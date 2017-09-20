@@ -15,7 +15,7 @@ Tag based tree-structured filesystem
 	[] = block of data
 	[TagName, diskBlocknum of "TagName", TagName, diskBlocknum of "TagName",....]
 
-### What does the tag tree look like in Storage: [] = block of data
+### What does the tag tree look like in Storage:
 
 	[] = block of data
 	[Filename, Fionde Blknum, # of associated tags, Filename, Fionde Blknum, # of associated tags,.....]
