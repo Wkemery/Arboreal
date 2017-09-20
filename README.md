@@ -11,8 +11,9 @@ Tag based tree-structured filesystem
 		// ** ADD and REMOVE node both UPDATE TAG TREE SIZE
 
 
-/*     What does the root tree look like in Storage: [] = block of data
+### What does the root tree look like in Storage: 
 
+	[] = block of data
 	[TagName, diskBlocknum of "TagName", TagName, diskBlocknum of "TagName",....]
 
 	What does the tag tree look like in Storage: [] = block of data
@@ -25,7 +26,7 @@ Tag based tree-structured filesystem
 
 	<---------------------------------------------------------------------------------------------------------->
 
-	Searching by Tags:
+### Searching by Tags:
 
 	- Single tag:
 		* find the tag in root tree
@@ -42,14 +43,13 @@ Tag based tree-structured filesystem
 
 	<---------------------------------------------------------------------------------------------------------->
 
-	Searching by Filename:
+### Searching by Filename:
 
 	- Binary search for file name from largest to smallest tag tree
 	- Worst case i (number of trees) * log(n)
 
 	<---------------------------------------------------------------------------------------------------------->
-
-	Creating a new Tag tree:
+### Creating a new Tag tree:
 
 	- Make sure tag is unique
 	- Get a block from disk to store tag tree
@@ -61,7 +61,7 @@ Tag based tree-structured filesystem
 
 	<---------------------------------------------------------------------------------------------------------->
 
-	Deleting a tag:
+### Deleting a tag:
 
 	- CANNOT delete tag if tag tree Size > 0
 	- remove node from Root tree
@@ -72,7 +72,7 @@ Tag based tree-structured filesystem
 
 	<---------------------------------------------------------------------------------------------------------->
 
-	Merging Tags:
+### Merging Tags:
 
 	- create new tag tree if needed
 	- Move all Nodes in largest tag tree to new (assuming new tree was created otherwise add to existsing tree) Tree
@@ -85,7 +85,7 @@ Tag based tree-structured filesystem
 
 	<---------------------------------------------------------------------------------------------------------->
 
-	Creating a new File:
+### Creating a new File:
 
 	- Get an open block and intiialize Fionde
 	- If tag not given then add file to "default" tag tree
@@ -98,7 +98,7 @@ Tag based tree-structured filesystem
 
 	<---------------------------------------------------------------------------------------------------------->
 
-	Deleting a File:
+### Deleting a File:
 
  	NOTE: File will be referenced by Finode block number
 	- check to make sure file exists
@@ -109,7 +109,7 @@ Tag based tree-structured filesystem
 
 	<---------------------------------------------------------------------------------------------------------->
 
-	Tagging a File:
+### Tagging a File:
 
  	- If tag does not exist create a new Tag tree
 	- Get From Finode: Blknum
@@ -121,7 +121,7 @@ Tag based tree-structured filesystem
 
 	<---------------------------------------------------------------------------------------------------------->
 
-	Untagging A File
+### Untagging A File
 
 	- Use Filblknum that was passed to search the TagTree
 	- Remove Node from TagTree
@@ -130,17 +130,17 @@ Tag based tree-structured filesystem
 
 	<---------------------------------------------------------------------------------------------------------->
 
+
+### Open a file:
+
 	** Direct File Operations are pretty much the same as OS **
-
-	Open a file:
-
 	- Get File Blknum
 	- Get Tags from Finode
 	- Steal Code from OS to see what else we need to do
 
 	<---------------------------------------------------------------------------------------------------------->
 
-	Closing a File:
+### Closing a File:
 
 	- Get File Blknum
 	- Get Tags from Finode
