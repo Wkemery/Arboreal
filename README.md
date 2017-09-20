@@ -33,7 +33,7 @@ Tag based tree-structured filesystem
 		* list files in tag tree pointed to by root tree
 
 	- Multi Tag:
-		* Use pin node to find smallest tree among the tags you want to search
+		* Use size field in root node of tag tree to find smallest tree among the tags you want to search
 		* Search the smallest tree:
 			# elimnate all nodes with tag count != the number of tags you are searching for
 			# search remainng files for exact tag match
@@ -45,7 +45,7 @@ Tag based tree-structured filesystem
 ### Searching by Filename:
 
 	- Binary search for file name from largest to smallest tag tree
-	- Worst case i (number of trees) * log(n)
+	- Worst case is (number of trees) * log(n)
 
 ### Creating a new Tag tree:
 
