@@ -22,6 +22,7 @@ Tag based tree-structured filesystem
 
 ### What does the file Inode look like:
 
+	[] = block of data
 	[size, tags (as the associated tagTree blknum on disk), attributes, X-directblocks, and X indirect blocks]
 
 	<---------------------------------------------------------------------------------------------------------->
