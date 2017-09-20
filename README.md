@@ -17,6 +17,7 @@ Tag based tree-structured filesystem
 
 ### What does the tag tree look like in Storage: [] = block of data
 
+	[] = block of data
 	[Filename, Fionde Blknum, # of associated tags, Filename, Fionde Blknum, # of associated tags,.....]
 
 ### What does the file Inode look like:
