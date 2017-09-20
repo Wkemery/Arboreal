@@ -25,7 +25,6 @@ Tag based tree-structured filesystem
 	[] = block of data
 	[size, tags (as the associated tagTree blknum on disk), attributes, X-directblocks, and X indirect blocks]
 
-	<---------------------------------------------------------------------------------------------------------->
 
 ### Searching by Tags:
 
@@ -42,14 +41,12 @@ Tag based tree-structured filesystem
 
 	** THIS IS SEARCH SMALLEST **
 
-	<---------------------------------------------------------------------------------------------------------->
 
 ### Searching by Filename:
 
 	- Binary search for file name from largest to smallest tag tree
 	- Worst case i (number of trees) * log(n)
 
-	<---------------------------------------------------------------------------------------------------------->
 ### Creating a new Tag tree:
 
 	- Make sure tag is unique
@@ -60,7 +57,6 @@ Tag based tree-structured filesystem
 	- rebalance  Root tree
 	- write Root tree to disk
 
-	<---------------------------------------------------------------------------------------------------------->
 
 ### Deleting a tag:
 
@@ -71,7 +67,6 @@ Tag based tree-structured filesystem
 	- encryption requires no zero-ing of disk
 	- write the root tree out to disk
 
-	<---------------------------------------------------------------------------------------------------------->
 
 ### Merging Tags:
 
@@ -84,7 +79,6 @@ Tag based tree-structured filesystem
 		* if NO: Add
 		* Repete
 
-	<---------------------------------------------------------------------------------------------------------->
 
 ### Creating a new File:
 
@@ -97,7 +91,6 @@ Tag based tree-structured filesystem
 		* call createTag()
 		* call TagFile()
 
-	<---------------------------------------------------------------------------------------------------------->
 
 ### Deleting a File:
 
@@ -108,7 +101,6 @@ Tag based tree-structured filesystem
 	- Free Finode block on disk
 	- Write Updated Tag Tree to Disk
 
-	<---------------------------------------------------------------------------------------------------------->
 
 ### Tagging a File:
 
@@ -120,7 +112,6 @@ Tag based tree-structured filesystem
 	- Update TagTree Size
 	- Write updated TagTree to disk
 
-	<---------------------------------------------------------------------------------------------------------->
 
 ### Untagging A File
 
@@ -129,7 +120,6 @@ Tag based tree-structured filesystem
 	- Delete tag from FileInode (reduce "# of tags" Fionde feild by X where X is number of tags removed)
 	- write updated tag tree to disk
 
-	<---------------------------------------------------------------------------------------------------------->
 
 
 ### Open a file:
@@ -139,7 +129,6 @@ Tag based tree-structured filesystem
 	- Get Tags from Finode
 	- Steal Code from OS to see what else we need to do
 
-	<---------------------------------------------------------------------------------------------------------->
 
 ### Closing a File:
 
@@ -148,7 +137,6 @@ Tag based tree-structured filesystem
 	- Steal Code from OS to see what else we need to do
 
 
-	<---------------------------------------------------------------------------------------------------------->
 
 	
 
