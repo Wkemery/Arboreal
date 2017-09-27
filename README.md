@@ -1,6 +1,18 @@
 # Arboreal
 Tag based tree-structured filesystem
 
+1. complete back end with drivers
+2. implementing the CLI
+
+## End Goals
+Limit Reduced functionality. (usable as a regular filesystem)
+Finish Virtual version by end of semester. (command line)
+Complete command line version. 
+	includes all commands, create tag, list files, etc...
+	
+(Optional)
+Hopefully, work to integrate with the Linux kernel, such that it is usable as a full fledged filesystem.
+
 
 ## Psudocode FileSystem
 
