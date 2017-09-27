@@ -4,6 +4,15 @@ Tag based tree-structured filesystem
 1. complete back end with drivers
 2. implementing the CLI
 
+
+## some notes
+We plan to use a map. The key will be something along the lines of the tree name. the value will be an intermediary data structure containing, tag tree pointer, location on disk, etc...
+
+Then the tagtree strucutre is almost the same thing as the root tree but uses a map of key=filename value = another intermediary structure contaning the location on disk, and maybe other things that I can't think of right now. 
+
+
+//TODO:: talk about managing overhead of loading stuff into memory. 
+
 ## End Goals
 Limit Reduced functionality. (usable as a regular filesystem)
 Finish Virtual version by end of semester. (command line)
