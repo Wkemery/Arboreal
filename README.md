@@ -8,10 +8,16 @@ Tag based tree-structured filesystem
 ## some notes
 We plan to use a map. The key will be something along the lines of the tree name. the value will be an intermediary data structure containing, tag tree pointer, location on disk, etc...
 
-Then the tagtree strucutre is almost the same thing as the root tree but uses a map of key=filename value = another intermediary structure contaning the location on disk, and maybe other things that I can't think of right now. 
+Then the tagtree structure is almost the same thing as the root tree but uses a map of key=filename value = another intermediary structure contaning the location on disk, and maybe other things that I can't think of right now. 
+
+overhead of loading stuff into memory.
+	We will load tagtrees into memory as needed. tagtrees will remain in memory until pushed out when we have deemed the memory taken up is too much. the least recently used tag trees will be put out first. Maybe we can try to keep the largest tag trees in memory to maximize the possiblity of us having what the user needs ready. loading an entire tree into storage will take a little time. However, on first start up, maybe load up a few of the largest or most commonly used tag trees. The nice thing is that a tag tree does not take up a lot of space on disk or in memory. EG writing a map out to disk, which as of right now i don't know how to do,  has only two values, a string and a pointer to an object with more information. a map of size 1000 might only have a size of roughly 38KB. 
+
+Some problems to consider in the future: 
+how to write a map out to disk such that we can read it in and reconstruct it quickly.
+Does FUSE even allow non directory based filesystems?
 
 
-//TODO:: talk about managing overhead of loading stuff into memory. 
 
 ## End Goals
 Limit Reduced functionality. (usable as a regular filesystem)
@@ -56,12 +62,14 @@ Hopefully, work to integrate with the Linux kernel, such that it is usable as a 
 	- Multi Tag:
 		* Use size field in root node of tag tree to find smallest tree among the tags you want to search
 		* Search the smallest tree:
-			# elimnate all nodes with tag count != the number of tags you are searching for
-			# search remainng files for exact tag match
+			# elimnate all nodes with tag count < the number of tags you are searching for
+			# search remainng files for exact tag match O(n)
 			# return (list) the found file(s)
 
 	** THIS IS SEARCH SMALLEST **
+This is an O(n) algorithm. However, we hope the smallest tree will actually be relatively small, because it is O(n) where n is the number of files in the smallest tag tree. In reality, it is very rare to have large numbers of files under a single tag. Even more rare to have 3 examples of that and have those three examples in a single search. 
 
+Note: potential fix, sacrifice space for time. store the combinations of tags as tag trees themselves. eg a tag tree for docs and a tag tree for docs,2017 and a tag tree for docs,2017,homework. I think the space complexity gets too large to be feasible for this but maybe not...
 
 ### Searching by Filename:
 
@@ -84,7 +92,7 @@ Hopefully, work to integrate with the Linux kernel, such that it is usable as a 
 	- CANNOT delete tag if tag tree Size > 0
 	- remove node from Root tree
 	- delete all references to the tag tree from Fileinodes
-	- rebalnce root tree
+	- rebalance root tree
 	- encryption requires no zero-ing of disk
 	- write the root tree out to disk
 
