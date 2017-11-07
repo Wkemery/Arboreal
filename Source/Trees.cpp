@@ -54,9 +54,10 @@ void TagTree::zeroDisk()
 
 bool operator==(const pair<string, unsigned int>& lhs, const pair<string, unsigned int>& rhs)
 {
-  return (lhs->first == rhs->first);
+  return (lhs.first == rhs.first);
 }
 
-PairHash::size_t operator()(const pair<int, int> &k) const{
-  return k.first * 100 + k.second;
+size_t PairHash::operator()(const pair<string, unsigned int>& k) const
+{
+  return hash<string>()(k.first);
 }

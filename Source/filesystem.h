@@ -45,6 +45,7 @@ class FileSystem {
   
 /******************************************************************************/
   unordered_map<string, TagTree*> _RootTree;
+//   unordered_map<TagTuple, TagTree*, PairHash> _RootTree;
 /******************************************************************************/
 
   void writeRoot();
