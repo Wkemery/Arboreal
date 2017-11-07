@@ -14,6 +14,9 @@
 #include<string>
 using namespace std;
 
+bool EncryptionFlag = false;
+
+
 FileSystem::FileSystem(DiskManager *dm, char fileSystemName)
 {
   myfileSystemName = fileSystemName;
@@ -46,56 +49,164 @@ FileSystem::~FileSystem()
   delete myPM;
 }
 
-int tagSearch(vector<string> tags)
+vector<FileInfo*>* FileSystem::tagSearch(vector<string> tags)
 {
-//   - Single tag:
-//   * find the tag in root tree
-//   * list files in tag tree pointed to by root tree
-//   
-//   - Multi Tag:
-//   * Use size field in root node of tag tree to find smallest tree among the tags you want to search
-//   * Search the smallest tree:
-//   # elimnate all nodes with tag count < the number of tags you are searching for
-//   # search remainng files for exact tag match O(n)
-//   # return (list) the found file(s)
-//   
-//   ** THIS IS SEARCH SMALLEST **
-  return 0;
+  vector<FileInfo*>* ret = new vector<FileInfo*>;
+  //  - Single tag:
+  
+  if(tags.size() == 1)
+  {
+    //   * find the tag in root tree
+    auto it = _RootTree.find(tags[0]);
+    it->second->getTree();
+    //   * list files in tag tree pointed to by root tree
+    unordered_map<string, FileInfo*>* treeptr = it->second->getTree();
+    
+    for(auto it2 = treeptr->begin(); it2 != treeptr->end(); it2++)
+    {
+      ret->push_back(it2->second);
+    }
+    
+  }
+  else
+  {
+    //   - Multi Tag:
+    
+    //   * Use size field in root node of tag tree to find smallest tree among the tags you want to search
+    //create vector of tagtrees that I want to search
+    vector<TagTree*> searchTrees;
+    for(unsigned int i = 0; i < tags.size(); i++)
+    {
+      auto it = _RootTree.find(tags[i]);
+      if(it == _RootTree.end())
+      {
+        cerr << tags[i] + " excluded from search : Tag Does not exist" << endl;
+      }
+      else
+      {
+        searchTrees.push_back(it->second);
+      }
+    }
+    
+    TagTree* smallest = searchTrees[0];
+    for(unsigned int i = 1; i < searchTrees.size(); i++)
+    {
+      if(searchTrees[i]->getTree()->size() < smallest->getTree()->size())
+        smallest = searchTrees[i];
+    }
+    
+    //   * Search the smallest tree:
+    unordered_map<string, FileInfo*>* treeptr = smallest->getTree();
+    for(auto it = treeptr->begin(); it != treeptr->end(); it++)
+    {
+      //   # elimnate all nodes with tag count < the number of tags you are searching for
+      if(it->second->getTags()->size() >= tags.size())
+      {
+        //could be a matching file
+        bool match = true;
+        //   # search remainng files for exact tag match O(n)
+        for(unsigned int i = 0; i < tags.size(); i++)
+        {
+          if(it->second->getTags()->find(tags[i]) == it->second->getTags()->end())
+          {
+            match = false;
+            break;
+          }
+        }
+        if(match)
+        {
+          ret->push_back(it->second);
+        }
+      }
+    }
+  }
+
+  //   # return (list) the found file(s)
+  return ret;
 }
 
-int fileSearch(string name)
+FileInfo* FileSystem::fileSearch(string name)
 {
-//   - Binary search for file name from largest to smallest tag tree
-//   - Worst case is (number of trees) * log(n)
+  //   - Binary search for file name from largest to smallest tag tree
+  // not sure how to do that right now...
+  //   - Worst case is (number of trees) * log(n)
+    
+  for(auto it = _RootTree.begin(); it != _RootTree.end(); it++)
+  {
+    auto it2 = it->second->getTree()->find(name);
+    if(it2 != it->second->getTree()->end())
+    {
+      //found the file 
+      return it2->second;
+    }
+  }
+  //never found the file
   
   return 0;
 }
 
-void createTag(string tagName)
+void FileSystem::createTag(string tagName)
 {
-//   - Make sure tag is unique
-//   - Get a block from disk to store tag tree
-//   - set up block in disk as empty tag tree
-//   - initialize tree in main memory
-//   - add respective node to root tree (write TagTree block num to Node as well as TagTree memory address to Node)
-//   - rebalance  Root tree
-//   - write Root tree to disk
+  
+  //   - Make sure tag is unique
+  if(_RootTree.find(tagName) != _RootTree.end())
+  {
+    throw invalid_argument(tagName + " is not unique");
+  }
+  
+  //   - Get a block from disk to store tag tree
+  int blknum = myPM->getFreeDiskBlock();
+  //   - initialize tree in main memory
+  TagTree* newTree = new TagTree(blknum);
+  //   - add respective node to root tree (write TagTree block num to Node as well as TagTree memory address to Node)
+  
+  _RootTree.insert(pair<string, TagTree*>(tagName, newTree));
+  //   - set up block in disk as empty tag tree, ie write out tag tree
+  newTree->writeOut();
+  //   - rebalance  Root tree, done automatically with map
+  //   - write Root tree to disk
+  writeRoot();
   
 }
 
-void deleteTag(string tagName)
+void FileSystem::deleteTag(string tagName)
 {
-//   - CANNOT delete tag if tag tree Size > 0
-//   - remove node from Root tree
-//   - delete all references to the tag tree from Fileinodes
-//   - rebalance root tree
-//   - encryption requires no zero-ing of disk
-//   - write the root tree out to disk
+  //   - find tagTree
+  auto it = _RootTree.find(tagName);
+  if(it == _RootTree.end())
+  {
+    throw invalid_argument(tagName + " cannot be deleted : Tag Does not exist");
+  }
+  
+  unordered_map<string, FileInfo*>* treeptr = it->second->getTree();
+  
+  //   - CANNOT delete tag if tag tree Size > 0
+  
+  if(treeptr->size() > 0)
+  {
+    throw invalid_argument(tagName + " cannot be deleted: Tag has files associated with it");
+  }
+  
+  //TODO: consider threading here to keep the programming running while deleting stuff in the background
+  //   - delete all references to the tag tree from Fileinodes
+  for(auto it2 = treeptr->begin(); it2 != treeptr->end(); it2++)
+  {
+    it2->second->delTag(tagName);
+    it2->second->writeOut();
+  }
+  //   - encryption requires no zero-ing of disk
+  if(!EncryptionFlag) it->second->zeroDisk();
+  //   - remove node from Root tree
+  _RootTree.erase(it);
+  
+  //   - write the root tree out to disk
+  writeRoot();
   
 }
 
-void mergeTags(string tag1, string tag2)
+void FileSystem::mergeTags(string tag1, string tag2)
 {
+  
 //   - create new tag tree if needed
 //   - Move all Nodes in largest tag tree to new (assuming new tree was created otherwise add to existsing tree) Tree
 //   * delete refrences to old tags in Fionde as you go
@@ -107,27 +218,67 @@ void mergeTags(string tag1, string tag2)
   
 }
 
-void tagFile(string filename, vector<string> tags)
+void FileSystem::tagFile(FileInfo* file, vector<string> tags)
 {
-//   - If tag does not exist create a new Tag tree
-//   - Get From Finode: Blknum
-//   - Get From Finode: Number of Tags
-//   - Create and Add new Node to TagTree
-//   - Add Tag to Fionde (write updated Fionde to disk)
-//   - Update TagTree Size
-//   - Write updated TagTree to disk
+  //for all tags in the vector
+  for(auto t : tags)
+  {
+    //   - find tagTree
+    
+    auto it = _RootTree.find(t);
+    //   - If tag does not exist create a new Tag tree
+    if(it == _RootTree.end())
+    {
+      createTag(t);
+      it = _RootTree.find(t);
+    }
+    unordered_map<string, FileInfo*>* treeptr = it->second->getTree();
+    
+    //   - Add Tag to Finode 
+    file->addTag(t, it->second->getBlockNum());
+    
+    //   - Create and Add new Node to TagTree
+    treeptr->insert(pair<string, FileInfo*>(file->getFilename(), file));
+    
+    //   - Write updated TagTree to disk
+    it->second->writeOut();
+
+  }
+
+  // (write updated Finode to disk)
+  file->writeOut();
   
 }
 
-void untagFile(string filename, vector<string> tags)
+void FileSystem::untagFile(FileInfo* file, vector<string> tags)
 {
-//   - Use Filblknum that was passed to search the TagTree
-//   - Remove Node from TagTree
-//   - Delete tag from FileInode (reduce "# of tags" Fionde feild by X where X is number of tags removed)
-//   - write updated tag tree to disk
+  //for all tags in the vector
+  for(auto t : tags)
+  {
+    //   - find tagTree
+    
+    auto it = _RootTree.find(t);
+    //   - If tag does not exist print error and continue
+    if(it == _RootTree.end())
+    {
+      cerr << t + " cannot be removed from " << file->getFilename() << " : Tag Does not exist" << endl;
+    }
+    unordered_map<string, FileInfo*>* treeptr = it->second->getTree();
+    
+    //   - Remove Node from TagTree
+    treeptr->erase(file->getFilename());
+    
+    //   - Delete tag from FileInode
+    file->delTag(t);
+    
+    //   - Write updated TagTree to disk
+    it->second->writeOut();
+    
+  }
   
+  // (write updated Finode to disk)
+  file->writeOut();
 }
-
 
 
 int FileSystem::createFile(char *filename, int fnameLen)
@@ -210,7 +361,8 @@ int FileSystem::createFile(char *filename, int fnameLen)
 
 int FileSystem::deleteFile(char *filename, int fnameLen)
 {
-//   NOTE: File will be referenced by Finode block number
+//change to take a fidentifier
+  //   NOTE: File will be referenced by Finode block number
 //   - check to make sure file exists
 //   - dissasociate all tags from the file (Call untagFile())
 //   - Free all data blocks
@@ -347,7 +499,8 @@ int FileSystem::deleteFile(char *filename, int fnameLen)
 int FileSystem::openFile(char *filename, int fnameLen, char mode, int lockId)
 {
 //   ** Direct File Operations are pretty much the same as OS **
-//   - Get File Blknum
+// change to take a fidentifier
+  //   - Get File Blknum
 //   - Get Tags from Finode
 //   - Steal Code from OS to see what else we need to do
   
@@ -888,6 +1041,29 @@ int FileSystem::setAttributes(char *filename, int fnameLen, char* buffer, int fl
 }
 
 /* Start Helper Functions */
+
+void FileSystem::writeRoot()
+{
+  //hardcoded blocknumber
+  //for every entry in the map:
+  // write out tagname = key
+  //write out value = blocknum of tagtree
+  //remember to leave space at end of block for continuation
+  //write out sentinel value to denote end - blocknumtype size bytes long of 0 bytes
+  // in order to just zero out continuation in the event we fill up a block perfectly
+}
+
+void FileSystem::readRoot()
+{
+  //hardcoded blocknumber
+  //until reading in the sentinel:
+  // read in key = tagname
+  //read in value = blocknumber of tagtree
+  // insert in map
+  //remember to read extension blocks when necessary
+}
+
+
 int FileSystem::findEmpty(int& blknum, char* name, int nameLen, char type)
 {
   int rv;

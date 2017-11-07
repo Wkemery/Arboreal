@@ -6,10 +6,11 @@
 #include "disk.h"
 #include "diskmanager.h"
 #include "partitionmanager.h"
+#include "Trees.h"
 #include <vector>
 #include <unordered_map>
 #include<map>
-
+#include<string>
 #ifndef FILESYSTEM_H
 #define FILESYSTEM_H
 
@@ -37,12 +38,19 @@ class FileSystem {
   char myfileSystemName;
   int myfileSystemSize;
   
-  /* declare other private members here */
   unordered_map<int, int> lockIdT;
   unsigned int numLocks = rand();
   int open;
   vector<FileOpen> FOT;   // File open table vector
   
+/******************************************************************************/
+  unordered_map<string, TagTree*> _RootTree;
+/******************************************************************************/
+
+  void writeRoot();
+  void readRoot();
+/******************************************************************************/
+
   int findEmpty(int& blknum, char* name, int nameLen, char type);
   /* Parameters: 
    *    blknum - acts as return value
@@ -126,13 +134,13 @@ public:
   FileSystem(DiskManager *dm, char fileSystemName);
   ~FileSystem();
   
-  int tagSearch(vector<string> tags);
-  int fileSearch(string name);
+  vector<FileInfo*>* tagSearch(vector<string> tags);
+  FileInfo* fileSearch(string name);
   void createTag(string tagName);
   void deleteTag(string tagName);
   void mergeTags(string tag1, string tag2);
-  void tagFile(string filename, vector<string> tags);
-  void untagFile(string filename, vector<string> tags);
+  void tagFile(FileInfo* file, vector<string> tags);
+  void untagFile(FileInfo* file, vector<string> tags);
   
   
   
@@ -148,7 +156,6 @@ public:
   int getAttributes(char *filename, int fnameLen, char* buffer, int flag);
   int setAttributes(char *filename, int fnameLen, char* buffer, int flag);
   
-  /* declare other public members here */
   
 };
 
