@@ -5,32 +5,28 @@
 
 #include<unordered_map>
 #include<string>
+
 using namespace std;
+typedef unsigned long long BlkNumType;
 
 #ifndef TREES_H
 #define TREES_H
-
-#define NOTUNIQUE 5000
-
-typedef unsigned long long BlkNumType;
-
 class FileInfo
 {
 private:
-  BlkNumType _fidentifier;
   string _fileName;
+  BlkNumType _fidentifier;
   unordered_map<string, BlkNumType> _tags;
 public:
-  FileInfo();
-  ~FileInfo();
+  FileInfo(string filename, BlkNumType fidentifier);
   BlkNumType getFidentifier();
   string getFilename();
-  void delTag(string tagName);
+  unordered_map<string, BlkNumType>* getTags();
   void writeOut();
   void readIn();
-  void addTag(string tagName, int blocknum);
-  unordered_map<string, BlkNumType>* getTags();
+  void del();
 };
+
 
 class TagTree
 {
@@ -38,21 +34,13 @@ private:
   unordered_map<string, FileInfo*> _tree;
   BlkNumType _blockNumber;
 public:
-  TagTree();
-  ~TagTree();
-  TagTree(int blocknum);
+  TagTree(BlkNumType blocknum);
   unordered_map<string, FileInfo*>* getTree();
   BlkNumType getBlockNum();
   void writeOut();
   void readIn();
   void zeroDisk();
 };
-
-
-
-
-
-
 
 
 #endif

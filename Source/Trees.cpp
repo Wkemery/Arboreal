@@ -9,16 +9,18 @@
 #include<unordered_map>
 using namespace std;
 
-FileInfo::FileInfo(){}
+FileInfo::FileInfo(string filename, BlkNumType fidentifier):_fileName(filename),_fidentifier(fidentifier) 
+{}
 
-FileInfo::~FileInfo(){}
 
 BlkNumType FileInfo::getFidentifier(){ return _fidentifier;}
 
 string FileInfo::getFilename() {return _fileName;}
 
-void FileInfo::delTag(string filename)
-{}
+unordered_map<string, BlkNumType>* FileInfo::getTags()
+{
+  return &_tags;
+}
 
 void FileInfo::writeOut()
 {}
@@ -26,22 +28,12 @@ void FileInfo::writeOut()
 void FileInfo::readIn()
 {}
 
-void FileInfo::addTag(string tagName, int blocknum)
+void FileInfo::del()
 {}
-
-unordered_map<string, BlkNumType>* FileInfo::getTags()
-{
-  return &_tags;
-}
 
 /******************************************************************************/
 
-TagTree::TagTree(){}
-
-TagTree::TagTree(int blocknum): _blockNumber(blocknum)
-{}
-
-TagTree::~TagTree()
+TagTree::TagTree(BlkNumType blocknum): _blockNumber(blocknum)
 {}
 
 unordered_map<string, FileInfo*>* TagTree::getTree() {return &_tree;}
@@ -56,4 +48,3 @@ void TagTree::readIn()
 
 void TagTree::zeroDisk()
 {}
-

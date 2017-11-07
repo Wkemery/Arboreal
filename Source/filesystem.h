@@ -137,15 +137,15 @@ public:
   vector<FileInfo*>* tagSearch(vector<string> tags);
   FileInfo* fileSearch(string name);
   void createTag(string tagName);
-  void deleteTag(string tagName);
+  void deleteTag(string tagName, bool force = false);
   void mergeTags(string tag1, string tag2);
   void tagFile(FileInfo* file, vector<string> tags);
   void untagFile(FileInfo* file, vector<string> tags);
+  FileInfo* createFile(string filename, vector<string> tags);
+  void deleteFile(FileInfo* file);
   
   
   
-  int createFile(char *filename, int fnameLen);
-  int deleteFile(char *filename, int fnameLen);
   int openFile(char *filename, int fnameLen, char mode, int lockId);
   int closeFile(int fileDesc);
   int readFile(int fileDesc, char *data, int len);
