@@ -307,7 +307,7 @@ FileInfo* FileSystem::createFile(string filename, vector<string> tags)
     tagFile(newFile, tags);
   }
   
-  return 0;
+  return newFile;
 }
 
 void FileSystem::deleteFile(FileInfo* file)

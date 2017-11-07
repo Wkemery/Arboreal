@@ -48,3 +48,15 @@ void TagTree::readIn()
 
 void TagTree::zeroDisk()
 {}
+
+/******************************************************************************/
+
+
+bool operator==(const pair<string, unsigned int>& lhs, const pair<string, unsigned int>& rhs)
+{
+  return (lhs->first == rhs->first);
+}
+
+PairHash::size_t operator()(const pair<int, int> &k) const{
+  return k.first * 100 + k.second;
+}
