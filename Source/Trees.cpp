@@ -22,14 +22,22 @@ unordered_map<string, BlkNumType>* FileInfo::getTags()
   return &_tags;
 }
 
-void FileInfo::writeOut()
+void FileInfo::writeOut(PartitionManager* pm)
 {
   //TODO:stub
+  //TODO: implement block continuation
+  
+  //filename - 64 bytes
+  // fidentifier - probably 8 bytes
+  //file size
+  
 }
 
-void FileInfo::readIn()
+void FileInfo::readIn(PartitionManager* pm)
 {
   //TODO:stub
+  //TODO: implement block continuation
+  
 }
 
 void FileInfo::del()
@@ -44,14 +52,22 @@ unordered_map<string, FileInfo*>* TagTree::getTree() {return &_tree;}
 
 BlkNumType TagTree::getBlockNum() {return _blockNumber;}
 
-void TagTree::writeOut()
+void TagTree::writeOut(PartitionManager* pm)
 {
   //TODO:stub
+  //TODO: implement block continuation
+  //for every entry in the _tree 
+    // write out key to buffer. pad to 64 bytes 
+    //write out the blocknumber of the fidentifier to buffer
+  
+  //write out buffer to my _blockNumber
 }
 
-void TagTree::readIn()
+void TagTree::readIn(PartitionManager* pm)
 {
   //TODO:stub
+  //TODO: implement block continuation
+  
 }
 
 void TagTree::zeroDisk()

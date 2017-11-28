@@ -5,6 +5,7 @@
 
 #include<unordered_map>
 #include<string>
+#include"partitionmanager.h"
 using namespace std;
 typedef unsigned long long BlkNumType;
 typedef pair<string, unsigned int> TagTuple;
@@ -30,8 +31,8 @@ public:
   string getFilename();
   unordered_map<string, BlkNumType>* getTags();
   
-  void writeOut();
-  void readIn();
+  void writeOut(PartitionManager* pm);
+  void readIn(PartitionManager* pm);
   void del();
 };
 
@@ -45,8 +46,8 @@ public:
   TagTree(BlkNumType blocknum);
   unordered_map<string, FileInfo*>* getTree();
   BlkNumType getBlockNum();
-  void writeOut();
-  void readIn();
+  void writeOut(PartitionManager* pm);
+  void readIn(PartitionManager* pm);
   void zeroDisk();
 };
 

@@ -164,7 +164,7 @@ void FileSystem::createTag(string tagName)
   
   _RootTree.insert(pair<string, TagTree*>(tagName, newTree));
   //   - set up block in disk as empty tag tree, ie write out tag tree
-  newTree->writeOut();
+  newTree->writeOut(myPM);
   //   - rebalance  Root tree, done automatically with map
   //   - write Root tree to disk
   writeRoot();
@@ -197,7 +197,7 @@ void FileSystem::deleteTag(string tagName, bool force)
     {
       //   - delete all references to the tag tree from Fileinodes
       it2->second->getTags()->erase(tagName);
-      it2->second->writeOut();
+      it2->second->writeOut(myPM);
     }
   }
 
@@ -248,12 +248,12 @@ void FileSystem::tagFile(FileInfo* file, vector<string> tags)
     treeptr->insert(pair<string, FileInfo*>(file->getFilename(), file));
     
     //   - Write updated TagTree to disk
-    it->second->writeOut();
+    it->second->writeOut(myPM);
 
   }
 
   // (write updated Finode to disk)
-  file->writeOut();
+  file->writeOut(myPM);
   
 }
 
@@ -279,12 +279,12 @@ void FileSystem::untagFile(FileInfo* file, vector<string> tags)
     file->getTags()->erase(t);
     
     //   - Write updated TagTree to disk
-    it->second->writeOut();
+    it->second->writeOut(myPM);
     
   }
   
   // (write updated Finode to disk)
-  file->writeOut();
+  file->writeOut(myPM);
 }
 
 
