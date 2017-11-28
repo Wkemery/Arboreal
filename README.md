@@ -50,7 +50,7 @@ Hopefully, work to integrate with the Linux kernel, such that it is usable as a 
 ### What does the file Inode look like:
 
 	[] = block of data
-	[size, tags (as the associated tagTree blknum on disk), attributes, X-directblocks, and X indirect blocks]
+	[filename, size, tags (as the associated tagTree blknum on disk), attributes, X-directblocks, and X indirect blocks]
 
 
 ### Searching by Tags:
@@ -67,7 +67,7 @@ Hopefully, work to integrate with the Linux kernel, such that it is usable as a 
 			# return (list) the found file(s)
 
 	** THIS IS SEARCH SMALLEST **
-This is an O(n) algorithm. However, we hope the smallest tree will actually be relatively small, because it is O(n) where n is the number of files in the smallest tag tree. In reality, it is very rare to have large numbers of files under a single tag. Even more rare to have 3 examples of that and have those three examples in a single search. 
+This is an O(n) algorithm. However, we hope the smallest tree will actually be relatively small, because it is O(n) where n is the number of files in the smallest tag tree. In reality, it is very rare to have large numbers of files under a single tag. Even more rare to have 3 examples of that and have those three examples in a single search. Note: O(n) is unavoidable here because the output must consist of the n files you are requesting. 
 
 Note: potential fix, sacrifice space for time. store the combinations of tags as tag trees themselves. eg a tag tree for docs and a tag tree for docs,2017 and a tag tree for docs,2017,homework. I think the space complexity gets too large to be feasible for this but maybe not...
 

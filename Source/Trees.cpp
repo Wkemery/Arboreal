@@ -23,10 +23,14 @@ unordered_map<string, BlkNumType>* FileInfo::getTags()
 }
 
 void FileInfo::writeOut()
-{}
+{
+  //TODO:stub
+}
 
 void FileInfo::readIn()
-{}
+{
+  //TODO:stub
+}
 
 void FileInfo::del()
 {}
@@ -41,10 +45,14 @@ unordered_map<string, FileInfo*>* TagTree::getTree() {return &_tree;}
 BlkNumType TagTree::getBlockNum() {return _blockNumber;}
 
 void TagTree::writeOut()
-{}
+{
+  //TODO:stub
+}
 
 void TagTree::readIn()
-{}
+{
+  //TODO:stub
+}
 
 void TagTree::zeroDisk()
 {}
