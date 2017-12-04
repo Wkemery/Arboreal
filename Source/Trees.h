@@ -49,6 +49,7 @@ public:
   void writeOut(PartitionManager* pm);
   void readIn(PartitionManager* pm);
   void zeroDisk();
+  void deleteContBlocks(BlkNumType blknum);
 };
 
 
