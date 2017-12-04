@@ -6,7 +6,7 @@
 
 using namespace std;
 
-Disk::Disk(int numblocks, int blksz, char *fname)
+Disk::Disk(BlkNumType numblocks, int blksz, char *fname)
 {
   blkCount = numblocks;
   diskSize = numblocks * blksz;
@@ -28,7 +28,7 @@ int Disk::initDisk()
       cerr << "Error: Cannot create disk file" << endl;
       return(-1);
     }
-    for (int i = 0; i < diskSize; i++) f.put('c');
+    for (BlkNumType i = 0; i < diskSize; i++) f.put('c');
     f.close();
     return(1);
   }
@@ -36,7 +36,7 @@ int Disk::initDisk()
   return 0 ;
 }
 
-int Disk::readDiskBlock(int blknum, char *blkdata)
+int Disk::readDiskBlock(BlkNumType blknum, char *blkdata)
 /*
   returns -1, if disk can't be opened;
   returns -2, if blknum is out of bounds;
@@ -52,7 +52,7 @@ int Disk::readDiskBlock(int blknum, char *blkdata)
   return(0);
 }
 
-int Disk::writeDiskBlock(int blknum, char *blkdata)
+int Disk::writeDiskBlock(BlkNumType blknum, char *blkdata)
 /*
   returns -1, if DISK can't be opened;
   returns -2, if blknum is out of bounds;

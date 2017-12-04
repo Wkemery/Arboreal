@@ -38,9 +38,9 @@ PartitionManager::~PartitionManager()
 /*
  * return blocknum, -1 otherwise
  */
-int PartitionManager::getFreeDiskBlock()
+BlkNumType PartitionManager::getFreeDiskBlock()
 {
-  for (int i = 2; i < myPartitionSize; i++)
+  for (BlkNumType i = 2; i < myPartitionSize; i++)
   {
     if (dmBV->testBit(i) == 0)
     {
@@ -59,7 +59,7 @@ int PartitionManager::getFreeDiskBlock()
 /*
  * return 0 for sucess, -1 otherwise
  */
-int PartitionManager::returnDiskBlock(int blknum)
+int PartitionManager::returnDiskBlock(BlkNumType blknum)
 {
   /* write the code for deallocating a partition block */
   /* Prevent deallocating of block 0 or 1*/
@@ -79,12 +79,12 @@ int PartitionManager::returnDiskBlock(int blknum)
 }
 
 
-int PartitionManager::readDiskBlock(int blknum, char *blkdata)
+int PartitionManager::readDiskBlock(BlkNumType blknum, char *blkdata)
 {
   return myDM->readDiskBlock(myPartitionName, blknum, blkdata);
 }
 
-int PartitionManager::writeDiskBlock(int blknum, char *blkdata)
+int PartitionManager::writeDiskBlock(BlkNumType blknum, char *blkdata)
 {
   return myDM->writeDiskBlock(myPartitionName, blknum, blkdata);
 }

@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include<map>
 #include<string>
+typedef unsigned long long BlkNumType;
 #ifndef FILESYSTEM_H
 #define FILESYSTEM_H
 

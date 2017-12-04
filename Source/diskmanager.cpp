@@ -97,7 +97,7 @@ DiskManager::~DiskManager()
  *  -2, if blknum is out of bounds; (same as disk)
  *  -3 if partition doesn't exist
  */
-int DiskManager::readDiskBlock(char partitionname, int blknum, char *blkdata)
+int DiskManager::readDiskBlock(char partitionname, BlkNumType blknum, char *blkdata)
 {
   /* find partition index in diskP*/
   int index = findPart(partitionname);
@@ -120,7 +120,7 @@ int DiskManager::readDiskBlock(char partitionname, int blknum, char *blkdata)
  *  -2, if blknum is out of bounds;  (same as disk)
  *  -3 if partition doesn't exist
  */
-int DiskManager::writeDiskBlock(char partitionname, int blknum, char *blkdata)
+int DiskManager::writeDiskBlock(char partitionname, BlkNumType blknum, char *blkdata)
 {
   /* find partition index in diskP */
   int index = findPart(partitionname);
@@ -140,10 +140,10 @@ int DiskManager::writeDiskBlock(char partitionname, int blknum, char *blkdata)
  * return size of partition
  * -1 if partition doesn't exist.
  */
-int DiskManager::getPartitionSize(char partitionname)
+BlkNumType DiskManager::getPartitionSize(char partitionname)
 {
-  int index = findPart(partitionname);
-  if(index == -1) return -1;
+  BlkNumType index = findPart(partitionname);
+//   if(index == -1) return -1;
   return diskP[index].partitionSize;
   
 }

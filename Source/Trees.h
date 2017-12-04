@@ -26,7 +26,7 @@ private:
   BlkNumType _fidentifier;
   unordered_map<string, BlkNumType> _tags;
 public:
-  FileInfo(string filename, BlkNumType fidentifier);
+  FileInfo(string filename, PartitionManager* pm);
   BlkNumType getFidentifier();
   string getFilename();
   unordered_map<string, BlkNumType>* getTags();
@@ -43,7 +43,7 @@ private:
   unordered_map<string, FileInfo*> _tree;
   BlkNumType _blockNumber;
 public:
-  TagTree(BlkNumType blocknum);
+  TagTree(PartitionManager* pm);
   unordered_map<string, FileInfo*>* getTree();
   BlkNumType getBlockNum();
   void writeOut(PartitionManager* pm);

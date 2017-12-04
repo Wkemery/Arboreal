@@ -28,10 +28,10 @@ class DiskManager {
   public:
     DiskManager(Disk *d, int partCount, DiskPartition *dp);
     ~DiskManager();
-    int readDiskBlock(char partitionname, int blknum, char *blkdata);
-    int writeDiskBlock(char partitionname, int blknum, char *blkdata);
+    int readDiskBlock(char partitionname, BlkNumType blknum, char *blkdata);
+    int writeDiskBlock(char partitionname, BlkNumType blknum, char *blkdata);
     int getBlockSize() {return myDisk->getBlockSize();};
-    int getPartitionSize(char partitionname);
+    BlkNumType getPartitionSize(char partitionname);
 };
 
 extern void intToChar(int pos, int num, char * buff);
