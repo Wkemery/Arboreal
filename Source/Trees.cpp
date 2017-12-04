@@ -12,18 +12,8 @@
 
 using namespace std;
 
-FileInfo::FileInfo(string filename,PartitionManager* pm):_fileName(filename)
-{
-  /*Get a block from disk to store FInode*/
-  
-  //TODO: fix catch statement.
-  BlkNumType newblknum = 0;
-  try{newblknum = pm->getFreeDiskBlock();}
-  catch(...){cerr << "Error trees.cpp1" << endl;}
-  
-  /*set newblknum as _fidentifier*/
-  _fidentifier = newblknum;
-}
+FileInfo::FileInfo(string filename,BlkNumType blknum):_fileName(filename), _fidentifier(blknum)
+{}
 
 
 BlkNumType FileInfo::getFidentifier(){ return _fidentifier;}
@@ -58,19 +48,8 @@ void FileInfo::del()
 
 /******************************************************************************/
 
-TagTree::TagTree(PartitionManager* pm)
-{
-  /*Get a block from disk to store tag tree*/
-  
-  //TODO: fix catch statement.
-  BlkNumType newblknum = 0;
-  try{newblknum = pm->getFreeDiskBlock();}
-  catch(...){cerr << "Error trees.cpp1" << endl;}
-  
-  /*set newblknum as _blockNumber*/
-  _blockNumber = newblknum;
-  
-}
+TagTree::TagTree(BlkNumType blknum): _blockNumber(blknum)
+{}
 
 unordered_map<string, FileInfo*>* TagTree::getTree() {return &_tree;}
 
@@ -137,6 +116,8 @@ void TagTree::readIn(PartitionManager* pm)
 {
   //TODO:stub
   //TODO: implement block continuation
+  
+  
   
 }
 

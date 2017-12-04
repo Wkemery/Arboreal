@@ -156,8 +156,16 @@ void FileSystem::createTag(string tagName)
     throw invalid_argument(tagName + " is not unique");
   }
   
+  
+  /*Get a block from disk to store tag tree*/
+  
+  //TODO: fix catch statement.
+  BlkNumType newblknum = 0;
+  try{newblknum = myPM->getFreeDiskBlock();}
+  catch(...){cerr << "Error trees.cpp1" << endl;}
+  
   //   - initialize tree in main memory
-  TagTree* newTree = new TagTree(myPM);
+  TagTree* newTree = new TagTree(newblknum);
   //   - add respective node to root tree (write TagTree block num to Node as well as TagTree memory address to Node)
   
   _RootTree.insert(pair<string, TagTree*>(tagName, newTree));
@@ -288,7 +296,14 @@ void FileSystem::untagFile(FileInfo* file, vector<string> tags)
 
 FileInfo* FileSystem::createFile(string filename, vector<string> tags)
 {
-  FileInfo* newFile = new FileInfo(filename, myPM);
+  /*Get a block from disk to store FInode*/
+  
+  //TODO: fix catch statement.
+  BlkNumType newblknum = 0;
+  try{newblknum = myPM->getFreeDiskBlock();}
+  catch(...){cerr << "Error trees.cpp1" << endl;}
+  
+  FileInfo* newFile = new FileInfo(filename, newblknum);
   
   //   - If tag not given then add file to "default" tag tree
   //   * File remains in default tag tree until a non-default tag is associated with file
