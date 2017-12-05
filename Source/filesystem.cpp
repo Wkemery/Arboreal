@@ -129,6 +129,7 @@ vector<FileInfo*>* FileSystem::tagSearch(vector<string> tags)
 
 FileInfo* FileSystem::fileSearch(string name)
 {
+  //TODO: change to default tree search, try to make default tree an ordered map
   //   - Binary search for file name from largest to smallest tag tree
   // not sure how to do that right now...
   //   - Worst case is (number of trees) * log(n)
@@ -151,36 +152,35 @@ void FileSystem::createTag(string tagName)
 {
   
   //   - Make sure tag is unique
-  if(_RootTree.find(tagName) != _RootTree.end())
+  if(_RootTree.find(tagName) != _RootTree.end())//Complexity: avg 1, worst # tags on system
   {
     throw invalid_argument(tagName + " is not unique");
   }
-  
   
   /*Get a block from disk to store tag tree*/
   
   //TODO: fix catch statement.
   BlkNumType newblknum = 0;
-  try{newblknum = myPM->getFreeDiskBlock();}
+  try{newblknum = myPM->getFreeDiskBlock();}//Complexity: not our fucking problem, but linear with # of blocks on partition
   catch(...){cerr << "Error trees.cpp1" << endl;}
   
   //   - initialize tree in main memory
   TagTree* newTree = new TagTree(newblknum);
   //   - add respective node to root tree (write TagTree block num to Node as well as TagTree memory address to Node)
   
-  _RootTree.insert(pair<string, TagTree*>(tagName, newTree));
+  _RootTree.insert(pair<string, TagTree*>(tagName, newTree));//Complexity: avg. 1, worst # of tags in filesystem
   //   - set up block in disk as empty tag tree, ie write out tag tree
-  newTree->writeOut(myPM);
+  newTree->writeOut(myPM); //Complexity: size of tag tree, this case 0;
   //   - rebalance  Root tree, done automatically with map
   //   - write Root tree to disk
-  writeRoot();
+  writeRoot();//Complexity: # of tags in filesystem
   
 }
 
 void FileSystem::deleteTag(string tagName, bool force)
 {
   //   - find tagTree
-  auto it = _RootTree.find(tagName);
+  auto it = _RootTree.find(tagName);//Complexity: avg 1, worst # tags on system
   if(it == _RootTree.end())
   {
     throw invalid_argument(tagName + " cannot be deleted : Tag Does not exist");
@@ -199,11 +199,11 @@ void FileSystem::deleteTag(string tagName, bool force)
   //TODO: consider threading here to keep the programming running while deleting stuff in the background
   if(force)
   {
-    for(auto it2 = treeptr->begin(); it2 != treeptr->end(); it2++)
+    for(auto it2 = treeptr->begin(); it2 != treeptr->end(); it2++)//Complexity: avg: size of tag tree * sizeof file/block size, worst size of tag tree * avg tags associated with file * sizeof file/block size
     {
       //   - delete all references to the tag tree from Fileinodes
-      it2->second->getTags()->erase(tagName);
-      it2->second->writeOut(myPM);
+      it2->second->getTags()->erase(tagName);//Complexity: avg 1, worst # of tags associated with file
+      it2->second->writeOut(myPM);//Complexity: size of file/ block size
     }
   }
 
