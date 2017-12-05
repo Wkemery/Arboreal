@@ -58,13 +58,13 @@ vector<FileInfo*>* FileSystem::tagSearch(vector<string> tags)
   if(tags.size() == 1)
   {
     //   * find the tag in root tree
-    auto it = _RootTree.find(tags[0]);
+    auto it = _RootTree.find(tags[0]);  //Complexity: avg. 1, worst linear
     it->second->getTree();
     
     //   * list files in tag tree pointed to by root tree
     unordered_map<string, FileInfo*>* treeptr = it->second->getTree();
     
-    for(auto it2 = treeptr->begin(); it2 != treeptr->end(); it2++)
+    for(auto it2 = treeptr->begin(); it2 != treeptr->end(); it2++)//Complexity: number of files in answer
     {
       ret->push_back(it2->second);
     }
@@ -77,9 +77,9 @@ vector<FileInfo*>* FileSystem::tagSearch(vector<string> tags)
     //   * Use size field in root node of tag tree to find smallest tree among the tags you want to search
     //create vector of tagtrees that I want to search
     vector<TagTree*> searchTrees;
-    for(unsigned int i = 0; i < tags.size(); i++)
+    for(unsigned int i = 0; i < tags.size(); i++)//Complexity: avg. number of tags specified, worst # tags specified*total number of user defined tags on filesystem
     {
-      auto it = _RootTree.find(tags[i]);
+      auto it = _RootTree.find(tags[i]);//complexity: avg. 1, worst linear
       if(it == _RootTree.end())
       {
         cerr << tags[i] + " excluded from search : Tag Does not exist" << endl;
@@ -91,7 +91,7 @@ vector<FileInfo*>* FileSystem::tagSearch(vector<string> tags)
     }
     
     TagTree* smallest = searchTrees[0];
-    for(unsigned int i = 1; i < searchTrees.size(); i++)
+    for(unsigned int i = 1; i < searchTrees.size(); i++)//Complexity: number of tags specified
     {
       if(searchTrees[i]->getTree()->size() < smallest->getTree()->size())
         smallest = searchTrees[i];
@@ -99,17 +99,17 @@ vector<FileInfo*>* FileSystem::tagSearch(vector<string> tags)
     
     //   * Search the smallest tree:
     unordered_map<string, FileInfo*>* treeptr = smallest->getTree();
-    for(auto it = treeptr->begin(); it != treeptr->end(); it++)
+    for(auto it = treeptr->begin(); it != treeptr->end(); it++)//Complexity: size of smallest specified tag tree * # of tags specified (worst case: size of smallest specified tag tree*# of tags specified* number of tags associated with file in question)
     {
       //   # elimnate all nodes with tag count < the number of tags you are searching for
       if(it->second->getTags()->size() >= tags.size())
       {
         //could be a matching file
         bool match = true;
-        //   # search remainng files for exact tag match O(nlogn) worst case, average case O(n)
-        for(unsigned int i = 0; i < tags.size(); i++)
+        //   # search remainng files for exact tag match O(1) average case, worst case O(n)
+        for(unsigned int i = 0; i < tags.size(); i++)//Complexity: # of tags specified(worst case: # of tags specified* number of tags associated with file in question)
         {
-          if(it->second->getTags()->find(tags[i]) == it->second->getTags()->end())
+          if(it->second->getTags()->find(tags[i]) == it->second->getTags()->end()) //complexity: avg. O(1), worst number of tags associated with file in question
           {
             match = false;
             break;
