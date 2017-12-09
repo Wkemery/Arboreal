@@ -17,6 +17,7 @@ using namespace std;
 
 bool EncryptionFlag = false;
 
+//TODO: fix writing out so it doesn't take so long
 
 FileSystem::FileSystem(DiskManager *dm, char fileSystemName)
 {
@@ -173,7 +174,7 @@ void FileSystem::createTag(string tagName)
   newTree->writeOut(myPM); //Complexity: size of tag tree, this case 0;
   //   - rebalance  Root tree, done automatically with map
   //   - write Root tree to disk
-  writeRoot();//Complexity: # of tags in filesystem
+  writeRoot();
   
 }
 
@@ -213,7 +214,7 @@ void FileSystem::deleteTag(string tagName, bool force)
   _RootTree.erase(it);
   
   //   - write the root tree out to disk
-  writeRoot();//Complexity: Number of tags on system
+  writeRoot();
   
 }
 
@@ -234,17 +235,18 @@ void FileSystem::mergeTags(string tag1, string tag2)
 void FileSystem::tagFile(FileInfo* file, vector<string> tags)
 {
   //for all tags in the vector
-  for(auto t : tags)//Complexity: avg:number of tags specified * createTree() , worst: number of tags specified * size of root tree * createTree()
+  for(auto t : tags)//Complexity: avg:number of tags specified , worst: number of tags specified * size of root tree
   {
     //   - find tagTree
     
     auto it = _RootTree.find(t);//Complexity: avg: 1, worst: size of root tree
     //   - If tag does not exist create a new Tag tree
-    if(it == _RootTree.end())
-    {
-      createTag(t);//Complexity: go to function
-      it = _RootTree.find(t);//Complexity: Complexity: avg: 1, worst: size of root tree
-    }
+    //not doing this
+//     if(it == _RootTree.end()) 
+//     {
+//       createTag(t);//Complexity: go to function
+//       it = _RootTree.find(t);//Complexity: Complexity: avg: 1, worst: size of root tree
+//     }
     unordered_map<string, FileInfo*>* treeptr = it->second->getTree();
     
     //   - Add Tag to Finode 
