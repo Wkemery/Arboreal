@@ -10,8 +10,8 @@
 CXX=g++
 XXFLAGS = -ggdb -Wall -gstabs -std=c++11
 
-CPPFILES=driver.cpp bitvector.cpp disk.cpp diskmanager.cpp partitionmanager.cpp filesystem.cpp Trees.cpp
-HFILES= bitvector.h disk.h disk.cpp diskmanager.h partitionmanager.h filesystem.h Trees.h
+CPPFILES=driver.cpp disk.cpp diskmanager.cpp partitionmanager.cpp filesystem.cpp Trees.cpp
+HFILES=disk.h disk.cpp diskmanager.h partitionmanager.h filesystem.h Trees.h
 all: driver
 
 driver: $(CPPFILES) $(HFILES)

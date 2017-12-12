@@ -1,3 +1,5 @@
+#include "types.h"
+
 class Client {
   public:
     FileSystem *myFS;

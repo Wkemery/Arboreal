@@ -1,41 +1,36 @@
 #include "disk.h"
-
+#include "types.h"
+#include<vector>
 #ifndef DISKMANAGER_H
 #define DISKMANAGER_H
 using namespace std;
 
-class DiskPartition {
-  public:
-    char partitionName;
-    int partitionSize;
+struct DiskPartition
+{
+  string partitionName;
+  BlkNumType partitionSize;
+  BlkNumType partitionBlkStart;
+  
 };
+
+bool operator==(const DiskPartition* lhs,  const DiskPartition& rhs);
 
 class DiskManager {
+private:
   Disk *myDisk;
-  int partCount;
-  DiskPartition *diskP;
-
+  vector<DiskPartition*>  _myPartitions;
   /* declare other private members here */
 
-  int findPart(char partitionname);
-    /* findPart searches diskP for the DiskPartition object with a partition name matching the parameter partitionname. 
-     * It return the index of the object if found. If not found, it returns -1. */
-  int blockOffset(int index, int blknum);
-    /* blockOffset takes the index of the desired partition and the block number relative to that partition. It converts
-     * the relative block number to its corresponding absolute block number on the disk. It returns the absolute block 
-     * number and returns -1 if the absolute block number is out of bounds for that partition. */
+  DiskPartition* findPart(string partitionName);
   
   public:
-    DiskManager(Disk *d, int partCount, DiskPartition *dp);
+    DiskManager(Disk *d);
     ~DiskManager();
-    int readDiskBlock(char partitionname, BlkNumType blknum, char *blkdata);
-    int writeDiskBlock(char partitionname, BlkNumType blknum, char *blkdata);
-    int getBlockSize() {return myDisk->getBlockSize();};
-    BlkNumType getPartitionSize(char partitionname);
+    void readDiskBlock(string partitionName, BlkNumType blknum, char *blkdata);
+    void writeDiskBlock(string partitionName, BlkNumType blknum, char *blkdata);
+    int getBlockSize();
+    BlkNumType getPartitionSize(string partitionName);
 };
-
-extern void intToChar(int pos, int num, char * buff);
-extern int charToInt(int pos, char * buff);  
 
 #endif
 

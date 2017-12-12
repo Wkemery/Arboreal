@@ -1,6 +1,8 @@
+#include "types.h"
+
+
 #ifndef DISK_H
 #define DISK_H
-typedef unsigned long long BlkNumType;
 using namespace std; 
 
 class Disk {

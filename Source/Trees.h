@@ -3,21 +3,17 @@
  * November 2017
  */
 
+#include "types.h"
+
+
 #include<unordered_map>
 #include<string>
 #include"partitionmanager.h"
 using namespace std;
-typedef unsigned long long BlkNumType;
-typedef pair<string, unsigned int> TagTuple;
+
+
 #ifndef TREES_H
 #define TREES_H
-
-bool operator==(const pair<string, unsigned int>& lhs, const pair<string, unsigned int>& rhs);
-class PairHash
-{
-public:
-  size_t operator()(const pair<string, unsigned int>& k) const;
-};
 
 class FileInfo
 {
@@ -31,6 +27,8 @@ public:
   string getFilename();
   unordered_map<string, BlkNumType>* getTags();
   
+  void insert(string tagName, BlkNumType blknum);
+  void erase(string tagName);
   void writeOut(PartitionManager* pm);
   void readIn(PartitionManager* pm);
   void del();
@@ -46,11 +44,12 @@ public:
   TagTree(BlkNumType blknum);
   unordered_map<string, FileInfo*>* getTree();
   BlkNumType getBlockNum();
+  void insert(string fileName, FileInfo* fileInfo);
+  void erase(string fileName);
   void writeOut(PartitionManager* pm);
   void readIn(PartitionManager* pm);
   void zeroDisk();
   void deleteContBlocks(BlkNumType blknum);
 };
-
 
 #endif

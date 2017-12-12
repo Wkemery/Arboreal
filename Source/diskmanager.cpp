@@ -1,188 +1,131 @@
 #include "diskmanager.h"
 #include <iostream>
+#include<algorithm>
 #include <string.h>
 #include <cstdlib>
 #include <stdio.h>
 using namespace std;
 
-DiskManager::DiskManager(Disk *d, int partcount, DiskPartition *dp)
+bool operator==(const DiskPartition* lhs, const DiskPartition& rhs)
+{
+  return lhs->partitionName == rhs.partitionName;
+}
+
+
+DiskManager::DiskManager(Disk *d)
 {
   myDisk = d;
-  char buffer[64];
-  memset(buffer, 0, sizeof(buffer));
-  
+  int offset = 0;
+  char* buff = new char[getBlockSize()];
   /* Read superblock from disk*/
-  int ret = myDisk->readDiskBlock(0, buffer); 
-  
-  if(ret == -1)
+  try{myDisk->readDiskBlock(0, buff);}
+  catch(...)
   {
-    /* Could not read from disk, initialize disk */
-    int r = myDisk->initDisk();
-    if(r == -1 ) exit(1);
-    
-    /* Set private vars*/
-    partCount = partcount;
-    diskP = new DiskPartition[partCount];
-    for(int i = 0; i < partCount; i++)
-    {
-      diskP[i].partitionName = dp[i].partitionName;
-      diskP[i].partitionSize = dp[i].partitionSize;      
-    }
-    
-    /* Disk is initialized, write out partition info*/
-    
-    /* Write out partcount (first 4 bytes)*/
-    intToChar(0, partCount, buffer); 
-    int bufferPos = 4;
-    
-    /* Write out partition information, name(1 byte), part size(4 bytes)*/
-    for(int i = 0; i < partCount; i++)
-    {
-      buffer[bufferPos] = diskP[i].partitionName;
-      bufferPos++;
-      intToChar(bufferPos, diskP[i].partitionSize, buffer);
-      bufferPos+=4;
-    }
-    
-    /* Now write out buffer to superblock*/
-    ret = myDisk->writeDiskBlock(0, buffer);
-    if(ret == -1)
-    {
-      cerr << "Disk unexpectedly moved or deleted" << endl;
-      //TODO:Note could try to recreate disk here in the future...
-      exit(1);
-    }
-    else if(ret == -2)
-    {
-      /* Something is really messed up, if block 0 was out of bounds*/
-      cerr << "Unknown Error!" << endl;
-      exit(1);
-    }
+    //TODO: error
+    cerr << "DiskManager::DiskManager" << endl;
   }
-  else if(ret == 0)
+
+  /*successfully read superblock, read in partition info*/
+  /*Layout -
+    * number of partitions - int - 4 bytes
+    * repeat: 
+    *  partition name - 16 bytes
+    *  partitions size in blocks - BlkNumType
+    *  partition start pos - BlkNumType
+    */
+  int numPartitions = 0;
+  memcpy(buff, &numPartitions, sizeof(int));
+  offset+= sizeof(int);
+  //TODO: add functionality for more paritions than can fit on a single block, or set cap on paritions
+  for(int i = 0; i < numPartitions; i++)
   {
-    /*successfully read superblock, read in partition info, ignore driver partition info*/
-    /* first 4 bytes is number of partitions. next byte is partition name then next 4 bytes is size (0 padded) */
-    partCount = charToInt(0, buffer);
-    diskP = new DiskPartition[partCount];
+    //TODO: check these values as your copying them to validate them.
+    DiskPartition* temp = new DiskPartition{"", 0, 0};
+    temp->partitionName.assign(buff + offset, 16);
+    offset+= 16;
     
-    /* Read in partition information*/
-    int bufferPos = 4;
-    for(int i = 0; i < partCount; i++)
-    {
-      diskP[i].partitionName = buffer[bufferPos];
-      bufferPos++;
-      diskP[i].partitionSize = charToInt(bufferPos, buffer);
-      bufferPos+=4;
-    }
+    memcpy(buff + offset, &temp->partitionSize, sizeof(BlkNumType));
+    offset+= sizeof(BlkNumType);
     
-  }
-  else
-  {
-    /* Something is really messed up, if reading from block 0 was out of bounds*/
-    cerr << "Unknown Error!" << endl;
-    exit(1);
+    memcpy(buff + offset, &temp->partitionBlkStart, sizeof(BlkNumType));
+    offset+= sizeof(BlkNumType);
+    
+    _myPartitions.push_back(temp);
+    
   }
 }
 
 DiskManager::~DiskManager()
-{
-  delete diskP;
-}
+{}
 
-/*
- *   returns: 
- *   0, if the block is successfully read;
- *  -1, if disk can't be opened; (same as disk)
- *  -2, if blknum is out of bounds; (same as disk)
- *  -3 if partition doesn't exist
- */
-int DiskManager::readDiskBlock(char partitionname, BlkNumType blknum, char *blkdata)
-{
-  /* find partition index in diskP*/
-  int index = findPart(partitionname);
-  if(index == -1) return -1; //if partition doesn't exist
-  
-  /* translate relative block number to absolute block number*/
-  int absBlockNum = blockOffset(index, blknum);
-  if(absBlockNum == -1) return -2;
-  
-  /* read block data from block using disk read command*/
-  int ret = myDisk->readDiskBlock(absBlockNum, blkdata);
-  return ret;
-  
-}
-
-/*
- *   returns: 
- *   0, if the block is successfully written;
- *  -1, if disk can't be opened; (same as disk)
- *  -2, if blknum is out of bounds;  (same as disk)
- *  -3 if partition doesn't exist
- */
-int DiskManager::writeDiskBlock(char partitionname, BlkNumType blknum, char *blkdata)
+void DiskManager::readDiskBlock(string partitionName, BlkNumType blknum, char *blkdata)
 {
   /* find partition index in diskP */
-  int index = findPart(partitionname);
-  if(index == -1) return -3; //if partition doesn't exist
+  BlkNumType index = 0;
+  try{index = findPart(partitionName)->partitionSize;}
+  //TODO: fix catch
+  catch(...)
+  {
+    cerr<< "error DiskManager::writeDiskBlock" << endl;
+  }
+  
+  /* translate relative block number to absolute block number*/
+  BlkNumType absBlockNum = index + blknum;
+  
+  /* read block data from block using disk read command*/
+  try{myDisk->readDiskBlock(absBlockNum, blkdata);}
+  //TODO: fix catch
+  catch(...)
+  {
+    cerr<< "error DiskManager::writeDiskBlock2" << endl;
+  }
+  
+}
+
+void DiskManager::writeDiskBlock(string partitionName, BlkNumType blknum, char *blkdata)
+{
+  /* find partition index in diskP */
+  BlkNumType index = 0;
+  try{index = findPart(partitionName)->partitionSize;}
+  //TODO: fix catch
+  catch(...)
+  {
+    cerr<< "error DiskManager::writeDiskBlock" << endl;
+  }
   
   /* translate relative block number to absolute block number */
-  int absBlockNum = blockOffset(index, blknum);
-  if(absBlockNum == -1) return -2;
+  BlkNumType absBlockNum = index + blknum;
   
   /* write blkdata to block number using disk write command*/
-  int ret = myDisk->writeDiskBlock(absBlockNum, blkdata);
-  return ret;
-  
-}
-
-/*
- * return size of partition
- * -1 if partition doesn't exist.
- */
-BlkNumType DiskManager::getPartitionSize(char partitionname)
-{
-  BlkNumType index = findPart(partitionname);
-//   if(index == -1) return -1;
-  return diskP[index].partitionSize;
-  
-}
-
-int DiskManager::findPart(char partitionname)
-{
-  for(int i = 0; i < partCount; i++)
+  try{myDisk->writeDiskBlock(absBlockNum, blkdata);}
+  catch(...)
   {
-    if(diskP[i].partitionName == partitionname) return i;
-  }
-  
-  return -1;
+    cerr << "error DiskManager::writeDiskBlock2" << endl;
+  }  
 }
 
-int DiskManager::blockOffset(int index, int blknum)
+BlkNumType DiskManager::getPartitionSize(string partitionName)
 {
-  if((blknum >= diskP[index].partitionSize) || (blknum < 0)) return -1;
-  
-  int startBlock = 1;
-  for(int i = 0; i < index ; i++)
+  BlkNumType size = 0;
+  try{size = findPart(partitionName)->partitionSize;}
+  catch(...)
   {
-    startBlock+=diskP[i].partitionSize;
+    cerr << "error DiskManager::getPartitionSize" << endl;
   }
-  int absBlockNum = startBlock + blknum;
-  return absBlockNum;
+  return size;
 }
 
-int charToInt(int pos, char * buff) 
+DiskPartition* DiskManager::findPart(string partitionName)
 {
-  char temp[5];
-  memset(temp, 0, sizeof(temp));
-  memcpy(temp, buff+pos, sizeof(char) * 4);
-  return atoi(temp);
+  struct DiskPartition temp{partitionName, 0};
+  auto it = find(_myPartitions.begin(), _myPartitions.end(), temp);
+  if(it == _myPartitions.end())
+  {
+    //throw error
+    cerr << "DiskManager::findPart" << endl;
+  }
+  return *it;
 }
 
-void intToChar(int pos, int num, char * buff) 
-{
-  char temp[5];
-  memset(temp , 0, sizeof(temp));
-  snprintf(temp , 5, "%04d", num);
-  memcpy(buff+pos, temp, sizeof(char) * 4);
-}
+int DiskManager::getBlockSize()
+{return myDisk->getBlockSize();}

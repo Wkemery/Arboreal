@@ -1,24 +1,24 @@
 #include "disk.h"
 #include "diskmanager.h"
-#include "bitvector.h"
-typedef unsigned long long BlkNumType;
+#include "types.h"
 #ifndef PARTMANAGER_H
 #define PARTMANAGER_H
 class PartitionManager {
-  DiskManager *myDM;
-  BitVector *dmBV;
-  
   //TODO: modify functions to throw
-  //TODO: have getFreeDiskBlock return a BlkNumType
-  public:
-    char myPartitionName;
-    BlkNumType myPartitionSize;
-    PartitionManager(DiskManager *dm, char partitionname, int partitionsize);
-    ~PartitionManager();
-    int readDiskBlock(BlkNumType blknum, char *blkdata);
-    int writeDiskBlock(BlkNumType blknum, char *blkdata);
-    int getBlockSize();
-    BlkNumType getFreeDiskBlock();
-    int returnDiskBlock(BlkNumType blknum);
+private:
+  string _partitionName;
+  BlkNumType _partitionSize;//in blocks
+  BlkNumType _freeBlockStart;
+  BlkNumType _freeBlockEnd;
+  DiskManager *myDM;
+public:
+  PartitionManager(DiskManager *dm, string partitionName, int partitionsize);
+  ~PartitionManager();
+  void readDiskBlock(BlkNumType blknum, char *blkdata);
+  void writeDiskBlock(BlkNumType blknum, char *blkdata);
+  int getBlockSize();
+  BlkNumType getFreeDiskBlock();
+  void returnDiskBlock(BlkNumType blknum);
+    
 };
 #endif

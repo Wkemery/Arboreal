@@ -25,6 +25,15 @@ unordered_map<string, BlkNumType>* FileInfo::getTags()
   return &_tags;
 }
 
+void insert(string tagName, BlkNumType blknum){
+  //TODO: stub
+  
+}
+void erase(string tagName){
+  //TODO:stub
+  
+}
+
 void FileInfo::writeOut(PartitionManager* pm)
 {
   //TODO:stub
@@ -246,17 +255,4 @@ void TagTree::zeroDisk()
 void TagTree::deleteContBlocks(BlkNumType blknum)
 {
   //TODO: stub
-}
-
-/******************************************************************************/
-
-
-bool operator==(const pair<string, unsigned int>& lhs, const pair<string, unsigned int>& rhs)
-{
-  return (lhs.first == rhs.first);
-}
-
-size_t PairHash::operator()(const pair<string, unsigned int>& k) const
-{
-  return hash<string>()(k.first);
 }
