@@ -12,7 +12,7 @@ Disk::Disk(BlkNumType numblocks, int blksz, char *fname)
   diskSize = numblocks * blksz;
   blkSize = blksz;
   diskFilename = strdup(fname);
-  initDisk();
+//   initDisk();
 }
 
 Disk::~Disk()
@@ -45,7 +45,7 @@ int Disk::readDiskBlock(BlkNumType blknum, char *blkdata)
 */
 {
   if ((blknum < 0) || (blknum >= blkCount)) return(-2);
-  ifstream f(diskFilename, ios::in);
+  ifstream f(diskFilename, ios::binary | ios::in);
   if (!f) return(-1);
   f.seekg(blknum * blkSize);
   f.read(blkdata, blkSize);
@@ -61,7 +61,7 @@ int Disk::writeDiskBlock(BlkNumType blknum, char *blkdata)
 */
 {
   if ((blknum < 0) || (blknum >= blkCount)) return(-2);
-  fstream f(diskFilename, ios::in|ios::out);
+  fstream f(diskFilename, ios::binary | ios::out);
   if (!f) return(-1);
   f.seekg(blknum * blkSize);
   f.write(blkdata, blkSize);

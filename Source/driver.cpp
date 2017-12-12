@@ -17,8 +17,9 @@ using namespace std;
 
 int main()
 {
-  Disk *d = new Disk(100, 512, const_cast<char *>("DISK1"));
-//   DiskPartition *dp = new DiskPartition[3];
+  Disk *d = new Disk(100, 512, const_cast<char *>("disk1"));
+  DiskManager * dm = new DiskManager(d);
+  cout << dm->getPartitionSize("parta") << endl;
   
 //   dp[0].partitionName = 'A';
 //   dp[0].partitionSize = 100;

@@ -36,10 +36,8 @@ bool operator==(const FileOpen& lhs, const FileOpen& rhs);
 
 
 class FileSystem {
-  DiskManager *myDM;
   PartitionManager *myPM;
   string myfileSystemName;
-  int myfileSystemSize;
   
   unordered_map<int, int> lockIdT;
   unsigned int numLocks = rand();
@@ -56,7 +54,7 @@ class FileSystem {
 /******************************************************************************/
 
 public:
-  FileSystem(DiskManager *dm, char fileSystemName);
+  FileSystem(DiskManager *dm, string fileSystemName);
   ~FileSystem();
   
   vector<FileInfo*>* tagSearch(vector<string> tags);

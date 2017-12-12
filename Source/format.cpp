@@ -1,4 +1,4 @@
-/*Format.cpp
+/*format.cpp
  * Arboreal
  * December 2017
  */
@@ -26,7 +26,7 @@ int main(int argc, char** argv)
   
   /*Create disk*/
   ofstream disk;
-  disk.open (argv[1], ios::binary);
+  disk.open (argv[1], ios::binary | ios::out);
   if(!disk)
   {
     cerr << "Could not create disk!" << endl;
@@ -44,6 +44,9 @@ int main(int argc, char** argv)
   BlkNumType partStart = 0;
   int offset = 0;
   memcpy(buff, &numParts, sizeof(int));
+  cout << numParts << endl;
+  memcpy(&numParts, buff, sizeof(int));
+//   cout << numParts << endl;
   offset+= sizeof(int);
   for(int i = 0; i < numParts; i++)
   {

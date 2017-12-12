@@ -11,12 +11,12 @@ bool operator==(const DiskPartition* lhs, const DiskPartition& rhs)
   return lhs->partitionName == rhs.partitionName;
 }
 
-
 DiskManager::DiskManager(Disk *d)
 {
   myDisk = d;
   int offset = 0;
   char* buff = new char[getBlockSize()];
+  memset(buff, 0, getBlockSize());
   /* Read superblock from disk*/
   try{myDisk->readDiskBlock(0, buff);}
   catch(...)
@@ -34,7 +34,7 @@ DiskManager::DiskManager(Disk *d)
     *  partition start pos - BlkNumType
     */
   int numPartitions = 0;
-  memcpy(buff, &numPartitions, sizeof(int));
+  memcpy(&numPartitions, buff, sizeof(int));
   offset+= sizeof(int);
   //TODO: add functionality for more paritions than can fit on a single block, or set cap on paritions
   for(int i = 0; i < numPartitions; i++)
@@ -42,16 +42,17 @@ DiskManager::DiskManager(Disk *d)
     //TODO: check these values as your copying them to validate them.
     DiskPartition* temp = new DiskPartition{"", 0, 0};
     temp->partitionName.assign(buff + offset, 16);
+    temp->partitionName = temp->partitionName.substr(0, temp->partitionName.find_first_of('\0'));
     offset+= 16;
     
-    memcpy(buff + offset, &temp->partitionSize, sizeof(BlkNumType));
+    memcpy( &temp->partitionSize,buff + offset, sizeof(BlkNumType));
     offset+= sizeof(BlkNumType);
     
-    memcpy(buff + offset, &temp->partitionBlkStart, sizeof(BlkNumType));
+    memcpy(&temp->partitionBlkStart, buff + offset, sizeof(BlkNumType));
     offset+= sizeof(BlkNumType);
     
     _myPartitions.push_back(temp);
-    
+        
   }
 }
 

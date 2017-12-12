@@ -24,13 +24,12 @@ bool EncryptionFlag = false;
 //However, this will require some sort of periodic cleanup. but that's allright because at least
 // it will be fast in the short term
 
-FileSystem::FileSystem(DiskManager *dm, char fileSystemName)
+FileSystem::FileSystem(DiskManager *dm, string fileSystemName)
 {
   myfileSystemName = fileSystemName;
-  myDM = dm;
-  myfileSystemSize = myDM->getPartitionSize(myfileSystemName);
-  /* Create a partition manager for my partition */
-  myPM = new PartitionManager(myDM, myfileSystemName, myfileSystemSize);
+//   myDM = dm;
+  /* set partition manager for my partition */
+  myPM = new PartitionManager(dm, fileSystemName);
   
 }
 

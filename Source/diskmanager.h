@@ -1,6 +1,7 @@
 #include "disk.h"
 #include "types.h"
 #include<vector>
+
 #ifndef DISKMANAGER_H
 #define DISKMANAGER_H
 using namespace std;
@@ -13,15 +14,15 @@ struct DiskPartition
   
 };
 
-bool operator==(const DiskPartition* lhs,  const DiskPartition& rhs);
+bool operator==(const DiskPartition* lhs, const DiskPartition& rhs);
+
 
 class DiskManager {
 private:
   Disk *myDisk;
-  vector<DiskPartition*>  _myPartitions;
+  vector<DiskPartition*> _myPartitions;
   /* declare other private members here */
 
-  DiskPartition* findPart(string partitionName);
   
   public:
     DiskManager(Disk *d);
@@ -30,6 +31,8 @@ private:
     void writeDiskBlock(string partitionName, BlkNumType blknum, char *blkdata);
     int getBlockSize();
     BlkNumType getPartitionSize(string partitionName);
+    DiskPartition* findPart(string partitionName);
+    
 };
 
 #endif

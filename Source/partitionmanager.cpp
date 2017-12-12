@@ -4,14 +4,13 @@
 using namespace std;
 
 
-PartitionManager::PartitionManager(DiskManager *dm, string partitionName, int partitionsize)
+
+PartitionManager::PartitionManager(DiskManager *dm, string partitionName)
 {
   myDM = dm;
   _partitionName = partitionName;
-  _partitionSize = myDM->getPartitionSize(_partitionName);
-  //TODO: look into previous line
-  //maybe this is better? 
-  //_partitionSize = partitionsize;
+  _partitionSize = dm->findPart(partitionName)->partitionSize;
+  _partitionBlkStart = dm->findPart(partitionName)->partitionBlkStart;
 
   char* buff = new char[getBlockSize()];
   //TODO: fix catch
@@ -133,3 +132,9 @@ int PartitionManager::getBlockSize()
 {
   return myDM->getBlockSize();
 }
+
+string PartitionManager::getPartitionName()
+{
+  return _partitionName;
+}
+

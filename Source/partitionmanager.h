@@ -10,15 +10,20 @@ private:
   BlkNumType _partitionSize;//in blocks
   BlkNumType _freeBlockStart;
   BlkNumType _freeBlockEnd;
+  BlkNumType _partitionBlkStart;
   DiskManager *myDM;
 public:
-  PartitionManager(DiskManager *dm, string partitionName, int partitionsize);
+  PartitionManager(DiskManager *dm, string partitionName);
   ~PartitionManager();
   void readDiskBlock(BlkNumType blknum, char *blkdata);
   void writeDiskBlock(BlkNumType blknum, char *blkdata);
   int getBlockSize();
   BlkNumType getFreeDiskBlock();
   void returnDiskBlock(BlkNumType blknum);
+  string getPartitionName();
+  
+  bool operator==(const PartitionManager& rhs);
+  
     
 };
 #endif

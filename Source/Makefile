@@ -8,7 +8,7 @@
 ##############################
 
 CXX=g++
-XXFLAGS = -ggdb -Wall -gstabs -std=c++11
+XXFLAGS = -ggdb -Wall -std=c++11 
 
 CPPFILES=driver.cpp disk.cpp diskmanager.cpp partitionmanager.cpp filesystem.cpp Trees.cpp
 HFILES=disk.h disk.cpp diskmanager.h partitionmanager.h filesystem.h Trees.h
