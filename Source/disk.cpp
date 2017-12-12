@@ -12,6 +12,7 @@ Disk::Disk(BlkNumType numblocks, int blksz, char *fname)
   diskSize = numblocks * blksz;
   blkSize = blksz;
   diskFilename = strdup(fname);
+  initDisk();
 }
 
 Disk::~Disk()
