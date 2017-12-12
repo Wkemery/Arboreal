@@ -17,5 +17,8 @@ all: driver
 driver: $(CPPFILES) $(HFILES)
 	$(CXX) $(XXFLAGS) -o driver $(CPPFILES)
 
+format: format.cpp
+	$(CXX) $(XXFLAGS) -o format format.cpp
+
 clean: 
-	/bin/rm -f *.o driver DISK1
+	/bin/rm -f *.o driver format DISK1
