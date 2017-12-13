@@ -17,9 +17,8 @@ using namespace std;
 
 int main()
 {
-  Disk *d = new Disk(100, 512, const_cast<char *>("disk1"));
-  DiskManager * dm = new DiskManager(d);
-  cout << dm->getPartitionSize("parta") << endl;
+
+//   cout << dm->getPartitionSize("PartitionA") << endl;
   
 //   dp[0].partitionName = 'A';
 //   dp[0].partitionSize = 100;
@@ -29,18 +28,44 @@ int main()
 //   dp[2].partitionSize = 105;
   
 //   DiskManager *dm = new DiskManager(d, 3, dp);
-//   FileSystem *fs1 = new FileSystem(dm, 'A');
-//   FileSystem *fs2 = new FileSystem(dm, 'B');
-//   FileSystem *fs3 = new FileSystem(dm, 'C');
+
 //   Client *c1 = new Client(fs1);
 //   Client *c2 = new Client(fs1);
 //   Client *c3 = new Client(fs1);
 //   Client *c4 = new Client(fs2);
 //   Client *c5 = new Client(fs2);
   
-//   c1->myFS->createTag("tag1");
-//   c1->myFS->createTag("tag2");
-//   c1->myFS->createTag("tag3");
+  try
+  {
+    //TODO: NOTE don't really want to put a bunch of these in a single try becuase it will quit if one fails
+    Disk *d = new Disk(100, 512, const_cast<char *>("DISK1"));
+    DiskManager * dm = new DiskManager(d);
+    
+    FileSystem *fs1 = new FileSystem(dm, "PartitionA");
+    FileSystem *fs2 = new FileSystem(dm, "PartitionB");
+    FileSystem *fs3 = new FileSystem(dm, "PartitionC");
+    
+    fs1->printRoot();
+    
+//     fs1->createTag("tag1");
+    fs1->createTag("tag1");
+    
+    fs1->createTag("tag2");
+    fs1->createTag("tag3");
+    
+    fs2->createTag("tag1");
+    fs2->createTag("tag2");
+    fs2->createTag("tag3");
+    
+    fs3->createTag("tag1");
+    fs3->createTag("tag2");
+    fs3->createTag("tag3");
+  }
+  catch(std::exception& e)
+  {
+    cout << e.what() << endl;
+  }
+
   
   return 0;
 }

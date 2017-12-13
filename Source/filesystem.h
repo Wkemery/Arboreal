@@ -36,8 +36,8 @@ bool operator==(const FileOpen& lhs, const FileOpen& rhs);
 
 
 class FileSystem {
-  PartitionManager *myPM;
-  string myfileSystemName;
+  PartitionManager *_myPartitionManager;
+  string _FSName;
   
   unordered_map<int, int> lockIdT;
   unsigned int numLocks = rand();
@@ -79,6 +79,8 @@ public:
   int getAttributes(char *filename, int fnameLen, char* buffer, int flag);
   int setAttributes(char *filename, int fnameLen, char* buffer, int flag);
   
+  /*DEBUG functions*/
+  void printRoot();
   
 };
 

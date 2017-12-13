@@ -61,9 +61,9 @@ int Disk::writeDiskBlock(BlkNumType blknum, char *blkdata)
 */
 {
   if ((blknum < 0) || (blknum >= blkCount)) return(-2);
-  fstream f(diskFilename, ios::binary | ios::out);
+  ofstream f(diskFilename, ios::binary | ios::in | ios::out );
   if (!f) return(-1);
-  f.seekg(blknum * blkSize);
+  f.seekp(blknum * blkSize);
   f.write(blkdata, blkSize);
   f.close();
   return(0);

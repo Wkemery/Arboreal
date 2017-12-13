@@ -63,7 +63,7 @@ void DiskManager::readDiskBlock(string partitionName, BlkNumType blknum, char *b
 {
   /* find partition index in diskP */
   BlkNumType index = 0;
-  try{index = findPart(partitionName)->partitionSize;}
+  try{index = findPart(partitionName)->partitionBlkStart;}
   //TODO: fix catch
   catch(...)
   {
@@ -87,7 +87,7 @@ void DiskManager::writeDiskBlock(string partitionName, BlkNumType blknum, char *
 {
   /* find partition index in diskP */
   BlkNumType index = 0;
-  try{index = findPart(partitionName)->partitionSize;}
+  try{index = findPart(partitionName)->partitionBlkStart;}
   //TODO: fix catch
   catch(...)
   {

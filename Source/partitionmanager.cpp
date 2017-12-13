@@ -18,7 +18,7 @@ PartitionManager::PartitionManager(DiskManager *dm, string partitionName)
   try {readDiskBlock(0, buff);}
   catch(...){cerr << "Error part.cpp constructor" << endl;}
   
-  int offset = 32;//byte 32 is where the start of free list is
+  int offset = 0;//byte 0 is where the start of free list is
   BlkNumType blknum;
   memcpy(&blknum, buff + offset, sizeof(BlkNumType));
   offset+= sizeof(BlkNumType);
@@ -67,13 +67,24 @@ BlkNumType PartitionManager::getFreeDiskBlock()
   try {readDiskBlock(0, buff);}
   catch(...){cerr << "Error part.cpp getFreeDiskBlock3" << endl;}
   
-  offset = 32;//byte 32 is where the start of free list is
-  memcpy(buff + offset, &_freeBlockStart, sizeof(BlkNumType));
+//   offset = 0;//byte 32 is where the start of free list is
+  memcpy(buff, &_freeBlockStart, sizeof(BlkNumType));
   
-  /*Write out buff*/
+  /*Write out block 0*/
   try {writeDiskBlock(0, buff);}
   catch(...){cerr << "Error part.cpp getFreeDiskBlock4" << endl;}
+  
+  /*update/write out new _freeBlockStart*/
+  try {readDiskBlock(_freeBlockStart, buff);}
+  catch(...){cerr << "Error part.cpp getFreeDiskBlock3" << endl;}
+  
+  /*Set previous to 0*/
+  memset(buff, 0, sizeof(BlkNumType));
+  try {writeDiskBlock(_freeBlockStart, buff);}
+  catch(...){cerr << "Error part.cpp getFreeDiskBlock4" << endl;}
+  
   return ret;
+  
 }
 
 void PartitionManager::returnDiskBlock(BlkNumType blknum)
