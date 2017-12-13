@@ -52,7 +52,7 @@ void FileInfo::readIn(PartitionManager* pm)
   
 }
 
-void FileInfo::del()
+void FileInfo::del(PartitionManager* pm)
 {}
 
 /******************************************************************************/
@@ -164,7 +164,7 @@ void TagTree::writeOut(PartitionManager* pm)
   
   
   /*Will zero out the key bits of all the cont. blocks*/
-  deleteContBlocks(contBlkNum);//TODO: function
+//   deleteContBlocks(contBlkNum);//TODO: function
   
   /*Zero out the rest of the entries in the currentBlkNum*/
   
@@ -248,11 +248,34 @@ void TagTree::readIn(PartitionManager* pm)
   }
 }
 
-void TagTree::zeroDisk()
-{}
-
-
-void TagTree::deleteContBlocks(BlkNumType blknum)
+void TagTree::deleteContBlocks(PartitionManager* pm, BlkNumType blknum)
 {
   //TODO: stub
 }
+
+void TagTree::del(PartitionManager* pm)
+{
+  char* buff = new char[pm->getBlockSize()];
+  
+  /*Read in the first block of this tagTree*/
+  try{pm->readDiskBlock(_blockNumber, buff);}
+  catch(...){cerr << "Error TagTree::del()" << endl;}
+  
+  
+  /*Look for a continuation block*/
+  BlkNumType contBlkNum;
+  memcpy(&contBlkNum, buff + (pm->getBlockSize() - sizeof(BlkNumType)), sizeof(BlkNumType));
+  
+  if(contBlkNum != 0)
+  {
+    //TODO: catch
+    try {deleteContBlocks(pm, contBlkNum);}
+    catch(...){cerr << "Error TagTree::del" << endl;}
+  }
+  //TODO: catch
+  try {pm->returnDiskBlock(_blockNumber);}
+  catch(...){cerr << "Error TagTree::del" << endl;}
+  
+}
+
+

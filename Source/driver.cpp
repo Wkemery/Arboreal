@@ -45,7 +45,7 @@ int main()
     FileSystem *fs2 = new FileSystem(dm, "PartitionB");
     FileSystem *fs3 = new FileSystem(dm, "PartitionC");
     
-    fs1->printRoot();
+    
     
 //     fs1->createTag("tag1");
     fs1->createTag("tag1");
@@ -60,6 +60,14 @@ int main()
     fs3->createTag("tag1");
     fs3->createTag("tag2");
     fs3->createTag("tag3");
+    fs1->printRoot();
+    cout << endl;
+    
+    fs1->deleteTag("tag1");
+    fs2->deleteTag("tag2");
+    fs3->deleteTag("tag3");
+    fs1->printRoot();
+    
   }
   catch(std::exception& e)
   {

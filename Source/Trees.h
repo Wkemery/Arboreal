@@ -27,11 +27,11 @@ public:
   string getFilename();
   unordered_map<string, BlkNumType>* getTags();
   
-  void insert(string tagName, BlkNumType blknum);
-  void erase(string tagName);
+//   void insert(string tagName, BlkNumType blknum);
+//   void erase(string tagName);
   void writeOut(PartitionManager* pm);
   void readIn(PartitionManager* pm);
-  void del();
+  void del(PartitionManager* pm);
 };
 
 
@@ -44,12 +44,14 @@ public:
   TagTree(BlkNumType blknum);
   unordered_map<string, FileInfo*>* getTree();
   BlkNumType getBlockNum();
-  void insert(string fileName, FileInfo* fileInfo);
-  void erase(string fileName);
+//   void insert(string fileName, FileInfo* fileInfo);
+//   void erase(string fileName);
   void writeOut(PartitionManager* pm);
   void readIn(PartitionManager* pm);
-  void zeroDisk();
-  void deleteContBlocks(BlkNumType blknum);
+  void deleteContBlocks(PartitionManager* pm, BlkNumType blknum);
+  void del(PartitionManager* pm);
+  /*del() will remove the tag tree's presence on disk. That includes removing all 
+   * continuation blocks and returning them to the disk.*/
 };
 
 #endif

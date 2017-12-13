@@ -111,13 +111,21 @@ void PartitionManager::returnDiskBlock(BlkNumType blknum)
   //TODO: always zeroing block, acutally less work.
   /*prepare block for returning*/
   memset(buff, 0, getBlockSize());
-  memcpy(&_freeBlockEnd, buff, sizeof(BlkNumType));
+  memcpy(buff, &_freeBlockEnd ,sizeof(BlkNumType));
   _freeBlockEnd = blknum;
-  
+ 
   /*Write out new blockend*/
   try {writeDiskBlock(_freeBlockEnd, buff);}
   catch(...){cerr << "Error part.cpp returnDiskBlock4" << endl;}
   
+  /*Update superblock with new end of free list*/
+  try {readDiskBlock(0, buff);}
+  catch(...){cerr << "Error part.cpp returnDiskBlock2" << endl;}
+  
+  memcpy(buff + offset, &blknum, sizeof(BlkNumType));
+  
+  try {writeDiskBlock(0, buff);}
+  catch(...){cerr << "Error part.cpp returnDiskBlock3" << endl;}
 }
 
 

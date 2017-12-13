@@ -195,9 +195,10 @@ void FileSystem::deleteTag(string tagName, bool force)
     }
   }
 
-  //   - encryption requires no zero-ing of disk
-  if(!EncryptionFlag) it->second->zeroDisk();//Complexity: skip for now
+  //   - returning blocks always zeros them
   //   - remove node from Root tree
+  it->second->del(_myPartitionManager);
+  delete it->second;
   _RootTree.erase(it);
   
   //   - write the root tree out to disk
@@ -325,7 +326,7 @@ void FileSystem::deleteFile(FileInfo* file)
   
   //   - Free all data blocks
   //   - Free Finode block on disk
-  file->del();
+  file->del(_myPartitionManager);
   
   delete file;
   file = 0;
