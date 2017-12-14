@@ -17,13 +17,6 @@ using namespace std;
 
 bool EncryptionFlag = false;
 
-//TODO: fix writing out so it doesn't take so long, keep track of additions or deletions to tree. 
-// additions need only append new stuff on. 
-// maybe for deletions, we somehow store the position of each entry, blknum and index, or something like that
-// this will allow for quick deletions.
-//However, this will require some sort of periodic cleanup. but that's allright because at least
-// it will be fast in the short term
-
 FileSystem::FileSystem(DiskManager *dm, string fileSystemName)
 {
   _FSName = fileSystemName;
@@ -330,7 +323,6 @@ void FileSystem::deleteFile(FileInfo* file)
   
   delete file;
   file = 0;
-  
   
 //  
 //   int ret;

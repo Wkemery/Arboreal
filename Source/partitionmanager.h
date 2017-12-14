@@ -21,7 +21,7 @@ public:
   BlkNumType getFreeDiskBlock();
   void returnDiskBlock(BlkNumType blknum);
   string getPartitionName();
-  
+  int getFileNameSize();
   bool operator==(const PartitionManager& rhs);
   
     

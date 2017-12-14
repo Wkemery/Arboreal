@@ -152,6 +152,11 @@ int PartitionManager::getBlockSize()
   return myDM->getBlockSize();
 }
 
+int PartitionManager::getFileNameSize(){return 0; //TODO stub
+  
+}
+
+
 string PartitionManager::getPartitionName()
 {
   return _partitionName;

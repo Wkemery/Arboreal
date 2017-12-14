@@ -8,6 +8,7 @@
 
 typedef unsigned long BlkNumType;
 typedef std::pair<std::string, unsigned int> TagTuple;
+typedef struct index Index;
 
 #ifndef TYPES_H
 #define TYPES_H
