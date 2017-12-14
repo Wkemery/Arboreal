@@ -20,10 +20,13 @@ bool EncryptionFlag = false;
 FileSystem::FileSystem(DiskManager *dm, string fileSystemName)
 {
   _FSName = fileSystemName;
-//   myDM = dm;
+
   /* set partition manager for my partition */
   _myPartitionManager = new PartitionManager(dm, fileSystemName);
-  readRoot();
+  
+  /*Read in the root tree*/
+  _RootTree = new RootTree();
+  _RootTree->readIn(_myPartitionManager);
 }
 
 FileSystem::~FileSystem()
@@ -150,12 +153,13 @@ void FileSystem::createTag(string tagName)
   //   - add respective node to root tree (write TagTree block num to Node as well as TagTree memory address to Node)
   
   _RootTree->getMap()->insert(pair<string, TagTree*>(tagName, newTree));//Complexity: avg. 1, worst # of tags in filesystem
-  //   - set up block in disk as empty tag tree, ie write out tag tree
-  newTree->writeOut(_myPartitionManager); //Complexity: size of tag tree, this case 0;
-  //   - rebalance  Root tree, done automatically with map
-  //   - write Root tree to disk
-  writeRoot();
+  /*Keep track of addition to RootTree*/
+  _RootTree->insertAddition(newTree);
+  /*Note Root Tree was modified*/
+  insertModification(_RootTree);
   
+  /*Write out newly created TagTree. it will only write out the TagTree superblock*/
+  newTree->writeOut(_myPartitionManager); //Complexity: size of tag tree, this case 0;
 }
 
 void FileSystem::deleteTag(string tagName, bool force)
@@ -184,18 +188,18 @@ void FileSystem::deleteTag(string tagName, bool force)
     {
       //   - delete all references to the tag tree from Fileinodes
       it2->second->getMap()->erase(tagName);//Complexity: avg 1, worst # of tags associated with file
-      it2->second->writeOut(_myPartitionManager);//Complexity: size of file/ block size
+      it2->second->writeOut(_myPartitionManager);//Complexity: just super block of file
     }
   }
 
   //   - returning blocks always zeros them
   //   - remove node from Root tree
-  it->second->del(_myPartitionManager);
-  delete it->second;
+  /*Keep track of Deletion*/
+  _RootTree->insertDeletion(it->second);
   _RootTree->getMap()->erase(it);
-  
+  /*Note Root Tree was modified*/
+  insertModification(_RootTree);
   //   - write the root tree out to disk
-  writeRoot();
   
 }
 
@@ -235,10 +239,11 @@ void FileSystem::tagFile(FileInfo* file, vector<string> tags)
     
     //   - Create and Add new Node to TagTree
     treeptr->insert(pair<string, FileInfo*>(file->getName(), file));//Complexity: Complexity: avg: 1, worst: size of tag tree
+    /*Keep track of addition*/
+    it->second->insertAddition(file);
+    /*Node a TagTree was modified*/
+    insertModification(it->second);
     
-    //   - Write updated TagTree to disk
-    it->second->writeOut(_myPartitionManager);
-
   }
 
   // (write updated Finode to disk)
@@ -261,14 +266,15 @@ void FileSystem::untagFile(FileInfo* file, vector<string> tags)
     }
     unordered_map<string, FileInfo*>* treeptr = it->second->getMap();
     
+    /*Keep track of deletion*/
+    it->second->insertDeletion(treeptr->find(file->getName())->second);
+    
     //   - Remove Node from TagTree
     treeptr->erase(file->getName()); //Complexity: Complexity: avg: 1, worst: size of tag tree
-    
+    /*Note a Tag Tree was modified*/
+    insertModification(it->second);
     //   - Delete tag from FileInode
     file->getMap()->erase(t);//Complexity: Complexity: avg: 1, worst: avg number of tags associated iwth file
-    
-    //   - Write updated TagTree to disk
-    it->second->writeOut(_myPartitionManager);
     
   }
   
@@ -482,201 +488,11 @@ int FileSystem::setAttributes(char *filename, int fnameLen, char* buffer, int fl
 
 /* Start Helper Functions */
 
-void FileSystem::writeRoot()
+void FileSystem::insertModification(TreeObject* object)
 {
-  
-  char* buff = new char[_myPartitionManager->getBlockSize()];
-  memset(buff, 0, _myPartitionManager->getBlockSize()); //zero out memory
-  int offset = 0;
-  BlkNumType currentBlkNum = 1;
-  int entrySize = 64 + (sizeof(BlkNumType)*2);
-  
-  /*for every entry in root */
-  for(auto it = _RootTree->getMap()->begin(); it != _RootTree->getMap()->end(); it++)
-  {
-    if(it->first.size() > 64)
-    {
-      //TODO: throw error someone fucked up
-    }
-    
-    /**************************************************************************/ 
-    /*check to see if there room for another entry and the cont. block*/
-    
-    
-    if((_myPartitionManager->getBlockSize() - offset) < entrySize)
-    {
-      /* There is not room for another entry. Check if cont. block exists.
-        * if so, go to that block. if not, allocate new block 
-        */
-      
-      /*Read in current block*/
-      //TODO: fix catch statement.
-      char* temp = new char[_myPartitionManager->getBlockSize()];
-      try{_myPartitionManager->readDiskBlock(currentBlkNum, temp);}
-      catch(...){cerr << "Error FileSystem::writeRoot" << endl;}
-      
-      /*Read in the cont. blocknum*/
-      BlkNumType contBlkNum;
-      memcpy(&contBlkNum, temp + (_myPartitionManager->getBlockSize() - sizeof(BlkNumType)), sizeof(BlkNumType));
-      delete temp;
-      
-      /************************************************************************/ 
-      
-      if(contBlkNum == 0)
-      {
-        /*No cont. block, allocate new block*/
-        
-        //TODO: fix catch statement.
-        BlkNumType newblknum = 0;
-        try{newblknum = _myPartitionManager->getFreeDiskBlock();}
-        catch(...) {cerr << "Error FileSystem::writeRoot" << endl;}
-        
-        /*got a new block, set it as continuation.*/
-        memcpy(buff + (_myPartitionManager->getBlockSize() - sizeof(BlkNumType)), &newblknum, sizeof(BlkNumType));
-        
-        /*write out buffer to my current _blockNumber*/
-        //TODO: fix catch statement.
-        try {_myPartitionManager->writeDiskBlock(currentBlkNum, buff);}
-        catch(...){cerr << "Error FileSystem::writeRoot" << endl;}
-        
-        /*Update current blocknumber*/
-        currentBlkNum = newblknum;
-        /*zero out buffer for reuse*/
-        memset(buff, 0, _myPartitionManager->getBlockSize()); //zero out memory
-        offset = 0;
-      }
-      else
-      {
-        /*Set currentBlkNum to cont. blocknum*/
-        currentBlkNum = contBlkNum;
-      }
-    }
-    /**************************************************************************/ 
-    
-    //TODO: note file name can be 64 bytes because null termination is not necessary
-    
-    /* write out key to buffer.*/
-    strncpy(buff + (offset*sizeof(char)), it->first.c_str(), 64);
-    offset += it->first.size();
-    
-    /*pad to 64 bytes*/
-    for(int i = it->first.size(); i < 64; i++) { offset++; }
-    
-    /*write out the blocknumber of the fidentifier to buffer, probably 8 bytes?*/
-    BlkNumType fiden = it->second->getBlockNumber();
-    memcpy(buff + (offset*sizeof(char)), &fiden, sizeof(BlkNumType));
-    offset += sizeof(BlkNumType);
-  }
-  
-  /*Clean up block structure. zero out the first byte of the key on disk 
-    * for the rest of the block and deallocate any continuation blocks to 
-    * account for any deletions when it was in memory */
-  
-  /*Read in current block*/
-  //TODO: fix catch statement.
-//   try{_myPartitionManager->readDiskBlock(currentBlkNum, buff);}
-//   catch(...){cerr << "Error FileSystem::writeRoot" << endl;}
-//   
-//   /*Read in the cont. blocknum*/
-//   BlkNumType contBlkNum;
-//   memcpy(&contBlkNum, buff + (_myPartitionManager->getBlockSize() - sizeof(BlkNumType)), sizeof(BlkNumType));
-//   
-  
-  /*Will zero out the key bits of all the cont. blocks*/
-//   deleteContBlocks(contBlkNum);//TODO: function
-  
-  /*Zero out the rest of the entries in the currentBlkNum*/
-  
-  while((_myPartitionManager->getBlockSize() - offset) > entrySize)
-  {
-    /*There can be more entries in this block*/
-    buff[offset] = 0;
-    offset += 64 + sizeof(BlkNumType);
-  }
-  
-  /*Write out buff to currentBlkNum*/
-  //TODO: fix catch statement.
-  try {_myPartitionManager->writeDiskBlock(currentBlkNum, buff);}
-  catch(...){cerr << "FileSystem::writeRoot" << endl;}
-  
-  delete buff;
-  
-  //hardcoded blocknumber - 1
-  //for every entry in the map:
-  // write out tagname = key
-  //write out value = blocknum of tagtree
-  //remember to leave space at end of block for continuation
-  //write out sentinel value to denote end - blocknumtype size bytes long of 0 bytes
-  // in order to just zero out continuation in the event we fill up a block perfectly
+  _modifiedObjects.insert(pair<TreeObject*, int>(object, 0));
 }
 
-void FileSystem::readRoot()
-{
-  
-  //hardcoded blocknumber - 1
-  
-  //until reading in the sentinel:
-  // read in key = tagname
-  //read in value = blocknumber of tagtree
-  // insert in map
-  //remember to read extension blocks when necessary
-  
-  char* buff = new char[_myPartitionManager->getBlockSize()];
-//   memset(buff, 0, _myPartitionManager->getBlockSize()); //zero out memory
-  int offset = 0;
-  BlkNumType currentBlkNum = 1;
-  
-  /*Read in first block*/
-  //TODO: fix catch statement.
-  try{_myPartitionManager->readDiskBlock(currentBlkNum, buff);}
-  catch(...){cerr << "Error FileSystem::readRoo" << endl;}
-  
-  
-  bool reading = buff[0] != 0;
-  
-  /*For every entry on disk*/  
-  while(reading)//assuming that offset always points to the start of an entry name.
-  {
-    string tagName;    
-    tagName.assign(buff + offset, 64);
-    tagName = tagName.substr(0, tagName.find_first_of('\0'));
-    offset+= 64;
-    
-    /*Read in the blknum*/
-    BlkNumType blknum;
-    memcpy(&blknum, buff + offset, sizeof(BlkNumType));
-    
-    TagTree* tagTree = new TagTree(tagName, blknum);
-    
-    /*Insert key and value into tagtree in memory*/
-    _RootTree->getMap()->insert(pair<string, TagTree*>(tagName, tagTree));
-    //TODO: check insert ret val, if failed throw error someone fucked up
-    offset += sizeof(BlkNumType);
-    
-    /**************************************************************************/ 
-    /*check to see if there is another entry in this block and if there is a cont. block*/
-    
-    int entrySize = 64 + (sizeof(BlkNumType)*2);
-    if((_myPartitionManager->getBlockSize() - offset) < entrySize)
-    {
-      /*can't be another entry in this block, check for cont. block*/
-      memcpy(&currentBlkNum, buff + (_myPartitionManager->getBlockSize() - sizeof(BlkNumType)), sizeof(BlkNumType));
-      
-      if(currentBlkNum == 0){reading = false;} //no cont. block. all done reading in tree
-      else
-      {
-        /*Cont. block exists. read it in and start over.*/
-        /*Read in cont. block*/
-        //TODO: fix catch statement.
-        try{_myPartitionManager->readDiskBlock(currentBlkNum, buff);}
-        catch(...){cerr << "Error FileSystem::readRoo" << endl;}
-        offset = 0;
-      }
-    }
-    
-    if(buff[offset] == 0){reading = false;} //not another entry in this block
-  }
-}
 
 void FileSystem::printRoot()
 {

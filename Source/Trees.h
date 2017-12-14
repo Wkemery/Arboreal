@@ -27,6 +27,7 @@ protected:
   TreeObject(string name, BlkNumType blknum);
   string _name;
   BlkNumType _blockNumber;
+  Index _index;
 public:
   virtual ~TreeObject();
   virtual void writeOut(PartitionManager* pm) = 0;
@@ -34,6 +35,8 @@ public:
   virtual void deleteContBlocks(PartitionManager* pm, BlkNumType blknum) = 0;
   virtual void del(PartitionManager* pm) = 0;
   string getName();
+  Index* getIndex();
+  void setIndex(Index index);
   BlkNumType getBlockNumber();
 protected:
   
@@ -43,12 +46,10 @@ class FileInfo : public TreeObject
 {
 private:
   unordered_map<string, BlkNumType> _tags;
-  Index _index;
 public:
   FileInfo(string filename, BlkNumType blknum);
   ~FileInfo();
   unordered_map<string, BlkNumType>* getMap();
-  Index* getIndex();
   /*Function Overrides*/
   void writeOut(PartitionManager* pm);
   void readIn(PartitionManager* pm);
@@ -69,6 +70,8 @@ public:
   TagTree(string tagName, BlkNumType blknum);
   ~TagTree();
   unordered_map<string, FileInfo*>* getMap();
+  void insertAddition(FileInfo*);
+  void insertDeletion(FileInfo*);
   /*Function Overrides*/
   void writeOut(PartitionManager* pm);
   void readIn(PartitionManager* pm);
@@ -82,10 +85,16 @@ class RootTree : public TreeObject
 {
 private:
   unordered_map<string, TagTree*> _tree;
+  BlkNumType _startBlock;
+  Index _lastEntry;
+  vector<TagTree*> _additions;
+  unordered_multimap<BlkNumType, TagTree*> _deletions;
 public:
   RootTree();
   ~RootTree();
   unordered_map<string, TagTree*>* getMap();
+  void insertAddition(TagTree*);
+  void insertDeletion(TagTree*);
   /*Function Overrides*/
   void writeOut(PartitionManager* pm);
   void readIn(PartitionManager* pm);

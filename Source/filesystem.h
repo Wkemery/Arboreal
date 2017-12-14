@@ -12,6 +12,7 @@
 #include <vector>
 #include <unordered_map>
 #include<map>
+#include<map>
 #include<string>
 
 #ifndef FILESYSTEM_H
@@ -47,13 +48,11 @@ class FileSystem {
   
 /******************************************************************************/
   RootTree* _RootTree;
-  vector<TreeObject*> _modifiedObjects;
-  
+  map<TreeObject*, int> _modifiedObjects;
+  void insertModification(TreeObject* object);
 //   unordered_map<TagTuple, TagTree*, PairHash> _RootTree;
 /******************************************************************************/
 
-  void writeRoot();
-  void readRoot();
 /******************************************************************************/
 
 public:

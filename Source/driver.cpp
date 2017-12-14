@@ -68,6 +68,10 @@ int main()
     fs3->deleteTag("tag3");
     fs1->printRoot();
     
+    fs1->writeOut();
+    fs2->writeOut();
+    fs3->writeOut();
+    
   }
   catch(std::exception& e)
   {
