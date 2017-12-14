@@ -38,20 +38,25 @@ Index* TreeObject::getIndex(){return &_index;}
 BlkNumType TreeObject::getBlockNumber(){return _blockNumber;}
 
 /******************************************************************************/
-RootTree::RootTree():TreeObject("Root", 1){}
+RootTree::RootTree():TreeObject("Root", 1)
+{
+  _lastEntry.blknum = 1;
+  _lastEntry.offset = 0;
+  _startBlock = 0;
+}
 
 RootTree::~RootTree(){}
 
 unordered_map<string, TagTree*>* RootTree::getMap(){return &_tree;}
 
-void RootTree::insertAddition(TagTree*)
+void RootTree::insertAddition(TagTree* tag)
 {
-  //TODO: stub
+  _additions.push_back(tag);
 }
 
-void RootTree::insertDeletion(TagTree*)
+void RootTree::insertDeletion(TagTree* tag)
 {
-  //TODO: stub
+  _deletions.insert(pair<BlkNumType, TagTree*>(tag->getBlockNumber(), tag));
 }
 
 void RootTree::writeOut(PartitionManager* pm)
@@ -61,80 +66,92 @@ void RootTree::writeOut(PartitionManager* pm)
   Index currentIndex{_blockNumber, 0};
   int entrySize = pm->getFileNameSize() + (sizeof(BlkNumType));
   
-  /*_blockNumber is the super block for this tagTree*/
-  /*Layout - 
-   * TagName - fileNameSize - 64 for now
-   * Size - size_t - 4 ?
-   * Index of end of tag tree on disk - sizeof(Index)
-   * startBlocknumber - start of entries on disk - sizeof(BlkNumType)
-   */
+  /*_blockNumber is the super block for the Root Tree */
   
-  memcpy(buff + currentIndex.offset, &_lastEntry, sizeof(Index));
-  currentIndex.offset+=  sizeof(Index);
+  memcpy(buff + currentIndex.offset, _name.c_str(), _name.length());
+  currentIndex.offset+=  _name.length() + 1;
   
-  memcpy(buff + currentIndex.offset, &_startBlock, sizeof(BlkNumType));
-  currentIndex.offset+=  sizeof(BlkNumType);
+  size_t treeSize = _tree.size();
   
-  /*Write out TagTree superblock*/
+  RootSuperBlock rootInfo{treeSize, _lastEntry, _startBlock};
+  
+  memcpy(buff + currentIndex.offset, &rootInfo, sizeof(RootSuperBlock));
+  currentIndex.offset+=  sizeof(RootSuperBlock);
+  
+  /*Write out RootTree superblock*/
   try{pm->writeDiskBlock(currentIndex.blknum, buff);}
-  catch(...){cerr << "Error TagTree::writeOut" << endl;}
+  catch(...){cerr << "Error RootTree::writeOut" << endl;}
   
   /****************************************************************************/
   /*Write out additions*/
+  memset(buff, 0, pm->getBlockSize()); //zero out memory
   
   /*Check to see if last entry completes a block*/
   currentIndex.blknum = _lastEntry.blknum;
-  if((pm->getBlockSize() - _lastEntry.offset) < entrySize + sizeof(BlkNumType))
+  if((pm->getBlockSize() - _lastEntry.offset) < entrySize + sizeof(BlkNumType)
+    || ((_startBlock == 0) && treeSize > 0))
   {
     /*Need to allocate a new block to start appending*/
     BlkNumType newblknum = 0;
     try{newblknum = pm->getFreeDiskBlock();}
-    catch(...) {cerr << "Error TagTree::writeOut" << endl;}
+    catch(...) {cerr << "Error RootTree::writeOut" << endl;}
     currentIndex.blknum = newblknum;
     currentIndex.offset = 0;
+    if(_startBlock == 0)
+    {
+      _startBlock = currentIndex.blknum;
+    }
   }
   
   /*Begin appending additions*/
-  for(size_t i; i < _additions.size(); i++)
+  if(_additions.size() > 0)
   {
-    
-    /* write out key to buffer.*/
-    int keySize = _additions[i]->getName().size();
-    if(keySize > pm->getFileNameSize())
+    for(size_t i = 0; i < _additions.size(); i++)
     {
-      //TODO: throw error
-      cerr << "Error TagTree::writeOut" << endl;
-    }
-    
-    strncpy(buff + currentIndex.offset, _additions[i]->getName().c_str(), keySize);
-    currentIndex.offset += keySize;
-    
-    /*pad to 64 bytes*/
-    for(int i = keySize; i < pm->getFileNameSize(); i++) { currentIndex.offset++; }
-    
-    /*write out the blocknumber of the tagTree to buffer, probably 8 bytes?*/
-    BlkNumType tagBlk = _additions[i]->getBlockNumber();
-    memcpy(buff + currentIndex.offset, &tagBlk, sizeof(BlkNumType));
-    currentIndex.offset += sizeof(BlkNumType);
-    
-    if((pm->getBlockSize() - _lastEntry.offset) < entrySize + sizeof(BlkNumType))
-    {
-      /*Need to allocate a new block to start appending*/
-      BlkNumType newblknum = 0;
-      try{newblknum = pm->getFreeDiskBlock();}
-      catch(...) {cerr << "Error TagTree::writeOut" << endl;}
-      currentIndex.blknum = newblknum;
-      currentIndex.offset = 0;
       
-      /*got a new block, set it as continuation.*/
-      memcpy(buff + (pm->getBlockSize() - sizeof(BlkNumType)), &newblknum, sizeof(BlkNumType));
+      /* write out key to buffer.*/
+      int keySize = _additions[i]->getName().size();
+      if(keySize > pm->getFileNameSize())
+      {
+        //TODO: throw error
+        cerr << "Error RootTree::writeOut" << endl;
+      }
+      
+      strncpy(buff + currentIndex.offset, _additions[i]->getName().c_str(), keySize);
+      
+      currentIndex.offset+= pm->getFileNameSize();
+      
+      /*write out the blocknumber of the tagTree to buffer, probably 8 bytes?*/
+      BlkNumType tagBlk = _additions[i]->getBlockNumber();
+      memcpy(buff + currentIndex.offset, &tagBlk, sizeof(BlkNumType));
+      currentIndex.offset += sizeof(BlkNumType);
+      
+      if((pm->getBlockSize() - _lastEntry.offset) < entrySize + sizeof(BlkNumType))
+      {
+        
+        /*Need to allocate a new block to keep appending*/
+        BlkNumType newblknum = 0;
+        try{newblknum = pm->getFreeDiskBlock();}
+        catch(...) {cerr << "Error RootTree::writeOut" << endl;}
+        
+        /*got a new block, set it as continuation.*/
+        memcpy(buff + (pm->getBlockSize() - sizeof(BlkNumType)), &newblknum, sizeof(BlkNumType));
+        /*Write out buff to currentIndex.blknum*/
+        //TODO: fix catch statement.
+        try {pm->writeDiskBlock(currentIndex.blknum, buff);}
+        catch(...){cerr << "Error RootTree::writeOut" << endl;}
+        memset(buff, 0, pm->getBlockSize());
+        currentIndex.blknum = newblknum;
+        currentIndex.offset = 0;
+      }
     }
-    
-    /*Write out buff to currentIndex.blknum*/
     //TODO: fix catch statement.
     try {pm->writeDiskBlock(currentIndex.blknum, buff);}
-    catch(...){cerr << "Error TagTree::writeOut" << endl;}
+    catch(...){cerr << "Error RootTree::writeOut" << endl;}
   }
+
+  
+
   
   /*update _lastEntry*/
   _lastEntry.blknum = currentIndex.blknum;
@@ -142,29 +159,34 @@ void RootTree::writeOut(PartitionManager* pm)
   
   /****************************************************************************/
   /*Write out deletions*/
+  memset(buff, 0, pm->getBlockSize()); //zero out memory
   
   /*For every entry with the same BlockNumber*/
-  for(size_t i = 0; i < _deletions.bucket_count(); i++)
+  if(_deletions.size() > 0)
   {
-    currentIndex.blknum = _deletions.begin(i)->first;
-    /*Read in currentIndex.blknum*/
-    try {pm->readDiskBlock(currentIndex.blknum, buff);}
-    catch(...){cerr << "Error TagTree::writeOut" << endl;}
-    
-    /* Modify all the entries in this block */
-    for(auto local_it = _deletions.begin(i); local_it != _deletions.end(i); local_it ++)
+    for(size_t i = 0; i < _deletions.bucket_count(); i++)
     {
-      currentIndex.offset = local_it->second->getIndex()->offset;
+      currentIndex.blknum = _deletions.begin(i)->first;
+      /*Read in currentIndex.blknum*/
+      try {pm->readDiskBlock(currentIndex.blknum, buff);}
+      catch(...){cerr << "Error RootTree::writeOut" << endl;}
       
-      /*Zero out name and blocknumber*/
-      memset(buff + currentIndex.offset, 0, pm->getFileNameSize() + sizeof(BlkNumType));
+      /* Modify all the entries in this block */
+      for(auto local_it = _deletions.begin(i); local_it != _deletions.end(i); local_it ++)
+      {
+        currentIndex.offset = local_it->second->getIndex()->offset;
+        
+        /*Zero out name and blocknumber*/
+        memset(buff + currentIndex.offset, 0, pm->getFileNameSize() + sizeof(BlkNumType));
+      }
+      
+      /*Write out buff to currentIndex.blknum*/
+      //TODO: fix catch statement.
+      try {pm->writeDiskBlock(currentIndex.blknum, buff);}
+      catch(...){cerr << "Error RootTree::writeOut" << endl;}
     }
-    
-    /*Write out buff to currentIndex.blknum*/
-    //TODO: fix catch statement.
-    try {pm->writeDiskBlock(currentIndex.blknum, buff);}
-    catch(...){cerr << "Error TagTree::writeOut" << endl;}
   }
+
 }
 
 void RootTree::readIn(PartitionManager* pm)
@@ -174,25 +196,23 @@ void RootTree::readIn(PartitionManager* pm)
   int entrySize = pm->getFileNameSize() + (sizeof(BlkNumType));
   Index currentIndex{_blockNumber, 0};
   
-  /*Read in tagTree superblock*/
+  /*Read in RootTree superblock*/
   //TODO: fix catch statement.
   try{pm->readDiskBlock(currentIndex.blknum, buff);}
   catch(...){cerr << "Error RootTree::readIn" << endl;}
   
   /*Store values from Root Tree superblock*/
-  /*Layout - 
-   * lastEntry
-   * startBlock
-   * 
-   */
+//   _name.assign(buff + currentIndex.offset, 5);
+  currentIndex.offset+=  5;
+    
+  RootSuperBlock rootInfo;
   
-  memcpy(&_lastEntry, buff + currentIndex.offset, sizeof(Index));
-  currentIndex.offset+=  sizeof(Index);
+  memcpy(&rootInfo, buff + currentIndex.offset, sizeof(RootSuperBlock));
+  currentIndex.offset+=  sizeof(RootSuperBlock);
   
-  memcpy(&_startBlock, buff + currentIndex.offset, sizeof(BlkNumType));
-  currentIndex.offset+=  sizeof(BlkNumType);
-  
-
+  _lastEntry.blknum = rootInfo.lastEntry.blknum;
+  _lastEntry.offset = rootInfo.lastEntry.offset;
+  _startBlock = rootInfo.startBlock;
   /****************************************************************************/
   
   
@@ -295,7 +315,7 @@ void RootTree::del(PartitionManager* pm)
 
 TagTree::TagTree(string tagName, BlkNumType blknum):TreeObject(tagName, blknum)
 {
-  _lastEntry.blknum = 0;
+  _lastEntry.blknum = blknum;
   _lastEntry.offset = 0;
   _startBlock = 0;
 }
@@ -304,15 +324,14 @@ TagTree::~TagTree(){}
 
 unordered_map<string, FileInfo*>* TagTree::getMap() {return &_tree;}
 
-void TagTree::insertAddition(FileInfo*)
+void TagTree::insertAddition(FileInfo* file)
 {
-  //TODO: stub
-  
+  _additions.push_back(file);
 }
 
-void TagTree::insertDeletion(FileInfo*)
+void TagTree::insertDeletion(FileInfo* file)
 {
-  //TODO: stub
+  _deletions.insert(pair<BlkNumType, FileInfo*>(file->getBlockNumber(), file));
 }
 
 void TagTree::writeOut(PartitionManager* pm)
@@ -329,18 +348,13 @@ void TagTree::writeOut(PartitionManager* pm)
    * Index of end of tag tree on disk - sizeof(Index)
    * startBlocknumber - start of entries on disk - sizeof(BlkNumType)
    */
+  
   memcpy(buff + currentIndex.offset, _name.c_str(), _name.size());
-  for(int i = _name.size(); i < pm->getFileNameSize(); i++) { currentIndex.offset++; }
+  currentIndex.offset+= pm->getFileNameSize();
   
-  size_t treeSize = _tree.size();
-  memcpy(buff + currentIndex.offset, &treeSize, sizeof(size_t));
-  currentIndex.offset+=  sizeof(size_t);
-  
-  memcpy(buff + currentIndex.offset, &_lastEntry, sizeof(Index));
-  currentIndex.offset+=  sizeof(Index);
-  
-  memcpy(buff + currentIndex.offset, &_startBlock, sizeof(BlkNumType));
-  currentIndex.offset+=  sizeof(BlkNumType);
+  TagTreeSuperBlock tagInfo{_tree.size(), _lastEntry, _startBlock};
+  memcpy(buff + currentIndex.offset, &tagInfo, sizeof(TagTreeSuperBlock));
+  currentIndex.offset+=  sizeof(TagTreeSuperBlock);
   
   /*Write out TagTree superblock*/
   try{pm->writeDiskBlock(currentIndex.blknum, buff);}
@@ -348,11 +362,12 @@ void TagTree::writeOut(PartitionManager* pm)
   
   /****************************************************************************/
   /*Write out additions*/
+  memset(buff, 0, pm->getBlockSize()); //zero out memory
   
   /*Check to see if last entry completes a block, or it has no start block*/
   currentIndex.blknum = _lastEntry.blknum;
   if(((pm->getBlockSize() - _lastEntry.offset) < entrySize + sizeof(BlkNumType))
-    || (_lastEntry.blknum == 0))
+    || ((_startBlock == 0) && _tree.size() > 0))
   {
     /*Need to allocate a new block to start appending*/
     BlkNumType newblknum = 0;
@@ -360,6 +375,11 @@ void TagTree::writeOut(PartitionManager* pm)
     catch(...) {cerr << "Error TagTree::writeOut" << endl;}
     currentIndex.blknum = newblknum;
     currentIndex.offset = 0;
+    
+    if(_startBlock == 0)
+    {
+      _startBlock = currentIndex.blknum;
+    }
   }
   
   /*Begin appending additions*/
@@ -387,22 +407,27 @@ void TagTree::writeOut(PartitionManager* pm)
     
     if((pm->getBlockSize() - _lastEntry.offset) < entrySize + sizeof(BlkNumType))
     {
-      /*Need to allocate a new block to start appending*/
+      /*Need to allocate a new block to keep appending*/
       BlkNumType newblknum = 0;
       try{newblknum = pm->getFreeDiskBlock();}
       catch(...) {cerr << "Error TagTree::writeOut" << endl;}
-      currentIndex.blknum = newblknum;
-      currentIndex.offset = 0;
       
       /*got a new block, set it as continuation.*/
       memcpy(buff + (pm->getBlockSize() - sizeof(BlkNumType)), &newblknum, sizeof(BlkNumType));
+      /*Write out buff to currentIndex.blknum*/
+      //TODO: fix catch statement.
+      try {pm->writeDiskBlock(currentIndex.blknum, buff);}
+      catch(...){cerr << "Error TagTree::writeOut" << endl;}
+      
+      currentIndex.blknum = newblknum;
+      currentIndex.offset = 0;
     }
-    
-    /*Write out buff to currentIndex.blknum*/
-    //TODO: fix catch statement.
-    try {pm->writeDiskBlock(currentIndex.blknum, buff);}
-    catch(...){cerr << "Error TagTree::writeOut" << endl;}
   }
+  
+  /*Write out buff to currentIndex.blknum*/
+  //TODO: fix catch statement.
+  try {pm->writeDiskBlock(currentIndex.blknum, buff);}
+  catch(...){cerr << "Error TagTree::writeOut" << endl;}
   
   /*update _lastEntry*/
   _lastEntry.blknum = currentIndex.blknum;
@@ -410,28 +435,32 @@ void TagTree::writeOut(PartitionManager* pm)
   
   /****************************************************************************/
   /*Write out deletions*/
+  memset(buff, 0, pm->getBlockSize()); //zero out memory
   
-  /*For every entry with the same BlockNumber*/
-  for(size_t i = 0; i < _deletions.bucket_count(); i++)
+  if(_deletions.size() > 0)
   {
-    currentIndex.blknum = _deletions.begin(i)->first;
-    /*Read in currentIndex.blknum*/
-    try {pm->readDiskBlock(currentIndex.blknum, buff);}
-    catch(...){cerr << "Error TagTree::writeOut" << endl;}
-    
-    /* Modify all the entries in this block */
-    for(auto local_it = _deletions.begin(i); local_it != _deletions.end(i); local_it ++)
+    /*For every entry with the same BlockNumber*/
+    for(size_t i = 0; i < _deletions.bucket_count(); i++)
     {
-      currentIndex.offset = local_it->second->getIndex()->offset;
+      currentIndex.blknum = _deletions.begin(i)->first;
+      /*Read in currentIndex.blknum*/
+      try {pm->readDiskBlock(currentIndex.blknum, buff);}
+      catch(...){cerr << "Error TagTree::writeOut" << endl;}
       
-      /*Zero out name and blocknumber*/
-      memset(buff + currentIndex.offset, 0, pm->getFileNameSize() + sizeof(BlkNumType));
+      /* Modify all the entries in this block */
+      for(auto local_it = _deletions.begin(i); local_it != _deletions.end(i); local_it ++)
+      {
+        currentIndex.offset = local_it->second->getIndex()->offset;
+        
+        /*Zero out name and blocknumber*/
+        memset(buff + currentIndex.offset, 0, pm->getFileNameSize() + sizeof(BlkNumType));
+      }
+      
+      /*Write out buff to currentIndex.blknum*/
+      //TODO: fix catch statement.
+      try {pm->writeDiskBlock(currentIndex.blknum, buff);}
+      catch(...){cerr << "Error TagTree::writeOut" << endl;}
     }
-    
-    /*Write out buff to currentIndex.blknum*/
-    //TODO: fix catch statement.
-    try {pm->writeDiskBlock(currentIndex.blknum, buff);}
-    catch(...){cerr << "Error TagTree::writeOut" << endl;}
   }
 }
 
@@ -452,16 +481,13 @@ void TagTree::readIn(PartitionManager* pm)
   _name = _name.substr(0, _name.find_first_of('\0'));
   currentIndex.offset+=  pm->getFileNameSize();
   
-  size_t treeSize = _tree.size();
-  memcpy(&treeSize, buff + currentIndex.offset, sizeof(size_t));
-  currentIndex.offset+=  sizeof(size_t);
+  TagTreeSuperBlock tagInfo;
+  memcpy(&tagInfo, buff + currentIndex.offset, sizeof(TagTreeSuperBlock));
+  currentIndex.offset+=  sizeof(TagTreeSuperBlock);
   
-  memcpy(&_lastEntry, buff + currentIndex.offset, sizeof(Index));
-  currentIndex.offset+=  sizeof(Index);
-  
-  memcpy(&_startBlock, buff + currentIndex.offset, sizeof(BlkNumType));
-  currentIndex.offset+=  sizeof(BlkNumType);
-  
+  _lastEntry.blknum = tagInfo.lastEntry.blknum;
+  _lastEntry.offset = tagInfo.lastEntry.offset;
+  _startBlock = tagInfo.startBlock;
   /****************************************************************************/
   /*Read in the startBlock - first block with entries*/
   if(_startBlock == 0)

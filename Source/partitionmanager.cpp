@@ -11,6 +11,7 @@ PartitionManager::PartitionManager(DiskManager *dm, string partitionName)
   _partitionName = partitionName;
   _partitionSize = dm->findPart(partitionName)->partitionSize;
   _partitionBlkStart = dm->findPart(partitionName)->partitionBlkStart;
+  _fileNameSize = dm->findPart(partitionName)->fileNameSize;
 
   char* buff = new char[getBlockSize()];
   //TODO: fix catch
@@ -38,6 +39,7 @@ PartitionManager::PartitionManager(DiskManager *dm, string partitionName)
   }
   
   _freeBlockEnd = blknum;
+  offset+= sizeof(BlkNumType);
 }
 
 PartitionManager::~PartitionManager()
@@ -67,7 +69,6 @@ BlkNumType PartitionManager::getFreeDiskBlock()
   try {readDiskBlock(0, buff);}
   catch(...){cerr << "Error part.cpp getFreeDiskBlock3" << endl;}
   
-//   offset = 0;//byte 32 is where the start of free list is
   memcpy(buff, &_freeBlockStart, sizeof(BlkNumType));
   
   /*Write out block 0*/
@@ -82,6 +83,7 @@ BlkNumType PartitionManager::getFreeDiskBlock()
   memset(buff, 0, sizeof(BlkNumType));
   try {writeDiskBlock(_freeBlockStart, buff);}
   catch(...){cerr << "Error part.cpp getFreeDiskBlock4" << endl;}
+  
   
   return ret;
   
@@ -152,9 +154,10 @@ int PartitionManager::getBlockSize()
   return myDM->getBlockSize();
 }
 
-int PartitionManager::getFileNameSize(){return 0; //TODO stub
-  
-}
+int PartitionManager::getFileNameSize()
+{
+  return _fileNameSize;
+}  
 
 
 string PartitionManager::getPartitionName()

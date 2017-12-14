@@ -18,6 +18,21 @@ struct index
   BlkNumType blknum;
   unsigned int offset;
 };
+
+struct rootSuperBlock 
+{
+  size_t size;
+  Index lastEntry;
+  BlkNumType startBlock;
+};
+
+struct tagTreeSuperBlock
+{
+  size_t size;
+  Index lastEntry;
+  BlkNumType startBlock;
+};
+
 bool operator ==(Index& lhs, Index& rhs);
 bool operator !=(Index& lhs, Index& rhs);
 
@@ -70,8 +85,8 @@ public:
   TagTree(string tagName, BlkNumType blknum);
   ~TagTree();
   unordered_map<string, FileInfo*>* getMap();
-  void insertAddition(FileInfo*);
-  void insertDeletion(FileInfo*);
+  void insertAddition(FileInfo* file);
+  void insertDeletion(FileInfo* file);
   /*Function Overrides*/
   void writeOut(PartitionManager* pm);
   void readIn(PartitionManager* pm);
@@ -93,8 +108,8 @@ public:
   RootTree();
   ~RootTree();
   unordered_map<string, TagTree*>* getMap();
-  void insertAddition(TagTree*);
-  void insertDeletion(TagTree*);
+  void insertAddition(TagTree* tag);
+  void insertDeletion(TagTree* tag);
   /*Function Overrides*/
   void writeOut(PartitionManager* pm);
   void readIn(PartitionManager* pm);

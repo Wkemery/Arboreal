@@ -32,6 +32,7 @@ DiskManager::DiskManager(Disk *d)
     *  partition name - 16 bytes
     *  partitions size in blocks - BlkNumType
     *  partition start pos - BlkNumType
+    *  filenameSize limit - int
     */
   int numPartitions = 0;
   memcpy(&numPartitions, buff, sizeof(int));
@@ -50,6 +51,9 @@ DiskManager::DiskManager(Disk *d)
     
     memcpy(&temp->partitionBlkStart, buff + offset, sizeof(BlkNumType));
     offset+= sizeof(BlkNumType);
+    
+    memcpy(&temp->fileNameSize, buff + offset, sizeof(int));
+    offset+= sizeof(int);
     
     _myPartitions.push_back(temp);
         

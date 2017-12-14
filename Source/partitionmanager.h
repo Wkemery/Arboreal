@@ -11,6 +11,7 @@ private:
   BlkNumType _freeBlockStart;
   BlkNumType _freeBlockEnd;
   BlkNumType _partitionBlkStart;
+  int _fileNameSize;
   DiskManager *myDM;
 public:
   PartitionManager(DiskManager *dm, string partitionName);

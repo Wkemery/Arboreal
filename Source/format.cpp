@@ -66,8 +66,6 @@ int main(int argc, char** argv)
   for(int i = 0; i < numParts; i++)
   {
     string partitionName;
-//     cout << "Enter name for partition number " << i << " : ";
-//     cin >> partitionName;
     file >> partitionName;
     if(partitionName.length() > 16)
     {
@@ -93,6 +91,12 @@ int main(int argc, char** argv)
     memcpy(buff + offset, &partStart, sizeof(BlkNumType));
     offset+= sizeof(BlkNumType);
     partStart+= partitionsize;
+    
+    int fileNameSize;
+    file >> fileNameSize;
+    /*Write out filenamesize limit*/
+    memcpy(buff + offset, &fileNameSize, sizeof(int));
+    offset+= sizeof(int);
   }
   
   disk.seekp(0);
@@ -110,6 +114,7 @@ int main(int argc, char** argv)
     
     memcpy(buff, &next, sizeof(BlkNumType));
     memcpy(buff + sizeof(BlkNumType), &prev, sizeof(BlkNumType));
+   
     disk.write(buff, blockSize);
     disk.seekp(512, ios_base::cur);
     prev = 0;

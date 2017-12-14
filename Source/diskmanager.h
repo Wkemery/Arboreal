@@ -11,6 +11,7 @@ struct DiskPartition
   string partitionName;
   BlkNumType partitionSize;
   BlkNumType partitionBlkStart;
+  int fileNameSize;
   
 };
 
