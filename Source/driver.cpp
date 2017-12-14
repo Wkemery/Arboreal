@@ -61,6 +61,9 @@ int main()
     fs3->createTag("tag2");
     fs3->createTag("tag3");
     fs1->printRoot();
+    fs1->writeChanges();
+    fs2->writeChanges();
+    fs3->writeChanges();
     cout << endl;
     
     fs1->deleteTag("tag1");
@@ -68,9 +71,9 @@ int main()
     fs3->deleteTag("tag3");
     fs1->printRoot();
     
-    fs1->writeOut();
-    fs2->writeOut();
-    fs3->writeOut();
+    fs1->writeChanges();
+    fs2->writeChanges();
+    fs3->writeChanges();
     
   }
   catch(std::exception& e)

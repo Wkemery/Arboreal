@@ -68,7 +68,7 @@ public:
   void untagFile(FileInfo* file, vector<string> tags);
   FileInfo* createFile(string filename, vector<string> tags);
   void deleteFile(FileInfo* file);
-  
+  void writeChanges();
   
   
   int openFile(char *filename, int fnameLen, char mode, int lockId);

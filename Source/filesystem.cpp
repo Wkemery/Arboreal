@@ -486,6 +486,15 @@ int FileSystem::getAttributes(char *filename, int fnameLen, char* buffer, int fl
 int FileSystem::setAttributes(char *filename, int fnameLen, char* buffer, int flag)
 {return 0;}
 
+void FileSystem::writeChanges()
+{
+  for(auto it = _modifiedObjects.begin(); it != _modifiedObjects.end(); it++)
+  {
+    it->first->writeOut(_myPartitionManager);
+  }
+}
+
+
 /* Start Helper Functions */
 
 void FileSystem::insertModification(TreeObject* object)

@@ -136,6 +136,10 @@ void RootTree::writeOut(PartitionManager* pm)
     catch(...){cerr << "Error TagTree::writeOut" << endl;}
   }
   
+  /*update _lastEntry*/
+  _lastEntry.blknum = currentIndex.blknum;
+  _lastEntry.offset = currentIndex.offset;
+  
   /****************************************************************************/
   /*Write out deletions*/
   
@@ -399,6 +403,10 @@ void TagTree::writeOut(PartitionManager* pm)
     try {pm->writeDiskBlock(currentIndex.blknum, buff);}
     catch(...){cerr << "Error TagTree::writeOut" << endl;}
   }
+  
+  /*update _lastEntry*/
+  _lastEntry.blknum = currentIndex.blknum;
+  _lastEntry.offset = currentIndex.offset;
   
   /****************************************************************************/
   /*Write out deletions*/
