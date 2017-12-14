@@ -39,13 +39,16 @@ class FileSystem {
   PartitionManager *_myPartitionManager;
   string _FSName;
   
+  
   unordered_map<int, int> lockIdT;
   unsigned int numLocks = rand();
   int open;
   vector<FileOpen> FOT;   // File open table vector
   
 /******************************************************************************/
-  unordered_map<string, TagTree*> _RootTree;
+  RootTree* _RootTree;
+  vector<TreeObject*> _modifiedObjects;
+  
 //   unordered_map<TagTuple, TagTree*, PairHash> _RootTree;
 /******************************************************************************/
 

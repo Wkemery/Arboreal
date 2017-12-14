@@ -12,62 +12,65 @@
 
 using namespace std;
 
-FileInfo::FileInfo(string filename,BlkNumType blknum):_fileName(filename), _fidentifier(blknum)
-{}
-
-
-BlkNumType FileInfo::getFidentifier(){ return _fidentifier;}
-
-string FileInfo::getFilename() {return _fileName;}
-
-unordered_map<string, BlkNumType>* FileInfo::getTags()
+bool operator ==(Index& lhs, Index& rhs)
 {
-  return &_tags;
+  return ((lhs.blknum == rhs.blknum) && (lhs.offset == rhs.offset));
 }
 
-void insert(string tagName, BlkNumType blknum){
+bool operator !=(Index& lhs, Index& rhs)
+{
+  return !(lhs == rhs);
+}
+
+/******************************************************************************/
+TreeObject::TreeObject(string name, BlkNumType blknum)
+:_name(name), _blockNumber(blknum)
+{}
+
+TreeObject::~TreeObject(){}
+
+string TreeObject::getName(){return _name;}
+
+BlkNumType TreeObject::getBlockNumber(){return _blockNumber;}
+
+/******************************************************************************/
+RootTree::RootTree():TreeObject("Root", 1){}
+
+RootTree::~RootTree(){}
+
+unordered_map<string, TagTree*>* RootTree::getMap(){return &_tree;}
+
+void RootTree::writeOut(PartitionManager* pm)
+{
+  //TODO: stub
+}
+
+void RootTree::readIn(PartitionManager* pm)
+{
   //TODO: stub
   
 }
-void erase(string tagName){
-  //TODO:stub
+
+void RootTree::deleteContBlocks(PartitionManager* pm, BlkNumType blknum)
+{
+  //TODO: stub
   
 }
 
-void FileInfo::writeOut(PartitionManager* pm)
+void RootTree::del(PartitionManager* pm)
 {
-  //TODO:stub
-  //TODO: implement block continuation
+  //TODO: stub
   
-  //filename - 64 bytes
-  // fidentifier - probably 8 bytes
-  //file size
-  
-}
-
-void FileInfo::readIn(PartitionManager* pm)
-{
-  //TODO:stub
-  //TODO: implement block continuation
-  
-}
-
-void FileInfo::del(PartitionManager* pm)
-{}
-
-Index* FileInfo::getIndex()
-{
-  return & _index;
 }
 
 /******************************************************************************/
 
-TagTree::TagTree(BlkNumType blknum): _blockNumber(blknum)
+TagTree::TagTree(string tagName, BlkNumType blknum):TreeObject(tagName, blknum)
 {}
 
-unordered_map<string, FileInfo*>* TagTree::getTree() {return &_tree;}
+TagTree::~TagTree(){}
 
-BlkNumType TagTree::getBlockNum() {return _blockNumber;}
+unordered_map<string, FileInfo*>* TagTree::getMap() {return &_tree;}
 
 void TagTree::writeOut(PartitionManager* pm)
 {
@@ -82,9 +85,10 @@ void TagTree::writeOut(PartitionManager* pm)
    * TagName - fileNameSize - 64 for now
    * Size - size_t - 4 ?
    * Index of end of tag tree on disk - sizeof(Index)
-   x*/
-  memcpy(buff + offset, _tagName.c_str(), _tagName.size());
-  offset+=  _tagName.size();
+   * startBlocknumber - start of entries on disk - sizeof(BlkNumType)
+   */
+  memcpy(buff + offset, _name.c_str(), _name.size());
+  for(int i = _name.size(); i < pm->getFileNameSize(); i++) { offset++; }
   
   size_t treeSize = _tree.size();
   memcpy(buff + offset, &treeSize, sizeof(size_t));
@@ -92,6 +96,9 @@ void TagTree::writeOut(PartitionManager* pm)
   
   memcpy(buff + offset, &_lastEntry, sizeof(Index));
   offset+=  sizeof(Index);
+  
+  memcpy(buff + offset, &_startBlock, sizeof(BlkNumType));
+  offset+=  sizeof(BlkNumType);
   
   /*Write out TagTree superblock*/
   try{pm->writeDiskBlock(currentBlkNum, buff);}
@@ -117,21 +124,21 @@ void TagTree::writeOut(PartitionManager* pm)
   {
     
     /* write out key to buffer.*/
-    int keySize = _additions[i]->getFilename().size();
+    int keySize = _additions[i]->getName().size();
     if(keySize > pm->getFileNameSize())
     {
       //TODO: throw error
       cerr << "Error TagTree::writeOut" << endl;
     }
     
-    strncpy(buff + offset, _additions[i]->getFilename().c_str(), keySize);
+    strncpy(buff + offset, _additions[i]->getName().c_str(), keySize);
     offset += keySize;
     
     /*pad to 64 bytes*/
     for(int i = keySize; i < pm->getFileNameSize(); i++) { offset++; }
     
     /*write out the blocknumber of the fidentifier to buffer, probably 8 bytes?*/
-    BlkNumType fiden = _additions[i]->getFidentifier();
+    BlkNumType fiden = _additions[i]->getBlockNumber();
     memcpy(buff + offset, &fiden, sizeof(BlkNumType));
     offset += sizeof(BlkNumType);
     
@@ -172,8 +179,6 @@ void TagTree::writeOut(PartitionManager* pm)
       
       /*Zero out name and blocknumber*/
       memset(buff + offset, 0, pm->getFileNameSize() + sizeof(BlkNumType));
-  
-      //TODO: some delete on local_it->second
     }
     
     /*Write out buff to currentBlkNum*/
@@ -187,65 +192,108 @@ void TagTree::readIn(PartitionManager* pm)
 {
   char* buff = new char[pm->getBlockSize()];
   memset(buff, 0, pm->getBlockSize()); //zero out memory
-  int offset = 0;
-  BlkNumType currentBlkNum = _blockNumber;
+  int entrySize = pm->getFileNameSize() + (sizeof(BlkNumType));
+  Index currentIndex{_blockNumber, 0};
   
-  /*Read in first block*/
+  /*Read in tagTree superblock*/
   //TODO: fix catch statement.
-  try{pm->readDiskBlock(currentBlkNum, buff);}
-  catch(...){cerr << "Error trees.cpp5" << endl;}
+  try{pm->readDiskBlock(currentIndex.blknum, buff);}
+  catch(...){cerr << "Error TagTree::readIn" << endl;}
   
+  /*Store values from superblock*/
+  _name.assign(buff + currentIndex.offset, pm->getFileNameSize());
+  _name = _name.substr(0, _name.find_first_of('\0'));
+  currentIndex.offset+=  pm->getFileNameSize();
   
-  bool reading = buff[0] == 0;
+  size_t treeSize = _tree.size();
+  memcpy(&treeSize, buff + currentIndex.offset, sizeof(size_t));
+  currentIndex.offset+=  sizeof(size_t);
   
-  /*For every entry on disk*/  
-  while(reading)//assuming that offset always points to the start of an entry name.
+  memcpy(&_lastEntry, buff + currentIndex.offset, sizeof(Index));
+  currentIndex.offset+=  sizeof(Index);
+  
+  memcpy(&_lastEntry, buff + currentIndex.offset, sizeof(Index));
+  currentIndex.offset+=  sizeof(Index);
+  
+  memcpy(&_startBlock, buff + currentIndex.offset, sizeof(BlkNumType));
+  currentIndex.offset+=  sizeof(BlkNumType);
+  
+  /****************************************************************************/
+  /*Read in the startBlock - first block with entries*/
+  currentIndex.blknum = _startBlock;
+  currentIndex.offset = 0;
+  //TODO: fix catch statement.
+  try{pm->readDiskBlock(currentIndex.blknum, buff);}
+  catch(...){cerr << "Error TagTree::readIn" << endl;}
+  
+  /*Read in every entry on disk, up to and including the last entry, taking into account
+   * there may be empty spaces*/ 
+  do
   {
-//     char * temp = new char[65]; //65 to accomodate the potential missing null byte
-//     memset(temp, 0, 65);
-    
-//     strncpy(temp, buff + offset, 64);
     string fileName;
-    //TODO: this may or may not work... uncomment neaby lines if needed
-//     fileName.assign(temp);
-    fileName.assign(buff + offset, 64);
-//     delete temp;
-    offset+= 64;
-    
-    /*Read in the blknum*/
     BlkNumType blknum;
-    memcpy(&blknum, buff + offset, sizeof(BlkNumType));
-    
-    FileInfo* finode = new FileInfo(fileName, blknum);
-    
-    /*Insert key and value into tagtree in memory*/
-    _tree.insert(pair<string, FileInfo*>(fileName, finode));
-    //TODO: check insert ret val, if failed throw error someone fucked up
-    offset += sizeof(BlkNumType);
+    /*if this is a valid entry, read in filename and blknum*/
+    if(buff[currentIndex.offset] != 0)
+    {
+      /*Read in Filename*/
+      fileName.assign(buff + currentIndex.offset, pm->getFileNameSize());
+      fileName = fileName.substr(0, fileName.find_first_of('\0'));
+      currentIndex.offset+= pm->getFileNameSize();
+      
+      /*Read in blocknumber for that fileinfo object*/
+      memcpy(&blknum, buff + currentIndex.offset, sizeof(BlkNumType));
+      currentIndex.offset+=  sizeof(BlkNumType);
+      if(blknum == 0)
+      {
+        //TODO: throw error
+        cerr << "Error TagTree::readIn" << endl;
+      }
+      
+      /*Creat finode object*/
+      FileInfo* finode = new FileInfo(fileName, blknum);
+      if(finode == 0)
+      {
+        //TODO: throw error
+        cerr << "Error TagTree::readIn" << endl;
+      }
+      
+      /*Insert key and value into tagtree in memory*/
+      auto it_ret = _tree.insert(pair<string, FileInfo*>(fileName, finode));
+      if(!it_ret.second)
+      {
+        //TODO: throw error
+        cerr << "Error TagTree::readIn" << endl;
+      }
+    }
+    else
+    {
+      currentIndex.offset += entrySize;
+    }
     
     /**************************************************************************/ 
-    /*check to see if there is another entry in this block and if there is a cont. block*/
-    
-    int entrySize = 64 + (sizeof(BlkNumType)*2);
-    if((pm->getBlockSize() - offset) < entrySize)
+    /*check to see if there is room for another entry in this block.*/
+    if((pm->getBlockSize() - currentIndex.offset) < entrySize + sizeof(BlkNumType))
     {
-      /*can't be another entry in this block, check for cont. block*/
-      memcpy(&currentBlkNum, buff + (pm->getBlockSize() - sizeof(BlkNumType)), sizeof(BlkNumType));
+      /*Can't be another entry in this block, check for cont. block*/
+      memcpy(&currentIndex.blknum, buff + (pm->getBlockSize() - sizeof(BlkNumType)), sizeof(BlkNumType));
+      if(currentIndex.blknum == 0 && currentIndex != _lastEntry)
+      {
+        //TODO: throw error, the cont block chain is fucked
+        cerr << "Error TagTree::readIn" << endl;
+      }
       
-      if(currentBlkNum == 0){reading = false;} //no cont. block. all done reading in tree
-      else
+      if(currentIndex.blknum != 0)
       {
         /*Cont. block exists. read it in and start over.*/
         /*Read in cont. block*/
         //TODO: fix catch statement.
-        try{pm->readDiskBlock(currentBlkNum, buff);}
-        catch(...){cerr << "Error trees.cpp6" << endl;}
-        offset = 0;
+        try{pm->readDiskBlock(currentIndex.blknum, buff);}
+        catch(...){cerr << "Error TagTree::readIn" << endl;}
+        currentIndex.offset = 0;
       }
     }
-    
-    if(buff[offset] == 0){reading = false;} //not another entry in this block
   }
+  while(currentIndex != _lastEntry);
 }
 
 void TagTree::deleteContBlocks(PartitionManager* pm, BlkNumType blknum)
@@ -277,5 +325,44 @@ void TagTree::del(PartitionManager* pm)
   catch(...){cerr << "Error TagTree::del" << endl;}
   
 }
+
+/******************************************************************************/
+FileInfo::FileInfo(string fileName,BlkNumType blknum):TreeObject(fileName, blknum)
+{}
+
+FileInfo::~FileInfo(){}
+
+unordered_map<string, BlkNumType>* FileInfo::getMap()
+{
+  return &_tags;
+}
+
+void FileInfo::writeOut(PartitionManager* pm)
+{
+  //TODO:stub
+  //TODO: implement block continuation
+  
+  //filename - 64 bytes
+  // fidentifier - probably 8 bytes
+  //file size
+  
+}
+
+void FileInfo::readIn(PartitionManager* pm)
+{
+  //TODO:stub
+  //TODO: implement block continuation
+  
+}
+
+void FileInfo::del(PartitionManager* pm)
+{}
+
+void FileInfo::deleteContBlocks(PartitionManager* pm, BlkNumType blknum)
+{}
+
+Index* FileInfo::getIndex(){return & _index;}
+
+/******************************************************************************/
 
 

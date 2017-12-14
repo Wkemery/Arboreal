@@ -39,11 +39,11 @@ vector<FileInfo*>* FileSystem::tagSearch(vector<string> tags)
   if(tags.size() == 1)
   {
     //   * find the tag in root tree
-    auto it = _RootTree.find(tags[0]);  //Complexity: avg. 1, worst linear
-    it->second->getTree();
+    auto it = _RootTree->getMap()->find(tags[0]);  //Complexity: avg. 1, worst linear
+    it->second->getMap();
     
     //   * list files in tag tree pointed to by root tree
-    unordered_map<string, FileInfo*>* treeptr = it->second->getTree();
+    unordered_map<string, FileInfo*>* treeptr = it->second->getMap();
     
     for(auto it2 = treeptr->begin(); it2 != treeptr->end(); it2++)//Complexity: number of files in answer
     {
@@ -60,8 +60,8 @@ vector<FileInfo*>* FileSystem::tagSearch(vector<string> tags)
     vector<TagTree*> searchTrees;
     for(unsigned int i = 0; i < tags.size(); i++)//Complexity: avg. number of tags specified, worst # tags specified*total number of user defined tags on filesystem
     {
-      auto it = _RootTree.find(tags[i]);//complexity: avg. 1, worst linear
-      if(it == _RootTree.end())
+      auto it = _RootTree->getMap()->find(tags[i]);//complexity: avg. 1, worst linear
+      if(it == _RootTree->getMap()->end())
       {
         cerr << tags[i] + " excluded from search : Tag Does not exist" << endl;
       }
@@ -74,23 +74,23 @@ vector<FileInfo*>* FileSystem::tagSearch(vector<string> tags)
     TagTree* smallest = searchTrees[0];
     for(unsigned int i = 1; i < searchTrees.size(); i++)//Complexity: number of tags specified
     {
-      if(searchTrees[i]->getTree()->size() < smallest->getTree()->size())
+      if(searchTrees[i]->getMap()->size() < smallest->getMap()->size())
         smallest = searchTrees[i];
     }
     
     //   * Search the smallest tree:
-    unordered_map<string, FileInfo*>* treeptr = smallest->getTree();
+    unordered_map<string, FileInfo*>* treeptr = smallest->getMap();
     for(auto it = treeptr->begin(); it != treeptr->end(); it++)//Complexity: size of smallest specified tag tree * # of tags specified (worst case: size of smallest specified tag tree*# of tags specified* number of tags associated with file in question)
     {
       //   # elimnate all nodes with tag count < the number of tags you are searching for
-      if(it->second->getTags()->size() >= tags.size())
+      if(it->second->getMap()->size() >= tags.size())
       {
         //could be a matching file
         bool match = true;
         //   # search remainng files for exact tag match O(1) average case, worst case O(n)
         for(unsigned int i = 0; i < tags.size(); i++)//Complexity: # of tags specified(worst case: # of tags specified* number of tags associated with file in question)
         {
-          if(it->second->getTags()->find(tags[i]) == it->second->getTags()->end()) //complexity: avg. O(1), worst number of tags associated with file in question
+          if(it->second->getMap()->find(tags[i]) == it->second->getMap()->end()) //complexity: avg. O(1), worst number of tags associated with file in question
           {
             match = false;
             break;
@@ -115,10 +115,10 @@ FileInfo* FileSystem::fileSearch(string name)
   // not sure how to do that right now...
   //   - Worst case is (number of trees) * log(n)
     
-  for(auto it = _RootTree.begin(); it != _RootTree.end(); it++)
+  for(auto it = _RootTree->getMap()->begin(); it != _RootTree->getMap()->end(); it++)
   {
-    auto it2 = it->second->getTree()->find(name);
-    if(it2 != it->second->getTree()->end())
+    auto it2 = it->second->getMap()->find(name);
+    if(it2 != it->second->getMap()->end())
     {
       //found the file 
       return it2->second;
@@ -133,7 +133,7 @@ void FileSystem::createTag(string tagName)
 {
   
   //   - Make sure tag is unique
-  if(_RootTree.find(tagName) != _RootTree.end())//Complexity: avg 1, worst # tags on system
+  if(_RootTree->getMap()->find(tagName) != _RootTree->getMap()->end())//Complexity: avg 1, worst # tags on system
   {
     throw invalid_argument(tagName + " is not unique");
   }
@@ -146,10 +146,10 @@ void FileSystem::createTag(string tagName)
   catch(...){cerr << "Error trees.cpp1" << endl;}
   
   //   - initialize tree in main memory
-  TagTree* newTree = new TagTree(newblknum);
+  TagTree* newTree = new TagTree(tagName, newblknum);
   //   - add respective node to root tree (write TagTree block num to Node as well as TagTree memory address to Node)
   
-  _RootTree.insert(pair<string, TagTree*>(tagName, newTree));//Complexity: avg. 1, worst # of tags in filesystem
+  _RootTree->getMap()->insert(pair<string, TagTree*>(tagName, newTree));//Complexity: avg. 1, worst # of tags in filesystem
   //   - set up block in disk as empty tag tree, ie write out tag tree
   newTree->writeOut(_myPartitionManager); //Complexity: size of tag tree, this case 0;
   //   - rebalance  Root tree, done automatically with map
@@ -161,13 +161,13 @@ void FileSystem::createTag(string tagName)
 void FileSystem::deleteTag(string tagName, bool force)
 {
   //   - find tagTree
-  auto it = _RootTree.find(tagName);//Complexity: avg 1, worst # tags on system
-  if(it == _RootTree.end())
+  auto it = _RootTree->getMap()->find(tagName);//Complexity: avg 1, worst # tags on system
+  if(it == _RootTree->getMap()->end())
   {
     throw invalid_argument(tagName + " cannot be deleted : Tag Does not exist");
   }
   
-  unordered_map<string, FileInfo*>* treeptr = it->second->getTree();
+  unordered_map<string, FileInfo*>* treeptr = it->second->getMap();
   
   //   - CANNOT delete tag if tag tree Size > 0
   
@@ -183,7 +183,7 @@ void FileSystem::deleteTag(string tagName, bool force)
     for(auto it2 = treeptr->begin(); it2 != treeptr->end(); it2++)//Complexity: avg: size of tag tree * sizeof file/block size, worst size of tag tree * avg tags associated with file * sizeof file/block size
     {
       //   - delete all references to the tag tree from Fileinodes
-      it2->second->getTags()->erase(tagName);//Complexity: avg 1, worst # of tags associated with file
+      it2->second->getMap()->erase(tagName);//Complexity: avg 1, worst # of tags associated with file
       it2->second->writeOut(_myPartitionManager);//Complexity: size of file/ block size
     }
   }
@@ -192,7 +192,7 @@ void FileSystem::deleteTag(string tagName, bool force)
   //   - remove node from Root tree
   it->second->del(_myPartitionManager);
   delete it->second;
-  _RootTree.erase(it);
+  _RootTree->getMap()->erase(it);
   
   //   - write the root tree out to disk
   writeRoot();
@@ -220,21 +220,21 @@ void FileSystem::tagFile(FileInfo* file, vector<string> tags)
   {
     //   - find tagTree
     
-    auto it = _RootTree.find(t);//Complexity: avg: 1, worst: size of root tree
+    auto it = _RootTree->getMap()->find(t);//Complexity: avg: 1, worst: size of root tree
     //   - If tag does not exist create a new Tag tree
     //not doing this
-//     if(it == _RootTree.end()) 
+//     if(it == _RootTree->getMap()->end()) 
 //     {
 //       createTag(t);//Complexity: go to function
-//       it = _RootTree.find(t);//Complexity: Complexity: avg: 1, worst: size of root tree
+//       it = _RootTree->getMap()->find(t);//Complexity: Complexity: avg: 1, worst: size of root tree
 //     }
-    unordered_map<string, FileInfo*>* treeptr = it->second->getTree();
+    unordered_map<string, FileInfo*>* treeptr = it->second->getMap();
     
     //   - Add Tag to Finode 
-    file->getTags()->insert(pair<string, BlkNumType>(t, it->second->getBlockNum()));//Complexity: Complexity: avg: 1, worst: avg number of tags associated iwth file
+    file->getMap()->insert(pair<string, BlkNumType>(t, it->second->getBlockNumber()));//Complexity: Complexity: avg: 1, worst: avg number of tags associated iwth file
     
     //   - Create and Add new Node to TagTree
-    treeptr->insert(pair<string, FileInfo*>(file->getFilename(), file));//Complexity: Complexity: avg: 1, worst: size of tag tree
+    treeptr->insert(pair<string, FileInfo*>(file->getName(), file));//Complexity: Complexity: avg: 1, worst: size of tag tree
     
     //   - Write updated TagTree to disk
     it->second->writeOut(_myPartitionManager);
@@ -253,19 +253,19 @@ void FileSystem::untagFile(FileInfo* file, vector<string> tags)
   {
     //   - find tagTree
     
-    auto it = _RootTree.find(t);//Complexity: avg: 1, worst: size of root tree
+    auto it = _RootTree->getMap()->find(t);//Complexity: avg: 1, worst: size of root tree
     //   - If tag does not exist print error and continue
-    if(it == _RootTree.end())
+    if(it == _RootTree->getMap()->end())
     {
-      cerr << t + " cannot be removed from " << file->getFilename() << " : Tag Does not exist" << endl;
+      cerr << t + " cannot be removed from " << file->getName() << " : Tag Does not exist" << endl;
     }
-    unordered_map<string, FileInfo*>* treeptr = it->second->getTree();
+    unordered_map<string, FileInfo*>* treeptr = it->second->getMap();
     
     //   - Remove Node from TagTree
-    treeptr->erase(file->getFilename()); //Complexity: Complexity: avg: 1, worst: size of tag tree
+    treeptr->erase(file->getName()); //Complexity: Complexity: avg: 1, worst: size of tag tree
     
     //   - Delete tag from FileInode
-    file->getTags()->erase(t);//Complexity: Complexity: avg: 1, worst: avg number of tags associated iwth file
+    file->getMap()->erase(t);//Complexity: Complexity: avg: 1, worst: avg number of tags associated iwth file
     
     //   - Write updated TagTree to disk
     it->second->writeOut(_myPartitionManager);
@@ -309,7 +309,7 @@ void FileSystem::deleteFile(FileInfo* file)
   //   NOTE: File will be referenced by Finode block number(fidentifier)
   //   - check to make sure file exists, you have a FileInfo*, so file must exist
   vector<string> tags;
-  unordered_map<string, BlkNumType>* fileTags = file->getTags();
+  unordered_map<string, BlkNumType>* fileTags = file->getMap();
   for(auto it = fileTags->begin(); it != fileTags->end(); it++)//Complexity: number of tags associated with file
   {
     tags.push_back(it->first);
@@ -492,7 +492,7 @@ void FileSystem::writeRoot()
   int entrySize = 64 + (sizeof(BlkNumType)*2);
   
   /*for every entry in root */
-  for(auto it = _RootTree.begin(); it != _RootTree.end(); it++)
+  for(auto it = _RootTree->getMap()->begin(); it != _RootTree->getMap()->end(); it++)
   {
     if(it->first.size() > 64)
     {
@@ -563,7 +563,7 @@ void FileSystem::writeRoot()
     for(int i = it->first.size(); i < 64; i++) { offset++; }
     
     /*write out the blocknumber of the fidentifier to buffer, probably 8 bytes?*/
-    BlkNumType fiden = it->second->getBlockNum();
+    BlkNumType fiden = it->second->getBlockNumber();
     memcpy(buff + (offset*sizeof(char)), &fiden, sizeof(BlkNumType));
     offset += sizeof(BlkNumType);
   }
@@ -646,10 +646,10 @@ void FileSystem::readRoot()
     BlkNumType blknum;
     memcpy(&blknum, buff + offset, sizeof(BlkNumType));
     
-    TagTree* tagTree = new TagTree(blknum);
+    TagTree* tagTree = new TagTree(tagName, blknum);
     
     /*Insert key and value into tagtree in memory*/
-    _RootTree.insert(pair<string, TagTree*>(tagName, tagTree));
+    _RootTree->getMap()->insert(pair<string, TagTree*>(tagName, tagTree));
     //TODO: check insert ret val, if failed throw error someone fucked up
     offset += sizeof(BlkNumType);
     
@@ -680,9 +680,9 @@ void FileSystem::readRoot()
 
 void FileSystem::printRoot()
 {
-  for(auto it = _RootTree.begin(); it != _RootTree.end(); it++)
+  for(auto it = _RootTree->getMap()->begin(); it != _RootTree->getMap()->end(); it++)
   {
-    cout << "Key: " << it->first << " Value: " << it->second->getBlockNum() << endl;
+    cout << "Key: " << it->first << " Value: " << it->second->getBlockNumber() << endl;
   }
 }
 
