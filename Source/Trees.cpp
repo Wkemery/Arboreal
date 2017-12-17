@@ -22,6 +22,11 @@ bool operator !=(Index& lhs, Index& rhs)
   return !(lhs == rhs);
 }
 
+void increment(Index* index)
+{
+  //TODO: stub
+}
+
 /******************************************************************************/
 TreeObject::TreeObject(string name, BlkNumType blknum)
 :_name(name), _blockNumber(blknum)
@@ -84,108 +89,82 @@ void RootTree::writeOut(PartitionManager* pm)
   
   /****************************************************************************/
   /*Write out additions*/
+  
+  Index nextEntry{0,0};
   memset(buff, 0, pm->getBlockSize()); //zero out memory
   
-  /*Check to see if last entry completes a block*/
-  currentIndex.blknum = _lastEntry.blknum;
-  if((pm->getBlockSize() - _lastEntry.offset) < entrySize + sizeof(BlkNumType)
-    || ((_startBlock == 0) && treeSize > 0))
+  for(size_t i = 0; i < _additions.size(); i++)
   {
-    /*Need to allocate a new block to start appending*/
-    BlkNumType newblknum = 0;
-    try{newblknum = pm->getFreeDiskBlock();}
-    catch(...) {cerr << "Error RootTree::writeOut" << endl;}
-    currentIndex.blknum = newblknum;
-    currentIndex.offset = 0;
     if(_startBlock == 0)
     {
-      _startBlock = currentIndex.blknum;
+      /*Need to allocate a new block to start appending*/
+      BlkNumType newblknum = 0;
+      try{newblknum = pm->getFreeDiskBlock();}
+      catch(...) {cerr << "Error RootTree::writeOut" << endl;}
+      nextEntry.blknum = newblknum;
+      nextEntry.offset = 0;
     }
-  }
-  
-  /*Begin appending additions*/
-  if(_additions.size() > 0)
-  {
-    for(size_t i = 0; i < _additions.size(); i++)
+    else
     {
-      
-      /* write out key to buffer.*/
-      int keySize = _additions[i]->getName().size();
-      if(keySize > pm->getFileNameSize())
-      {
-        //TODO: throw error
-        cerr << "Error RootTree::writeOut" << endl;
-      }
-      
-      strncpy(buff + currentIndex.offset, _additions[i]->getName().c_str(), keySize);
-      
-      currentIndex.offset+= pm->getFileNameSize();
-      
-      /*write out the blocknumber of the tagTree to buffer, probably 8 bytes?*/
-      BlkNumType tagBlk = _additions[i]->getBlockNumber();
-      memcpy(buff + currentIndex.offset, &tagBlk, sizeof(BlkNumType));
-      currentIndex.offset += sizeof(BlkNumType);
-      
-      if((pm->getBlockSize() - _lastEntry.offset) < entrySize + sizeof(BlkNumType))
-      {
-        
-        /*Need to allocate a new block to keep appending*/
-        BlkNumType newblknum = 0;
-        try{newblknum = pm->getFreeDiskBlock();}
-        catch(...) {cerr << "Error RootTree::writeOut" << endl;}
-        
-        /*got a new block, set it as continuation.*/
-        memcpy(buff + (pm->getBlockSize() - sizeof(BlkNumType)), &newblknum, sizeof(BlkNumType));
-        /*Write out buff to currentIndex.blknum*/
-        //TODO: fix catch statement.
-        try {pm->writeDiskBlock(currentIndex.blknum, buff);}
-        catch(...){cerr << "Error RootTree::writeOut" << endl;}
-        memset(buff, 0, pm->getBlockSize());
-        currentIndex.blknum = newblknum;
-        currentIndex.offset = 0;
-      }
+      nextEntry = _lastEntry;
+      increment(&nextEntry);
     }
-    //TODO: fix catch statement.
-    try {pm->writeDiskBlock(currentIndex.blknum, buff);}
-    catch(...){cerr << "Error RootTree::writeOut" << endl;}
+    
+    if(_lastEntry.blknum != nextEntry.blknum)
+    {
+      try{pm->readDiskBlock(nextEntry.blknum, buff);}
+      catch(...){cerr << "Error RootTree::writeOut" << endl;}
+    }
+    
+    int keySize = _additions[i]->getName().length();
+    strncpy(buff + nextEntry.offset, _additions[i]->getName().c_str(), keySize);
+    
+    /*write out the blocknumber of the tagTree to buffer, probably 8 bytes?*/
+    BlkNumType tagBlk = _additions[i]->getBlockNumber();
+    memcpy(buff + nextEntry.offset + pm->getFileNameSize(), &tagBlk, sizeof(BlkNumType));
+
+    _lastEntry.blknum = nextEntry.blknum;
+    _lastEntry.offset = _lastEntry.offset;
+    
+    /*if lastEntry is the last possible entry in this block or this is the last addition*/
+    if(((pm->getBlockSize() - _lastEntry.offset) < entrySize + sizeof(BlkNumType)) 
+      || (i == (_additions.size() - 1)))
+    {
+      try {pm->writeDiskBlock(_lastEntry.blknum, buff);}
+      catch(...){cerr << "Error RootTree::writeOut" << endl;}
+    }
+    
   }
-
-  
-
-  
-  /*update _lastEntry*/
-  _lastEntry.blknum = currentIndex.blknum;
-  _lastEntry.offset = currentIndex.offset;
   
   /****************************************************************************/
   /*Write out deletions*/
-  memset(buff, 0, pm->getBlockSize()); //zero out memory
-  
-  /*For every entry with the same BlockNumber*/
-  if(_deletions.size() > 0)
-  {
-    for(size_t i = 0; i < _deletions.bucket_count(); i++)
-    {
-      currentIndex.blknum = _deletions.begin(i)->first;
-      /*Read in currentIndex.blknum*/
-      try {pm->readDiskBlock(currentIndex.blknum, buff);}
-      catch(...){cerr << "Error RootTree::writeOut" << endl;}
-      
-      /* Modify all the entries in this block */
-      for(auto local_it = _deletions.begin(i); local_it != _deletions.end(i); local_it ++)
-      {
-        currentIndex.offset = local_it->second->getIndex()->offset;
-        
-        /*Zero out name and blocknumber*/
-        memset(buff + currentIndex.offset, 0, pm->getFileNameSize() + sizeof(BlkNumType));
-      }
-      
-      /*Write out buff to currentIndex.blknum*/
-      //TODO: fix catch statement.
-      try {pm->writeDiskBlock(currentIndex.blknum, buff);}
-      catch(...){cerr << "Error RootTree::writeOut" << endl;}
-    }
-  }
+//   memset(buff, 0, pm->getBlockSize()); //zero out memory
+//   
+//   /*For every entry with the same BlockNumber*/
+//   if(_deletions.size() > 0)
+//   {
+//     for(size_t i = 0; i < _deletions.bucket_count(); i++)
+//     {
+//       currentIndex.blknum = _deletions.begin(i)->first;
+//       /*Read in currentIndex.blknum*/
+//       try {pm->readDiskBlock(currentIndex.blknum, buff);}
+//       catch(...){cerr << "Error RootTree::writeOut" << endl;}
+//       
+//       /* Modify all the entries in this block */
+//       for(auto local_it = _deletions.begin(i); local_it != _deletions.end(i); local_it ++)
+//       {
+//         currentIndex.offset = local_it->second->getIndex()->offset;
+//         
+//         /*Zero out name and blocknumber*/
+//         memset(buff + currentIndex.offset, 0, pm->getFileNameSize() + sizeof(BlkNumType));
+//       }
+//       
+//       /*Write out buff to currentIndex.blknum*/
+//       //TODO: fix catch statement.
+//       try {pm->writeDiskBlock(currentIndex.blknum, buff);}
+//       catch(...){cerr << "Error RootTree::writeOut" << endl;}
+//     }
+//   }
 
 }
 

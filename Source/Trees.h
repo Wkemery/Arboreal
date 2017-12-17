@@ -19,6 +19,8 @@ struct index
   unsigned int offset;
 };
 
+void increment(Index* index);
+
 struct rootSuperBlock 
 {
   size_t size;
