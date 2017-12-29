@@ -628,7 +628,7 @@ void TagTree::del(PartitionManager* pm)
 {
   char* buff = new char[pm->getBlockSize()];
   
-  /*Read in the first block of this tagTree*/
+  /*Read in the super block of this tagTree*/
   try{pm->readDiskBlock(_blockNumber, buff);}
   catch(...){cerr << "Error TagTree::del()" << endl;}
   
