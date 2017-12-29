@@ -192,6 +192,8 @@ void FileSystem::deleteTag(string tagName, bool force)
     }
   }
 
+  /*Delete tagTree on disk*/
+  it->second->del(_myPartitionManager);
   //   - returning blocks always zeros them
   //   - remove node from Root tree
   /*Keep track of Deletion*/

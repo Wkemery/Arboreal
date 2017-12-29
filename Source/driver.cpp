@@ -65,12 +65,12 @@ int main()
     fs2->writeChanges();
     fs3->writeChanges();
     cout << endl;
-/*    
+    
     fs1->deleteTag("tag1");
     fs2->deleteTag("tag2");
     fs3->deleteTag("tag3");
     fs1->printRoot();
-    
+/*    
     fs1->writeChanges();
     fs2->writeChanges();
     fs3->writeChanges();*/

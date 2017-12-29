@@ -11,6 +11,7 @@ typedef std::pair<std::string, unsigned int> TagTuple;
 typedef struct index Index;
 typedef struct rootSuperBlock RootSuperBlock;
 typedef struct tagTreeSuperBlock TagTreeSuperBlock;
+
 #ifndef TYPES_H
 #define TYPES_H
 
