@@ -9,7 +9,6 @@
 #include<string.h>
 #include<unordered_map>
 #include<iostream>
-
 using namespace std;
 
 bool operator ==(Index& lhs, Index& rhs)
@@ -22,7 +21,22 @@ bool operator !=(Index& lhs, Index& rhs)
   return !(lhs == rhs);
 }
 
-void incrementAllocate(Index* index, PartitionManager* pm)
+/******************************************************************************/
+TreeObject::TreeObject(string name, BlkNumType blknum)
+:_name(name), _blockNumber(blknum)
+{}
+
+TreeObject::~TreeObject(){}
+
+string TreeObject::getName(){return _name;}
+
+void TreeObject::setIndex(Index index){_index.blknum = index.blknum; _index.offset = index.offset;}
+
+Index* TreeObject::getIndex(){return &_index;}
+
+BlkNumType TreeObject::getBlockNumber(){return _blockNumber;}
+
+void TreeObject::incrementAllocate(Index* index, PartitionManager* pm)
 {
   char* buff = new char[pm->getBlockSize()];
   memset(buff, 0, pm->getBlockSize()); //zero out memory
@@ -58,7 +72,7 @@ void incrementAllocate(Index* index, PartitionManager* pm)
   }
 }
 
-void incrementFollow(Index* index, PartitionManager* pm)
+void TreeObject::incrementFollow(Index* index, PartitionManager* pm)
 {
   char* buff = new char[pm->getBlockSize()];
   memset(buff, 0, pm->getBlockSize()); //zero out memory
@@ -91,20 +105,17 @@ void incrementFollow(Index* index, PartitionManager* pm)
   }
 }
 
-/******************************************************************************/
-TreeObject::TreeObject(string name, BlkNumType blknum)
-:_name(name), _blockNumber(blknum)
-{}
-
-TreeObject::~TreeObject(){}
-
-string TreeObject::getName(){return _name;}
-
-void TreeObject::setIndex(Index index){_index.blknum = index.blknum; _index.offset = index.offset;}
-
-Index* TreeObject::getIndex(){return &_index;}
-
-BlkNumType TreeObject::getBlockNumber(){return _blockNumber;}
+void TreeObject::deleteContBlocks(PartitionManager* pm, BlkNumType blknum)
+{
+  //TODO: finish function
+  
+  try {pm->returnDiskBlock(blknum);}
+  catch(...)
+  {
+    //TODO: fix catch
+    cerr << "Error! TreeObject::deleteContBlocks" << endl;
+  }
+}
 
 /******************************************************************************/
 RootTree::RootTree():TreeObject("Root", 1)
@@ -125,7 +136,7 @@ void RootTree::insertAddition(TagTree* tag)
 
 void RootTree::insertDeletion(TagTree* tag)
 {
-  _deletions.insert(pair<BlkNumType, TagTree*>(tag->getBlockNumber(), tag));
+  _deletions.insert(pair<BlkNumType, TagTree*>(tag->getIndex()->blknum, tag));
 }
 
 void RootTree::writeOut(PartitionManager* pm)
@@ -143,7 +154,7 @@ void RootTree::writeOut(PartitionManager* pm)
       BlkNumType newblknum = 0;
       try{newblknum = pm->getFreeDiskBlock();}
       catch(...) {cerr << "Error RootTree::writeOut" << endl;}
-      _lastEntry.blknum = newblknum;
+      _lastEntry.blknum = 0;
       _lastEntry.offset = 0;
       _startBlock = newblknum;
     }
@@ -193,11 +204,24 @@ void RootTree::writeOutAdds(PartitionManager* pm)
   int entrySize = pm->getFileNameSize() + (sizeof(BlkNumType));
   
   Index nextEntry{0,0};
+  size_t startSize = _additions.size();
   
-  for(size_t i = 0; i < _additions.size(); i++)
+  
+  try{pm->readDiskBlock(_lastEntry.blknum, buff);}
+  catch(...){cerr << "Error RootTree::writeOutAdds" << endl;}
+  
+  for(size_t i = 0; i < startSize; i++)
   {
-    nextEntry = _lastEntry;
-    incrementAllocate(&nextEntry, pm);
+    if(_lastEntry.blknum == 0)
+    {
+      nextEntry.blknum = _startBlock;
+      nextEntry.offset = 0;
+    }
+    else
+    {
+      nextEntry = _lastEntry;
+      incrementAllocate(&nextEntry, pm);
+    }
     
     if(_lastEntry.blknum != nextEntry.blknum)
     {
@@ -207,12 +231,15 @@ void RootTree::writeOutAdds(PartitionManager* pm)
     
     int keySize = _additions.front()->getName().length();
     strncpy(buff + nextEntry.offset, _additions.front()->getName().c_str(), keySize);
+    memset(buff + nextEntry.offset + keySize, 0, pm->getFileNameSize() - keySize);
     
     /*write out the blocknumber of the tagTree to buffer, probably 8 bytes?*/
     BlkNumType tagBlk = _additions.front()->getBlockNumber();
     memcpy(buff + nextEntry.offset + pm->getFileNameSize(), &tagBlk, sizeof(BlkNumType));
     
     _lastEntry = nextEntry;
+    
+    _additions.front()->setIndex(_lastEntry);
     
     /*Remove Entry from Additions*/
     _additions.pop();
@@ -246,29 +273,38 @@ void RootTree::writeOutDels(PartitionManager* pm)
     if(_deletions.begin(i) != _deletions.end(i))
     {
       //There is something in this bucket
-      currentIndex.blknum = _deletions.begin(i)->first;
-      
-      /*Read in currentIndex.blknum*/
-      try {pm->readDiskBlock(currentIndex.blknum, buff);}
-      catch(...){cerr << "Error RootTree::writeOutDels" << endl;}
-      
-      /* Modify all the entries in this block */
-      for(auto local_it = _deletions.begin(i); local_it != _deletions.end(i); local_it ++)
+      if(_deletions.begin(i)->first == 0)
       {
-        currentIndex.offset = local_it->second->getIndex()->offset;
-        
-        /*Zero out name and blocknumber*/
-        memset(buff + currentIndex.offset, 0, pm->getFileNameSize() + sizeof(BlkNumType));
-        
+        cerr << "Tag Tree was never written out. Not really an error, just here for debugging" << endl;
+        //NOTE: even though it is just here for debugging don't remove the if, just the printout.
       }
-      
-      /*Write out buff to currentIndex.blknum*/
-      //TODO: fix catch statement.
-      try {pm->writeDiskBlock(currentIndex.blknum, buff);}
-      catch(...){cerr << "Error RootTree::writeOutDels" << endl;}
-      
-      _deletions.erase(currentIndex.blknum);
-      
+      else
+      {
+        currentIndex.blknum = _deletions.begin(i)->first;
+        
+        /*Read in currentIndex.blknum*/
+        try {pm->readDiskBlock(currentIndex.blknum, buff);}
+        catch(...){cerr << "Error RootTree::writeOutDels" << endl;}
+        
+        /* Modify all the entries in this block */
+        for(auto local_it = _deletions.begin(i); local_it != _deletions.end(i); local_it ++)
+        {
+          currentIndex.offset = local_it->second->getIndex()->offset;
+          
+          /*Zero out name and blocknumber*/
+          memset(buff + currentIndex.offset, 0, pm->getFileNameSize() + sizeof(BlkNumType));
+          
+          /*Remove that TagTrees presence on Disk*/
+          local_it->second->del(pm);
+        }
+        
+        /*Write out buff to currentIndex.blknum*/
+        //TODO: fix catch statement.
+        try {pm->writeDiskBlock(currentIndex.blknum, buff);}
+        catch(...){cerr << "Error RootTree::writeOutDels" << endl;}
+        
+        _deletions.erase(currentIndex.blknum);
+      }
     }
   }
 }
@@ -356,11 +392,11 @@ void RootTree::readIn(PartitionManager* pm)
   }
 }
 
-void RootTree::deleteContBlocks(PartitionManager* pm, BlkNumType blknum)
-{
-  //TODO: stub
-  
-}
+// void RootTree::deleteContBlocks(PartitionManager* pm, BlkNumType blknum)
+// {
+//   //TODO: stub
+//   
+// }
 
 void RootTree::del(PartitionManager* pm)
 {
@@ -388,7 +424,7 @@ void TagTree::insertAddition(FileInfo* file)
 
 void TagTree::insertDeletion(FileInfo* file)
 {
-  _deletions.insert(pair<BlkNumType, FileInfo*>(file->getBlockNumber(), file));
+  _deletions.insert(pair<BlkNumType, FileInfo*>(file->getIndex()->blknum, file));
 }
 
 void TagTree::writeOut(PartitionManager* pm)
@@ -406,7 +442,7 @@ void TagTree::writeOut(PartitionManager* pm)
       BlkNumType newblknum = 0;
       try{newblknum = pm->getFreeDiskBlock();}
       catch(...) {cerr << "Error TagTree::writeOut" << endl;}
-      _lastEntry.blknum = newblknum;
+      _lastEntry.blknum = 0;
       _lastEntry.offset = 0;
       _startBlock = newblknum;
     }
@@ -462,8 +498,16 @@ void TagTree::writeOutAdds(PartitionManager* pm)
   
   for(size_t i = 0; i < _additions.size(); i++)
   {
-    nextEntry = _lastEntry;
-    incrementAllocate(&nextEntry, pm);
+    if(_lastEntry.blknum == 0)
+    {
+      nextEntry.blknum = _startBlock;
+      nextEntry.offset = 0;
+    }
+    else
+    {
+      nextEntry = _lastEntry;
+      incrementAllocate(&nextEntry, pm);
+    }
     
     if(_lastEntry.blknum != nextEntry.blknum)
     {
@@ -473,6 +517,7 @@ void TagTree::writeOutAdds(PartitionManager* pm)
     
     int keySize = _additions.front()->getName().length();
     strncpy(buff + nextEntry.offset, _additions.front()->getName().c_str(), keySize);
+    memset(buff + nextEntry.offset + keySize, 0, pm->getFileNameSize() - keySize);
     
     /*write out the blocknumber of the tagTree to buffer, probably 8 bytes?*/
     BlkNumType finodeBlk = _additions.front()->getBlockNumber();
@@ -513,25 +558,36 @@ void TagTree::writeOutDels(PartitionManager* pm)
       //There is something in this bucket
       currentIndex.blknum = _deletions.begin(i)->first;
       
-      /*Read in currentIndex.blknum*/
-      try {pm->readDiskBlock(currentIndex.blknum, buff);}
-      catch(...){cerr << "Error TagTree::writeOutDels" << endl;}
-      
-      /* Modify all the entries in this block */
-      for(auto local_it = _deletions.begin(i); local_it != _deletions.end(i); local_it ++)
+      if(_deletions.begin(i)->first == 0)
       {
-        currentIndex.offset = local_it->second->getIndex()->offset;
-        
-        /*Zero out name and blocknumber*/
-        memset(buff + currentIndex.offset, 0, pm->getFileNameSize() + sizeof(BlkNumType));
+        cerr << "Tag Tree was never written out. Not really an error, just here for debugging" << endl;
+        //NOTE: even though it is just here for debugging don't remove the if, just the printout.
       }
-      
-      /*Write out buff to currentIndex.blknum*/
-      //TODO: fix catch statement.
-      try {pm->writeDiskBlock(currentIndex.blknum, buff);}
-      catch(...){cerr << "Error TagTree::writeOutDels" << endl;}
-      
-      _deletions.erase(currentIndex.blknum);
+      else
+      {
+        /*Read in currentIndex.blknum*/
+        try {pm->readDiskBlock(currentIndex.blknum, buff);}
+        catch(...){cerr << "Error TagTree::writeOutDels" << endl;}
+        
+        /* Modify all the entries in this block */
+        for(auto local_it = _deletions.begin(i); local_it != _deletions.end(i); local_it ++)
+        {
+          currentIndex.offset = local_it->second->getIndex()->offset;
+          
+          /*Zero out name and blocknumber*/
+          memset(buff + currentIndex.offset, 0, pm->getFileNameSize() + sizeof(BlkNumType));
+          
+          /*Remove that fileInode's presence on Disk*/
+          local_it->second->del(pm);
+        }
+        
+        /*Write out buff to currentIndex.blknum*/
+        //TODO: fix catch statement.
+        try {pm->writeDiskBlock(currentIndex.blknum, buff);}
+        catch(...){cerr << "Error TagTree::writeOutDels" << endl;}
+        
+        _deletions.erase(currentIndex.blknum);
+      }
     }
   }
 }
@@ -619,10 +675,10 @@ void TagTree::readIn(PartitionManager* pm)
   
 }
 
-void TagTree::deleteContBlocks(PartitionManager* pm, BlkNumType blknum)
-{
-  //TODO: stub
-}
+// void TagTree::deleteContBlocks(PartitionManager* pm, BlkNumType blknum)
+// {
+//   //TODO: stub
+// }
 
 void TagTree::del(PartitionManager* pm)
 {
@@ -632,20 +688,27 @@ void TagTree::del(PartitionManager* pm)
   try{pm->readDiskBlock(_blockNumber, buff);}
   catch(...){cerr << "Error TagTree::del()" << endl;}
   
+  TagTreeSuperBlock tagInfo;
+  memcpy(&tagInfo, buff + pm->getFileNameSize(), sizeof(TagTreeSuperBlock));
   
-  /*Look for a continuation block*/
-  BlkNumType contBlkNum;
-  memcpy(&contBlkNum, buff + (pm->getBlockSize() - sizeof(BlkNumType)), sizeof(BlkNumType));
+  /* This value could be in memory. but it may differ, and we only care about 
+   * what is written to disk. plus if we are deleting this tag tree anyway the 
+   * values in memory will be handled elsewhere*/
+  BlkNumType myStartBlock = tagInfo.startBlock; 
   
-  if(contBlkNum != 0)
+  if(myStartBlock != 0)
   {
     //TODO: catch
-    try {deleteContBlocks(pm, contBlkNum);}
+    try {deleteContBlocks(pm, myStartBlock);}
     catch(...){cerr << "Error TagTree::del" << endl;}
   }
-  //TODO: catch
-  try {pm->returnDiskBlock(_blockNumber);}
-  catch(...){cerr << "Error TagTree::del" << endl;}
+  
+  try{pm->returnDiskBlock(_blockNumber);}
+  catch(...)
+  {
+    //TODO: catch
+    cerr << "Error TagTree::del" << endl;
+  }
   
 }
 
@@ -681,8 +744,8 @@ void FileInfo::readIn(PartitionManager* pm)
 void FileInfo::del(PartitionManager* pm)
 {}
 
-void FileInfo::deleteContBlocks(PartitionManager* pm, BlkNumType blknum)
-{}
+// void FileInfo::deleteContBlocks(PartitionManager* pm, BlkNumType blknum)
+// {}
 
 /******************************************************************************/
 
