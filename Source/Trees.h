@@ -14,13 +14,14 @@ using namespace std;
 
 #ifndef TREES_H
 #define TREES_H
+
+class TreeObject;
+
 struct index
 {
   BlkNumType blknum;
   unsigned int offset;
 };
-
-
 
 struct rootSuperBlock 
 {
@@ -40,10 +41,35 @@ bool operator ==(Index& lhs, Index& rhs);
 bool operator !=(Index& lhs, Index& rhs);
 
 
+class Modification
+{
+protected:
+  TreeObject* _mod;
+  TreeObject* _parent;
+  Modification(TreeObject* obj, TreeObject* parent);
+public:
+  virtual void writeOut(PartitionManager* pm) = 0;
+};
+
+class Addition : public Modification
+{
+public:
+  Addition(TreeObject* obj, TreeObject* parent);
+  void writeOut (PartitionManager* pm);
+};
+
+class Deletion : public Modification
+{
+public:
+  Deletion(TreeObject* obj, TreeObject* parent);
+  void writeOut (PartitionManager* pm);
+};
+
 //TODO: deleteContBlocks may need to be overriden in derived classes
 class TreeObject
 {
 protected:
+  queue<Modification*> _modifications;
   TreeObject(string name, BlkNumType blknum);
   string _name;
   BlkNumType _blockNumber;
@@ -56,8 +82,11 @@ public:
   virtual void readIn(PartitionManager* pm) = 0;
   virtual void del(PartitionManager* pm) = 0;
   string getName();
-  Index* getIndex();
+  Index getIndex();
   void setIndex(Index index);
+  void setLastEntry(Index index);
+  Index getLastEntry();
+  BlkNumType getStartBlock();
   BlkNumType getBlockNumber();
   void incrementAllocate(Index* index, PartitionManager* pm);
   void incrementFollow(Index* index, PartitionManager* pm);
@@ -120,7 +149,7 @@ public:
   unordered_map<string, TagTree*>* getMap();
   void insertAddition(TagTree* tag);
   void insertDeletion(TagTree* tag);
-  void writeOutAdds(PartitionManager* pm);
+//   void writeOutAdds(PartitionManager* pm);
   void writeOutDels(PartitionManager* pm);
   /*Function Overrides*/
   void writeOut(PartitionManager* pm);
