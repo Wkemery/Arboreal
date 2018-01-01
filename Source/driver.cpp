@@ -61,7 +61,7 @@ int main()
     fs3->createTag("tag2");
     fs3->createTag("tag3");
     fs1->printRoot();
-    fs1->writeChanges();
+//     fs1->writeChanges();
     fs2->writeChanges();
     fs3->writeChanges();
     cout << endl;

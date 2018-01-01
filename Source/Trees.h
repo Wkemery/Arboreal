@@ -37,8 +37,26 @@ struct tagTreeSuperBlock
   BlkNumType startBlock;
 };
 
+struct finode
+{
+  BlkNumType attributes;
+  BlkNumType directBlocks[12];
+  BlkNumType level1Indirect;
+  BlkNumType level2Indirect;
+  BlkNumType level3Indirect;
+};
+
 bool operator ==(Index& lhs, Index& rhs);
 bool operator !=(Index& lhs, Index& rhs);
+
+class Attributes
+{
+private:
+public:
+  void writeOut(PartitionManager* pm);
+  void readIn(PartitionManager* pm);
+  void del(PartitionManager* pm);
+};
 
 
 class Modification
@@ -101,6 +119,8 @@ class FileInfo : public TreeObject
 {
 private:
   unordered_map<string, BlkNumType> _tags;
+  Attributes _myAttributes;
+  Finode _myFinode;
 public:
   FileInfo(string filename, BlkNumType blknum);
   ~FileInfo();
@@ -118,8 +138,8 @@ class TagTree : public TreeObject
 {
 private:
   unordered_map<string, FileInfo*> _tree;
-  queue<FileInfo*> _additions;
-  unordered_multimap<BlkNumType, FileInfo*> _deletions;
+//   queue<FileInfo*> _additions;
+//   unordered_multimap<BlkNumType, FileInfo*> _deletions;
 public:
   TagTree(string tagName, BlkNumType blknum);
   ~TagTree();
@@ -141,8 +161,8 @@ class RootTree : public TreeObject
 {
 private:
   unordered_map<string, TagTree*> _tree;
-  queue<TagTree*> _additions;
-  unordered_multimap<BlkNumType, TagTree*> _deletions;
+//   queue<TagTree*> _additions;
+//   unordered_multimap<BlkNumType, TagTree*> _deletions;
 public:
   RootTree();
   ~RootTree();

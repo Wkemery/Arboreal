@@ -32,6 +32,7 @@ THE LOCATION IN MAIN MEMORY WILL BE DECIDED AND ADDED ONCE WE INSTANTIATE THE TR
 
 
 **TODO:**
-1. make bitvector a vector<bool>
-2. change all lower level code to stop using 64 byte blocksize
-3. implement write/read functions.
+1. Incorporate storing number of tags associated with file in Tag tree on disk
+2. Implement Read/Write for FileInfo class
+3. Deal with being sure that File Info objects are in fact in memory, or at least their necessary parts are in memory
+
