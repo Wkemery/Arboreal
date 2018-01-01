@@ -51,7 +51,6 @@ bool operator !=(Index& lhs, Index& rhs);
 
 class Attributes
 {
-private:
 public:
   void writeOut(PartitionManager* pm);
   void readIn(PartitionManager* pm);

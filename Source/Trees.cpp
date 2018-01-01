@@ -277,8 +277,9 @@ void RootTree::writeOut(PartitionManager* pm)
   /*_blockNumber is the super block for the Root Tree */
   memset(buff, 0, pm->getBlockSize()); //zero out memory
   
-  memcpy(buff + currentIndex.offset, _name.c_str(), _name.length());
-  currentIndex.offset+=  _name.length() + 1;
+  
+  memcpy(buff + currentIndex.offset, _name.c_str(), _name.size());
+  currentIndex.offset+=  _name.size() + 1;
   
   size_t treeSize = _tree.size();
   
@@ -825,45 +826,100 @@ unordered_map<string, BlkNumType>* FileInfo::getMap()
 
 void FileInfo::writeOut(PartitionManager* pm)
 {
-  //TODO: implement block continuation
-  
   /* For this write out, we only need to write out the Finode, not anything to 
    * do with the files */
   
   /* File Inode Structure 
    * fileName
-   * Empty Space
    * Atrributes Block
    * 12 Direct Blocks
    * 1 1st level Indirect block
    * 1 2nd level Indirect block
    * 1 3rd level Indirect block
+   * Start local tag storage...
+   * possible tag cont. block
    */
   
+  /*Write out finode*/
   char* buff = new char[pm->getBlockSize()];
   memset(buff, 0, pm->getBlockSize()); //zero out memory
   
-//   Index currentIndex{_blockNumber, 0};
   
   memcpy(buff, _name.c_str(), _name.size());
-  currentIndex.offset+= pm->getFileNameSize();
   
+  memcpy(buff + (pm->getBlockSize()/2), &_myFinode, sizeof(Finode));
   
-  memcpy(buff + currentIndex.offset, &tagInfo, sizeof(TagTreeSuperBlock));
-  currentIndex.offset+=  sizeof(TagTreeSuperBlock);
+  /*This is the maximum number of tags we can store before needing a cont block*/
+  int localTagCount = ((pm->getBlockSize() / 2) - sizeof(Finode) - sizeof(BlkNumType))
+                        / sizeof(BlkNumType);
   
-  /*Write out TagTree superblock*/
-  try{pm->writeDiskBlock(currentIndex.blknum, buff);}
-  catch(...){cerr << "Error TagTree::writeOut" << endl;}
+  auto it = _tags.begin();
+  if(_tags.size() <= localTagCount)
+  {
+    /*There is room to store all the tags locally*/
+    for(size_t i = 0; i < _tags.size(); i++)
+    {
+      it++;
+    }
+  }
+  else
+  {
+    /*There is not room to store all the tags locally*/
+    for(int i = 0; i < localTagCount; i++)
+    {
+      /*Write out as many as we can*/
+      it++;
+    }
+    
+    /*Read in current Finode*/
+    char* localBuff = new char[pm->getBlockSize()];
+    memset(localBuff, 0, pm->getBlockSize()); //zero out memory
+    
+    try{pm->readDiskBlock(_blockNumber, localBuff);}
+    catch(...){cerr << "Error FileInfo::writeOut" << endl;}
+    
+    BlkNumType contBlock = 0;
+    memcpy(&contBlock, localBuff + pm->getBlockSize() - sizeof(BlkNumType), sizeof(BlkNumType));
+    
+    /*If there is already a cont. block, just overwrite it*/
+    /*If not, allocate one and write to it.*/
+    if(contBlock == 0)
+    {
+      try{contBlock = pm->getFreeDiskBlock();}
+      catch(...){cerr << "Error FileInfo::writeOut" << endl;}
+      /*Write out the cont blocknum to the finode*/
+      memcpy(buff + pm->getBlockSize() - sizeof(BlkNumType), &contBlock, sizeof(BlkNumType));
+      
+    }
+    
+    for(size_t i = 0; i < _tags.size() - localTagCount; i++)
+    {
+      /*Write out the rest of the tags into the cont block*/
+      it++;
+    }
+    
+    /*Write out the contBlock of tags*/
+    try{pm->writeDiskBlock(contBlock, localBuff);}
+    catch(...){cerr << "Error FileInfo::writeOut" << endl;}
+    
+    
+    delete localBuff;
+  }
   
+  /*Write out Finode*/
+  try{pm->writeDiskBlock(_blockNumber, buff);}
+  catch(...){cerr << "Error FileInfo::writeOut" << endl;}
+    
+  /*Write out attributes*/
+  //TODO:
   
 }
 
 void FileInfo::readIn(PartitionManager* pm)
 {
-  //TODO:stub
-  //TODO: implement block continuation
+  /*Read in all the finode data*/
   
+  /*Read in the Attributes*/
 }
 
 void FileInfo::del(PartitionManager* pm)
