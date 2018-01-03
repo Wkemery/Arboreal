@@ -93,11 +93,14 @@ protected:
   Index _index;
   Index _lastEntry; //points at the last entry
   BlkNumType _startBlock;
+  unordered_map<TreeObject*, bool> _readable;
 public:
   virtual ~TreeObject();
   virtual void writeOut(PartitionManager* pm) = 0;
   virtual void readIn(PartitionManager* pm) = 0;
   virtual void del(PartitionManager* pm) = 0;
+  bool isRead(TreeObject*);
+  void setRead(TreeObject*);
   string getName();
   Index getIndex();
   void setIndex(Index index);

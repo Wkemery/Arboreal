@@ -54,7 +54,7 @@ int main(int argc, char** argv)
   {
     case 0:
     {
-      cout << "Root Tree Initial States:" << endl;
+      cout << "Root Tree and Tag Tree's Contents:" << endl;
       cout << "Partition A" << endl;
 //       fs1->printRoot();
       fs1->printTags();
@@ -76,7 +76,6 @@ int main(int argc, char** argv)
     {
       try
       {
-        //     fs1->createTag("tag1");
         fs1->createTag("tag1");
         
         fs1->createTag("tag2");
@@ -104,6 +103,25 @@ int main(int argc, char** argv)
         fs2->writeChanges();
         fs3->writeChanges();
         
+      }
+      catch(std::exception& e)
+      {
+        cout << e.what() << endl;
+      }
+      break;
+    }
+    case 2:
+    {
+      try
+      {
+        vector<string> tagSet;
+        fs1->createFile("myfile1", tagSet);
+        tagSet.push_back("tag2");
+        fs1->createFile("myfile2", tagSet);
+        tagSet.push_back("tag3");
+        fs1->createFile("myfile3", tagSet);
+        
+        fs1->writeChanges();
       }
       catch(std::exception& e)
       {

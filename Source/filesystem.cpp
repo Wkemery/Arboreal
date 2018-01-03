@@ -236,11 +236,19 @@ void FileSystem::tagFile(FileInfo* file, vector<string> tags)
     auto it = _RootTree->getMap()->find(t);//Complexity: avg: 1, worst: size of root tree
     //   - If tag does not exist create a new Tag tree
     //not doing this
-//     if(it == _RootTree->getMap()->end()) 
-//     {
+    if(it == _RootTree->getMap()->end()) 
+    {
+      //TODO: throw error
+      cerr << "Error! FileSystem::tagFile, Tag does not exist" << endl;
 //       createTag(t);//Complexity: go to function
 //       it = _RootTree->getMap()->find(t);//Complexity: Complexity: avg: 1, worst: size of root tree
-//     }
+    }
+    /*If the tag tree has not been read in and should be, then read it in and set it as read.*/
+    if(!(_RootTree->isRead(it->second)))
+    {
+      it->second->readIn(_myPartitionManager);
+      _RootTree->setRead(it->second);
+    }
     unordered_map<string, FileInfo*>* treeptr = it->second->getMap();
     
     //   - Add Tag to Finode 
@@ -250,9 +258,8 @@ void FileSystem::tagFile(FileInfo* file, vector<string> tags)
     treeptr->insert(pair<string, FileInfo*>(file->getName(), file));//Complexity: Complexity: avg: 1, worst: size of tag tree
     /*Keep track of addition*/
     it->second->insertAddition(file);
-    /*Node a TagTree was modified*/
+    /*Note a TagTree was modified*/
     insertModification(it->second);
-    
   }
 
   // (write updated Finode to disk)
@@ -299,22 +306,25 @@ FileInfo* FileSystem::createFile(string filename, vector<string> tags)
   //TODO: fix catch statement.
   BlkNumType newblknum = 0;
   try{newblknum = _myPartitionManager->getFreeDiskBlock();}
-  catch(...){cerr << "Error trees.cpp1" << endl;}
+  catch(...){cerr << "FileSystem::createFile" << endl;}
   
   FileInfo* newFile = new FileInfo(filename, newblknum);
   
   //   - If tag not given then add file to "default" tag tree
   //   * File remains in default tag tree until a non-default tag is associated with file
-  vector<string> temp;
-  temp.push_back("default tag");
+
   if(tags.size() == 0)
   {
+    vector<string> temp;
+    temp.push_back("default");
+    
     tagFile(newFile, temp);
   }
   else
   {
     tagFile(newFile, tags);
   }
+  newFile->writeOut(_myPartitionManager);
   
   return newFile;
 }

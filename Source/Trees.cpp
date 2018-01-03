@@ -130,6 +130,25 @@ TreeObject::~TreeObject(){}
 
 string TreeObject::getName(){return _name;}
 
+bool TreeObject::isRead(TreeObject* obj)
+{
+  auto it = _readable.find(obj);
+  if(it == _readable.end())
+  {
+    return false;
+  }
+  return it->second;
+}
+
+void TreeObject::setRead(TreeObject* obj)
+{
+  auto it = _readable.find(obj);
+  if(it != _readable.end())
+  {
+    it->second = true;
+  }
+}
+
 void TreeObject::setIndex(Index index){_index.blknum = index.blknum; _index.offset = index.offset;}
 
 Index TreeObject::getIndex(){return _index;}
@@ -371,6 +390,13 @@ void RootTree::readIn(PartitionManager* pm)
         //TODO: throw error
         cerr << "Error RootTree::readIn" << endl;
       }
+      /*Insert key into _readable */
+      auto it_ret2 = _readable.insert(pair<TreeObject*, bool>(tagTree, false));
+      if(!it_ret2.second)
+      {
+        //TODO: throw error
+        cerr << "Error RootTree::readIn" << endl;
+      }
     }
     
     incrementFollow(&currentIndex, pm);
@@ -548,11 +574,17 @@ void TagTree::readIn(PartitionManager* pm)
         //TODO: throw error
         cerr << "Error RootTree::readIn" << endl;
       }
+      /*add key to _readable*/
+      auto it_ret2 = _readable.insert(pair<TreeObject*, bool>(finode, false));
+      if(!it_ret2.second)
+      {
+        //TODO: throw error
+        cerr << "Error RootTree::readIn" << endl;
+      }
     }
     
     incrementFollow(&currentIndex, pm);
   }
-  
 }
 
 void TagTree::del(PartitionManager* pm)
