@@ -30,6 +30,18 @@ Modification::Modification(TreeObject* obj, TreeObject* parent)
 
 /******************************************************************************/
 
+void Attributes::writeOut(PartitionManager* pm)
+{
+  
+}
+
+void Attributes::readIn(PartitionManager* pm)
+{
+  
+}
+
+/******************************************************************************/
+
 Addition::Addition(TreeObject* obj, TreeObject* parent):Modification(obj, parent)
 {}
 
@@ -840,10 +852,11 @@ void FileInfo::writeOut(PartitionManager* pm)
    * possible tag cont. block
    */
   
+  //TODO: If there is a cont. block but we removed enough tags, we need to make sure to free that cont block
+  
   /*Write out finode*/
   char* buff = new char[pm->getBlockSize()];
   memset(buff, 0, pm->getBlockSize()); //zero out memory
-  
   
   memcpy(buff, _name.c_str(), _name.size());
   
@@ -911,15 +924,111 @@ void FileInfo::writeOut(PartitionManager* pm)
   catch(...){cerr << "Error FileInfo::writeOut" << endl;}
     
   /*Write out attributes*/
-  //TODO:
+  try{_myAttributes.writeOut(pm);}
+  catch(...)
+  {cerr << "Error FileInfo::writeOut" << endl;}
   
 }
 
 void FileInfo::readIn(PartitionManager* pm)
 {
   /*Read in all the finode data*/
+  char* buff = new char[pm->getBlockSize()];
+  memset(buff, 0, pm->getBlockSize()); //zero out memory
+  
+  /*Read in Finode*/
+  try{pm->readDiskBlock(_blockNumber, buff);}
+  catch(...){cerr << "Error FileInfo::writeOut" << endl;}
+    
+  memcpy(&_myFinode, buff + (pm->getBlockSize()/2), sizeof(Finode));
+  
+  /*This is the maximum number of tags we can store before needing a cont block*/
+  int localTagCount = ((pm->getBlockSize() / 2) - sizeof(Finode) - sizeof(BlkNumType))
+  / sizeof(BlkNumType);
+  
+  Index currentIndex{0,(pm->getBlockSize()/2) + sizeof(Finode)}; 
+  char* localBuff = new char[pm->getBlockSize()];
+  memset(buff, 0, pm->getBlockSize()); //zero out memory
+  string tagName;
+  BlkNumType tagBlk = 0;
+  
+  /*Read in the Cont. block*/
+  BlkNumType contBlock = 0;
+  memcpy(&contBlock, localBuff + pm->getBlockSize() - sizeof(BlkNumType), sizeof(BlkNumType));
+  
+  /*If there is a cont. block */
+  if(contBlock != 0)
+  {
+    /*Read in everything we can, then all the cont block tags*/
+    for(int i = 0; i < localTagCount; i++)
+    {
+      /*Read in tagBlk number*/
+      memcpy(&tagBlk, buff + currentIndex.offset, sizeof(BlkNumType));
+      currentIndex.offset += sizeof(BlkNumType);
+      
+      /*Read in tagBlk to localbuff*/
+      try{pm->readDiskBlock(tagBlk, localBuff);}
+      catch(...){cerr << "Error FileInfo::writeOut" << endl;}
+      
+      /*Save tag name*/
+      tagName.assign(localBuff, pm->getFileNameSize());
+      tagName = tagName.substr(0, _name.find_first_of('\0'));
+      
+      /*Insert tag and tagblknum to _tags*/
+      _tags.insert(pair<string, BlkNumType>(tagName, tagBlk));
+    }
+    
+    do
+    {
+      /*Read in tagBlk number*/
+      memcpy(&tagBlk, buff + currentIndex.offset, sizeof(BlkNumType));
+      currentIndex.offset += sizeof(BlkNumType);
+      
+      /*Read in tagBlk to localbuff*/
+      try{pm->readDiskBlock(tagBlk, localBuff);}
+      catch(...){cerr << "Error FileInfo::writeOut" << endl;}
+      
+      /*Save tag name*/
+      tagName.assign(localBuff, pm->getFileNameSize());
+      tagName = tagName.substr(0, _name.find_first_of('\0'));
+      
+      /*Insert tag and tagblknum to _tags*/
+      _tags.insert(pair<string, BlkNumType>(tagName, tagBlk));
+      
+    }while(tagBlk != 0);
+    
+  }
+  else
+  {
+    /*Read in till we hit a zero entry, or the local tag count*/
+    
+    int i = 0;
+    do
+    {
+      /*Read in tagBlk number*/
+      memcpy(&tagBlk, buff + currentIndex.offset, sizeof(BlkNumType));
+      currentIndex.offset += sizeof(BlkNumType);
+      
+      /*Read in tagBlk to localbuff*/
+      try{pm->readDiskBlock(tagBlk, localBuff);}
+      catch(...){cerr << "Error FileInfo::writeOut" << endl;}
+      
+      /*Save tag name*/
+      tagName.assign(localBuff, pm->getFileNameSize());
+      tagName = tagName.substr(0, _name.find_first_of('\0'));
+      
+      /*Insert tag and tagblknum to _tags*/
+      _tags.insert(pair<string, BlkNumType>(tagName, tagBlk));
+      
+      i++;
+    }while(tagBlk != 0 && i < localTagCount);
+    
+  }
   
   /*Read in the Attributes*/
+  try{_myAttributes.readIn(pm);}
+  catch(...)
+  {cerr << "Error FileInfo::writeOut" << endl;}
 }
 
 void FileInfo::del(PartitionManager* pm)
