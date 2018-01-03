@@ -83,6 +83,7 @@ public:
   
   /*DEBUG functions*/
   void printRoot();
+  void printTags();
   
 };
 

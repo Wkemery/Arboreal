@@ -11,9 +11,23 @@
 #include<fstream>
 using namespace std;
 
+struct index
+{
+  BlkNumType blknum;
+  unsigned int offset;
+};
+
+struct rootSuperBlock 
+{
+  size_t size;
+  Index lastEntry;
+  BlkNumType startBlock;
+};
 
 int main(int argc, char** argv)
 {
+  int fileNameSize;
+  
   if(argc != 2)
   {
     cerr << "Error ! \nUsage: format filename" << endl;
@@ -92,7 +106,6 @@ int main(int argc, char** argv)
     offset+= sizeof(BlkNumType);
     partStart+= partitionsize;
     
-    int fileNameSize;
     file >> fileNameSize;
     /*Write out filenamesize limit*/
     memcpy(buff + offset, &fileNameSize, sizeof(int));
@@ -109,18 +122,44 @@ int main(int argc, char** argv)
     memset(buff, 0, blockSize);
     
     BlkNumType prev = partSizes[i] - 1;
-    BlkNumType next = 2;
+    BlkNumType next = 4;
 //     cout << partSizes[i] << endl;
     
     memcpy(buff, &next, sizeof(BlkNumType));
     memcpy(buff + sizeof(BlkNumType), &prev, sizeof(BlkNumType));
    
+    /*Block 0 of part. is part super block*/
     disk.write(buff, blockSize);
-    disk.seekp(512, ios_base::cur);
+    
+    /*Block 1 of part. is root super block*/
+    string rootName = "root";
+    memset(buff, 0, blockSize);
+    memcpy(buff, rootName.c_str(), rootName.size());
+    struct index tempindex{2,fileNameSize + sizeof(BlkNumType)};
+    struct rootSuperBlock tempSuperBlock{0, tempindex, 2};
+    memcpy(buff + 5, &tempSuperBlock, sizeof(rootSuperBlock));
+    disk.write(buff, blockSize);
+    
+    /*Block 2 of part. is root start block contains entry for default tag tree*/
+    string def = "default";
+    BlkNumType defTagStart = 3;
+    memset(buff, 0, blockSize);
+    memcpy(buff, def.c_str(), def.size());
+    memcpy(buff + fileNameSize, &defTagStart, sizeof(BlkNumType));
+    
+    disk.write(buff, blockSize);
+    
+    /*Block 3 of part. is default tag tree super block*/
+    memset(buff, 0, blockSize);
+    
+    strncpy(buff, def.c_str(), def.size());
+    disk.write(buff, blockSize);
+    
     prev = 0;
     next++;
     
-    for(BlkNumType k = 2; k < partSizes[i]; k++)
+    /*Start at partition Block 4*/
+    for(BlkNumType k = 4; k < partSizes[i]; k++)
     {
       memset(buff, 0, blockSize);
       memcpy(buff, &prev, sizeof(BlkNumType));
