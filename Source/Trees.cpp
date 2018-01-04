@@ -323,7 +323,7 @@ void RootTree::readIn(PartitionManager* pm)
   /*Read in RootTree superblock*/
   //TODO: fix catch statement.
   try{pm->readDiskBlock(currentIndex.blknum, buff);}
-  catch(...){cerr << "Error RootTree::readIn" << endl;}
+  catch(...){cerr << "Error RootTree::readIn1" << endl;}
   
   /*Store values from Root Tree superblock*/
 //   _name.assign(buff + currentIndex.offset, 5);
@@ -351,7 +351,7 @@ void RootTree::readIn(PartitionManager* pm)
   
   //TODO: fix catch statement.
   try{pm->readDiskBlock(currentIndex.blknum, buff);}
-  catch(...){cerr << "Error RootTree::readIn" << endl;}
+  catch(...){cerr << "Error RootTree::readIn2" << endl;}
 
   Index EOFIndex{0,0};
   
@@ -371,7 +371,7 @@ void RootTree::readIn(PartitionManager* pm)
       if(blknum == 0)
       {
         //TODO: throw error
-        cerr << "Error RootTree::readIn" << endl;
+        cerr << "Error RootTree::readIn3" << endl;
       }
       
       /*Create TagTree object*/
@@ -380,7 +380,7 @@ void RootTree::readIn(PartitionManager* pm)
       if(tagTree == 0)
       {
         //TODO: throw error
-        cerr << "Error RootTree::readIn" << endl;
+        cerr << "Error RootTree::readIn4" << endl;
       }
       
       /*Insert key and value into tagtree in memory*/
@@ -388,14 +388,14 @@ void RootTree::readIn(PartitionManager* pm)
       if(!it_ret.second)
       {
         //TODO: throw error
-        cerr << "Error RootTree::readIn" << endl;
+        cerr << "Error RootTree::readIn5" << endl;
       }
       /*Insert key into _readable */
       auto it_ret2 = _readable.insert(pair<TreeObject*, bool>(tagTree, false));
       if(!it_ret2.second)
       {
         //TODO: throw error
-        cerr << "Error RootTree::readIn" << endl;
+        cerr << "Error RootTree::readIn6" << endl;
       }
     }
     
@@ -507,7 +507,7 @@ void TagTree::readIn(PartitionManager* pm)
   /*Read in tagTree superblock*/
   //TODO: fix catch statement.
   try{pm->readDiskBlock(currentIndex.blknum, buff);}
-  catch(...){cerr << "Error TagTree::readIn" << endl;}
+  catch(...){cerr << "Error TagTree::readIn1" << endl;}
   
   /*Store values from superblock*/
   _name.assign(buff + currentIndex.offset, pm->getFileNameSize());
@@ -535,7 +535,7 @@ void TagTree::readIn(PartitionManager* pm)
   
   //TODO: fix catch statement.
   try{pm->readDiskBlock(currentIndex.blknum, buff);}
-  catch(...){cerr << "Error TagTree::readIn" << endl;}
+  catch(...){cerr << "Error TagTree::readIn2" << endl;}
   
   Index EOFIndex{0,0};
   
@@ -555,7 +555,7 @@ void TagTree::readIn(PartitionManager* pm)
       if(blknum == 0)
       {
         //TODO: throw error
-        cerr << "Error RootTree::readIn" << endl;
+        cerr << "Error TagTree::readIn3" << endl;
       }
       
       /*Create FileInfo object*/
@@ -564,7 +564,7 @@ void TagTree::readIn(PartitionManager* pm)
       if(finode == 0)
       {
         //TODO: throw error
-        cerr << "Error RootTree::readIn" << endl;
+        cerr << "Error TagTree::readIn4" << endl;
       }
       
       /*Insert key and value into FileInfo object in memory*/
@@ -572,14 +572,14 @@ void TagTree::readIn(PartitionManager* pm)
       if(!it_ret.second)
       {
         //TODO: throw error
-        cerr << "Error RootTree::readIn" << endl;
+        cerr << "Error TagTree::readIn5" << endl;
       }
       /*add key to _readable*/
       auto it_ret2 = _readable.insert(pair<TreeObject*, bool>(finode, false));
       if(!it_ret2.second)
       {
         //TODO: throw error
-        cerr << "Error RootTree::readIn" << endl;
+        cerr << "Error TagTree::readIn6" << endl;
       }
     }
     

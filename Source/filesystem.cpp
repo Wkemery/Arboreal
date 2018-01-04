@@ -33,6 +33,7 @@ FileSystem::FileSystem(DiskManager *dm, string fileSystemName)
   /*Read in default tag Tree.*/
   auto it = _RootTree->getMap()->find("default");
   it->second->readIn(_myPartitionManager);
+  _RootTree->setRead(it->second);
   
 }
 
@@ -535,6 +536,12 @@ void FileSystem::printTags()
   for(auto it = _RootTree->getMap()->begin(); it != _RootTree->getMap()->end(); it++)
   {
     cout << "TagName: " << it->first << " \tBlockNumber: " << it->second->getBlockNumber() << endl;
+    if(!_RootTree->isRead(it->second))
+    {
+      it->second->readIn(_myPartitionManager);
+      _RootTree->setRead(it->second);
+    }
+    
     for(auto it2 = it->second->getMap()->begin(); it2 != it->second->getMap()->end(); it2++)
     {
       cout << "\t FileName: " << it2->first << " \tBlockNumber: " << it->second->getBlockNumber() << endl;
