@@ -625,7 +625,7 @@ FileInfo::FileInfo(string fileName,BlkNumType blknum):TreeObject(fileName, blknu
 
 FileInfo::~FileInfo(){}
 
-unordered_map<string, BlkNumType>* FileInfo::getMap()
+map<string, BlkNumType>* FileInfo::getMap()
 {
   return &_tags;
 }

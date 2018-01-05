@@ -28,12 +28,24 @@ FileSystem::FileSystem(DiskManager *dm, string fileSystemName)
   _RootTree = new RootTree();
   _RootTree->readIn(_myPartitionManager);
   
-  /*Read in everything else we want on startup*/
+  /*Read in every tag Tree*/
+  for(auto it = _RootTree->getMap()->begin(); it != _RootTree->getMap()->end(); it++)
+  {
+    it->second->readIn(_myPartitionManager);
+    for(auto it2 = it->second->getMap()->begin(); it2 != it->second->getMap()->end(); it++)
+    {
+      it->second->readIn(_myPartitionManager);
+    }
+  }
   
-  /*Read in default tag Tree.*/
-  auto it = _RootTree->getMap()->find("default");
-  it->second->readIn(_myPartitionManager);
-  _RootTree->setRead(it->second);
+  //TODO: for now just gonna read in every finode as well. maybe change later to not read in full finode at this time
+  //TODO: in that case use the below code to use the read marker to figure out what has and has not been read in.
+  
+  
+//   /*Read in default tag Tree.*/
+//   auto it = _RootTree->getMap()->find("default");
+//   it->second->readIn(_myPartitionManager);
+//   _RootTree->setRead(it->second);
   
 }
 
@@ -226,6 +238,25 @@ void FileSystem::mergeTags(string tag1, string tag2)
 void FileSystem::tagFile(FileInfo* file, vector<string>& tags)
 {
   //for all tags in the vector
+  /*Validate the tagging of this file first*/
+  if(tags.size() == 0)
+  {
+    cerr << "No tags specified : File not Tagged" << endl;
+    return;
+  }
+  if(file == 0)
+  {
+    cerr << "File Does not Exist: File Not Tagged" << endl;
+    return;
+  }
+  
+  auto tagTreeptr = _RootTree->getMap()->find(tags[0]);
+  auto ret = tagTreeptr->second->getMap()->find(mangle(file));
+  if(ret != tagTreeptr->second->getMap()->end())
+  {
+    throw file_error("File with specified tags already exists", "FileSystem::tagFile");
+  }
+  
   for(auto t : tags)//Complexity: avg:number of tags specified , worst: number of tags specified * size of root tree
   {
     //   - find tagTree
@@ -240,11 +271,12 @@ void FileSystem::tagFile(FileInfo* file, vector<string>& tags)
 //       it = _RootTree->getMap()->find(t);//Complexity: Complexity: avg: 1, worst: size of root tree
     }
     /*If the tag tree has not been read in and should be, then read it in and set it as read.*/
-    if(!(_RootTree->isRead(it->second)))
-    {
-      it->second->readIn(_myPartitionManager);
-      _RootTree->setRead(it->second);
-    }
+    //TODO: cleanup here
+//     if(!(_RootTree->isRead(it->second)))
+//     {
+//       it->second->readIn(_myPartitionManager);
+//       _RootTree->setRead(it->second);
+//     }
     unordered_map<string, FileInfo*>* treeptr = it->second->getMap();
     
     //   - Add Tag to Finode 
@@ -255,7 +287,7 @@ void FileSystem::tagFile(FileInfo* file, vector<string>& tags)
     }
     
     //   - Create and Add new Node to TagTree
-    auto ret2 = treeptr->insert(pair<string, FileInfo*>(file->getName(), file));//Complexity: Complexity: avg: 1, worst: size of tag tree
+    auto ret2 = treeptr->insert(pair<string, FileInfo*>(mangle(file), file));//Complexity: Complexity: avg: 1, worst: size of tag tree
     if(!ret2.second)
     {
       throw file_error(file->getName() + " with the specified tags already exists", "FileSystem::tagFile");
@@ -337,7 +369,7 @@ void FileSystem::deleteFile(FileInfo* file)
   //   NOTE: File will be referenced by Finode block number(fidentifier)
   //   - check to make sure file exists, you have a FileInfo*, so file must exist
   vector<string> tags;
-  unordered_map<string, BlkNumType>* fileTags = file->getMap();
+  auto fileTags = file->getMap();
   for(auto it = fileTags->begin(); it != fileTags->end(); it++)//Complexity: number of tags associated with file
   {
     tags.push_back(it->first);
@@ -412,11 +444,12 @@ void FileSystem::printTags()
   for(auto it = _RootTree->getMap()->begin(); it != _RootTree->getMap()->end(); it++)
   {
     cout << "TagName: " << it->first << " \tBlockNumber: " << it->second->getBlockNumber() << endl;
-    if(!_RootTree->isRead(it->second))
-    {
-      it->second->readIn(_myPartitionManager);
-      _RootTree->setRead(it->second);
-    }
+    //TODO: cleanup here
+//     if(!_RootTree->isRead(it->second))
+//     {
+//       it->second->readIn(_myPartitionManager);
+//       _RootTree->setRead(it->second);
+//     }
     
     for(auto it2 = it->second->getMap()->begin(); it2 != it->second->getMap()->end(); it2++)
     {
@@ -430,3 +463,15 @@ bool operator==(const FileOpen& lhs, const FileOpen& rhs)
   if((lhs.finodeblk == rhs.finodeblk)) return true;
   else return false;
 }
+
+string mangle(FileInfo* obj)
+{
+  string ret = obj->getName();
+  for(auto it = obj->getMap()->begin(); it != obj->getMap()->end(); it++)
+  {
+    ret.append("_");
+    ret.append(it->first);
+  }
+  return ret;
+}
+

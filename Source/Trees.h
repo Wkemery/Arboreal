@@ -10,6 +10,7 @@
 #include<string>
 #include"partitionmanager.h"
 #include<queue>
+#include<map>
 using namespace std;
 
 #ifndef TREES_H
@@ -120,13 +121,13 @@ protected:
 class FileInfo : public TreeObject
 {
 private:
-  unordered_map<string, BlkNumType> _tags;
+  map<string, BlkNumType> _tags;
   Attributes _myAttributes;
   Finode _myFinode;
 public:
   FileInfo(string filename, BlkNumType blknum);
   ~FileInfo();
-  unordered_map<string, BlkNumType>* getMap();
+  map<string, BlkNumType>* getMap();
   /*Function Overrides*/
   void writeOut(PartitionManager* pm);
   void readIn(PartitionManager* pm);
