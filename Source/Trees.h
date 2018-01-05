@@ -15,7 +15,7 @@ using namespace std;
 
 #ifndef TREES_H
 #define TREES_H
-
+class FileInfo;
 class TreeObject;
 
 struct index
@@ -98,7 +98,7 @@ protected:
 public:
   virtual ~TreeObject();
   virtual void writeOut(PartitionManager* pm) = 0;
-  virtual void readIn(PartitionManager* pm) = 0;
+  virtual void readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*>* allFiles) = 0;
   virtual void del(PartitionManager* pm) = 0;
   bool isRead(TreeObject*);
   void setRead(TreeObject*);
@@ -128,9 +128,10 @@ public:
   FileInfo(string filename, BlkNumType blknum);
   ~FileInfo();
   map<string, BlkNumType>* getMap();
+  string mangle();
   /*Function Overrides*/
   void writeOut(PartitionManager* pm);
-  void readIn(PartitionManager* pm);
+  void readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*>* allFiles);
   void del(PartitionManager* pm);
 //   void deleteContBlocks(PartitionManager* pm, BlkNumType blknum);
 
@@ -153,7 +154,7 @@ public:
   void writeOutDels(PartitionManager* pm);
   /*Function Overrides*/
   void writeOut(PartitionManager* pm);
-  void readIn(PartitionManager* pm);
+  void readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*>* allFiles);
 //   void deleteContBlocks(PartitionManager* pm, BlkNumType blknum);
   void del(PartitionManager* pm);
   /*del() will remove the tag tree's presence on disk. That includes removing all 
@@ -176,7 +177,7 @@ public:
   void writeOutDels(PartitionManager* pm);
   /*Function Overrides*/
   void writeOut(PartitionManager* pm);
-  void readIn(PartitionManager* pm);
+  void readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*>* allFiles);
 //   void deleteContBlocks(PartitionManager* pm, BlkNumType blknum);
   void del(PartitionManager* pm);//TODO: maybe unnecesary?
   

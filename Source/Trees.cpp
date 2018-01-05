@@ -314,7 +314,7 @@ void RootTree::writeOut(PartitionManager* pm)
   catch(...){cerr << "Error RootTree::writeOut" << endl;}
 }
 
-void RootTree::readIn(PartitionManager* pm)
+void RootTree::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*>* allFiles)
 {
   char* buff = new char[pm->getBlockSize()];
   memset(buff, 0, pm->getBlockSize()); //zero out memory
@@ -390,13 +390,13 @@ void RootTree::readIn(PartitionManager* pm)
         //TODO: throw error
         cerr << "Error RootTree::readIn5" << endl;
       }
-      /*Insert key into _readable */
-      auto it_ret2 = _readable.insert(pair<TreeObject*, bool>(tagTree, false));
-      if(!it_ret2.second)
-      {
-        //TODO: throw error
-        cerr << "Error RootTree::readIn6" << endl;
-      }
+//       /*Insert key into _readable */
+//       auto it_ret2 = _readable.insert(pair<TreeObject*, bool>(tagTree, false));
+//       if(!it_ret2.second)
+//       {
+//         //TODO: throw error
+//         cerr << "Error RootTree::readIn6" << endl;
+//       }
     }
     
     incrementFollow(&currentIndex, pm);
@@ -497,7 +497,7 @@ void TagTree::writeOut(PartitionManager* pm)
 
 }
 
-void TagTree::readIn(PartitionManager* pm)
+void TagTree::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*>* allFiles)
 {
   //TODO: incorporate file number of tags
   char* buff = new char[pm->getBlockSize()];
@@ -568,19 +568,28 @@ void TagTree::readIn(PartitionManager* pm)
       }
       
       /*Insert key and value into FileInfo object in memory*/
-      auto it_ret = _tree.insert(pair<string, FileInfo*>(fileName, finode));
+      auto it_ret = _tree.insert(pair<string, FileInfo*>(finode->mangle(), finode));
       if(!it_ret.second)
       {
         //TODO: throw error
         cerr << "Error TagTree::readIn5" << endl;
       }
-      /*add key to _readable*/
-      auto it_ret2 = _readable.insert(pair<TreeObject*, bool>(finode, false));
-      if(!it_ret2.second)
+      
+      /*add to allFiles*/
+      auto it_ret2 = allFiles->insert(pair<string, FileInfo*>(fileName, finode));
+      if(!it_ret2->second)
       {
         //TODO: throw error
-        cerr << "Error TagTree::readIn6" << endl;
+        cerr << "Error TagTree::readIn5" << endl;
       }
+      
+//       /*add key to _readable*/
+//       auto it_ret2 = _readable.insert(pair<TreeObject*, bool>(finode, false));
+//       if(!it_ret2.second)
+//       {
+//         //TODO: throw error
+//         cerr << "Error TagTree::readIn6" << endl;
+//       }
     }
     
     incrementFollow(&currentIndex, pm);
@@ -724,7 +733,7 @@ void FileInfo::writeOut(PartitionManager* pm)
   
 }
 
-void FileInfo::readIn(PartitionManager* pm)
+void FileInfo::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*>* allFiles)
 {
   /*Read in all the finode data*/
   char* buff = new char[pm->getBlockSize()];
@@ -827,6 +836,18 @@ void FileInfo::readIn(PartitionManager* pm)
 
 void FileInfo::del(PartitionManager* pm)
 {}
+
+string FileInfo::mangle()
+{
+  string ret = _name;
+  for(auto it = _tags.begin(); it != _tags.end(); it++)
+  {
+    ret.append("_");
+    ret.append(it->first);
+  }
+  return ret;
+}
+
 
 /******************************************************************************/
 

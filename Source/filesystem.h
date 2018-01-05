@@ -13,13 +13,10 @@
 #include <vector>
 #include <unordered_map>
 #include<map>
-#include<map>
 #include<string>
 
 #ifndef FILESYSTEM_H
 #define FILESYSTEM_H
-
-string mangle(FileInfo* obj);
 
 class FileOpen{
 public:
@@ -53,8 +50,7 @@ class FileSystem {
   RootTree* _RootTree;
   map<TreeObject*, int> _modifiedObjects;
   void insertModification(TreeObject* object);
-//   unordered_map<TagTuple, TagTree*, PairHash> _RootTree;
-/******************************************************************************/
+  unordered_multimap<string, FileInfo*> _allFiles;
 
 /******************************************************************************/
 

@@ -26,15 +26,15 @@ FileSystem::FileSystem(DiskManager *dm, string fileSystemName)
   
   /*Read in the root tree*/
   _RootTree = new RootTree();
-  _RootTree->readIn(_myPartitionManager);
+  _RootTree->readIn(_myPartitionManager, &_allFiles);
   
   /*Read in every tag Tree*/
   for(auto it = _RootTree->getMap()->begin(); it != _RootTree->getMap()->end(); it++)
   {
-    it->second->readIn(_myPartitionManager);
+    it->second->readIn(_myPartitionManager, &_allFiles);
     for(auto it2 = it->second->getMap()->begin(); it2 != it->second->getMap()->end(); it++)
     {
-      it->second->readIn(_myPartitionManager);
+      it->second->readIn(_myPartitionManager, &_allFiles);
     }
   }
   
@@ -251,7 +251,7 @@ void FileSystem::tagFile(FileInfo* file, vector<string>& tags)
   }
   
   auto tagTreeptr = _RootTree->getMap()->find(tags[0]);
-  auto ret = tagTreeptr->second->getMap()->find(mangle(file));
+  auto ret = tagTreeptr->second->getMap()->find(file->mangle());
   if(ret != tagTreeptr->second->getMap()->end())
   {
     throw file_error("File with specified tags already exists", "FileSystem::tagFile");
@@ -287,7 +287,7 @@ void FileSystem::tagFile(FileInfo* file, vector<string>& tags)
     }
     
     //   - Create and Add new Node to TagTree
-    auto ret2 = treeptr->insert(pair<string, FileInfo*>(mangle(file), file));//Complexity: Complexity: avg: 1, worst: size of tag tree
+    auto ret2 = treeptr->insert(pair<string, FileInfo*>(file->mangle(), file));//Complexity: Complexity: avg: 1, worst: size of tag tree
     if(!ret2.second)
     {
       throw file_error(file->getName() + " with the specified tags already exists", "FileSystem::tagFile");
@@ -464,14 +464,5 @@ bool operator==(const FileOpen& lhs, const FileOpen& rhs)
   else return false;
 }
 
-string mangle(FileInfo* obj)
-{
-  string ret = obj->getName();
-  for(auto it = obj->getMap()->begin(); it != obj->getMap()->end(); it++)
-  {
-    ret.append("_");
-    ret.append(it->first);
-  }
-  return ret;
-}
+
 
