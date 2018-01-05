@@ -7,6 +7,7 @@
 #include "diskmanager.h"
 #include "partitionmanager.h"
 #include "types.h"
+#include "Arboreal_Exceptions.h"
 
 #include "Trees.h"
 #include <vector>
@@ -64,9 +65,9 @@ public:
   void createTag(string tagName);
   void deleteTag(string tagName, bool force = false);
   void mergeTags(string tag1, string tag2);
-  void tagFile(FileInfo* file, vector<string> tags);
+  void tagFile(FileInfo* file, vector<string>& tags);
   void untagFile(FileInfo* file, vector<string> tags);
-  FileInfo* createFile(string filename, vector<string> tags);
+  FileInfo* createFile(string filename, vector<string>& tags);
   void deleteFile(FileInfo* file);
   void writeChanges();
   

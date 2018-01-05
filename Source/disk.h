@@ -1,5 +1,5 @@
 #include "types.h"
-
+#include "Arboreal_Exceptions.h"
 
 #ifndef DISK_H
 #define DISK_H
@@ -15,9 +15,14 @@ class Disk {
 
   Disk(BlkNumType numblocks, int blksz, char *fname);
     ~Disk();
-    int initDisk();
-    int readDiskBlock(BlkNumType blknum, char *blkdata);
-    int writeDiskBlock(BlkNumType blknum, char *blkdata);
+    void readDiskBlock(BlkNumType blknum, char *blkdata);
+    /*
+     * Throws: invalid_arg, disk_error
+     */
+    void writeDiskBlock(BlkNumType blknum, char *blkdata);
+    /*
+     * Throws: invalid_arg, disk_error
+     */
     int getBlockSize() {return (blkSize);};
     int getBlockCount() {return (blkCount);};
 };

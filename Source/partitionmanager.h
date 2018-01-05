@@ -4,7 +4,6 @@
 #ifndef PARTMANAGER_H
 #define PARTMANAGER_H
 class PartitionManager {
-  //TODO: modify functions to throw
 private:
   string _partitionName;
   BlkNumType _partitionSize;//in blocks
@@ -21,6 +20,7 @@ public:
   int getBlockSize();
   BlkNumType getFreeDiskBlock();
   void returnDiskBlock(BlkNumType blknum);
+  /* Throws: invalid_arg */
   string getPartitionName();
   int getFileNameSize();
   bool operator==(const PartitionManager& rhs);

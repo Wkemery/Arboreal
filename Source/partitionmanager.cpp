@@ -14,10 +14,9 @@ PartitionManager::PartitionManager(DiskManager *dm, string partitionName)
   _fileNameSize = dm->findPart(partitionName)->fileNameSize;
 
   char* buff = new char[getBlockSize()];
-  //TODO: fix catch
   //relative block 0 is where the next free ptr will be stored.
-  try {readDiskBlock(0, buff);}
-  catch(...){cerr << "Error part.cpp constructor" << endl;}
+  
+  readDiskBlock(0, buff);
   
   int offset = 0;//byte 0 is where the start of free list is
   BlkNumType blknum;
@@ -25,8 +24,10 @@ PartitionManager::PartitionManager(DiskManager *dm, string partitionName)
   offset+= sizeof(BlkNumType);
   if(blknum == 0)
   {
-    //TODO: some sort of error here.
-    cerr << "Error part.cpp constructor2" << endl;
+    /*No freelist, disk must be full*/
+    //TODO: this is probably gonna print twice
+    cerr << "Partition" << _partitionName << " has run out of space!" << endl;
+//     throw disk_error("Partition Full", "PartitionManager::PartitionManager");
   }
   
   _freeBlockStart = blknum;
@@ -34,8 +35,10 @@ PartitionManager::PartitionManager(DiskManager *dm, string partitionName)
   memcpy(&blknum, buff + offset, sizeof(BlkNumType));
   if(blknum == 0)
   {
-    //TODO: some sort of error here.
-    cerr << "Error part.cpp constructor3" << endl;
+    //TODO: same thing as above.
+    /*No freelist, disk must be full*/
+    cerr << "Partition" << _partitionName << " has run out of space!" << endl;
+//     throw disk_error("Partition Full", "PartitionManager::PartitionManager");
   }
   
   _freeBlockEnd = blknum;
@@ -47,11 +50,10 @@ PartitionManager::~PartitionManager()
 
 BlkNumType PartitionManager::getFreeDiskBlock()
 {
-  //TODO: what is freeblock start and end are the same?
+  //TODO: what if freeblock start and end are the same? well then this must be the last free block
   char* buff = new char[getBlockSize()];
   BlkNumType ret = _freeBlockStart;
-  try {readDiskBlock(_freeBlockStart, buff);}
-  catch(...){cerr << "Error part.cpp getFreeDiskBlock" << endl;}
+  readDiskBlock(_freeBlockStart, buff);
   
   int offset = sizeof(BlkNumType);//second position is where the next free block is
   BlkNumType blknum;
@@ -59,31 +61,26 @@ BlkNumType PartitionManager::getFreeDiskBlock()
   
   if(blknum == 0)
   {
-    //TODO: some sort of error here.
-    cerr << "Error part.cpp getFreeDiskBlock2" << endl;
+    /*There is no next free block, this must be the last one*/
+    cerr << "WARNING! Last free block allocated" << endl;
   }
   
   _freeBlockStart = blknum;
   
   /*Write out freeblock*/
-  try {readDiskBlock(0, buff);}
-  catch(...){cerr << "Error part.cpp getFreeDiskBlock3" << endl;}
+  readDiskBlock(0, buff);
   
   memcpy(buff, &_freeBlockStart, sizeof(BlkNumType));
   
   /*Write out block 0*/
-  try {writeDiskBlock(0, buff);}
-  catch(...){cerr << "Error part.cpp getFreeDiskBlock4" << endl;}
+  writeDiskBlock(0, buff);
   
   /*update/write out new _freeBlockStart*/
-  try {readDiskBlock(_freeBlockStart, buff);}
-  catch(...){cerr << "Error part.cpp getFreeDiskBlock3" << endl;}
+  readDiskBlock(_freeBlockStart, buff);
   
   /*Set previous to 0*/
   memset(buff, 0, sizeof(BlkNumType));
-  try {writeDiskBlock(_freeBlockStart, buff);}
-  catch(...){cerr << "Error part.cpp getFreeDiskBlock4" << endl;}
-  
+  writeDiskBlock(_freeBlockStart, buff);
   
   return ret;
   
@@ -97,56 +94,43 @@ void PartitionManager::returnDiskBlock(BlkNumType blknum)
   
   if (blknum == 0 || blknum > _partitionSize)
   {
-    cerr << "Error part.cpp returnDiskBlock" << endl;
+    throw invalid_arg("Blocknumber out of bounds", "PartitionManager::returnDiskBlock");
   }
 
   /*Add blknum to end of free list */
   /*Read in last free block, modify position 2, the next block*/
-  try {readDiskBlock(_freeBlockEnd, buff);}
-  catch(...){cerr << "Error part.cpp returnDiskBlock2" << endl;}
+  readDiskBlock(_freeBlockEnd, buff);
   
   memcpy(buff + offset, &blknum, sizeof(BlkNumType));
   
-  try {writeDiskBlock(_freeBlockEnd, buff);}
-  catch(...){cerr << "Error part.cpp returnDiskBlock3" << endl;}
+  writeDiskBlock(_freeBlockEnd, buff);
   
-  //TODO: always zeroing block, acutally less work.
+  /*NOTE: always zeroing block, acutally less work.*/
   /*prepare block for returning*/
   memset(buff, 0, getBlockSize());
   memcpy(buff, &_freeBlockEnd ,sizeof(BlkNumType));
   _freeBlockEnd = blknum;
  
   /*Write out new blockend*/
-  try {writeDiskBlock(_freeBlockEnd, buff);}
-  catch(...){cerr << "Error part.cpp returnDiskBlock4" << endl;}
+  writeDiskBlock(_freeBlockEnd, buff);
   
   /*Update superblock with new end of free list*/
-  try {readDiskBlock(0, buff);}
-  catch(...){cerr << "Error part.cpp returnDiskBlock2" << endl;}
+  readDiskBlock(0, buff);
   
   memcpy(buff + offset, &blknum, sizeof(BlkNumType));
   
-  try {writeDiskBlock(0, buff);}
-  catch(...){cerr << "Error part.cpp returnDiskBlock3" << endl;}
+  writeDiskBlock(0, buff);
 }
 
 
 void PartitionManager::readDiskBlock(BlkNumType blknum, char *blkdata)
 {
-  try{myDM->readDiskBlock(_partitionName, blknum, blkdata);}
-  catch(...)
-  {
-    cerr << "PartitionManager::readDiskBlock" << endl;
-  }
+  myDM->readDiskBlock(_partitionName, blknum, blkdata);
 }
 
 void PartitionManager::writeDiskBlock(BlkNumType blknum, char *blkdata)
 {
-  try{myDM->writeDiskBlock(_partitionName, blknum, blkdata);}
-  catch(...)
-  {
-    cerr << "PartitionManager::readDiskBlock" << endl;
-  }
+  myDM->writeDiskBlock(_partitionName, blknum, blkdata);
 }
 
 int PartitionManager::getBlockSize()

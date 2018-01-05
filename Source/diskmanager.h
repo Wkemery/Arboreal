@@ -1,5 +1,7 @@
 #include "disk.h"
 #include "types.h"
+#include "Arboreal_Exceptions.h"
+
 #include<vector>
 
 #ifndef DISKMANAGER_H
@@ -22,8 +24,6 @@ class DiskManager {
 private:
   Disk *myDisk;
   vector<DiskPartition*> _myPartitions;
-  /* declare other private members here */
-
   
   public:
     DiskManager(Disk *d);
@@ -33,6 +33,9 @@ private:
     int getBlockSize();
     BlkNumType getPartitionSize(string partitionName);
     DiskPartition* findPart(string partitionName);
+    /*Throws:
+      tag_error
+      */
     
 };
 

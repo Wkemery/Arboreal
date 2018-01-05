@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <cstring>
 #include "disk.h"
+#include "Arboreal_Exceptions.h"
 
 using namespace std;
 
@@ -12,7 +13,6 @@ Disk::Disk(BlkNumType numblocks, int blksz, char *fname)
   diskSize = numblocks * blksz;
   blkSize = blksz;
   diskFilename = strdup(fname);
-//   initDisk();
 }
 
 Disk::~Disk()
@@ -20,51 +20,28 @@ Disk::~Disk()
   delete diskFilename;
 }
 
-int Disk::initDisk()
+void Disk::readDiskBlock(BlkNumType blknum, char *blkdata)
 {
-  fstream f(diskFilename, ios::in);
-  if (!f) {
-    f.open(diskFilename, ios::out);
-    if (!f) {
-      cerr << "Error: Cannot create disk file" << endl;
-      return(-1);
-    }
-    for (BlkNumType i = 0; i < diskSize; i++) f.put('c');
-    f.close();
-    return(1);
-  }
-  f.close();
-  return 0 ;
-}
-
-int Disk::readDiskBlock(BlkNumType blknum, char *blkdata)
-/*
-  returns -1, if disk can't be opened;
-  returns -2, if blknum is out of bounds;
-  returns 0, if the block is successfully read;
-*/
-{
-  if ((blknum < 0) || (blknum >= blkCount)) return(-2);
+  if ((blknum < 0) || (blknum >= blkCount)) throw invalid_arg("Blocknumber is out bounds", "Disk::readDiskBlock");
   ifstream f(diskFilename, ios::binary | ios::in);
-  if (!f) return(-1);
+  if (!f) throw disk_error("Unable to open Disk", "Disk::readDiskBlock");
   f.seekg(blknum * blkSize);
+  if(f.bad()) throw disk_error("Disk Seek Error", "Disk::readDiskBlock");
+  
   f.read(blkdata, blkSize);
+  if(f.bad()) throw disk_error("Disk Read Error", "Disk::readDiskBlock");
+  
   f.close();
-  return(0);
 }
 
-int Disk::writeDiskBlock(BlkNumType blknum, char *blkdata)
-/*
-  returns -1, if DISK can't be opened;
-  returns -2, if blknum is out of bounds;
-  returns 0, if the block is successfully read;
-*/
+void Disk::writeDiskBlock(BlkNumType blknum, char *blkdata)
 {
-  if ((blknum < 0) || (blknum >= blkCount)) return(-2);
+  if ((blknum < 0) || (blknum >= blkCount)) throw invalid_arg("Blocknumber is out bounds", "Disk::writeDiskBlock");
   ofstream f(diskFilename, ios::binary | ios::in | ios::out );
-  if (!f) return(-1);
+  if (!f) throw disk_error("Unable to open Disk", "Disk::writeDiskBlock");
   f.seekp(blknum * blkSize);
+  if(f.bad()) throw disk_error("Disk Seek Error", "Disk::writeDiskBlock");
   f.write(blkdata, blkSize);
+  if(f.bad()) throw disk_error("Disk Write Error", "Disk::writeDiskBlock");
   f.close();
-  return(0);
 }

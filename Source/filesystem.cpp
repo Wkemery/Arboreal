@@ -142,25 +142,21 @@ FileInfo* FileSystem::fileSearch(string name)
 
 void FileSystem::createTag(string tagName)
 {
-  
-  //   - Make sure tag is unique
-  if(_RootTree->getMap()->find(tagName) != _RootTree->getMap()->end())//Complexity: avg 1, worst # tags on system
-  {
-    throw invalid_argument(tagName + " is not unique");
-  }
-  
   /*Get a block from disk to store tag tree*/
   
-  //TODO: fix catch statement.
   BlkNumType newblknum = 0;
-  try{newblknum = _myPartitionManager->getFreeDiskBlock();}//Complexity: not our fucking problem, but linear with # of blocks on partition
-  catch(...){cerr << "Error trees.cpp1" << endl;}
+  newblknum = _myPartitionManager->getFreeDiskBlock();//Complexity: not our fucking problem, but linear with # of blocks on partition
   
   //   - initialize tree in main memory
   TagTree* newTree = new TagTree(tagName, newblknum);
   //   - add respective node to root tree (write TagTree block num to Node as well as TagTree memory address to Node)
   
-  _RootTree->getMap()->insert(pair<string, TagTree*>(tagName, newTree));//Complexity: avg. 1, worst # of tags in filesystem
+  auto ret = _RootTree->getMap()->insert(pair<string, TagTree*>(tagName, newTree));//Complexity: avg. 1, worst # of tags in filesystem
+  if(!ret.second)
+  {
+    throw tag_error (tagName + " is not unique", "FileSystem::createTag");
+  }
+  
   /*Keep track of addition to RootTree*/
   _RootTree->insertAddition(newTree);
   /*Note Root Tree was modified*/
@@ -176,7 +172,7 @@ void FileSystem::deleteTag(string tagName, bool force)
   auto it = _RootTree->getMap()->find(tagName);//Complexity: avg 1, worst # tags on system
   if(it == _RootTree->getMap()->end())
   {
-    throw invalid_argument(tagName + " cannot be deleted : Tag Does not exist");
+    throw tag_error(tagName + " Does Not Exist", "FileSystem::deleteTag");
   }
   
   unordered_map<string, FileInfo*>* treeptr = it->second->getMap();
@@ -227,7 +223,7 @@ void FileSystem::mergeTags(string tag1, string tag2)
   
 }
 
-void FileSystem::tagFile(FileInfo* file, vector<string> tags)
+void FileSystem::tagFile(FileInfo* file, vector<string>& tags)
 {
   //for all tags in the vector
   for(auto t : tags)//Complexity: avg:number of tags specified , worst: number of tags specified * size of root tree
@@ -239,8 +235,7 @@ void FileSystem::tagFile(FileInfo* file, vector<string> tags)
     //not doing this
     if(it == _RootTree->getMap()->end()) 
     {
-      //TODO: throw error
-      cerr << "Error! FileSystem::tagFile, Tag does not exist" << endl;
+      cerr << t << " Does Not Exist: Not added to file tag set" << endl;
 //       createTag(t);//Complexity: go to function
 //       it = _RootTree->getMap()->find(t);//Complexity: Complexity: avg: 1, worst: size of root tree
     }
@@ -253,10 +248,19 @@ void FileSystem::tagFile(FileInfo* file, vector<string> tags)
     unordered_map<string, FileInfo*>* treeptr = it->second->getMap();
     
     //   - Add Tag to Finode 
-    file->getMap()->insert(pair<string, BlkNumType>(t, it->second->getBlockNumber()));//Complexity: Complexity: avg: 1, worst: avg number of tags associated iwth file
+    auto ret = file->getMap()->insert(pair<string, BlkNumType>(t, it->second->getBlockNumber()));//Complexity: Complexity: avg: 1, worst: avg number of tags associated iwth file
+    if(!ret.second)
+    {
+      cerr << t << "specified twice during file creation: Only Tagged once" << endl;
+    }
     
     //   - Create and Add new Node to TagTree
-    treeptr->insert(pair<string, FileInfo*>(file->getName(), file));//Complexity: Complexity: avg: 1, worst: size of tag tree
+    auto ret2 = treeptr->insert(pair<string, FileInfo*>(file->getName(), file));//Complexity: Complexity: avg: 1, worst: size of tag tree
+    if(!ret2.second)
+    {
+      throw file_error(file->getName() + " with the specified tags already exists", "FileSystem::tagFile");
+    }
+    
     /*Keep track of addition*/
     it->second->insertAddition(file);
     /*Note a TagTree was modified*/
@@ -300,14 +304,12 @@ void FileSystem::untagFile(FileInfo* file, vector<string> tags)
 }
 
 
-FileInfo* FileSystem::createFile(string filename, vector<string> tags)
+FileInfo* FileSystem::createFile(string filename, vector<string>& tags)
 {
   /*Get a block from disk to store FInode*/
   
-  //TODO: fix catch statement.
   BlkNumType newblknum = 0;
-  try{newblknum = _myPartitionManager->getFreeDiskBlock();}
-  catch(...){cerr << "FileSystem::createFile" << endl;}
+  newblknum = _myPartitionManager->getFreeDiskBlock();
   
   FileInfo* newFile = new FileInfo(filename, newblknum);
   
@@ -349,130 +351,6 @@ void FileSystem::deleteFile(FileInfo* file)
   
   delete file;
   file = 0;
-  
-//  
-//   int ret;
-//   /* Validate filename */
-//   
-//   /***************************************************************************/
-//   
-//   /*Follow directory path*/
-//   int parentDinodeStart =  pathSearch(filename, 1); //1 to start at root directory
-//   if(parentDinodeStart == -1) return -1; //File does not exist
-//   if(parentDinodeStart == -4) return -4; //something went wrong
-//   
-//   char name[3]; // 3 because directory names can only be 1 character
-//   memcpy(name, filename + (fnameLen - 2), 2);
-//   name[2] = 0;
-//   /***************************************************************************/
-//   
-//   /* Find file mapping index number in correct directory inode block */
-//   int dinodeBlknum = parentDinodeStart;
-//   int index = findIndex(dinodeBlknum, name, 2, 'f');
-//   if(index == -1) return -1; //file does not exist
-//   if(index == -4) return -3; //something went wrong
-//   if(index == -2) return -3; //name exists but is wrong type
-//   /***************************************************************************/
-//   
-//   /* Read in directory inode */
-//   char dinode[_myPartitionManager->getBlockSize()];
-//   ret = _myPartitionManager->readDiskBlock(dinodeBlknum, dinode);
-//   
-//   if(ret == -1) cerr << "Disk could not be opened!" << endl;
-//   if(ret == -2) cerr << "Invalid blocknumber for partition: " << _FSName << endl;
-//   if(ret == -3) cerr << "Partition: " << _FSName << " does not exist"<< endl;
-//   if(ret != 0) return -3; //something went wrong
-//   /***************************************************************************/
-//   
-//   
-//   int finodeBlknum = charToInt(index + 2, dinode);//save finodeBlknum first
-//   
-//   if(lockIdT.find(finodeBlknum) != lockIdT.end()) return -2;
-//   
-//   /*Check if file is open*/
-//   /* Use STL find to search for an element in the file open table(FOT) matching filename1*/
-//   FileOpen element;
-//   element.finodeblk = finodeBlknum;
-//   vector<FileOpen>::iterator it;
-//   it = find(FOT.begin(), FOT.end(), element);
-//   if(it != FOT.end()) return -2; //file is open
-//   /***************************************************************************/
-//   /* Delete file mapping entry. I will just "zero" out the whole file map entry*/
-//   
-//   memset(dinode + index, 0, 6);
-//   
-//   /* Write out modified dinode*/
-//   ret = _myPartitionManager->writeDiskBlock(dinodeBlknum, dinode);
-//   if(ret == -1) cerr << "Disk could not be opened!" << endl;
-//   if(ret == -2) cerr << "Invalid blocknumber for partition: " << _FSName << endl;
-//   if(ret == -3) cerr << "Partition: " << _FSName << " does not exist"<< endl;
-//   if(ret != 0) return -3; //something went wrong
-//   
-//   /* check if that was the last mapping in an extension , if so free block */
-//   ret = dirCleanUp(name, 2, parentDinodeStart);
-//   if(ret == -3) return -3; //something went wrong
-//   
-//   /***************************************************************************/
-//   
-//   /* Read in finode*/
-//   char finode[_myPartitionManager->getBlockSize()];
-//   ret = _myPartitionManager->readDiskBlock(finodeBlknum, finode);
-//   if(ret == -1) cerr << "Disk could not be opened!" << endl;
-//   if(ret == -2) cerr << "Invalid blocknumber for partition: " << _FSName << endl;
-//   if(ret == -3) cerr << "Partition: " << _FSName << " does not exist"<< endl;
-//   if(ret != 0) return -3; //something went wrong
-//   /***************************************************************************/
-//   
-//   
-//   /* Free finode block*/
-//   ret = _myPartitionManager->returnDiskBlock(finodeBlknum);
-//   if(ret != 0) return -3; //something went wrong
-//   
-//   /* Delete all file data */
-//   /* Free all direct address data */
-//   int bufferPos = 6;
-//   for(int i = 0; i < 3; i++)
-//   {
-//     if(finode[bufferPos] != 0)
-//     {
-//       /* Return blocks with data */
-//       ret = _myPartitionManager->returnDiskBlock(charToInt(bufferPos, finode));
-//       if(ret != 0) return -3; //something went wrong
-//       
-//       bufferPos += 4;
-//     }
-//   }
-//   /* If there is an indirect inode, follow it and free all that data*/
-//   if(finode[18] != 0) //indirect inode address @ block 18
-//   {
-//     int indinodeBlknum = charToInt(18, finode);
-//     /* Read in Indirect inode */
-//     char indinode[_myPartitionManager->getBlockSize()];
-//     ret = _myPartitionManager->readDiskBlock(indinodeBlknum, indinode);
-//     if(ret == -1) cerr << "Disk could not be opened!" << endl;
-//     if(ret == -2) cerr << "Invalid blocknumber for partition: " << _FSName << endl;
-//     if(ret == -3) cerr << "Partition: " << _FSName << " does not exist"<< endl;
-//     if(ret != 0) return -3; //something went wrong
-//     
-//     /* Free the Indirect Inode */
-//     ret = _myPartitionManager->returnDiskBlock(indinodeBlknum);
-//     if(ret != 0) return -3; //something went wrong
-//     
-//     bufferPos = 0;
-//     for(int i = 0; i < 16; i++)
-//     {
-//       if(indinode[bufferPos] != 0)
-//       {
-//         /* Return blocks with data */
-//         ret = _myPartitionManager->returnDiskBlock(charToInt(bufferPos, indinode));
-//         if(ret != 0) return -3; //something went wrong
-//       }
-//       else break;
-//       bufferPos += 4;
-//     }
-//   }
-//   
-//   return 0;
 }
 
 int FileSystem::openFile(char *filename, int fnameLen, char mode, int lockId)
@@ -481,9 +359,7 @@ int FileSystem::openFile(char *filename, int fnameLen, char mode, int lockId)
 }
 
 int FileSystem::closeFile(int fileDesc)
-{
-  return (0); // return success
-}
+{return 0;}
 
 int FileSystem::readFile(int fileDesc, char *data, int len)
 {return 0;}

@@ -18,12 +18,7 @@ DiskManager::DiskManager(Disk *d)
   char* buff = new char[getBlockSize()];
   memset(buff, 0, getBlockSize());
   /* Read superblock from disk*/
-  try{myDisk->readDiskBlock(0, buff);}
-  catch(...)
-  {
-    //TODO: error
-    cerr << "DiskManager::DiskManager" << endl;
-  }
+  myDisk->readDiskBlock(0, buff);
 
   /*successfully read superblock, read in partition info*/
   /*Layout -
@@ -67,56 +62,32 @@ void DiskManager::readDiskBlock(string partitionName, BlkNumType blknum, char *b
 {
   /* find partition index in diskP */
   BlkNumType index = 0;
-  try{index = findPart(partitionName)->partitionBlkStart;}
-  //TODO: fix catch
-  catch(...)
-  {
-    cerr<< "error DiskManager::writeDiskBlock" << endl;
-  }
+  index = findPart(partitionName)->partitionBlkStart;
   
   /* translate relative block number to absolute block number*/
   BlkNumType absBlockNum = index + blknum;
   
   /* read block data from block using disk read command*/
-  try{myDisk->readDiskBlock(absBlockNum, blkdata);}
-  //TODO: fix catch
-  catch(...)
-  {
-    cerr<< "error DiskManager::writeDiskBlock2" << endl;
-  }
-  
+  myDisk->readDiskBlock(absBlockNum, blkdata);
 }
 
 void DiskManager::writeDiskBlock(string partitionName, BlkNumType blknum, char *blkdata)
 {
   /* find partition index in diskP */
   BlkNumType index = 0;
-  try{index = findPart(partitionName)->partitionBlkStart;}
-  //TODO: fix catch
-  catch(...)
-  {
-    cerr<< "error DiskManager::writeDiskBlock" << endl;
-  }
+  index = findPart(partitionName)->partitionBlkStart;
   
   /* translate relative block number to absolute block number */
   BlkNumType absBlockNum = index + blknum;
   
   /* write blkdata to block number using disk write command*/
-  try{myDisk->writeDiskBlock(absBlockNum, blkdata);}
-  catch(...)
-  {
-    cerr << "error DiskManager::writeDiskBlock2" << endl;
-  }  
+  myDisk->writeDiskBlock(absBlockNum, blkdata); 
 }
 
 BlkNumType DiskManager::getPartitionSize(string partitionName)
 {
   BlkNumType size = 0;
-  try{size = findPart(partitionName)->partitionSize;}
-  catch(...)
-  {
-    cerr << "error DiskManager::getPartitionSize" << endl;
-  }
+  size = findPart(partitionName)->partitionSize;
   return size;
 }
 
@@ -126,8 +97,7 @@ DiskPartition* DiskManager::findPart(string partitionName)
   auto it = find(_myPartitions.begin(), _myPartitions.end(), temp);
   if(it == _myPartitions.end())
   {
-    //throw error
-    cerr << "DiskManager::findPart" << endl;
+    throw tag_error("Partition Does Not Exist", "DiskManager::findPart");
   }
   return *it;
 }
