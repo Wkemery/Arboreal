@@ -59,7 +59,7 @@ public:
   ~FileSystem();
   
   vector<FileInfo*>* tagSearch(vector<string> tags);
-  FileInfo* fileSearch(string name);
+  vector<FileInfo*>* fileSearch(string name);
   void createTag(string tagName);
   void deleteTag(string tagName, bool force = false);
   void mergeTags(string tag1, string tag2);

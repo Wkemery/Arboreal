@@ -11,6 +11,7 @@
 #include "partitionmanager.h"
 #include "filesystem.h"
 #include "client.h"
+#include "Trees.h"
 #include <string>
 #include <string.h>
 using namespace std;
@@ -146,6 +147,28 @@ int main(int argc, char** argv)
       tagSet.push_back("badtag");
       try{fs1->createFile("myfile3", tagSet);}//
       catch(arboreal_exception& e) {cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
+      break;
+    }
+    case 4:
+    {
+      vector<FileInfo*>* foundFiles;
+      cout << "Searching for myfile1:" << endl;
+      try{foundFiles = fs1->fileSearch("myfile1");}
+      catch(arboreal_exception& e)
+      {cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
+      cout << "found " << foundFiles->size() << " files" << endl;
+      delete foundFiles; foundFiles = 0;
+      
+      
+      cout << "Searching for myfile2:" << endl;
+      try{foundFiles = fs1->fileSearch("myfile2");}
+      catch(arboreal_exception& e)
+      {cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
+      cout << "found " << foundFiles->size() << " files" << endl;
+      delete foundFiles; foundFiles = 0;
+      
+      
+      
       break;
     }
     default:

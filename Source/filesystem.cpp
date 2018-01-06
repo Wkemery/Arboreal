@@ -125,25 +125,19 @@ vector<FileInfo*>* FileSystem::tagSearch(vector<string> tags)
   return ret;
 }
 
-FileInfo* FileSystem::fileSearch(string name)
+vector<FileInfo*>* FileSystem::fileSearch(string name)
 {
-  //TODO: change to default tree search, try to make default tree an ordered map
-  //   - Binary search for file name from largest to smallest tag tree
-  // not sure how to do that right now...
-  //   - Worst case is (number of trees) * log(n)
-    
-  for(auto it = _RootTree->getMap()->begin(); it != _RootTree->getMap()->end(); it++)
-  {
-    auto it2 = it->second->getMap()->find(name);
-    if(it2 != it->second->getMap()->end())
-    {
-      //found the file 
-      return it2->second;
-    }
-  }
-  //never found the file
+  /*We're going to use the _allFiles variable to find the files*/
   
-  return 0;
+  vector<FileInfo*>* ret = new vector<FileInfo*>;
+  
+  auto files = _allFiles.equal_range(name);
+  
+  for (auto it = files.first; it != files.second; it++) {
+    ret->push_back(it->second);
+  }
+  
+  return ret;
 }
 
 void FileSystem::createTag(string tagName)
