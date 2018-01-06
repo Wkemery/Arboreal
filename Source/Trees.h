@@ -11,6 +11,7 @@
 #include"partitionmanager.h"
 #include<queue>
 #include<map>
+#include<algorithm>
 using namespace std;
 
 #ifndef TREES_H
@@ -129,6 +130,7 @@ public:
   ~FileInfo();
   map<string, BlkNumType>* getMap();
   string mangle();
+  string mangle(vector<string>& tags);
   /*Function Overrides*/
   void writeOut(PartitionManager* pm);
   void readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*>* allFiles);

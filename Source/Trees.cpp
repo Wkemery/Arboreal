@@ -53,8 +53,7 @@ void Addition::writeOut(PartitionManager* pm)
   Index nextEntry{0,0};
   
   
-  try{pm->readDiskBlock(_parent->getLastEntry().blknum, buff);}
-  catch(...){cerr << "Error RootTree::writeOutAdds" << endl;}
+  pm->readDiskBlock(_parent->getLastEntry().blknum, buff);
   
   if(_parent->getLastEntry().blknum == 0)
   {
@@ -69,8 +68,7 @@ void Addition::writeOut(PartitionManager* pm)
   
   if(_parent->getLastEntry().blknum != nextEntry.blknum)
   {
-    try{pm->readDiskBlock(nextEntry.blknum, buff);}
-    catch(...){cerr << "Error Addition::writeOut" << endl;}
+    pm->readDiskBlock(nextEntry.blknum, buff);
   }
   
   int keySize = _mod->getName().length();
@@ -85,8 +83,7 @@ void Addition::writeOut(PartitionManager* pm)
   
   _mod->setIndex(_parent->getLastEntry());
   
-  try {pm->writeDiskBlock(_parent->getLastEntry().blknum, buff);}
-  catch(...){cerr << "Error Addition::writeOut" << endl;}
+  pm->writeDiskBlock(_parent->getLastEntry().blknum, buff);
 }
 /******************************************************************************/
 
@@ -105,8 +102,7 @@ void Deletion::writeOut(PartitionManager* pm)
   }
   else
   {        
-    try {pm->readDiskBlock(_mod->getIndex().blknum, buff);}
-    catch(...){cerr << "Error Deletion::writeOut" << endl;}
+    pm->readDiskBlock(_mod->getIndex().blknum, buff);
       
     /*Zero out name and blocknumber*/
     memset(buff + _mod->getIndex().offset, 0, pm->getFileNameSize() + sizeof(BlkNumType));
@@ -115,9 +111,7 @@ void Deletion::writeOut(PartitionManager* pm)
     _mod->del(pm);
     
     /*Write out buff to mod blknum*/
-    //TODO: fix catch statement.
-    try {pm->writeDiskBlock(_mod->getIndex().blknum, buff);}
-    catch(...){cerr << "Error Deletion::writeOut" << endl;}
+    pm->writeDiskBlock(_mod->getIndex().blknum, buff);
   }
 }
 
@@ -171,23 +165,16 @@ void TreeObject::incrementAllocate(Index* index, PartitionManager* pm)
   if((pm->getBlockSize() - index->offset) < entrySize + sizeof(BlkNumType))
   {
     BlkNumType newBlock;
-    try{newBlock = pm->getFreeDiskBlock();}
-    catch(...)
-    {
-      //TODO: fix catch
-      cerr << "Error! incrementAllocate" << endl;
-    }
+    newBlock = pm->getFreeDiskBlock();
     
     /*Read in old block*/
-    try{pm->readDiskBlock(index->blknum, buff);}
-    catch(...){cerr << "Error incrementAllocate" << endl;}
+    pm->readDiskBlock(index->blknum, buff);
     
     /*set continuation on old block*/
     memcpy(buff + pm->getBlockSize() - sizeof(BlkNumType), &newBlock, sizeof(BlkNumType));
     
     /*Write out old block*/
-    try{pm->writeDiskBlock(index->blknum, buff);}
-    catch(...){cerr << "Error incrementAllocate" << endl;}
+    pm->writeDiskBlock(index->blknum, buff);
     
     index->blknum = newBlock;
     index->offset = 0;
@@ -207,8 +194,7 @@ void TreeObject::incrementFollow(Index* index, PartitionManager* pm)
   if((pm->getBlockSize() - index->offset) < entrySize + sizeof(BlkNumType))
   {
     /*Read in index.blknum*/
-    try{pm->readDiskBlock(index->blknum, buff);}
-    catch(...){cerr << "Error incrementFollow" << endl;}
+    pm->readDiskBlock(index->blknum, buff);
     
     /*Read in cont. blocknum */
     BlkNumType contBlkNum;
@@ -235,12 +221,7 @@ void TreeObject::deleteContBlocks(PartitionManager* pm, BlkNumType blknum)
 {
   //TODO: finish function
   
-  try {pm->returnDiskBlock(blknum);}
-  catch(...)
-  {
-    //TODO: fix catch
-    cerr << "Error! TreeObject::deleteContBlocks" << endl;
-  }
+  pm->returnDiskBlock(blknum);
 }
 
 /******************************************************************************/
@@ -280,12 +261,7 @@ void RootTree::writeOut(PartitionManager* pm)
   
   for(size_t i = 0; i < queueSize; i++)
   {
-    try{_modifications.front()->writeOut(pm);}
-    catch(...)
-    {
-      //TODO: fix catch
-      cerr << "Error RootTree::writeOut" << endl;
-    }
+    _modifications.front()->writeOut(pm);
     _modifications.pop();
   }
   
@@ -310,8 +286,7 @@ void RootTree::writeOut(PartitionManager* pm)
   currentIndex.offset+=  sizeof(RootSuperBlock);
   
   /*Write out RootTree superblock*/
-  try{pm->writeDiskBlock(currentIndex.blknum, buff);}
-  catch(...){cerr << "Error RootTree::writeOut" << endl;}
+  pm->writeDiskBlock(currentIndex.blknum, buff);
 }
 
 void RootTree::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*>* allFiles)
@@ -321,9 +296,7 @@ void RootTree::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*
   Index currentIndex{_blockNumber, 0};
   
   /*Read in RootTree superblock*/
-  //TODO: fix catch statement.
-  try{pm->readDiskBlock(currentIndex.blknum, buff);}
-  catch(...){cerr << "Error RootTree::readIn1" << endl;}
+  pm->readDiskBlock(currentIndex.blknum, buff);
   
   /*Store values from Root Tree superblock*/
 //   _name.assign(buff + currentIndex.offset, 5);
@@ -349,9 +322,7 @@ void RootTree::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*
   currentIndex.blknum = _startBlock;
   currentIndex.offset = 0;
   
-  //TODO: fix catch statement.
-  try{pm->readDiskBlock(currentIndex.blknum, buff);}
-  catch(...){cerr << "Error RootTree::readIn2" << endl;}
+  pm->readDiskBlock(currentIndex.blknum, buff);
 
   Index EOFIndex{0,0};
   
@@ -387,8 +358,7 @@ void RootTree::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*
       auto it_ret = _tree.insert(pair<string, TagTree*>(tagName, tagTree));
       if(!it_ret.second)
       {
-        //TODO: throw error
-        cerr << "Error RootTree::readIn5" << endl;
+        throw arboreal_logic_error("Duplicate Tag Tree read in from disk", "RootTree::readIn");
       }
 //       /*Insert key into _readable */
 //       auto it_ret2 = _readable.insert(pair<TreeObject*, bool>(tagTree, false));
@@ -448,8 +418,7 @@ void TagTree::writeOut(PartitionManager* pm)
   {
     /*Need to allocate a new block to start appending*/
     BlkNumType newblknum = 0;
-    try{newblknum = pm->getFreeDiskBlock();}
-    catch(...) {cerr << "Error TagTree::writeOut" << endl;}
+    newblknum = pm->getFreeDiskBlock();
     _lastEntry.blknum = 0;
     _lastEntry.offset = 0;
     _startBlock = newblknum;
@@ -461,12 +430,8 @@ void TagTree::writeOut(PartitionManager* pm)
   
   for(size_t i = 0; i < queueSize; i++)
   {
-    try{_modifications.front()->writeOut(pm);}
-    catch(...)
-    {
-      //TODO: fix catch
-      cerr << "Error TagTree::writeOut" << endl;
-    }
+    _modifications.front()->writeOut(pm);
+
     _modifications.pop();
   }
   
@@ -491,8 +456,7 @@ void TagTree::writeOut(PartitionManager* pm)
   currentIndex.offset+=  sizeof(TagTreeSuperBlock);
   
   /*Write out TagTree superblock*/
-  try{pm->writeDiskBlock(currentIndex.blknum, buff);}
-  catch(...){cerr << "Error TagTree::writeOut" << endl;}
+  pm->writeDiskBlock(currentIndex.blknum, buff);
   
 
 }
@@ -567,21 +531,18 @@ void TagTree::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*>
         cerr << "Error TagTree::readIn4" << endl;
       }
       
+      /*Read in the finode*/
+      finode->readIn(pm, allFiles);
+      
       /*Insert key and value into FileInfo object in memory*/
       auto it_ret = _tree.insert(pair<string, FileInfo*>(finode->mangle(), finode));
       if(!it_ret.second)
       {
-        //TODO: throw error
-        cerr << "Error TagTree::readIn5" << endl;
+        throw arboreal_logic_error("Duplicate File read in from Disk", "TagTree:readIn");
       }
       
       /*add to allFiles*/
-      auto it_ret2 = allFiles->insert(pair<string, FileInfo*>(fileName, finode));
-      if(!it_ret2->second)
-      {
-        //TODO: throw error
-        cerr << "Error TagTree::readIn5" << endl;
-      }
+      allFiles->insert(pair<string, FileInfo*>(fileName, finode));
       
 //       /*add key to _readable*/
 //       auto it_ret2 = _readable.insert(pair<TreeObject*, bool>(finode, false));
@@ -601,8 +562,7 @@ void TagTree::del(PartitionManager* pm)
   char* buff = new char[pm->getBlockSize()];
   
   /*Read in the super block of this tagTree*/
-  try{pm->readDiskBlock(_blockNumber, buff);}
-  catch(...){cerr << "Error TagTree::del()" << endl;}
+  pm->readDiskBlock(_blockNumber, buff);
   
   TagTreeSuperBlock tagInfo;
   memcpy(&tagInfo, buff + pm->getFileNameSize(), sizeof(TagTreeSuperBlock));
@@ -614,23 +574,19 @@ void TagTree::del(PartitionManager* pm)
   
   if(myStartBlock != 0)
   {
-    //TODO: catch
-    try {deleteContBlocks(pm, myStartBlock);}
-    catch(...){cerr << "Error TagTree::del" << endl;}
+    deleteContBlocks(pm, myStartBlock);
   }
   
-  try{pm->returnDiskBlock(_blockNumber);}
-  catch(...)
-  {
-    //TODO: catch
-    cerr << "Error TagTree::del" << endl;
-  }
+  pm->returnDiskBlock(_blockNumber);
+
   
 }
 
 /******************************************************************************/
 FileInfo::FileInfo(string fileName,BlkNumType blknum):TreeObject(fileName, blknum)
-{}
+{
+  memset(&_myFinode, 0, sizeof(Finode));
+}
 
 FileInfo::~FileInfo(){}
 
@@ -669,67 +625,77 @@ void FileInfo::writeOut(PartitionManager* pm)
   int localTagCount = ((pm->getBlockSize() / 2) - sizeof(Finode) - sizeof(BlkNumType))
                         / sizeof(BlkNumType);
   
-  auto it = _tags.begin();
+  
+  /*Read in current Finode*/
+  char* localBuff = new char[pm->getBlockSize()];
+  memset(localBuff, 0, pm->getBlockSize()); //zero out memory
+  
+  pm->readDiskBlock(_blockNumber, localBuff);
+  
+  BlkNumType contBlock = 0;
+  memcpy(&contBlock, localBuff + pm->getBlockSize() - sizeof(BlkNumType), sizeof(BlkNumType));
+  
+  int offset = pm->getBlockSize()/2 + sizeof(Finode);
+  
   if(_tags.size() <= localTagCount)
   {
-    /*There is room to store all the tags locally*/
-    for(size_t i = 0; i < _tags.size(); i++)
+    /*If there is a cont. block, free it*/
+    if(contBlock != 0)
     {
-      it++;
+      pm->returnDiskBlock(contBlock);
+    }
+    
+    /*There is room to store all the tags locally*/
+    for(auto it = _tags.begin(); it != _tags.end(); it++)
+    {
+      BlkNumType blknum = it->second;
+      memcpy(buff + offset, &blknum, sizeof(BlkNumType));
+      offset+= sizeof(BlkNumType);
     }
   }
   else
   {
     /*There is not room to store all the tags locally*/
+    auto it = _tags.begin();
+    
     for(int i = 0; i < localTagCount; i++)
     {
       /*Write out as many as we can*/
+      BlkNumType blknum = it->second;
+      memcpy(buff + offset, &blknum, sizeof(BlkNumType));
+      offset+= sizeof(BlkNumType);
       it++;
     }
-    
-    /*Read in current Finode*/
-    char* localBuff = new char[pm->getBlockSize()];
-    memset(localBuff, 0, pm->getBlockSize()); //zero out memory
-    
-    try{pm->readDiskBlock(_blockNumber, localBuff);}
-    catch(...){cerr << "Error FileInfo::writeOut" << endl;}
-    
-    BlkNumType contBlock = 0;
-    memcpy(&contBlock, localBuff + pm->getBlockSize() - sizeof(BlkNumType), sizeof(BlkNumType));
     
     /*If there is already a cont. block, just overwrite it*/
     /*If not, allocate one and write to it.*/
     if(contBlock == 0)
     {
-      try{contBlock = pm->getFreeDiskBlock();}
-      catch(...){cerr << "Error FileInfo::writeOut" << endl;}
+      contBlock = pm->getFreeDiskBlock();
       /*Write out the cont blocknum to the finode*/
       memcpy(buff + pm->getBlockSize() - sizeof(BlkNumType), &contBlock, sizeof(BlkNumType));
-      
     }
     
-    for(size_t i = 0; i < _tags.size() - localTagCount; i++)
+    offset = 0;
+    memset(buff, 0, pm->getBlockSize());
+    for(it = it; it != _tags.end(); it++)
     {
       /*Write out the rest of the tags into the cont block*/
+      BlkNumType blknum = it->second;
+      memcpy(buff + offset, &blknum, sizeof(BlkNumType));
+      offset+= sizeof(BlkNumType);
       it++;
     }
     
     /*Write out the contBlock of tags*/
-    try{pm->writeDiskBlock(contBlock, localBuff);}
-    catch(...){cerr << "Error FileInfo::writeOut" << endl;}
-    
-    
-    delete localBuff;
+    pm->writeDiskBlock(contBlock, buff);
   }
-  
+  delete localBuff;
   /*Write out Finode*/
-  try{pm->writeDiskBlock(_blockNumber, buff);}
-  catch(...){cerr << "Error FileInfo::writeOut" << endl;}
+  pm->writeDiskBlock(_blockNumber, buff);
     
   /*Write out attributes*/
-  try{_myAttributes.writeOut(pm);}
-  catch(...)
-  {cerr << "Error FileInfo::writeOut" << endl;}
+  _myAttributes.writeOut(pm);
   
 }
 
@@ -740,8 +706,7 @@ void FileInfo::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*
   memset(buff, 0, pm->getBlockSize()); //zero out memory
   
   /*Read in Finode*/
-  try{pm->readDiskBlock(_blockNumber, buff);}
-  catch(...){cerr << "Error FileInfo::writeOut" << endl;}
+  pm->readDiskBlock(_blockNumber, buff);
     
   memcpy(&_myFinode, buff + (pm->getBlockSize()/2), sizeof(Finode));
   
@@ -751,13 +716,12 @@ void FileInfo::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*
   
   Index currentIndex{0,(pm->getBlockSize()/2) + sizeof(Finode)}; 
   char* localBuff = new char[pm->getBlockSize()];
-  memset(buff, 0, pm->getBlockSize()); //zero out memory
   string tagName;
   BlkNumType tagBlk = 0;
   
   /*Read in the Cont. block*/
   BlkNumType contBlock = 0;
-  memcpy(&contBlock, localBuff + pm->getBlockSize() - sizeof(BlkNumType), sizeof(BlkNumType));
+  memcpy(&contBlock, buff + pm->getBlockSize() - sizeof(BlkNumType), sizeof(BlkNumType));
   
   /*If there is a cont. block */
   if(contBlock != 0)
@@ -770,8 +734,7 @@ void FileInfo::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*
       currentIndex.offset += sizeof(BlkNumType);
       
       /*Read in tagBlk to localbuff*/
-      try{pm->readDiskBlock(tagBlk, localBuff);}
-      catch(...){cerr << "Error FileInfo::writeOut" << endl;}
+      pm->readDiskBlock(tagBlk, localBuff);
       
       /*Save tag name*/
       tagName.assign(localBuff, pm->getFileNameSize());
@@ -788,8 +751,7 @@ void FileInfo::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*
       currentIndex.offset += sizeof(BlkNumType);
       
       /*Read in tagBlk to localbuff*/
-      try{pm->readDiskBlock(tagBlk, localBuff);}
-      catch(...){cerr << "Error FileInfo::writeOut" << endl;}
+      pm->readDiskBlock(tagBlk, localBuff);
       
       /*Save tag name*/
       tagName.assign(localBuff, pm->getFileNameSize());
@@ -806,32 +768,30 @@ void FileInfo::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*
     /*Read in till we hit a zero entry, or the local tag count*/
     
     int i = 0;
+    memcpy(&tagBlk, buff + currentIndex.offset, sizeof(BlkNumType));
+    currentIndex.offset += sizeof(BlkNumType);
     do
     {
-      /*Read in tagBlk number*/
-      memcpy(&tagBlk, buff + currentIndex.offset, sizeof(BlkNumType));
-      currentIndex.offset += sizeof(BlkNumType);
-      
       /*Read in tagBlk to localbuff*/
-      try{pm->readDiskBlock(tagBlk, localBuff);}
-      catch(...){cerr << "Error FileInfo::writeOut" << endl;}
+      pm->readDiskBlock(tagBlk, localBuff);
       
       /*Save tag name*/
       tagName.assign(localBuff, pm->getFileNameSize());
-      tagName = tagName.substr(0, _name.find_first_of('\0'));
+      tagName = tagName.substr(0, tagName.find_first_of('\0'));
       
       /*Insert tag and tagblknum to _tags*/
       _tags.insert(pair<string, BlkNumType>(tagName, tagBlk));
       
       i++;
+      /*Read in tagBlk number*/
+      memcpy(&tagBlk, buff + currentIndex.offset, sizeof(BlkNumType));
+      currentIndex.offset += sizeof(BlkNumType);
     }while(tagBlk != 0 && i < localTagCount);
     
   }
   
   /*Read in the Attributes*/
-  try{_myAttributes.readIn(pm);}
-  catch(...)
-  {cerr << "Error FileInfo::writeOut" << endl;}
+  _myAttributes.readIn(pm);
 }
 
 void FileInfo::del(PartitionManager* pm)
@@ -848,6 +808,30 @@ string FileInfo::mangle()
   return ret;
 }
 
+string FileInfo::mangle(vector<string>& tags)
+{
+  map<string, int> tempTags;
+  string ret = _name;
+  
+  for(size_t i = 0; i < tags.size(); i++)
+  {
+    tempTags.insert(pair<string, int>(tags[i], 0));
+  }
+  
+  for(auto it = _tags.begin(); it != _tags.end(); it++)
+  {
+    tempTags.insert(pair<string, int>(it->first, 0));
+  }
+  
+  for(auto it = tempTags.begin(); it != tempTags.end(); it++)
+  {
+    ret.append("_");
+    ret.append(it->first);
+  }
+  
+  return ret.substr(0, ret.find_first_of('\0'));
+  
+}
 
 /******************************************************************************/
 

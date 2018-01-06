@@ -32,15 +32,9 @@ FileSystem::FileSystem(DiskManager *dm, string fileSystemName)
   for(auto it = _RootTree->getMap()->begin(); it != _RootTree->getMap()->end(); it++)
   {
     it->second->readIn(_myPartitionManager, &_allFiles);
-    for(auto it2 = it->second->getMap()->begin(); it2 != it->second->getMap()->end(); it++)
-    {
-      it->second->readIn(_myPartitionManager, &_allFiles);
-    }
   }
   
-  //TODO: for now just gonna read in every finode as well. maybe change later to not read in full finode at this time
-  //TODO: in that case use the below code to use the read marker to figure out what has and has not been read in.
-  
+  //TODO: right now finodes must be read in to read in a tag tree, because we need the tags to mangle a name.
   
 //   /*Read in default tag Tree.*/
 //   auto it = _RootTree->getMap()->find("default");
@@ -239,64 +233,52 @@ void FileSystem::tagFile(FileInfo* file, vector<string>& tags)
 {
   //for all tags in the vector
   /*Validate the tagging of this file first*/
-  if(tags.size() == 0)
-  {
-    cerr << "No tags specified : File not Tagged" << endl;
-    return;
-  }
-  if(file == 0)
-  {
-    cerr << "File Does not Exist: File Not Tagged" << endl;
-    return;
-  }
+  if(tags.size() == 0) {throw ("No tags specified","FileSystem::tagFile");}
+  if(file == 0) {throw file_error ("File Does not Exist", "FileSystem::tagFile");}
   
   auto tagTreeptr = _RootTree->getMap()->find(tags[0]);
-  auto ret = tagTreeptr->second->getMap()->find(file->mangle());
+  if(tagTreeptr == _RootTree->getMap()->end())
+  {
+    cerr << tags[0] << " Does Not Exist: Not added to file tag set" << endl;
+  }
+  auto ret = tagTreeptr->second->getMap()->find(file->mangle(tags));
   if(ret != tagTreeptr->second->getMap()->end())
   {
-    throw file_error("File with specified tags already exists", "FileSystem::tagFile");
+    throw file_error(file->getName() + " with the specified tags already exists", "FileSystem::tagFile");
   }
   
   for(auto t : tags)//Complexity: avg:number of tags specified , worst: number of tags specified * size of root tree
   {
-    //   - find tagTree
-    
+    /*find tagTree*/
     auto it = _RootTree->getMap()->find(t);//Complexity: avg: 1, worst: size of root tree
-    //   - If tag does not exist create a new Tag tree
-    //not doing this
+    
     if(it == _RootTree->getMap()->end()) 
     {
       cerr << t << " Does Not Exist: Not added to file tag set" << endl;
-//       createTag(t);//Complexity: go to function
-//       it = _RootTree->getMap()->find(t);//Complexity: Complexity: avg: 1, worst: size of root tree
     }
-    /*If the tag tree has not been read in and should be, then read it in and set it as read.*/
-    //TODO: cleanup here
-//     if(!(_RootTree->isRead(it->second)))
-//     {
-//       it->second->readIn(_myPartitionManager);
-//       _RootTree->setRead(it->second);
-//     }
-    unordered_map<string, FileInfo*>* treeptr = it->second->getMap();
-    
-    //   - Add Tag to Finode 
-    auto ret = file->getMap()->insert(pair<string, BlkNumType>(t, it->second->getBlockNumber()));//Complexity: Complexity: avg: 1, worst: avg number of tags associated iwth file
-    if(!ret.second)
+    else
     {
-      cerr << t << "specified twice during file creation: Only Tagged once" << endl;
+      unordered_map<string, FileInfo*>* treeptr = it->second->getMap();
+      
+      /*Add Tag to Finode */
+      auto ret = file->getMap()->insert(pair<string, BlkNumType>(t, it->second->getBlockNumber()));//Complexity: Complexity: avg: 1, worst: avg number of tags associated iwth file
+      if(!ret.second)
+      {
+        cerr << "File already tagged with " << t << " : Only Tagged once" << endl;
+      }
+      
+      //   - Create and Add new Node to TagTree
+      auto ret2 = treeptr->insert(pair<string, FileInfo*>(file->mangle(tags), file));//Complexity: Complexity: avg: 1, worst: size of tag tree
+      if(!ret2.second)
+      {
+        throw arboreal_logic_error(file->getName() + " with the specified tags already exists,\n THIS SHOULD HAVE BEEN TRIGGERED EARLIER", "FileSystem::tagFile");
+      }
+      
+      /*Keep track of addition*/
+      it->second->insertAddition(file);
+      /*Note a TagTree was modified*/
+      insertModification(it->second);
     }
-    
-    //   - Create and Add new Node to TagTree
-    auto ret2 = treeptr->insert(pair<string, FileInfo*>(file->mangle(), file));//Complexity: Complexity: avg: 1, worst: size of tag tree
-    if(!ret2.second)
-    {
-      throw file_error(file->getName() + " with the specified tags already exists", "FileSystem::tagFile");
-    }
-    
-    /*Keep track of addition*/
-    it->second->insertAddition(file);
-    /*Note a TagTree was modified*/
-    insertModification(it->second);
   }
 
   // (write updated Finode to disk)
@@ -344,7 +326,6 @@ FileInfo* FileSystem::createFile(string filename, vector<string>& tags)
   newblknum = _myPartitionManager->getFreeDiskBlock();
   
   FileInfo* newFile = new FileInfo(filename, newblknum);
-  
   //   - If tag not given then add file to "default" tag tree
   //   * File remains in default tag tree until a non-default tag is associated with file
 
@@ -359,7 +340,9 @@ FileInfo* FileSystem::createFile(string filename, vector<string>& tags)
   {
     tagFile(newFile, tags);
   }
+  
   newFile->writeOut(_myPartitionManager);
+  _allFiles.insert(pair<string, FileInfo*>(filename, newFile));
   
   return newFile;
 }
@@ -453,7 +436,7 @@ void FileSystem::printTags()
     
     for(auto it2 = it->second->getMap()->begin(); it2 != it->second->getMap()->end(); it2++)
     {
-      cout << "\t FileName: " << it2->first << " \tBlockNumber: " << it->second->getBlockNumber() << endl;
+      cout << "\t FileName: " << it2->second->getName() << " \tBlockNumber: " << it2->second->getBlockNumber() << endl;
     }
   }
 }

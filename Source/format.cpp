@@ -161,10 +161,11 @@ int main(int argc, char** argv)
     /*Start at partition Block 4*/
     for(BlkNumType k = 4; k < partSizes[i]; k++)
     {
+      if(k == 5) prev = 4;
+      
       memset(buff, 0, blockSize);
       memcpy(buff, &prev, sizeof(BlkNumType));
       prev++;
-      if(k == 2) prev++;
       
       if(k == partSizes[i] - 1)
       {
