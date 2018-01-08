@@ -181,7 +181,7 @@ void FileSystem::deleteTag(string tagName, bool force)
   
   if((treeptr->size() > 0) && (!force))
   {
-    throw invalid_argument(tagName + " cannot be deleted: Tag has files associated with it, Consider running with force option");
+    throw tag_error(tagName + " cannot be deleted: Tag has files associated with it, Consider running with force option", "FileSystem::deleteTag");
     //cerr << "Warning! : Tag has files associated with it. This may take a while."
   }
   

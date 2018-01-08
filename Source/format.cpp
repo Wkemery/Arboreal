@@ -135,7 +135,7 @@ int main(int argc, char** argv)
     string rootName = "root";
     memset(buff, 0, blockSize);
     memcpy(buff, rootName.c_str(), rootName.size());
-    struct index tempindex{2,fileNameSize + sizeof(BlkNumType)};
+    struct index tempindex{2,0};
     struct rootSuperBlock tempSuperBlock{0, tempindex, 2};
     memcpy(buff + 5, &tempSuperBlock, sizeof(rootSuperBlock));
     disk.write(buff, blockSize);

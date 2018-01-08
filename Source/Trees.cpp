@@ -162,7 +162,7 @@ void TreeObject::incrementAllocate(Index* index, PartitionManager* pm)
   memset(buff, 0, pm->getBlockSize()); //zero out memory
   int entrySize = pm->getFileNameSize() + (sizeof(BlkNumType));
   
-  if((pm->getBlockSize() - index->offset) < entrySize + sizeof(BlkNumType))
+  if((pm->getBlockSize() - index->offset - entrySize) < (entrySize + sizeof(BlkNumType)))
   {
     BlkNumType newBlock;
     newBlock = pm->getFreeDiskBlock();
