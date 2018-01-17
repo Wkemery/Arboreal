@@ -4,7 +4,6 @@
  */
 
 #include "filesystem.h"
-#include "Trees.h"
 #include <time.h>
 #include <cstdlib>
 #include <iostream>
@@ -227,14 +226,38 @@ void FileSystem::tagFile(FileInfo* file, vector<string>& tags)
 {
   //for all tags in the vector
   /*Validate the tagging of this file first*/
-  if(tags.size() == 0) {throw ("No tags specified","FileSystem::tagFile");}
+  if(tags.size() == 0) {throw tag_error("No tags specified","FileSystem::tagFile");}
   if(file == 0) {throw file_error ("File Does not Exist", "FileSystem::tagFile");}
   
+  bool found = true;
   auto tagTreeptr = _RootTree->getMap()->find(tags[0]);
   if(tagTreeptr == _RootTree->getMap()->end())
   {
     cerr << tags[0] << " Does Not Exist: Not added to file tag set" << endl;
+    found = false;
   }
+  
+  size_t i = 1;
+  while((!found) && (i < tags.size()))
+  {
+    tagTreeptr = _RootTree->getMap()->find(tags[i]);
+    if(tagTreeptr == _RootTree->getMap()->end())
+    {
+      cerr << tags[i] << " Does Not Exist: Not added to file tag set" << endl;
+      found = false;
+    }
+    else
+    {
+      found = true;
+    }
+    i++;
+  }
+
+  if(found == false)
+  {
+    return;
+  }
+  
   auto ret = tagTreeptr->second->getMap()->find(file->mangle(tags));
   if(ret != tagTreeptr->second->getMap()->end())
   {

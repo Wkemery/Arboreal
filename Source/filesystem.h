@@ -4,6 +4,7 @@
  */
 
 #include "disk.h"
+#include "types.h"
 #include "diskmanager.h"
 #include "partitionmanager.h"
 #include "types.h"

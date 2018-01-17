@@ -1,5 +1,4 @@
 #include "types.h"
-#include "Arboreal_Exceptions.h"
 
 #ifndef DISK_H
 #define DISK_H

@@ -1,7 +1,5 @@
 #include "disk.h"
 #include "types.h"
-#include "Arboreal_Exceptions.h"
-
 #include<vector>
 
 #ifndef DISKMANAGER_H

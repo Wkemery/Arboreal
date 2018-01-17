@@ -3,7 +3,6 @@
 #include <cstdlib>
 #include <cstring>
 #include "disk.h"
-#include "Arboreal_Exceptions.h"
 
 using namespace std;
 

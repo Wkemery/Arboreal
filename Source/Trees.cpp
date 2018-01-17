@@ -191,7 +191,7 @@ void TreeObject::incrementFollow(Index* index, PartitionManager* pm)
   memset(buff, 0, pm->getBlockSize()); //zero out memory
   int entrySize = pm->getFileNameSize() + (sizeof(BlkNumType));
   
-  if((pm->getBlockSize() - index->offset) < entrySize + sizeof(BlkNumType))
+  if((pm->getBlockSize() - index->offset - entrySize) < entrySize + sizeof(BlkNumType))
   {
     /*Read in index.blknum*/
     pm->readDiskBlock(index->blknum, buff);
@@ -307,6 +307,7 @@ void RootTree::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*
   memcpy(&rootInfo, buff + currentIndex.offset, sizeof(RootSuperBlock));
   currentIndex.offset+=  sizeof(RootSuperBlock);
   
+  
   _lastEntry.blknum = rootInfo.lastEntry.blknum;
   _lastEntry.offset = rootInfo.lastEntry.offset;
   _startBlock = rootInfo.startBlock;
@@ -370,6 +371,10 @@ void RootTree::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*
     }
     
     incrementFollow(&currentIndex, pm);
+    if(currentIndex != EOFIndex)
+    {
+      pm->readDiskBlock(currentIndex.blknum, buff);
+    }
   }
 }
 
@@ -554,6 +559,10 @@ void TagTree::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*>
     }
     
     incrementFollow(&currentIndex, pm);
+    if(currentIndex != EOFIndex)
+    {
+      pm->readDiskBlock(currentIndex.blknum, buff);
+    }
   }
 }
 
@@ -622,7 +631,7 @@ void FileInfo::writeOut(PartitionManager* pm)
   memcpy(buff + (pm->getFileNameSize()), &_myFinode, sizeof(Finode));
   
   /*This is the maximum number of tags we can store before needing a cont block*/
-  int localTagCount = ((pm->getFileNameSize()) - sizeof(Finode) - sizeof(BlkNumType))
+  size_t localTagCount = ((pm->getFileNameSize()) - sizeof(Finode) - sizeof(BlkNumType))
                         / sizeof(BlkNumType);
   
   
@@ -658,7 +667,7 @@ void FileInfo::writeOut(PartitionManager* pm)
     /*There is not room to store all the tags locally*/
     auto it = _tags.begin();
     
-    for(int i = 0; i < localTagCount; i++)
+    for(size_t i = 0; i < localTagCount; i++)
     {
       /*Write out as many as we can*/
       BlkNumType blknum = it->second;

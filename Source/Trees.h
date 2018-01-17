@@ -4,8 +4,6 @@
  */
 
 #include "types.h"
-
-
 #include<unordered_map>
 #include<string>
 #include"partitionmanager.h"
@@ -16,37 +14,9 @@ using namespace std;
 
 #ifndef TREES_H
 #define TREES_H
-class FileInfo;
-class TreeObject;
 
-struct index
-{
-  BlkNumType blknum;
-  unsigned int offset;
-};
 
-struct rootSuperBlock 
-{
-  size_t size;
-  Index lastEntry;
-  BlkNumType startBlock;
-};
 
-struct tagTreeSuperBlock
-{
-  size_t size;
-  Index lastEntry;
-  BlkNumType startBlock;
-};
-
-struct finode
-{
-  BlkNumType attributes;
-  BlkNumType directBlocks[12];
-  BlkNumType level1Indirect;
-  BlkNumType level2Indirect;
-  BlkNumType level3Indirect;
-};
 
 bool operator ==(Index& lhs, Index& rhs);
 bool operator !=(Index& lhs, Index& rhs);

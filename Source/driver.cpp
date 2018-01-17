@@ -10,7 +10,6 @@
 #include "diskmanager.h"
 #include "partitionmanager.h"
 #include "filesystem.h"
-#include "client.h"
 #include "Trees.h"
 #include <string>
 #include <string.h>
@@ -381,7 +380,7 @@ int main(int argc, char** argv)
       tags.push_back("myTag3");
       tags.push_back("myTag5");
       
-      cout << "Creating files with nonexistent tag: should be 1 warning" << endl;
+      cout << "Creating files with nonexistent tag: should be 1 warning and 1 error" << endl;
       try{fs1->createFile("myFile0", tags);}
       catch(arboreal_exception& e)
       {cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
@@ -390,6 +389,64 @@ int main(int argc, char** argv)
       fs1->writeChanges();
       
       break;
+    }
+    case 6:
+    {
+      string tagName = "myTag";
+      string fileName = "myFile";
+      vector<string> tags;
+      /*Tag Creation Errors*/
+      cout << "Tag Creation Errors: should be 4 errors, skipping tag 1" << endl;
+      for(int i = 0; i < 5; i++)
+      {
+        tagName.append(to_string(i));
+        try{fs1->createTag(tagName);}
+        catch(arboreal_exception& e)
+        {cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
+        tagName = tagName.substr(0, 5);
+      }
+      cout << endl;
+      
+      cout << "Tag Deletion Errors: should be 5 errors" << endl;
+      for(int i = 10; i < 15; i++)
+      {
+        tagName.append(to_string(i));
+        try{fs1->deleteTag(tagName);}
+        catch(arboreal_exception& e)
+        {cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
+        tagName = tagName.substr(0, 5);
+      }
+      cout << endl;
+      
+      /*create 5 files tagged with 0,2,4, errors*/
+      cout << "Tag Deletion Errors: should be 5 errors" << endl;
+      
+      tags.push_back("myTag0");
+      tags.push_back("myTag2");
+      tags.push_back("myTag4");
+      
+      for(int i = 0; i < 5; i++)
+      {
+        fileName.append(to_string(i));
+        try{fs1->createFile(fileName, tags);}
+        catch(arboreal_exception& e)
+        {cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
+        fileName = fileName.substr(0, 6);
+      }
+      
+      /*Try to create some files with tag1, should issue warning*/
+      tags.clear();
+      tags.push_back("myTag1");
+      tags.push_back("myTag3");
+      tags.push_back("myTag5");
+      
+      cout << "Creating files with nonexistent tag: should be 1 warning and 1 error" << endl;
+      try{fs1->createFile("myFile0", tags);}
+      catch(arboreal_exception& e)
+      {cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
+      cout << endl;
+      
+      fs1->writeChanges();
     }
     default:
     {

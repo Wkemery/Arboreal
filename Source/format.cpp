@@ -11,19 +11,6 @@
 #include<fstream>
 using namespace std;
 
-struct index
-{
-  BlkNumType blknum;
-  unsigned int offset;
-};
-
-struct rootSuperBlock 
-{
-  size_t size;
-  Index lastEntry;
-  BlkNumType startBlock;
-};
-
 int main(int argc, char** argv)
 {
   int fileNameSize;
