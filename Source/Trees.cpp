@@ -619,10 +619,10 @@ void FileInfo::writeOut(PartitionManager* pm)
   
   memcpy(buff, _name.c_str(), _name.size());
   
-  memcpy(buff + (pm->getBlockSize()/2), &_myFinode, sizeof(Finode));
+  memcpy(buff + (pm->getFileNameSize()), &_myFinode, sizeof(Finode));
   
   /*This is the maximum number of tags we can store before needing a cont block*/
-  int localTagCount = ((pm->getBlockSize() / 2) - sizeof(Finode) - sizeof(BlkNumType))
+  int localTagCount = ((pm->getFileNameSize()) - sizeof(Finode) - sizeof(BlkNumType))
                         / sizeof(BlkNumType);
   
   
@@ -635,7 +635,7 @@ void FileInfo::writeOut(PartitionManager* pm)
   BlkNumType contBlock = 0;
   memcpy(&contBlock, localBuff + pm->getBlockSize() - sizeof(BlkNumType), sizeof(BlkNumType));
   
-  int offset = pm->getBlockSize()/2 + sizeof(Finode);
+  int offset = pm->getFileNameSize() + sizeof(Finode);
   
   if(_tags.size() <= localTagCount)
   {
@@ -708,13 +708,13 @@ void FileInfo::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*
   /*Read in Finode*/
   pm->readDiskBlock(_blockNumber, buff);
     
-  memcpy(&_myFinode, buff + (pm->getBlockSize()/2), sizeof(Finode));
+  memcpy(&_myFinode, buff + (pm->getFileNameSize()), sizeof(Finode));
   
   /*This is the maximum number of tags we can store before needing a cont block*/
-  int localTagCount = ((pm->getBlockSize() / 2) - sizeof(Finode) - sizeof(BlkNumType))
+  int localTagCount = ((pm->getFileNameSize()) - sizeof(Finode) - sizeof(BlkNumType))
   / sizeof(BlkNumType);
   
-  Index currentIndex{0,(pm->getBlockSize()/2) + sizeof(Finode)}; 
+  Index currentIndex{0,(pm->getFileNameSize()) + sizeof(Finode)}; 
   char* localBuff = new char[pm->getBlockSize()];
   string tagName;
   BlkNumType tagBlk = 0;
