@@ -42,4 +42,6 @@ Hard cap on the number of tags that can be associated with a file. = (((blocksiz
 1. Incorporate storing number of tags associated with file in Tag tree on disk, not yet
 2. Implement Read/Write for FileInfo class
 3. Deal with being sure that File Info objects are in fact in memory, or at least their necessary parts are in memory
+4. Add renameTag() function
+5. Add renameFile() function
 
