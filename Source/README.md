@@ -41,4 +41,5 @@ O(n^2*log(n))
 
 **TODO:**
 1. Incorporate storing number of tags associated with file in Tag tree on disk, not yet
+2. add renameTag function
 
