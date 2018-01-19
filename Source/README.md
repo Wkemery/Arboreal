@@ -13,15 +13,12 @@ I think we may need two open functions. One that takes the unique file id,(block
 *I removed validName() because we should check for valid input before passing it to our filesystem. as much as possible anyway.*
 
 I think we'll be able to get rid of alot of the helper functions actually. because map will be able to do all that for us. the **big helper functions will be reading in a map and writing out a map**. which i think we can just basically write out all the key, value pairs, because a map can do that easily with its iterator. **for reading in, we'll just read in all the key value pairs and add them to the map one by one.** 
-**Name Length HARD CAPS at 64 char**
+**Name Length HARD CAPS at size specified in partition info during formatting**
 **NEED TREE INODE**
 **READING A MAP FROM DISK TO MAIN MEMORY**
 **------------------------------------------**
-**Read key until 1 NULLbyte then read exactly "Size of int" bytes and repeat for size of map/tree(from Tree Inode) **
 
  **so we'll have to have a reserved spot at the end of a block for a block number to the next block of continuing data.** 
-**WHEN READING IN ITERMEDIARY DATA STRUCT ONLY CONTAINS 1 INTEGER VALUE, THE LOCATION ON DISK OF THE TREE INODE 
-THE LOCATION IN MAIN MEMORY WILL BE DECIDED AND ADDED ONCE WE INSTANTIATE THE TREE AFTER HAVING READ IT FROM DISK**
 
 **We should write everything out in plaintext and have a converter that can change it to byte stuff that we can implement later. also we should have a flag that will zero out blocks (FOR SPEED), mainly for debugging. but can also repourpose to an encrypt flag later.** 
 
@@ -33,15 +30,15 @@ THE LOCATION IN MAIN MEMORY WILL BE DECIDED AND ADDED ONCE WE INSTANTIATE THE TR
 ** A NOTE about speed: 
  right now, in order to do tag search, we have to read in the finode of each file in the smallest tag tree becuase I am not storing the number of tags associated with a file in the tag tree inodes. This can be changed later, but for now I just want to get it done. If, when we are testing speeds this is something that will surely improve speed.
 
+** Estimated read in time:
+O(n^2*log(n))
+
 **Restrictions:
-filename size restricted to no more than 1/2 block size
-block size should be a power of 2
-Hard cap on the number of tags that can be associated with a file. = (((blocksize / 2) - (17 * sizeof(BlkNumType))) / sizeof(BlkNumType)) + (blocksize / sizeof(BlkNumType)). 72 tags for blocksize of 512. 367 for 2k blocksize
+1. filename size restricted to no more than 1/2 block size
+2. block size should be a power of 2
+3. Hard cap on the number of tags that can be associated with a file. = (((blocksize / 2) - (17 * sizeof(BlkNumType))) / sizeof(BlkNumType)) + (blocksize / sizeof(BlkNumType)). 72 tags for blocksize of 512. 367 for 2k blocksize
+4. 
 
 **TODO:**
 1. Incorporate storing number of tags associated with file in Tag tree on disk, not yet
-2. Implement Read/Write for FileInfo class
-3. Deal with being sure that File Info objects are in fact in memory, or at least their necessary parts are in memory
-4. Add renameTag() function
-5. Add renameFile() function
 
