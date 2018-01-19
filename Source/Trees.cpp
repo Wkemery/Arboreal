@@ -238,13 +238,11 @@ unordered_map<string, TagTree*>* RootTree::getMap(){return &_tree;}
 
 void RootTree::insertAddition(TagTree* tag)
 {
-//   _additions.push(tag);
   _modifications.push(new Addition(tag, this));
 }
 
 void RootTree::insertDeletion(TagTree* tag)
 {
-//   _deletions.insert(pair<BlkNumType, TagTree*>(tag->getIndex()->blknum, tag));
   _modifications.push(new Deletion(tag, this));
   
 }
@@ -316,8 +314,8 @@ void RootTree::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*
   /*Read in the startBlock, first block with entries*/
   if(_startBlock == 0)
   {
-    //TODO: throw error. Root can never be empty becuase of default tag tree.
-    cerr << "Error! RootTree::readIn, _startblock = 0. root tree empty" << endl;
+    throw arboreal_logic_error("Root tree Start Block zero. Root Tree can never be empty becuase of the default tree", 
+                               "RootTree::readIn");
   }
   
   currentIndex.blknum = _startBlock;
@@ -342,18 +340,14 @@ void RootTree::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*
       memcpy(&blknum, buff + currentIndex.offset + pm->getFileNameSize() , sizeof(BlkNumType));
       if(blknum == 0)
       {
-        //TODO: throw error
-        cerr << "Error RootTree::readIn3" << endl;
+        throw arboreal_logic_error("blocknumber for a tag tree is zero as read from disk in the root tree", 
+                                   "RootTree::readIn");
       }
       
       /*Create TagTree object*/
       TagTree* tagTree = new TagTree(tagName, blknum);
       tagTree->setIndex(currentIndex);
-      if(tagTree == 0)
-      {
-        //TODO: throw error
-        cerr << "Error RootTree::readIn4" << endl;
-      }
+
       
       /*Insert key and value into tagtree in memory*/
       auto it_ret = _tree.insert(pair<string, TagTree*>(tagName, tagTree));
@@ -388,8 +382,6 @@ void RootTree::del(PartitionManager* pm)
 
 TagTree::TagTree(string tagName, BlkNumType blknum):TreeObject(tagName, blknum)
 {
-//   _lastEntry.blknum = blknum;
-//   _lastEntry.offset = 0;
   _lastEntry.blknum = 0;
   _startBlock = 0;
 }
@@ -400,16 +392,12 @@ unordered_map<string, FileInfo*>* TagTree::getMap() {return &_tree;}
 
 void TagTree::insertAddition(FileInfo* file)
 {
-//   _additions.push(file);
   _modifications.push(new Addition(file, this));
-  
 }
 
 void TagTree::insertDeletion(FileInfo* file)
 {
-//   _deletions.insert(pair<BlkNumType, FileInfo*>(file->getIndex()->blknum, file));
   _modifications.push(new Deletion(file, this));
-  
 }
 
 void TagTree::writeOut(PartitionManager* pm)
@@ -474,9 +462,7 @@ void TagTree::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*>
   Index currentIndex{_blockNumber, 0};
   
   /*Read in tagTree superblock*/
-  //TODO: fix catch statement.
-  try{pm->readDiskBlock(currentIndex.blknum, buff);}
-  catch(...){cerr << "Error TagTree::readIn1" << endl;}
+  pm->readDiskBlock(currentIndex.blknum, buff);
   
   /*Store values from superblock*/
   _name.assign(buff + currentIndex.offset, pm->getFileNameSize());
@@ -502,9 +488,7 @@ void TagTree::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*>
   currentIndex.blknum = _startBlock;
   currentIndex.offset = 0;
   
-  //TODO: fix catch statement.
-  try{pm->readDiskBlock(currentIndex.blknum, buff);}
-  catch(...){cerr << "Error TagTree::readIn2" << endl;}
+  pm->readDiskBlock(currentIndex.blknum, buff);
   
   Index EOFIndex{0,0};
   
@@ -523,22 +507,19 @@ void TagTree::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*>
       memcpy(&blknum, buff + currentIndex.offset + pm->getFileNameSize() , sizeof(BlkNumType));
       if(blknum == 0)
       {
-        //TODO: throw error
-        cerr << "Error TagTree::readIn3" << endl;
+        throw arboreal_logic_error("blocknumber for a finode is zero as read from disk in a tag tree", 
+                                   "TagTree::readIn");
       }
       
       /*Create FileInfo object*/
       FileInfo* finode = new FileInfo(fileName, blknum);
       finode->setIndex(currentIndex);
-      if(finode == 0)
-      {
-        //TODO: throw error
-        cerr << "Error TagTree::readIn4" << endl;
-      }
+
       
       /*Read in the finode*/
       finode->readIn(pm, allFiles);
       
+      bool found = false;
       
       /*Check to see if FileInfo object already existed. if so, set finode to 
        * already existing FileInfo object and delete finode.*/
@@ -550,6 +531,7 @@ void TagTree::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*>
           FileInfo* temp = finode;
           finode = it->second;
           delete temp; temp = 0;
+          found = true;
           break;
         }
       }
@@ -561,8 +543,11 @@ void TagTree::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*>
         throw arboreal_logic_error("Duplicate File read in from Disk", "TagTree:readIn");
       }
       
-      /*add to allFiles*/
-      allFiles->insert(pair<string, FileInfo*>(fileName, finode));
+      /*add to allFiles, if it wasn't already there*/
+      if(!found) 
+      {
+        allFiles->insert(pair<string, FileInfo*>(fileName, finode));
+      }
       
 //       /*add key to _readable*/
 //       auto it_ret2 = _readable.insert(pair<TreeObject*, bool>(finode, false));
