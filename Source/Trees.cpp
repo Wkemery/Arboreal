@@ -539,6 +539,21 @@ void TagTree::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*>
       /*Read in the finode*/
       finode->readIn(pm, allFiles);
       
+      
+      /*Check to see if FileInfo object already existed. if so, set finode to 
+       * already existing FileInfo object and delete finode.*/
+      auto ret = allFiles->equal_range(fileName);
+      for(auto it = ret.first; it != ret.second; it++)
+      {
+        if(it->second->mangle() == finode->mangle())
+        {
+          FileInfo* temp = finode;
+          finode = it->second;
+          delete temp; temp = 0;
+          break;
+        }
+      }
+      
       /*Insert key and value into FileInfo object in memory*/
       auto it_ret = _tree.insert(pair<string, FileInfo*>(finode->mangle(), finode));
       if(!it_ret.second)
