@@ -538,7 +538,8 @@ void TagTree::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*>
       
       /*Insert key and value into FileInfo object in memory*/
       auto it_ret = _tree.insert(pair<string, FileInfo*>(finode->mangle(), finode));
-      if(!it_ret.second)
+      cout << "File just inserted(maybe): " << finode->mangle() << endl;
+      if(!(it_ret.second))
       {
         throw arboreal_logic_error("Duplicate File read in from Disk", "TagTree:readIn");
       }

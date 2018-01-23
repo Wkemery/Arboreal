@@ -43,10 +43,21 @@ int main(int argc, char** argv)
   int driverNumber = atoi(argv[1]);
   
   //TODO: NOTE don't really want to put a bunch of these in a single try becuase it will quit if one fails
-  Disk *d = new Disk(501, 512, const_cast<char *>("DISK1"));
-  DiskManager * dm = new DiskManager(d);
+  Disk* d = 0;
+  DiskManager* dm = 0;
+  FileSystem* fs1 = 0;
   
-  FileSystem *fs1 = new FileSystem(dm, "PartitionA");
+  try
+  {  
+    d = new Disk(501, 512, const_cast<char *>("DISK1"));
+    dm = new DiskManager(d);
+    fs1 = new FileSystem(dm, "PartitionA");
+  }
+  catch(arboreal_exception& e)
+  {
+    cerr << "Error! " << e.what() << " in " << e.where()<< endl;
+    exit(1);
+  }
 //   FileSystem *fs2 = new FileSystem(dm, "PartitionB");
 //   FileSystem *fs3 = new FileSystem(dm, "PartitionC");
   
@@ -62,15 +73,15 @@ int main(int argc, char** argv)
         fs1->printTags();
         cout << endl << endl;
         
-        cout << "Partition B" << endl;
+//         cout << "Partition B" << endl;
         //       fs2->printRoot();
 //         fs2->printTags();
-        cout << endl << endl;
+//         cout << endl << endl;
         
-        cout << "Partition C" << endl;
+//         cout << "Partition C" << endl;
         //       fs3->printRoot();
 //         fs3->printTags();
-        cout << endl << endl;
+//         cout << endl << endl;
       }
       catch(arboreal_exception& e)
       {
@@ -88,27 +99,12 @@ int main(int argc, char** argv)
         fs1->createTag("tag2");
         fs1->createTag("tag3");
         
-//         fs2->createTag("tag1");
-//         fs2->createTag("tag2");
-//         fs2->createTag("tag3");
-        
-//         fs3->createTag("tag1");
-//         fs3->createTag("tag2");
-//         fs3->createTag("tag3");
         fs1->printRoot();
         fs1->writeChanges();
-//         fs2->writeChanges();
-//         fs3->writeChanges();
-        cout << endl;
         
-        //         fs1->deleteTag("tag1");
-        //         fs2->deleteTag("tag2");
-        //         fs3->deleteTag("tag3");
-        fs1->printRoot();
+        fs1->deleteTag("tag1");
         
         fs1->writeChanges();
-//         fs2->writeChanges();
-//         fs3->writeChanges();
       }
       catch(arboreal_exception& e)
       {
@@ -367,26 +363,26 @@ int main(int argc, char** argv)
       
       
       /*Delete tag1 with force*/
-      try{fs1->deleteTag("myTag1", true);}
-      catch(arboreal_exception& e)
-      {cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
-      cout << endl;
-      
-      fs1->writeChanges();
+//       try{fs1->deleteTag("myTag1", true);}
+//       catch(arboreal_exception& e)
+//       {cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
+//       cout << endl;
+//       
+//       fs1->writeChanges();
       
       /*Try to create some files with tag1, should issue warning*/
-      tags.clear();
-      tags.push_back("myTag1");
-      tags.push_back("myTag3");
-      tags.push_back("myTag5");
-      
-      cout << "Creating files with nonexistent tag: should be 1 warning and 1 error" << endl;
-      try{fs1->createFile("myFile0", tags);}
-      catch(arboreal_exception& e)
-      {cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
-      cout << endl;
-      
-      fs1->writeChanges();
+//       tags.clear();
+//       tags.push_back("myTag1");
+//       tags.push_back("myTag3");
+//       tags.push_back("myTag5");
+//       
+//       cout << "Creating files with nonexistent tag: should be 1 warning and 1 error" << endl;
+//       try{fs1->createFile("myFile0", tags);}
+//       catch(arboreal_exception& e)
+//       {cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
+//       cout << endl;
+//       
+//       fs1->writeChanges();
       
       break;
     }
