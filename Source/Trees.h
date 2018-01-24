@@ -82,7 +82,7 @@ public:
   BlkNumType getBlockNumber();
   void incrementAllocate(Index* index, PartitionManager* pm);
   void incrementFollow(Index* index, PartitionManager* pm);
-  void deleteContBlocks(PartitionManager* pm, BlkNumType blknum);
+  virtual void deleteContBlocks(PartitionManager* pm, BlkNumType blknum);
   /* deleteContBlocks will take a blknum and free it. it will follow the chain 
    * of continuation blocks and free all of them too*/
 protected:
@@ -105,7 +105,8 @@ public:
   void writeOut(PartitionManager* pm);
   void readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*>* allFiles);
   void del(PartitionManager* pm);
-//   void deleteContBlocks(PartitionManager* pm, BlkNumType blknum);
+  void deleteContBlocks(PartitionManager* pm, BlkNumType blknum);
+    /*This will delete all the blocks with file data starting from any level*/
 
 };
 

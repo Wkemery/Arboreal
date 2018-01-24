@@ -189,23 +189,44 @@ void FileSystem::deleteTag(string tagName, bool force)
   {
     for(auto it2 = treeptr->begin(); it2 != treeptr->end(); it2++)//Complexity: avg: size of tag tree * sizeof file/block size, worst size of tag tree * avg tags associated with file * sizeof file/block size
     {
-      //   - delete all references to the tag tree from Fileinodes
-      it2->second->getMap()->erase(tagName);//Complexity: avg 1, worst # of tags associated with file
-      it2->second->writeOut(_myPartitionManager);//Complexity: just super block of file
+      /*Remove presence from all tag trees that this file is associated with*/
+      for(auto fileTags = it2->second->getMap()->begin(); fileTags != it2->second->getMap()->end(); fileTags++)
+      {
+        auto fileTagTreePtr = _RootTree->getMap()->find(fileTags->first);
+        if(fileTagTreePtr == _RootTree->getMap()->end())
+        {
+          throw arboreal_logic_error("Tag doesn't exist when it should", "FileSystem::deleteTag");
+        }
+        fileTagTreePtr->second->insertDeletion(it2->second);
+        insertModification(fileTagTreePtr->second);
+      }
+      
+      /*Delete the file*/
+      it2->second->del(_myPartitionManager);
+      /*Remove from allFiles*/
+      auto ret = _allFiles.equal_range(it2->second->getName());
+      for(auto eq_it = ret.first; eq_it!= ret.second; eq_it++)
+      {
+        if(it2->second == eq_it->second)
+        {
+          _allFiles.erase(eq_it);
+          break;
+        }
+      }
     }
+    treeptr->clear();
   }
 
 //   /*Delete tagTree on disk*/
-//   it->second->del(_myPartitionManager);
+  it->second->del(_myPartitionManager);
   //   - returning blocks always zeros them
   //   - remove node from Root tree
   /*Keep track of Deletion*/
   _RootTree->insertDeletion(it->second);
   _RootTree->getMap()->erase(it);
   /*Note Root Tree was modified*/
-  
-  //   - write the root tree out to disk
-  
+  insertModification(_RootTree);
+    
 }
 
 void FileSystem::mergeTags(string tag1, string tag2)
@@ -288,7 +309,9 @@ void FileSystem::tagFile(FileInfo* file, vector<string>& tags)
       auto ret2 = treeptr->insert(pair<string, FileInfo*>(file->mangle(tags), file));//Complexity: Complexity: avg: 1, worst: size of tag tree
       if(!ret2.second)
       {
-        throw arboreal_logic_error(file->getName() + " with the specified tags already exists,\n THIS SHOULD HAVE BEEN TRIGGERED EARLIER", "FileSystem::tagFile");
+        throw arboreal_logic_error(file->getName() + " with the specified tags already exists \n THIS SHOULD HAVE BEEN TRIGGERED EARLIER", "FileSystem::tagFile");
+        //NOTE: this is a duplicate error check, but we check above to save a little time and not create a new file inode unnecesarily. 
+        //NOTE: That is also why this is a logic error
       }
       
       /*Keep track of addition*/
@@ -453,8 +476,16 @@ void FileSystem::printTags()
     
     for(auto it2 = it->second->getMap()->begin(); it2 != it->second->getMap()->end(); it2++)
     {
-      cout << "\t FileName: " << it2->second->getName() << " \tBlockNumber: " << it2->second->getBlockNumber() << endl;
+      cout << "\t FilePath: " << it2->second->mangle() << " \tBlockNumber: " << it2->second->getBlockNumber() << endl;
     }
+  }
+}
+
+void FileSystem::printFiles()
+{
+  for(auto it = _allFiles.begin(); it != _allFiles.end(); it++)
+  {
+    cout << "\t FilePath: " << it->second->mangle() << endl;//" \t\tBlockNumber: " << it->second->getBlockNumber() << endl;
   }
 }
 

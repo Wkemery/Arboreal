@@ -84,6 +84,7 @@ public:
   /*DEBUG functions*/
   void printRoot();
   void printTags();
+  void printFiles();
   
 };
 

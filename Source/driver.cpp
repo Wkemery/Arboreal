@@ -70,7 +70,8 @@ int main(int argc, char** argv)
         cout << "Root Tree and Tag Tree's Contents:" << endl;
         cout << "Partition A" << endl;
         //       fs1->printRoot();
-        fs1->printTags();
+//         fs1->printTags();
+        fs1->printFiles();
         cout << endl << endl;
         
 //         cout << "Partition B" << endl;
@@ -94,17 +95,33 @@ int main(int argc, char** argv)
     {
       try 
       {
+        cout << "Creating 3 Tags, Creating 9 files where filenames are reused but with different \"paths\"" << endl;
         fs1->createTag("tag1");
-        
         fs1->createTag("tag2");
         fs1->createTag("tag3");
         
-        fs1->printRoot();
+//         fs1->printRoot();
         fs1->writeChanges();
         
-        fs1->deleteTag("tag1");
+        vector<string> tagSet;
+        fs1->createFile("myfile1", tagSet);
+        fs1->createFile("myfile2", tagSet);
+        fs1->createFile("myfile3", tagSet);
         
+        tagSet.push_back("tag1");
+        fs1->createFile("myfile1", tagSet);
+        fs1->createFile("myfile2", tagSet);
+        fs1->createFile("myfile3", tagSet);
+        
+        tagSet.push_back("tag2");
+        fs1->createFile("myfile1", tagSet);
+        fs1->createFile("myfile2", tagSet);
+        fs1->createFile("myfile3", tagSet);
         fs1->writeChanges();
+        
+//         fs1->deleteTag("tag1");
+        
+//         fs1->writeChanges();
       }
       catch(arboreal_exception& e)
       {
@@ -388,61 +405,71 @@ int main(int argc, char** argv)
     }
     case 6:
     {
-      string tagName = "myTag";
-      string fileName = "myFile";
+      cout << "Testing tag deletion force" << endl << endl; 
+      string tagName = "Tag";
+      string fileName = "File";
       vector<string> tags;
-      /*Tag Creation Errors*/
-      cout << "Tag Creation Errors: should be 4 errors, skipping tag 1" << endl;
-      for(int i = 0; i < 5; i++)
+      
+      /*create 10 tags*/
+      for(int i = 0; i < 10; i++)
       {
         tagName.append(to_string(i));
         try{fs1->createTag(tagName);}
         catch(arboreal_exception& e)
         {cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
-        tagName = tagName.substr(0, 5);
+        tagName = tagName.substr(0, 3);
       }
-      cout << endl;
       
-      cout << "Tag Deletion Errors: should be 5 errors" << endl;
-      for(int i = 10; i < 15; i++)
+      try
       {
-        tagName.append(to_string(i));
-        try{fs1->deleteTag(tagName);}
-        catch(arboreal_exception& e)
-        {cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
-        tagName = tagName.substr(0, 5);
+        tags.push_back("Tag0"); tags.push_back("Tag1"); tags.push_back("Tag2");
+        fs1->createFile("File1", tags); tags.clear();
+        
+        tags.push_back("Tag0"); tags.push_back("Tag1");
+        fs1->createFile("File1", tags); tags.clear();
+        
+        tags.push_back("Tag0"); tags.push_back("Tag2");
+        fs1->createFile("File1", tags); tags.clear();
+        
+        tags.push_back("Tag1");
+        fs1->createFile("File2", tags); tags.clear();
+        
+        tags.push_back("Tag1"); tags.push_back("Tag5");
+        fs1->createFile("File3", tags); tags.clear();
+        
+        tags.push_back("Tag0"); tags.push_back("Tag2"); tags.push_back("Tag5");
+        fs1->createFile("File4", tags); tags.clear();
+        
+        tags.push_back("Tag0"); tags.push_back("Tag2"); tags.push_back("Tag4");
+        fs1->createFile("File5", tags); tags.clear();
+        
+        
+        /*Create a bunch of files with just Tag1 in order to test the deleteContBlocks function*/
+//         tags.push_back("Tag1");
+//         for(int i = 10; i < 35; i++)
+//         {
+//           fileName.append(to_string(i));
+//           try{fs1->createFile(fileName, tags);}
+//           catch(arboreal_exception& e)
+//           {cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
+//           fileName = fileName.substr(0, 4);
+//         }
+        
+        fs1->writeChanges();
+        fs1->printFiles();
+        cout << endl <<  endl;
+        fs1->deleteTag("Tag1", true);
+        
+        fs1->writeChanges();
+        fs1->printFiles();
+        
       }
-      cout << endl;
-      
-      /*create 5 files tagged with 0,2,4, errors*/
-      cout << "Tag Deletion Errors: should be 5 errors" << endl;
-      
-      tags.push_back("myTag0");
-      tags.push_back("myTag2");
-      tags.push_back("myTag4");
-      
-      for(int i = 0; i < 5; i++)
-      {
-        fileName.append(to_string(i));
-        try{fs1->createFile(fileName, tags);}
-        catch(arboreal_exception& e)
-        {cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
-        fileName = fileName.substr(0, 6);
-      }
-      
-      /*Try to create some files with tag1, should issue warning*/
-      tags.clear();
-      tags.push_back("myTag1");
-      tags.push_back("myTag3");
-      tags.push_back("myTag5");
-      
-      cout << "Creating files with nonexistent tag: should be 1 warning and 1 error" << endl;
-      try{fs1->createFile("myFile0", tags);}
       catch(arboreal_exception& e)
-      {cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
-      cout << endl;
-      
-      fs1->writeChanges();
+      {
+        cerr << "Error! " << e.what() << " in " << e.where()<< endl;
+      }
+
+      break;
     }
     default:
     {

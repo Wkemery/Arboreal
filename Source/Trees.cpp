@@ -219,7 +219,20 @@ void TreeObject::incrementFollow(Index* index, PartitionManager* pm)
 
 void TreeObject::deleteContBlocks(PartitionManager* pm, BlkNumType blknum)
 {
-  //TODO: finish function
+  char* buff = new char[pm->getBlockSize()];
+  
+  /*Read in the block passed*/
+  pm->readDiskBlock(blknum, buff);
+  
+  /*Check for cont block*/
+  BlkNumType contBlkNum;
+  memcpy(&contBlkNum, buff + pm->getBlockSize() - sizeof(BlkNumType), sizeof(BlkNumType));
+  
+  if(contBlkNum != 0)
+  {
+   delete buff; buff = 0;
+   deleteContBlocks(pm, contBlkNum);
+  }
   
   pm->returnDiskBlock(blknum);
 }
@@ -243,8 +256,10 @@ void RootTree::insertAddition(TagTree* tag)
 
 void RootTree::insertDeletion(TagTree* tag)
 {
-  _modifications.push(new Deletion(tag, this));
-  
+  if(tag != 0)
+  {
+    _modifications.push(new Deletion(tag, this));
+  }
 }
 
 void RootTree::writeOut(PartitionManager* pm)
@@ -397,7 +412,10 @@ void TagTree::insertAddition(FileInfo* file)
 
 void TagTree::insertDeletion(FileInfo* file)
 {
-  _modifications.push(new Deletion(file, this));
+  if(file != 0)
+  {
+    _modifications.push(new Deletion(file, this));
+  }
 }
 
 void TagTree::writeOut(PartitionManager* pm)
@@ -538,7 +556,7 @@ void TagTree::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*>
       
       /*Insert key and value into FileInfo object in memory*/
       auto it_ret = _tree.insert(pair<string, FileInfo*>(finode->mangle(), finode));
-      cout << "File just inserted(maybe): " << finode->mangle() << endl;
+//       cout << "File just inserted(maybe): " << finode->mangle() << endl;
       if(!(it_ret.second))
       {
         throw arboreal_logic_error("Duplicate File read in from Disk", "TagTree:readIn");
@@ -588,8 +606,6 @@ void TagTree::del(PartitionManager* pm)
   }
   
   pm->returnDiskBlock(_blockNumber);
-
-  
 }
 
 /******************************************************************************/
@@ -721,8 +737,8 @@ void FileInfo::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*
   memcpy(&_myFinode, buff + (pm->getFileNameSize()), sizeof(Finode));
   
   /*This is the maximum number of tags we can store before needing a cont block*/
-  int localTagCount = ((pm->getFileNameSize()) - sizeof(Finode) - sizeof(BlkNumType))
-  / sizeof(BlkNumType);
+  int localTagCount = ((pm->getBlockSize() - pm->getFileNameSize() 
+  - sizeof(Finode) - sizeof(BlkNumType)) / sizeof(BlkNumType));
   
   Index currentIndex{0,(pm->getFileNameSize()) + sizeof(Finode)}; 
   char* localBuff = new char[pm->getBlockSize()];
@@ -805,7 +821,101 @@ void FileInfo::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*
 }
 
 void FileInfo::del(PartitionManager* pm)
-{}
+{
+  /*Return direct blocks*/
+  int i = 0;
+  
+  while(_myFinode.directBlocks[i] != 0 && i < 12)
+  {
+    pm->returnDiskBlock(_myFinode.directBlocks[i]);
+    i++;
+  }
+  
+  deleteContBlocks(pm, _myFinode.level1Indirect);
+  deleteContBlocks(pm, _myFinode.level2Indirect);
+  deleteContBlocks(pm, _myFinode.level3Indirect);
+  
+  /*Return the super block*/
+  pm->returnDiskBlock(_blockNumber);
+}
+
+void FileInfo::deleteContBlocks(PartitionManager* pm, BlkNumType blknum)
+{
+  if(blknum == 0)
+  {
+    return;
+  }
+  
+  char* buff = new char[pm->getBlockSize()];
+  /*Read in the block from blknum*/
+  pm->readDiskBlock(blknum, buff);
+  
+  BlkNumType block;
+  int offset = 0;
+  memcpy(&block, buff + offset, sizeof(BlkNumType));
+  offset+= sizeof(BlkNumType);
+  
+  /*read in all block numbers and free them*/
+  while(block != 0 && offset <= pm->getBlockSize())
+  {
+    pm->returnDiskBlock(block);
+    memcpy(&block, buff + offset, sizeof(BlkNumType));
+    offset+= sizeof(BlkNumType);
+  }
+  
+  delete buff; buff = 0;
+  pm->returnDiskBlock(blknum);
+}
+
+// void FileInfo::deleteFileBlocks(PartitionManager* pm, BlkNumType blknum, int level)
+// {
+//   char* buff = new char[pm->getBlockSize()];
+//   /*Read in the block from blknum*/
+//   pm->readDiskBlock(blknum, buff);
+//   
+//   if(level == 3 || level == 2)
+//   {
+//     vector<BlkNumType> indBlockNums;
+//     BlkNumType block;
+//     unsigned int offset = 0;
+//     memcpy(&block, buff + offset, sizeof(BlkNumType));
+//     
+//     /*read in all indirect block numbers*/
+//     while(block != 0 && offset <= pm->getBlockSize())
+//     {
+//       indBlockNums.push_back(block);
+//       memcpy(&block, buff + offset, sizeof(BlkNumType));
+//       offset+= sizeof(BlkNumType);
+//     }
+//     
+//     for(size_t i = 0; i < indBlockNums.size(); i++)
+//     {
+//       deleteFileBlocks(pm, indBlockNums[i], i -1);
+//     }
+//   }
+//   else if(level == 1)
+//   {
+//     BlkNumType block;
+//     unsigned int offset = 0;
+//     memcpy(&block, buff + offset, sizeof(BlkNumType));
+//     
+//     /*read in all direct block numbers and free them*/
+//     while(block != 0 && offset <= pm->getBlockSize())
+//     {
+//       pm->returnDiskBlock(block);
+//       memcpy(&block, buff + offset, sizeof(BlkNumType));
+//       offset+= sizeof(BlkNumType);
+//     }
+//   }
+//   else
+//   {
+//     throw arboreal_logic_error("Invalid level passed", "FileInfo::deleteFileBlocks");
+//   }
+//   
+//   delete buff; buff = 0;
+//   pm->returnDiskBlock(blknum);
+// }
+
 
 string FileInfo::mangle()
 {
