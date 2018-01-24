@@ -30,16 +30,23 @@ I think we'll be able to get rid of alot of the helper functions actually. becau
 ** A NOTE about speed: 
  right now, in order to do tag search, we have to read in the finode of each file in the smallest tag tree becuase I am not storing the number of tags associated with a file in the tag tree inodes. This can be changed later, but for now I just want to get it done. If, when we are testing speeds this is something that will surely improve speed.
 
-** Estimated read in time:
+** Estimated read in time for everything on startup:
 O(n^2*log(n))
+
+** FileInode structure
+filename - filenameSize
+Finode struct = sizeof(finode struct)
+local tag storage = rest of the space
+possible tag cont. block = sizeof(blknumType)
 
 **Restrictions:
 1. filename size restricted to no more than 1/2 block size
 2. block size should be a power of 2
-3. Hard cap on the number of tags that can be associated with a file. = (((blocksize / 2) - (17 * sizeof(BlkNumType))) / sizeof(BlkNumType)) + (blocksize / sizeof(BlkNumType)). 72 tags for blocksize of 512. 367 for 2k blocksize
+3. Hard cap on the number of tags that can be associated with a file. = (((blocksize - filenamesize - 136) / sizeof(BlkNumType)) + (blocksize / sizeof(BlkNumType)). 103 tags for blocksize of 512. and 64b filename
 4. 
 
 **TODO:**
 1. Incorporate storing number of tags associated with file in Tag tree on disk, not yet
 2. add renameTag function
+3. don't allow duplicate tags to be sent to the filesystem when sending a tagset of any kind
 
