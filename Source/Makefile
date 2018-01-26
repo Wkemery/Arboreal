@@ -20,5 +20,11 @@ driver: $(CPPFILES) $(HFILES)
 format: format.cpp
 	$(CXX) $(XXFLAGS) -o format format.cpp
 
+cli: clean cli_driver.cpp cli.h
+	$(CXX) $(XXFLAGS) cli.cpp cli_driver.cpp -o cli
+
+liason: clean liason.cpp liason.h
+	$(CXX) $(XXFLAGS) liason.cpp -o liason
+
 clean: 
-	/bin/rm -f *.o driver format DISK1
+/bin/rm -f *.o driver cli format DISK1 *.pipe
