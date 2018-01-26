@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 //////////////////////////////////////////////////////////////////////////////////////////////////// 
 //
 // cli.cpp
@@ -212,11 +213,51 @@ void CLI::run()
       if(c == '\n')
       {
          if(is_script != "-s"){cout << "Arboreal >> \n";}
+=======
+//////////////////////////////////////////////////////////////////////////////// 
+//
+// Comand Line Interface (CLI) For Arboreal
+// 
+// Adrian Barberis
+// Fri. | 10:01 AM | Jan. 5 | 2018
+// 
+////////////////////////////////////////////////////////////////////////////////
+
+#include <string>
+#include <iostream>
+#include <stdio.h>
+using namespace::std;
+
+bool process(string input);
+bool process(char input);
+/*
+ * 1. Get input
+ * 2. Check if input is correct
+ *    a. Check function exists
+ *    b. Check flags exist
+ *    c. Check paramters are correct
+ * 2b. Error re-request command
+ * 3. Call function
+ */
+
+int main()
+{
+   string input;
+   printf("Arboreal >> ");
+   while(true)
+   {
+      // Check for ENTER pressed
+      char c = cin.get();
+      if(c == '\n')
+      {
+         printf("Arboreal >> ");
+>>>>>>> Begin CLI
          continue;
       }
       else
       {
          /* 
+<<<<<<< HEAD
           * Put back the character used to check for ENTER pressed
           * If this is not done will result in the first character 
           * of the input being thrown away
@@ -946,3 +987,42 @@ char* CLI::build(int id,string input)
 
 
 
+=======
+          * Put back the charcter used to check for ENTER pressed
+          * If this is not done will result in the first charcter 
+          * of the input being thrown away
+          */
+         cin.putback(c);
+
+         // Get the command
+         getline(cin,input);
+
+         if(input == "quit" || input == "Q" || input == "q")
+         {
+            // May need to do more than return in order to make
+            // sure we dont corrupt data
+            return 0;
+         }
+
+         bool valid = process(input);
+         if(!valid)
+         {
+            cerr << "Command Not Valid\n";
+            printf("Arboreal >> ");
+            continue;
+         }
+      }
+   }
+   return 0;
+}
+
+bool process(string input)
+{
+   return false;
+}
+
+bool process(char input)
+{
+   return false;
+}
+>>>>>>> Begin CLI
