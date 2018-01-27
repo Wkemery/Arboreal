@@ -62,7 +62,7 @@ public:
   vector<FileInfo*>* tagSearch(vector<string> tags);
   vector<FileInfo*>* fileSearch(string name);
   void createTag(string tagName);
-  void deleteTag(string tagName, bool force = false);
+  void deleteTag(string tagName);
   void mergeTags(string tag1, string tag2);
   void tagFile(FileInfo* file, vector<string>& tags);
   void untagFile(FileInfo* file, vector<string> tags);
@@ -80,6 +80,9 @@ public:
   int renameFile(char *filename1, int fnameLen1, char *filename2, int fnameLen2);
   int getAttributes(char *filename, int fnameLen, char* buffer, int flag);
   int setAttributes(char *filename, int fnameLen, char* buffer, int flag);
+  
+  int getFileNameSize();
+  
   
   /*DEBUG functions*/
   void printRoot();

@@ -63,7 +63,7 @@ void Addition::writeOut(PartitionManager* pm)
   else
   {
     nextEntry = _parent->getLastEntry();
-    _parent->incrementAllocate(&nextEntry, pm);
+    _parent->incrementAllocate(&nextEntry);
   }
   
   if(_parent->getLastEntry().blknum != nextEntry.blknum)
@@ -108,7 +108,7 @@ void Deletion::writeOut(PartitionManager* pm)
     memset(buff + _mod->getIndex().offset, 0, pm->getFileNameSize() + sizeof(BlkNumType));
     
     /*Remove that TagTrees presence on Disk*/
-    _mod->del(pm);
+    _mod->del();
     
     /*Write out buff to mod blknum*/
     pm->writeDiskBlock(_mod->getIndex().blknum, buff);
@@ -116,32 +116,13 @@ void Deletion::writeOut(PartitionManager* pm)
 }
 
 /******************************************************************************/
-TreeObject::TreeObject(string name, BlkNumType blknum)
-:_name(name), _blockNumber(blknum)
+TreeObject::TreeObject(string name, BlkNumType blknum, PartitionManager* pm)
+:_name(name), _blockNumber(blknum), _myPartitionManager(pm)
 {}
 
 TreeObject::~TreeObject(){}
 
 string TreeObject::getName(){return _name;}
-
-bool TreeObject::isRead(TreeObject* obj)
-{
-  auto it = _readable.find(obj);
-  if(it == _readable.end())
-  {
-    return false;
-  }
-  return it->second;
-}
-
-void TreeObject::setRead(TreeObject* obj)
-{
-  auto it = _readable.find(obj);
-  if(it != _readable.end())
-  {
-    it->second = true;
-  }
-}
 
 void TreeObject::setIndex(Index index){_index.blknum = index.blknum; _index.offset = index.offset;}
 
@@ -156,25 +137,25 @@ BlkNumType TreeObject::getStartBlock(){return _startBlock;}
 void TreeObject::setLastEntry(Index index){_lastEntry = index;}
 
 
-void TreeObject::incrementAllocate(Index* index, PartitionManager* pm)
+void TreeObject::incrementAllocate(Index* index)
 {
-  char* buff = new char[pm->getBlockSize()];
-  memset(buff, 0, pm->getBlockSize()); //zero out memory
-  int entrySize = pm->getFileNameSize() + (sizeof(BlkNumType));
+  char* buff = new char[_myPartitionManager->getBlockSize()];
+  memset(buff, 0, _myPartitionManager->getBlockSize()); //zero out memory
+  int entrySize = _myPartitionManager->getFileNameSize() + (sizeof(BlkNumType));
   
-  if((pm->getBlockSize() - index->offset - entrySize) < (entrySize + sizeof(BlkNumType)))
+  if((_myPartitionManager->getBlockSize() - index->offset - entrySize) < (entrySize + sizeof(BlkNumType)))
   {
     BlkNumType newBlock;
-    newBlock = pm->getFreeDiskBlock();
+    newBlock = _myPartitionManager->getFreeDiskBlock();
     
     /*Read in old block*/
-    pm->readDiskBlock(index->blknum, buff);
+    _myPartitionManager->readDiskBlock(index->blknum, buff);
     
     /*set continuation on old block*/
-    memcpy(buff + pm->getBlockSize() - sizeof(BlkNumType), &newBlock, sizeof(BlkNumType));
+    memcpy(buff + _myPartitionManager->getBlockSize() - sizeof(BlkNumType), &newBlock, sizeof(BlkNumType));
     
     /*Write out old block*/
-    pm->writeDiskBlock(index->blknum, buff);
+    _myPartitionManager->writeDiskBlock(index->blknum, buff);
     
     index->blknum = newBlock;
     index->offset = 0;
@@ -185,20 +166,20 @@ void TreeObject::incrementAllocate(Index* index, PartitionManager* pm)
   }
 }
 
-void TreeObject::incrementFollow(Index* index, PartitionManager* pm)
+void TreeObject::incrementFollow(Index* index)
 {
-  char* buff = new char[pm->getBlockSize()];
-  memset(buff, 0, pm->getBlockSize()); //zero out memory
-  int entrySize = pm->getFileNameSize() + (sizeof(BlkNumType));
+  char* buff = new char[_myPartitionManager->getBlockSize()];
+  memset(buff, 0, _myPartitionManager->getBlockSize()); //zero out memory
+  int entrySize = _myPartitionManager->getFileNameSize() + (sizeof(BlkNumType));
   
-  if((pm->getBlockSize() - index->offset - entrySize) < entrySize + sizeof(BlkNumType))
+  if((_myPartitionManager->getBlockSize() - index->offset - entrySize) < entrySize + sizeof(BlkNumType))
   {
     /*Read in index.blknum*/
-    pm->readDiskBlock(index->blknum, buff);
+    _myPartitionManager->readDiskBlock(index->blknum, buff);
     
     /*Read in cont. blocknum */
     BlkNumType contBlkNum;
-    memcpy(&contBlkNum, buff + pm->getBlockSize() - sizeof(BlkNumType), sizeof(BlkNumType));
+    memcpy(&contBlkNum, buff + _myPartitionManager->getBlockSize() - sizeof(BlkNumType), sizeof(BlkNumType));
     
     if(contBlkNum == 0)
     {
@@ -217,28 +198,28 @@ void TreeObject::incrementFollow(Index* index, PartitionManager* pm)
   }
 }
 
-void TreeObject::deleteContBlocks(PartitionManager* pm, BlkNumType blknum)
+void TreeObject::deleteContBlocks(BlkNumType blknum)
 {
-  char* buff = new char[pm->getBlockSize()];
+  char* buff = new char[_myPartitionManager->getBlockSize()];
   
   /*Read in the block passed*/
-  pm->readDiskBlock(blknum, buff);
+  _myPartitionManager->readDiskBlock(blknum, buff);
   
   /*Check for cont block*/
   BlkNumType contBlkNum;
-  memcpy(&contBlkNum, buff + pm->getBlockSize() - sizeof(BlkNumType), sizeof(BlkNumType));
+  memcpy(&contBlkNum, buff + _myPartitionManager->getBlockSize() - sizeof(BlkNumType), sizeof(BlkNumType));
   
   if(contBlkNum != 0)
   {
    delete buff; buff = 0;
-   deleteContBlocks(pm, contBlkNum);
+   deleteContBlocks(contBlkNum);
   }
   
-  pm->returnDiskBlock(blknum);
+  _myPartitionManager->returnDiskBlock(blknum);
 }
 
 /******************************************************************************/
-RootTree::RootTree():TreeObject("Root", 1)
+RootTree::RootTree(PartitionManager* pm):TreeObject("Root", 1, pm)
 {
   _lastEntry.blknum = 1;
   _lastEntry.offset = 0;
@@ -246,6 +227,11 @@ RootTree::RootTree():TreeObject("Root", 1)
 }
 
 RootTree::~RootTree(){}
+
+void RootTree::del()
+{
+  throw arboreal_logic_error("Attempt to delete Root Tree", "RootTree::del");
+}
 
 unordered_map<string, TagTree*>* RootTree::getMap(){return &_tree;}
 
@@ -262,10 +248,10 @@ void RootTree::insertDeletion(TagTree* tag)
   }
 }
 
-void RootTree::writeOut(PartitionManager* pm)
+void RootTree::writeOut()
 {
-  char* buff = new char[pm->getBlockSize()];
-  memset(buff, 0, pm->getBlockSize()); //zero out memory
+  char* buff = new char[_myPartitionManager->getBlockSize()];
+  memset(buff, 0, _myPartitionManager->getBlockSize()); //zero out memory
 
   /******************************************************************************/
 
@@ -274,7 +260,7 @@ void RootTree::writeOut(PartitionManager* pm)
   
   for(size_t i = 0; i < queueSize; i++)
   {
-    _modifications.front()->writeOut(pm);
+    _modifications.front()->writeOut(_myPartitionManager);
     _modifications.pop();
   }
   
@@ -285,7 +271,7 @@ void RootTree::writeOut(PartitionManager* pm)
   Index currentIndex{_blockNumber, 0};
   
   /*_blockNumber is the super block for the Root Tree */
-  memset(buff, 0, pm->getBlockSize()); //zero out memory
+  memset(buff, 0, _myPartitionManager->getBlockSize()); //zero out memory
   
   
   memcpy(buff + currentIndex.offset, _name.c_str(), _name.size());
@@ -299,17 +285,17 @@ void RootTree::writeOut(PartitionManager* pm)
   currentIndex.offset+=  sizeof(RootSuperBlock);
   
   /*Write out RootTree superblock*/
-  pm->writeDiskBlock(currentIndex.blknum, buff);
+  _myPartitionManager->writeDiskBlock(currentIndex.blknum, buff);
 }
 
-void RootTree::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*>* allFiles)
+void RootTree::readIn(unordered_multimap<string, FileInfo*>* allFiles)
 {
-  char* buff = new char[pm->getBlockSize()];
-  memset(buff, 0, pm->getBlockSize()); //zero out memory
+  char* buff = new char[_myPartitionManager->getBlockSize()];
+  memset(buff, 0, _myPartitionManager->getBlockSize()); //zero out memory
   Index currentIndex{_blockNumber, 0};
   
   /*Read in RootTree superblock*/
-  pm->readDiskBlock(currentIndex.blknum, buff);
+  _myPartitionManager->readDiskBlock(currentIndex.blknum, buff);
   
   /*Store values from Root Tree superblock*/
 //   _name.assign(buff + currentIndex.offset, 5);
@@ -336,7 +322,7 @@ void RootTree::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*
   currentIndex.blknum = _startBlock;
   currentIndex.offset = 0;
   
-  pm->readDiskBlock(currentIndex.blknum, buff);
+  _myPartitionManager->readDiskBlock(currentIndex.blknum, buff);
 
   Index EOFIndex{0,0};
   
@@ -348,11 +334,11 @@ void RootTree::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*
       BlkNumType blknum;
       
       /*Read in tagName*/
-      tagName.assign(buff + currentIndex.offset, pm->getFileNameSize());
+      tagName.assign(buff + currentIndex.offset, _myPartitionManager->getFileNameSize());
       tagName = tagName.substr(0, tagName.find_first_of('\0'));
       
       /*Read in blocknumber for that TagTree object*/
-      memcpy(&blknum, buff + currentIndex.offset + pm->getFileNameSize() , sizeof(BlkNumType));
+      memcpy(&blknum, buff + currentIndex.offset + _myPartitionManager->getFileNameSize() , sizeof(BlkNumType));
       if(blknum == 0)
       {
         throw arboreal_logic_error("blocknumber for a tag tree is zero as read from disk in the root tree", 
@@ -360,7 +346,7 @@ void RootTree::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*
       }
       
       /*Create TagTree object*/
-      TagTree* tagTree = new TagTree(tagName, blknum);
+      TagTree* tagTree = new TagTree(tagName, blknum, _myPartitionManager);
       tagTree->setIndex(currentIndex);
 
       
@@ -379,23 +365,17 @@ void RootTree::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*
 //       }
     }
     
-    incrementFollow(&currentIndex, pm);
+    incrementFollow(&currentIndex);
     if(currentIndex != EOFIndex)
     {
-      pm->readDiskBlock(currentIndex.blknum, buff);
+      _myPartitionManager->readDiskBlock(currentIndex.blknum, buff);
     }
   }
 }
-
-void RootTree::del(PartitionManager* pm)
-{
-  //TODO: stub
-  
-}
-
 /******************************************************************************/
 
-TagTree::TagTree(string tagName, BlkNumType blknum):TreeObject(tagName, blknum)
+TagTree::TagTree(string tagName, BlkNumType blknum, PartitionManager* pm)
+:TreeObject(tagName, blknum, pm)
 {
   _lastEntry.blknum = 0;
   _startBlock = 0;
@@ -418,18 +398,18 @@ void TagTree::insertDeletion(FileInfo* file)
   }
 }
 
-void TagTree::writeOut(PartitionManager* pm)
+void TagTree::writeOut()
 {
   //TODO: incorporate file number of tags
   
-  char* buff = new char[pm->getBlockSize()];
-  memset(buff, 0, pm->getBlockSize()); //zero out memory
+  char* buff = new char[_myPartitionManager->getBlockSize()];
+  memset(buff, 0, _myPartitionManager->getBlockSize()); //zero out memory
   
   if(_startBlock == 0)
   {
     /*Need to allocate a new block to start appending*/
     BlkNumType newblknum = 0;
-    newblknum = pm->getFreeDiskBlock();
+    newblknum = _myPartitionManager->getFreeDiskBlock();
     _lastEntry.blknum = 0;
     _lastEntry.offset = 0;
     _startBlock = newblknum;
@@ -441,7 +421,7 @@ void TagTree::writeOut(PartitionManager* pm)
   
   for(size_t i = 0; i < queueSize; i++)
   {
-    _modifications.front()->writeOut(pm);
+    _modifications.front()->writeOut(_myPartitionManager);
 
     _modifications.pop();
   }
@@ -449,7 +429,7 @@ void TagTree::writeOut(PartitionManager* pm)
   /****************************************************************************/
   
   Index currentIndex{_blockNumber, 0};
-  memset(buff, 0, pm->getBlockSize()); //zero out memory
+  memset(buff, 0, _myPartitionManager->getBlockSize()); //zero out memory
   
   /*_blockNumber is the super block for this tagTree*/
   /*Layout - 
@@ -460,32 +440,32 @@ void TagTree::writeOut(PartitionManager* pm)
    */
   
   memcpy(buff + currentIndex.offset, _name.c_str(), _name.size());
-  currentIndex.offset+= pm->getFileNameSize();
+  currentIndex.offset+= _myPartitionManager->getFileNameSize();
   
   TagTreeSuperBlock tagInfo{_tree.size(), _lastEntry, _startBlock};
   memcpy(buff + currentIndex.offset, &tagInfo, sizeof(TagTreeSuperBlock));
   currentIndex.offset+=  sizeof(TagTreeSuperBlock);
   
   /*Write out TagTree superblock*/
-  pm->writeDiskBlock(currentIndex.blknum, buff);
+  _myPartitionManager->writeDiskBlock(currentIndex.blknum, buff);
   
 
 }
 
-void TagTree::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*>* allFiles)
+void TagTree::readIn(unordered_multimap<string, FileInfo*>* allFiles)
 {
   //TODO: incorporate file number of tags
-  char* buff = new char[pm->getBlockSize()];
-  memset(buff, 0, pm->getBlockSize()); //zero out memory
+  char* buff = new char[_myPartitionManager->getBlockSize()];
+  memset(buff, 0, _myPartitionManager->getBlockSize()); //zero out memory
   Index currentIndex{_blockNumber, 0};
   
   /*Read in tagTree superblock*/
-  pm->readDiskBlock(currentIndex.blknum, buff);
+  _myPartitionManager->readDiskBlock(currentIndex.blknum, buff);
   
   /*Store values from superblock*/
-  _name.assign(buff + currentIndex.offset, pm->getFileNameSize());
+  _name.assign(buff + currentIndex.offset, _myPartitionManager->getFileNameSize());
   _name = _name.substr(0, _name.find_first_of('\0'));
-  currentIndex.offset+=  pm->getFileNameSize();
+  currentIndex.offset+=  _myPartitionManager->getFileNameSize();
   
   TagTreeSuperBlock tagInfo;
   memcpy(&tagInfo, buff + currentIndex.offset, sizeof(TagTreeSuperBlock));
@@ -506,7 +486,7 @@ void TagTree::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*>
   currentIndex.blknum = _startBlock;
   currentIndex.offset = 0;
   
-  pm->readDiskBlock(currentIndex.blknum, buff);
+  _myPartitionManager->readDiskBlock(currentIndex.blknum, buff);
   
   Index EOFIndex{0,0};
   
@@ -518,11 +498,11 @@ void TagTree::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*>
       BlkNumType blknum;
       
       /*Read in fileName*/
-      fileName.assign(buff + currentIndex.offset, pm->getFileNameSize());
+      fileName.assign(buff + currentIndex.offset, _myPartitionManager->getFileNameSize());
       fileName = fileName.substr(0, fileName.find_first_of('\0'));
       
       /*Read in blocknumber for that Finode object*/
-      memcpy(&blknum, buff + currentIndex.offset + pm->getFileNameSize() , sizeof(BlkNumType));
+      memcpy(&blknum, buff + currentIndex.offset + _myPartitionManager->getFileNameSize() , sizeof(BlkNumType));
       if(blknum == 0)
       {
         throw arboreal_logic_error("blocknumber for a finode is zero as read from disk in a tag tree", 
@@ -530,12 +510,12 @@ void TagTree::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*>
       }
       
       /*Create FileInfo object*/
-      FileInfo* finode = new FileInfo(fileName, blknum);
+      FileInfo* finode = new FileInfo(fileName, blknum, _myPartitionManager);
       finode->setIndex(currentIndex);
 
       
       /*Read in the finode*/
-      finode->readIn(pm, allFiles);
+      finode->readIn(allFiles);
       
       bool found = false;
       
@@ -577,23 +557,23 @@ void TagTree::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*>
 //       }
     }
     
-    incrementFollow(&currentIndex, pm);
+    incrementFollow(&currentIndex);
     if(currentIndex != EOFIndex)
     {
-      pm->readDiskBlock(currentIndex.blknum, buff);
+      _myPartitionManager->readDiskBlock(currentIndex.blknum, buff);
     }
   }
 }
 
-void TagTree::del(PartitionManager* pm)
+void TagTree::del()
 {
-  char* buff = new char[pm->getBlockSize()];
+  char* buff = new char[_myPartitionManager->getBlockSize()];
   
   /*Read in the super block of this tagTree*/
-  pm->readDiskBlock(_blockNumber, buff);
+  _myPartitionManager->readDiskBlock(_blockNumber, buff);
   
   TagTreeSuperBlock tagInfo;
-  memcpy(&tagInfo, buff + pm->getFileNameSize(), sizeof(TagTreeSuperBlock));
+  memcpy(&tagInfo, buff + _myPartitionManager->getFileNameSize(), sizeof(TagTreeSuperBlock));
   
   /* This value could be in memory. but it may differ, and we only care about 
    * what is written to disk. plus if we are deleting this tag tree anyway the 
@@ -602,14 +582,15 @@ void TagTree::del(PartitionManager* pm)
   
   if(myStartBlock != 0)
   {
-    deleteContBlocks(pm, myStartBlock);
+    deleteContBlocks(myStartBlock);
   }
   
-  pm->returnDiskBlock(_blockNumber);
+  _myPartitionManager->returnDiskBlock(_blockNumber);
 }
 
 /******************************************************************************/
-FileInfo::FileInfo(string fileName,BlkNumType blknum):TreeObject(fileName, blknum)
+FileInfo::FileInfo(string fileName,BlkNumType blknum, PartitionManager* pm)
+:TreeObject(fileName, blknum, pm)
 {
   memset(&_myFinode, 0, sizeof(Finode));
 }
@@ -621,7 +602,7 @@ map<string, BlkNumType>* FileInfo::getMap()
   return &_tags;
 }
 
-void FileInfo::writeOut(PartitionManager* pm)
+void FileInfo::writeOut()
 {
   /* For this write out, we only need to write out the Finode, not anything to 
    * do with the files */
@@ -640,35 +621,35 @@ void FileInfo::writeOut(PartitionManager* pm)
   //TODO: If there is a cont. block but we removed enough tags, we need to make sure to free that cont block
   
   /*Write out finode*/
-  char* buff = new char[pm->getBlockSize()];
-  memset(buff, 0, pm->getBlockSize()); //zero out memory
+  char* buff = new char[_myPartitionManager->getBlockSize()];
+  memset(buff, 0, _myPartitionManager->getBlockSize()); //zero out memory
   
   memcpy(buff, _name.c_str(), _name.size());
   
-  memcpy(buff + (pm->getFileNameSize()), &_myFinode, sizeof(Finode));
+  memcpy(buff + (_myPartitionManager->getFileNameSize()), &_myFinode, sizeof(Finode));
   
   /*This is the maximum number of tags we can store before needing a cont block*/
-  size_t localTagCount = ((pm->getFileNameSize()) - sizeof(Finode) - sizeof(BlkNumType))
+  size_t localTagCount = ((_myPartitionManager->getFileNameSize()) - sizeof(Finode) - sizeof(BlkNumType))
                         / sizeof(BlkNumType);
   
   
   /*Read in current Finode*/
-  char* localBuff = new char[pm->getBlockSize()];
-  memset(localBuff, 0, pm->getBlockSize()); //zero out memory
+  char* localBuff = new char[_myPartitionManager->getBlockSize()];
+  memset(localBuff, 0, _myPartitionManager->getBlockSize()); //zero out memory
   
-  pm->readDiskBlock(_blockNumber, localBuff);
+  _myPartitionManager->readDiskBlock(_blockNumber, localBuff);
   
   BlkNumType contBlock = 0;
-  memcpy(&contBlock, localBuff + pm->getBlockSize() - sizeof(BlkNumType), sizeof(BlkNumType));
+  memcpy(&contBlock, localBuff + _myPartitionManager->getBlockSize() - sizeof(BlkNumType), sizeof(BlkNumType));
   
-  int offset = pm->getFileNameSize() + sizeof(Finode);
+  int offset = _myPartitionManager->getFileNameSize() + sizeof(Finode);
   
   if(_tags.size() <= localTagCount)
   {
     /*If there is a cont. block, free it*/
     if(contBlock != 0)
     {
-      pm->returnDiskBlock(contBlock);
+      _myPartitionManager->returnDiskBlock(contBlock);
     }
     
     /*There is room to store all the tags locally*/
@@ -697,13 +678,13 @@ void FileInfo::writeOut(PartitionManager* pm)
     /*If not, allocate one and write to it.*/
     if(contBlock == 0)
     {
-      contBlock = pm->getFreeDiskBlock();
+      contBlock = _myPartitionManager->getFreeDiskBlock();
       /*Write out the cont blocknum to the finode*/
-      memcpy(buff + pm->getBlockSize() - sizeof(BlkNumType), &contBlock, sizeof(BlkNumType));
+      memcpy(buff + _myPartitionManager->getBlockSize() - sizeof(BlkNumType), &contBlock, sizeof(BlkNumType));
     }
     
     offset = 0;
-    memset(buff, 0, pm->getBlockSize());
+    memset(buff, 0, _myPartitionManager->getBlockSize());
     for(it = it; it != _tags.end(); it++)
     {
       /*Write out the rest of the tags into the cont block*/
@@ -714,40 +695,40 @@ void FileInfo::writeOut(PartitionManager* pm)
     }
     
     /*Write out the contBlock of tags*/
-    pm->writeDiskBlock(contBlock, buff);
+    _myPartitionManager->writeDiskBlock(contBlock, buff);
   }
   delete localBuff;
   /*Write out Finode*/
-  pm->writeDiskBlock(_blockNumber, buff);
+  _myPartitionManager->writeDiskBlock(_blockNumber, buff);
     
   /*Write out attributes*/
-  _myAttributes.writeOut(pm);
+  _myAttributes.writeOut(_myPartitionManager);
   
 }
 
-void FileInfo::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*>* allFiles)
+void FileInfo::readIn(unordered_multimap<string, FileInfo*>* allFiles)
 {
   /*Read in all the finode data*/
-  char* buff = new char[pm->getBlockSize()];
-  memset(buff, 0, pm->getBlockSize()); //zero out memory
+  char* buff = new char[_myPartitionManager->getBlockSize()];
+  memset(buff, 0, _myPartitionManager->getBlockSize()); //zero out memory
   
   /*Read in Finode*/
-  pm->readDiskBlock(_blockNumber, buff);
+  _myPartitionManager->readDiskBlock(_blockNumber, buff);
     
-  memcpy(&_myFinode, buff + (pm->getFileNameSize()), sizeof(Finode));
+  memcpy(&_myFinode, buff + (_myPartitionManager->getFileNameSize()), sizeof(Finode));
   
   /*This is the maximum number of tags we can store before needing a cont block*/
-  int localTagCount = ((pm->getBlockSize() - pm->getFileNameSize() 
+  int localTagCount = ((_myPartitionManager->getBlockSize() - _myPartitionManager->getFileNameSize() 
   - sizeof(Finode) - sizeof(BlkNumType)) / sizeof(BlkNumType));
   
-  Index currentIndex{0,(pm->getFileNameSize()) + sizeof(Finode)}; 
-  char* localBuff = new char[pm->getBlockSize()];
+  Index currentIndex{0,(_myPartitionManager->getFileNameSize()) + sizeof(Finode)}; 
+  char* localBuff = new char[_myPartitionManager->getBlockSize()];
   string tagName;
   BlkNumType tagBlk = 0;
   
   /*Read in the Cont. block*/
   BlkNumType contBlock = 0;
-  memcpy(&contBlock, buff + pm->getBlockSize() - sizeof(BlkNumType), sizeof(BlkNumType));
+  memcpy(&contBlock, buff + _myPartitionManager->getBlockSize() - sizeof(BlkNumType), sizeof(BlkNumType));
   
   /*If there is a cont. block */
   if(contBlock != 0)
@@ -760,10 +741,10 @@ void FileInfo::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*
       currentIndex.offset += sizeof(BlkNumType);
       
       /*Read in tagBlk to localbuff*/
-      pm->readDiskBlock(tagBlk, localBuff);
+      _myPartitionManager->readDiskBlock(tagBlk, localBuff);
       
       /*Save tag name*/
-      tagName.assign(localBuff, pm->getFileNameSize());
+      tagName.assign(localBuff, _myPartitionManager->getFileNameSize());
       tagName = tagName.substr(0, _name.find_first_of('\0'));
       
       /*Insert tag and tagblknum to _tags*/
@@ -777,10 +758,10 @@ void FileInfo::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*
       currentIndex.offset += sizeof(BlkNumType);
       
       /*Read in tagBlk to localbuff*/
-      pm->readDiskBlock(tagBlk, localBuff);
+      _myPartitionManager->readDiskBlock(tagBlk, localBuff);
       
       /*Save tag name*/
-      tagName.assign(localBuff, pm->getFileNameSize());
+      tagName.assign(localBuff, _myPartitionManager->getFileNameSize());
       tagName = tagName.substr(0, _name.find_first_of('\0'));
       
       /*Insert tag and tagblknum to _tags*/
@@ -799,10 +780,10 @@ void FileInfo::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*
     do
     {
       /*Read in tagBlk to localbuff*/
-      pm->readDiskBlock(tagBlk, localBuff);
+      _myPartitionManager->readDiskBlock(tagBlk, localBuff);
       
       /*Save tag name*/
-      tagName.assign(localBuff, pm->getFileNameSize());
+      tagName.assign(localBuff, _myPartitionManager->getFileNameSize());
       tagName = tagName.substr(0, tagName.find_first_of('\0'));
       
       /*Insert tag and tagblknum to _tags*/
@@ -817,38 +798,38 @@ void FileInfo::readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*
   }
   
   /*Read in the Attributes*/
-  _myAttributes.readIn(pm);
+  _myAttributes.readIn(_myPartitionManager);
 }
 
-void FileInfo::del(PartitionManager* pm)
+void FileInfo::del()
 {
   /*Return direct blocks*/
   int i = 0;
   
   while(_myFinode.directBlocks[i] != 0 && i < 12)
   {
-    pm->returnDiskBlock(_myFinode.directBlocks[i]);
+    _myPartitionManager->returnDiskBlock(_myFinode.directBlocks[i]);
     i++;
   }
   
-  deleteContBlocks(pm, _myFinode.level1Indirect);
-  deleteContBlocks(pm, _myFinode.level2Indirect);
-  deleteContBlocks(pm, _myFinode.level3Indirect);
+  deleteContBlocks(_myFinode.level1Indirect);
+  deleteContBlocks(_myFinode.level2Indirect);
+  deleteContBlocks(_myFinode.level3Indirect);
   
   /*Return the super block*/
-  pm->returnDiskBlock(_blockNumber);
+  _myPartitionManager->returnDiskBlock(_blockNumber);
 }
 
-void FileInfo::deleteContBlocks(PartitionManager* pm, BlkNumType blknum)
+void FileInfo::deleteContBlocks(BlkNumType blknum)
 {
   if(blknum == 0)
   {
     return;
   }
   
-  char* buff = new char[pm->getBlockSize()];
+  char* buff = new char[_myPartitionManager->getBlockSize()];
   /*Read in the block from blknum*/
-  pm->readDiskBlock(blknum, buff);
+  _myPartitionManager->readDiskBlock(blknum, buff);
   
   BlkNumType block;
   int offset = 0;
@@ -856,22 +837,22 @@ void FileInfo::deleteContBlocks(PartitionManager* pm, BlkNumType blknum)
   offset+= sizeof(BlkNumType);
   
   /*read in all block numbers and free them*/
-  while(block != 0 && offset <= pm->getBlockSize())
+  while(block != 0 && offset <= _myPartitionManager->getBlockSize())
   {
-    pm->returnDiskBlock(block);
+    _myPartitionManager->returnDiskBlock(block);
     memcpy(&block, buff + offset, sizeof(BlkNumType));
     offset+= sizeof(BlkNumType);
   }
   
   delete buff; buff = 0;
-  pm->returnDiskBlock(blknum);
+  _myPartitionManager->returnDiskBlock(blknum);
 }
 
-// void FileInfo::deleteFileBlocks(PartitionManager* pm, BlkNumType blknum, int level)
+// void FileInfo::deleteFileBlocks(, BlkNumType blknum, int level)
 // {
-//   char* buff = new char[pm->getBlockSize()];
+//   char* buff = new char[_myPartitionManager->getBlockSize()];
 //   /*Read in the block from blknum*/
-//   pm->readDiskBlock(blknum, buff);
+//   _myPartitionManager->readDiskBlock(blknum, buff);
 //   
 //   if(level == 3 || level == 2)
 //   {
@@ -881,7 +862,7 @@ void FileInfo::deleteContBlocks(PartitionManager* pm, BlkNumType blknum)
 //     memcpy(&block, buff + offset, sizeof(BlkNumType));
 //     
 //     /*read in all indirect block numbers*/
-//     while(block != 0 && offset <= pm->getBlockSize())
+//     while(block != 0 && offset <= _myPartitionManager->getBlockSize())
 //     {
 //       indBlockNums.push_back(block);
 //       memcpy(&block, buff + offset, sizeof(BlkNumType));
@@ -890,7 +871,7 @@ void FileInfo::deleteContBlocks(PartitionManager* pm, BlkNumType blknum)
 //     
 //     for(size_t i = 0; i < indBlockNums.size(); i++)
 //     {
-//       deleteFileBlocks(pm, indBlockNums[i], i -1);
+//       deleteFileBlocks(_myPartitionManager, indBlockNums[i], i -1);
 //     }
 //   }
 //   else if(level == 1)
@@ -900,9 +881,9 @@ void FileInfo::deleteContBlocks(PartitionManager* pm, BlkNumType blknum)
 //     memcpy(&block, buff + offset, sizeof(BlkNumType));
 //     
 //     /*read in all direct block numbers and free them*/
-//     while(block != 0 && offset <= pm->getBlockSize())
+//     while(block != 0 && offset <= _myPartitionManager->getBlockSize())
 //     {
-//       pm->returnDiskBlock(block);
+//       _myPartitionManager->returnDiskBlock(block);
 //       memcpy(&block, buff + offset, sizeof(BlkNumType));
 //       offset+= sizeof(BlkNumType);
 //     }
@@ -913,7 +894,7 @@ void FileInfo::deleteContBlocks(PartitionManager* pm, BlkNumType blknum)
 //   }
 //   
 //   delete buff; buff = 0;
-//   pm->returnDiskBlock(blknum);
+//   _myPartitionManager->returnDiskBlock(blknum);
 // }
 
 
