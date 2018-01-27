@@ -218,6 +218,32 @@ void TreeObject::deleteContBlocks(BlkNumType blknum)
   _myPartitionManager->returnDiskBlock(blknum);
 }
 
+size_t TreeObject::size(){return _myTree.size();}
+
+unordered_map<string, TreeObject*>::iterator TreeObject::begin(){return _myTree.begin();}
+
+unordered_map<string, TreeObject*>::iterator TreeObject::end(){return _myTree.end();}
+
+pair<unordered_map<string, TreeObject*>::iterator, bool>TreeObject::insert(string name, TreeObject* ptr)
+{return _myTree.insert(pair<string, TreeObject*>(name, ptr));}
+
+void TreeObject::erase(string name)
+{_myTree.erase(name);}
+
+void TreeObject::erase(unordered_map<string, TreeObject*>::iterator item)
+{_myTree.erase(item);}
+
+TreeObject* TreeObject::find(string name)
+{
+  auto it = _myTree.find(name);
+  if(it == _myTree.end())
+  {
+    return 0;
+  }
+  return it->second;
+}
+
+
 /******************************************************************************/
 RootTree::RootTree(PartitionManager* pm):TreeObject("Root", 1, pm)
 {
@@ -277,7 +303,7 @@ void RootTree::writeOut()
   memcpy(buff + currentIndex.offset, _name.c_str(), _name.size());
   currentIndex.offset+=  _name.size() + 1;
   
-  size_t treeSize = _tree.size();
+  size_t treeSize = _myTree.size();
   
   RootSuperBlock rootInfo{treeSize, _lastEntry, _startBlock};
   
@@ -351,7 +377,7 @@ void RootTree::readIn(unordered_multimap<string, FileInfo*>* allFiles)
 
       
       /*Insert key and value into tagtree in memory*/
-      auto it_ret = _tree.insert(pair<string, TagTree*>(tagName, tagTree));
+      auto it_ret = _myTree.insert(pair<string, TagTree*>(tagName, tagTree));
       if(!it_ret.second)
       {
         throw arboreal_logic_error("Duplicate Tag Tree read in from disk", "RootTree::readIn");
@@ -442,7 +468,7 @@ void TagTree::writeOut()
   memcpy(buff + currentIndex.offset, _name.c_str(), _name.size());
   currentIndex.offset+= _myPartitionManager->getFileNameSize();
   
-  TagTreeSuperBlock tagInfo{_tree.size(), _lastEntry, _startBlock};
+  TagTreeSuperBlock tagInfo{_myTree.size(), _lastEntry, _startBlock};
   memcpy(buff + currentIndex.offset, &tagInfo, sizeof(TagTreeSuperBlock));
   currentIndex.offset+=  sizeof(TagTreeSuperBlock);
   
@@ -535,7 +561,7 @@ void TagTree::readIn(unordered_multimap<string, FileInfo*>* allFiles)
       }
       
       /*Insert key and value into FileInfo object in memory*/
-      auto it_ret = _tree.insert(pair<string, FileInfo*>(finode->mangle(), finode));
+      auto it_ret = _myTree.insert(pair<string, FileInfo*>(finode->mangle(), finode));
 //       cout << "File just inserted(maybe): " << finode->mangle() << endl;
       if(!(it_ret.second))
       {

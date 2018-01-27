@@ -76,10 +76,18 @@ public:
   Index getIndex();
   Index getLastEntry();
   BlkNumType getStartBlock();
+  size_t size();
+  unordered_map<string, TreeObject*>::iterator begin();
+  unordered_map<string, TreeObject*>::iterator end();
+  TreeObject* find(string name);
+  
 
 /*Modifier Functions*/
   void setIndex(Index index);
   void setLastEntry(Index index);
+  pair<unordered_map<string, TreeObject*>::iterator, bool> insert(string name, TreeObject* ptr);
+  void erase(string name);
+  void erase(unordered_map<string, TreeObject*>::iterator item);
 
 /*Disk Functions*/
   virtual void writeOut() = 0;
