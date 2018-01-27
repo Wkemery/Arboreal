@@ -14,7 +14,9 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <vector>
 
+#define MAX_COMMAND_SIZE 2048
 
 
 using namespace::std;
@@ -24,6 +26,7 @@ int main(int argc, char** argv)
     // Get the CLI pipe that this Liason is tied to
     string pipe_name;
     pipe_name = *argv;
+    char command[MAX_COMMAND_SIZE];
 
     if(pipe_name != "")
     {
@@ -33,12 +36,8 @@ int main(int argc, char** argv)
 
         if(pipe_in.is_open())
         {
-            getline(pipe_in,line);
-            std::cout << "Liason: Received --> \"" << line << "\"\n";
-            if(line == "handshake")
-            {
-                // query max string length
-            } 
+            
+            pipe_in.read(command,MAX_COMMAND_SIZE); 
             pipe_in.close();      
         }
         else
@@ -54,7 +53,7 @@ int main(int argc, char** argv)
         pipe_out.open(pipe_name);
         if(pipe_out.is_open())
         {
-            pipe_out << "Message " << "\"" << line << "\"" << " Recevied by Liason " << getpid() << endl;
+            pipe_out.write("Liason: Command Received\n",sizeof("Liason: Command Received\n"));
             pipe_out.close();
         }
         else
@@ -65,4 +64,19 @@ int main(int argc, char** argv)
 
     }
     return 0;
+}
+
+
+vector<char*> generate_system_calls(char* command)
+{
+    vector<char*> command_list;
+    char command_id[4];
+    for(unsigned int i = 0; i < 4; i++)
+    {
+        command_id[i] = command[i];
+    }
+    int c_id = atoi(command_id);
+    cout << "C-ID: " << c_id << endl;
+
+    return command_list;
 }

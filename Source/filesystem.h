@@ -80,8 +80,13 @@ public:
   int renameFile(char *filename1, int fnameLen1, char *filename2, int fnameLen2);
   int getAttributes(char *filename, int fnameLen, char* buffer, int flag);
   int setAttributes(char *filename, int fnameLen, char* buffer, int flag);
+
+  /* IPC Related */
+
+  int getFileNameSize();
+  void listen();
   
-  /*DEBUG functions*/
+  /* DEBUG functions */
   void printRoot();
   void printTags();
   
