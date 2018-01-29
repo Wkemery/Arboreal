@@ -5,29 +5,73 @@
 //  Primary Author: Adrian Barberis
 //  For "Arboreal" Senior Design Project
 //
-//  Fri. | Jan. 26th | 2018 | 11:27 PM
+//  Sun. | Jan. 28th | 2018 | 8:30 PM
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include "cli.h"
-string pipe_name = "";
+std::string pipe_name = "";
+
+bool server_up = false;
 
 int main(int argc, char** argv)
 {
-    if(argc < 2 || argc >= 4)
+    if(argc < 2 || argc >= 5)
     {
-        cerr << "Ivalid Argument Count\n";
+        std::cerr << "Ivalid Argument Count\n";
         return 0;
     }
-    if(argc == 3)
+    if(argc == 4)
     {
-        CLI cli(argv,argv[2]);
-        //cli.run();
+        try
+        {
+            CLI cli(argv,argv[2],true);
+        }
+        catch(CLI_EX err)
+        {
+            std::cerr << err.what;
+            std::cerr << err.why;
+            exit(1);
+        }
+    }
+    else if(argc == 3 && !strncmp(argv[2],"-d",sizeof("-d")))
+    {
+        try
+        {
+            CLI cli(argv,argv[2]);
+        }
+        catch(CLI_EX err)
+        {
+            std::cerr << err.what;
+            std::cerr << err.why;
+            exit(1);
+        }
+    }
+    else if(argc == 3 && strncmp(argv[2],"-d",sizeof("-d")))
+    {
+        try
+        {
+            CLI cli(argv,true);
+        }
+        catch(CLI_EX err)
+        {
+            std::cerr << err.what;
+            std::cerr << err.why;
+            exit(1);
+        }
     }
     else
     {
-        CLI cli(argv);
-        //cli.run();
+        try
+        {
+            CLI cli(argv);
+        }
+        catch(CLI_EX err)
+        {
+            std::cerr << err.what;
+            std::cerr << err.why;
+            exit(1);
+        }
     }
     return 0;
 }

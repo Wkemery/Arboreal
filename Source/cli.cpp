@@ -5,14 +5,17 @@
 // Primary Author: Adrian Barberis
 // For "Arboreal" Senior Design Project
 // 
-// Sun. | Jan. 7th | 2018 | 8:11 PM
+//  Sun. | Jan. 28th | 2018 | 8:30 PM
 // 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 #include "cli.h"
 #include "cmnd_validation.h"
-#include "helper_functions.hpp"
+#include "cli_helper.hpp"
+
+#define PERMISSIONS 0666
+#define DEBUG false
 
 
 
@@ -21,6 +24,27 @@
 CLI::CLI(char** partition)
 {
    my_partition = partition[1];
+   my_pid = std::to_string(getpid());
+   client_socket_path = "cli-" + my_pid + "-socket";
+   server_socket_path = "lson-" + my_pid + "-socket";
+   start();
+}
+//[================================================================================================]
+
+
+
+
+
+
+
+//[================================================================================================]
+CLI::CLI(char** partition, bool debug)
+{
+   my_partition = partition[1];
+   my_pid = std::to_string(getpid());
+   client_socket_path = "cli-" + my_pid + "-socket";
+   server_socket_path = "lson-" + my_pid + "-socket";
+   dbug = debug;
    start();
 }
 //[================================================================================================]
@@ -37,6 +61,9 @@ CLI::CLI(char** partition, char* isScript)
 {
    my_partition = partition[1];
    is_script = isScript;
+   my_pid = std::to_string(getpid());
+   client_socket_path = "cli-" + my_pid + "-socket";
+   server_socket_path = "lson-" + my_pid + "-socket";
    start();
 }
 //[================================================================================================]
@@ -46,10 +73,31 @@ CLI::CLI(char** partition, char* isScript)
 
 
 
+//[================================================================================================]
+CLI::CLI(char** partition, char* isScript, bool debug)
+{
+   my_partition = partition[1];
+   is_script = isScript;
+   my_pid = std::to_string(getpid());
+   client_socket_path = "cli-" + my_pid + "-socket";
+   server_socket_path = "lson-" + my_pid + "-socket";
+   dbug = debug;
+   start();
+}
+//[================================================================================================]
+
+
+
+
+
 
 // Default Destructor
 //[================================================================================================]
-CLI::~CLI(){}
+CLI::~CLI()
+{
+   delete my_partition;
+   delete shared_mem;
+}
 //[================================================================================================]
 
 
@@ -63,103 +111,199 @@ CLI::~CLI(){}
 void CLI::start()
 {
 
-   // Build pipe name for this CLI 
-   string pipe_name = ("pipe-"+std::to_string(getpid())+".pipe");
-   my_pipe_name = pipe_name;
+   /* Data for shared memory operations */
+   key_t shm_key;
+   char *shm;
+   shm_key = atoi(my_pid.c_str());
 
-   // Convert pipe_name to a format which we can send
-   // to the Liason Process as an argv for Liason's main() process
-   // Type will be char* const*
-   char* temp_name = const_cast<char*>(my_pipe_name.c_str());
-   vector<char*> arguments;
-   arguments.push_back(temp_name);
-   arguments.push_back(NULL);
+   /* Create char** to send to Liason via main() argv param */
+   std::vector<char*> argv;
+   argv.push_back(const_cast<char*>(server_socket_path.c_str()));
+   argv.push_back(const_cast<char*>(client_socket_path.c_str()));
+   argv.push_back(const_cast<char*>(my_pid.c_str()));
+   argv.push_back(NULL);
+
+   /* Zero the server and client socket addresses */
+   memset(&server_sockaddr, '\0', sizeof(struct sockaddr_un));
+   memset(&client_sockaddr, '\0', sizeof(struct sockaddr_un));
+//-------------------------------------------------------------------------------------------------
 
 
-   // Initiate Handshake
-   //[---------------------------------------------------------------------------------------------]
-   
-   // Open pipe to write out
-   ofstream my_pipe_out;
-   my_pipe_out.open(my_pipe_name);
+   /* Fork a Liason Process that will be tied to this CLI */
+   pid_t pid = fork();
 
-   if(!my_pipe_out.is_open())
+   if(pid == 0)
    {
-      my_pipe_out.close();
-      cerr << "CLI: Pipe Open (write) FAIL\n";
-      exit(1);
+      /* Child (will be replaced with Liason process) */
+      execv("liason",argv.data());
    }
-
-
-   // Convert the handshake command to a char array of size = MAX_COMAND_SIZE
-   // In order to emulate the format the build() returns
-   char command[MAX_COMAND_SIZE];
-   string temp = "handshake\n";
-
-   // Zero out buffer
-   for(unsigned int i = 0; i < MAX_COMAND_SIZE; i++)
+   else if(pid < 0)
    {
-      command[i] = '\0';
-   }
-
-   // Write "handshake" to command buffer
-   for(unsigned int i = 0; i < temp.length(); i++)
-   {
-      command[i] = temp[i];
-   }
-
-   // Write out command buffer
-   my_pipe_out.write(command,MAX_COMAND_SIZE);
-   my_pipe_out.close();
-   //[---------------------------------------------------------------------------------------------]
-
-
-
-   // Initiate a Liason Process
-   pid_t pID = vfork();
-   if(pID == 0)
-   {
-      // Replace child with Liason process
-      execv("liason",arguments.data());
-   }
-   else if(pID < 0)
-   {
-      cerr << "Fork Failed!\n";
-      exit(0);
+      /* Fork Failed */
+      CLI_EX err;
+      err.what = "[CLI:WHAT] | FORK FAILED - E#: " + std::to_string(errno) + "\n";
+      err.why = "[CLI:WHY]  | See \'man fork\' for more information\n";
+      throw err;
    }
    else
    {
-      // Wait for child to finish
-      while(wait(&pID) > 0){}
-      cout << "Returned to Parent\n";
 
-      ifstream my_pipe_in;
-      my_pipe_in.open(my_pipe_name);
+            // Begin Shared Memory Set-Up \\
+         
 
-      string line;
+      /* Returned to parent */
+      if(dbug) std::cout << "Going To Sleep...\n";
 
-      if(!my_pipe_in.is_open())
+      /* Sleep a sec in order to allow Liason to get the ball rolling */
+      sleep(2);
+
+
+      /* Get the shared memory segment so that the CLI knows when it can continue on */
+      if ((shm_id = shmget(shm_key, SHMSZ, PERMISSIONS)) < 0) 
       {
-         my_pipe_in.close();
-         cerr << "CLI: Pipe Open (read) FAIL\n";
-         exit(1);
+         CLI_EX err;
+         err.what = "[CLI:WHAT] | SHARED MEMORY GET FAILED - E#: " << std::to_string(errno) + "\n";
+         err.why = "[CLI:WHY]  | See \'man shmget\' for more information\n";
+         throw err;
       }
 
-      getline(my_pipe_in,line);
-      cout << "CLI: Received --> \"" << line << "\"\n";
+      /* Attach the shared memory to this process so the CLI can access it */
+      if ((shm = (char*)shmat(shm_id, NULL, 0)) == (char *) -1) 
+      {
+         CLI_EX err;
+         err.what = "[CLI:WHAT] | SHARED ATTACH FAILED - E#: " << std::to_string(errno) + "\n";
+         err.why = "[CLI:WHY]  | See \'man shmat\' for more information\n";
+         throw err;  
+      }
 
-      my_pipe_in.close();
-   
-      cout << "\n\nInitiating Command Line Interface Using Partition: " << my_partition << endl;
-      cout << ".................................................................................\n\n";
-   
+      /* Not honestly sure why this is necessary but all of the UNIX examples had this */
+      shared_mem = shm;
+
+      if(dbug) std::cout << "Waiting on Server...\n";
+
+      /* Block until Liason gives the OK */
+      while(shared_mem[0] == 0);
+//-------------------------------------------------------------------------------------------------
+
+               // Begin Socket Creation \\
+
+
+      /* Create a socket for the client i.e. CLI */
+      client_sock = socket(AF_UNIX, SOCK_STREAM, 0);
+      if (client_sock == -1) 
+      {
+         CLI_EX err;
+         err.what = "[CLI:WHAT] | SOCKET CREATION FAILED - E#: " + std::to_string(errno) + "\n";
+         err.why = "[CLI:WHY]  | See \'man socket\' for more information\n";
+         throw err;
+      }
+
+
+      /* Set-Up Client Socket */
+      client_sockaddr.sun_family = AF_UNIX;   
+      strcpy(client_sockaddr.sun_path, client_socket_path.c_str()); 
+      len = sizeof(client_sockaddr);
+
+      /* Avoid "This socket is already in use" errors */ 
+      unlink(client_socket_path.c_str());
+
+      /* Bind the client address to the socket */
+      rc = bind(client_sock,(struct sockaddr *)&client_sockaddr, len);
+      if(rc == -1)
+      {
+         CLI_EX err;
+         err.what = "[CLI:WHAT] | SOCKET BIND FAILED - E#: " + std::to_string(errno) + "\n";
+         err.why = "[CLI:WHY]  | See \'man bind \' for more information\n";
+         close(client_sock);
+         throw err;
+      }
+//-------------------------------------------------------------------------------------------------
+
+
+
+      /* Set-Up Server Socket and Connect */
+      server_sockaddr.sun_family = AF_UNIX;
+      strcpy(server_sockaddr.sun_path, server_socket_path.c_str());
+
+      /* Connect to the server socket */
+      rc = connect(client_sock, (struct sockaddr *)&server_sockaddr, len);
+      if(rc == -1)
+      {
+         CLI_EX err;
+         err.what = "[CLI:WHAT] | CONNECT TO SERVER FAILED - E#: " + std::to_string(errno) + "\n";
+         err.why = "[CLI:WHY]  | See \'man connect\' for more information\n";
+         close(client_sock);
+         throw err;
+      }
+
+      if (dbug) std::cout << "Initiating Handshake...\n";
+//-------------------------------------------------------------------------------------------------
+
+
+
+      /* Build "handshake" command */
+      char init[MAX_COMAND_SIZE];
+      memset(init,'\0',MAX_COMAND_SIZE);
+      memcpy(init,"e",sizeof(int));
+      memcpy(init+sizeof(int),"init: handshake",sizeof("init: handshake"));
+
+
+      /* Send the command */
+      rc = send(client_sock, init, MAX_COMAND_SIZE, 0);
+      if(rc == -1)
+      {
+         CLI_EX err;
+         err.what = "[CLI:WHAT] | MESSAGE SEND FAILED - E#: " + std::to_string(errno) + "\n";
+         err.why = "[CLI:WHY]  | See \' man send\' for more information\n";
+         close(client_sock);
+         throw err;
+      }
+      if(dbug) std::cout << "Handshake Established!\n";
+      if(dbug) std::cout << "Awaiting Response...\n";
+//-------------------------------------------------------------------------------------------------
+
+
+
+      /* Prepare to receive response from the Liason */
+      char response_buff[MAX_COMAND_SIZE];
+      memset(response_buff,'\0',MAX_COMAND_SIZE);
+
+
+      /* Receive Response */
+      rc = recv(client_sock,response_buff,MAX_COMAND_SIZE,0);
+      if(rc == -1)
+      {
+         CLI_EX err;
+         err.what = "[CLI:WHAT] | MESSAGE RECEIVE FAILED - E#: " + std::to_string(errno) + "\n";
+         err.why = "[CLI:WHY]  | See \'man recv\' for more information\n";
+         close(client_sock);
+         throw err;
+      }
+
+      if(dbug) std::cout << "Response Received: " << response_buff << std::endl;
+//-------------------------------------------------------------------------------------------------
+
+
+
+      // Eventually need to change this basd on what the FS says
       max_string_size = 64;
 
+      /* Print some info for the user */
+      std::cout << "\n\nMaximum Filename/Tagname size is: " << max_string_size << std::endl;
+      std::cout << "\n\nInitiating Command Line Interface Using Partition: " << my_partition << std::endl;
+      std::cout << ".................................................................................\n\n";
+   
+      /* Close the socket and run the input gathering loop */
+      close(client_sock);
       run();
 
+      /* Wait for child (Liason) process to complete */
+      int status;
+      waitpid(pid,&status,0);
+
+      if(dbug) std::cout << "Wait Status: " << status << std::endl;
       return;
    }
-
 }
 //[================================================================================================]
 
@@ -185,10 +329,10 @@ void CLI::run()
     */
 
    // user input
-   string input;
+   std::string input;
 
    // last 10 inputs
-   vector<string> history;
+   std::vector<std::string> history;
                            
    bool from_history = false; // unimportant at the moment
    
@@ -199,19 +343,18 @@ void CLI::run()
    // Operations will differ slightly if reading commands from a text file
    if(is_script == "-s")
    {
-      cout << "Reading from input file...\n";
-      cout << "+---------------------------------------\n\n\n";
+      std::cout << "Reading from input file...\n";
+      std::cout << "+---------------------------------------\n\n\n";
    }
-
 
    // Begin read loop
    while(true)
    {
       // Check for ENTER pressed (prints out a new line with 'Arboreal >> ')
-      char c = cin.get();
+      char c = std::cin.get();
       if(c == '\n')
       {
-         if(is_script != "-s"){cout << "Arboreal >> \n";}
+         if(is_script != "-s"){std::cout << "Arboreal >> \n";}
          continue;
       }
       else
@@ -230,76 +373,128 @@ void CLI::run()
           */
          if(!from_history) 
          {
-            cin.putback(c);
+            std::cin.putback(c);
 
             // Get the command
-            getline(cin,input);
+            getline(std::cin,input);
    
             // Add command to history
             history.push_back(input);
-            if(is_script == "-s"){cout << "Arboreal >> " << input << endl;}
+            if(is_script == "-s"){std::cout << "Arboreal >> " << input << std::endl;}
          }
          from_history = false;
-
-         //----------------------------------------------------------------------------------------+
-
 
          if(input == "quit" || input == "q")
          {
             // May need to do more than return in order to make
             // sure we dont corrupt data
-            cout << "Are you sure you would like to quit? (Y/N)\n";
-            cin >> input;
+            std::cout << "Are you sure you would like to quit? (Y/N)\n";
+            std::cin >> input;
             if(input == "Y" || input == "y")
             {
-               // delete pipe file
-               if(remove(my_pipe_name.c_str()) != 0)
+               client_sock = socket(AF_UNIX, SOCK_STREAM, 0);
+               if (client_sock == -1) 
                {
-                  cerr << "CLI: Error Removing " << my_pipe_name << endl;
+                  CLI_EX err;
+                  err.what = "[CLI:WHAT] | SOCKET CREATION FAILED - E#: " + std::to_string(errno) + "\n";
+                  err.why = "[CLI:WHY]  | See \'man socket\' for more information\n";
+                  throw err;
                }
+            
+            
+               /* Set-Up Client Socket */
+               client_sockaddr.sun_family = AF_UNIX;   
+               strcpy(client_sockaddr.sun_path, client_socket_path.c_str()); 
+               len = sizeof(client_sockaddr);
+               unlink(client_socket_path.c_str());
+            
+            
+               rc = bind(client_sock,(struct sockaddr *)&client_sockaddr, len);
+               if(rc == -1)
+               {
+                  CLI_EX err;
+                  err.what = "[CLI:WHAT] | SOCKET BIND FAILED - E#: " + std::to_string(errno) + "\n";
+                  err.why = "[CLI:WHY]  | See \'man bind \' for more information\n";
+                  close(client_sock);
+                  throw err;
+               }
+            
+            
+               /* Set-Up Server Socket and Connect */
+               server_sockaddr.sun_family = AF_UNIX;
+               strcpy(server_sockaddr.sun_path, server_socket_path.c_str());
+            
+            
+               rc = connect(client_sock, (struct sockaddr *)&server_sockaddr, len);
+               if(rc == -1)
+               {
+                  CLI_EX err;
+                  err.what = "[CLI:WHAT] | CONNECT TO SERVER FAILED - E#: " + std::to_string(errno) + "\n";
+                  err.why = "[CLI:WHY]  | See \'man connect\' for more information\n";
+                  close(client_sock);
+                  throw err;
+               }
+
+               char buf[MAX_COMAND_SIZE];
+               memset(buf,'\0',MAX_COMAND_SIZE);
+               memcpy(buf,"e",sizeof(int));
+               memcpy(buf+sizeof(int), "quit", sizeof("quit"));
+               
+               rc = send(client_sock, buf, MAX_COMAND_SIZE,0);
+               if(rc == -1)
+               {
+                  CLI_EX err;
+                  err.what = "[CLI:WHAT] | MESSAGE SEND FAILED - E#: " + std::to_string(errno) + "\n";
+                  err.why = "[CLI:WHY]  | See \' man send\' for more information\n";
+                  close(client_sock);
+                  throw err;
+               }
+            
+            
+               std::cout << "Awaiting Response...\n";
+               char buff[MAX_COMAND_SIZE];
+               memset(buff,'\0',MAX_COMAND_SIZE);
+                  
+               rc = recv(client_sock,buff,sizeof(buff),0);
+               if(rc == -1)
+               {
+                  CLI_EX err;
+                  err.what = "[CLI:WHAT] | MESSAGE RECEIVE FAILED - E#: " + std::to_string(errno) + "\n";
+                  err.why = "[CLI:WHY]  | See \'man recv\' for more information\n";
+                  close(client_sock);
+                  throw err;
+               }
+               close(client_sock);
+               unlink(client_socket_path.c_str());
+               close(shm_id);
                return;
             }
             else{continue;}
          }
-
-
-         //----------------------------------------------------------------------------------------+
-         
-
          else if(input == "h" || input == "help")
          {
             print_help();
          }
-
-
-         //----------------------------------------------------------------------------------------+
-         
-
          else if(input == "history")
          {
             for(unsigned int i = 0; i < history.size(); i++)
             {
-               cout << i << ": " << history[i] << "\n";
+               std::cout << i << ": " << history[i] << "\n";
             }
             if(history.size() >= MAX_HISTORY_SIZE)
             {
                history.clear();
             }
-            if(is_script == "-s"){cout << "\n";}
-            if(is_script != "-s"){cout << "Arboreal >> ";}
+            if(is_script == "-s"){std::cout << "\n";}
+            if(is_script != "-s"){std::cout << "Arboreal >> ";}
          }
 
          // If using a text file to read in commands
          if(input == "end" && is_script == "-s")
          {
-            cout << "\n\n";
+            std::cout << "\n\n";
             return;
          }
-
-
-         //----------------------------------------------------------------------------------------+
-         
-
          else
          {
             // Test if the command is valid
@@ -307,20 +502,17 @@ void CLI::run()
             if(rtrn != 0)
             {
                // Debug
-               cout << "Return: " << rtrn << endl;
-               cout << "Buffer: \n";
-               send(build(rtrn,input));
-               // If pipe empty continue else output
-               if(is_script != "-s"){cout << "Arboreal >> ";}
+               std::cout << "Return: " << rtrn << std::endl;
+               send_cmnd(build(rtrn,input));
+               if(is_script != "-s"){std::cout << "Arboreal >> ";}
             }
             else
             {
-               cerr << "Comand Not Valid\n";
-               if(is_script != "-s"){cout << "Arboreal >> ";}
+               std::cerr << "Comand Not Valid\n";
+               if(is_script != "-s"){std::cout << "Arboreal >> ";}
             }
 
          }
-         //----------------------------------------------------------------------------------------+
       }
    }
    return;
@@ -334,64 +526,96 @@ void CLI::run()
 
 
 
-// Send the newly built command to the Liason process
+
+
+
 //[================================================================================================]
-int CLI::send(char* command)
+void CLI::send_cmnd(char* cmnd)
 {
 
-   // FIX NULL CMND
-   // 
-   ofstream my_pipe_out;
-   char* temp_name = const_cast<char*>(my_pipe_name.c_str());
-   vector<char*> arguments;
-   arguments.push_back(temp_name);
-   arguments.push_back(NULL);
-
-   cout << "YES: " << command << endl;
-   my_pipe_out.open(my_pipe_name);
-   if(my_pipe_out.is_open())
+   // Set-Up
+   
+   /* Create Socket */
+   client_sock = socket(AF_UNIX, SOCK_STREAM, 0);
+   if (client_sock == -1) 
    {
-      my_pipe_out.write(command,MAX_COMAND_SIZE);
-      my_pipe_out.close();
-   }
-   else
-   {
-      cerr << "CLI: Pipe Open (write) FAIL\n";
-      return -1;
+      CLI_EX err;
+      err.what = "[CLI:WHAT] | SOCKET CREATION FAILED - E#: " + std::to_string(errno) + "\n";
+      err.why = "[CLI:WHY]  | See \'man socket\' for more information\n";
+      throw err;
    }
 
 
-   pid_t pID = vfork();
+   /* Set-Up Client Socket */
+   client_sockaddr.sun_family = AF_UNIX;   
+   strcpy(client_sockaddr.sun_path, client_socket_path.c_str()); 
+   len = sizeof(client_sockaddr);
 
-   if(pID == 0)
-   {
-      execv("liason",arguments.data());
-   }
-   else if(pID < 0)
-   {
-      cerr << "CLID: Fork Creation Failed\n";
-      return -1;
-   }
-   else
-   {
-      while(wait(&pID) > 0);
 
-      ifstream my_pipe_in;
-      my_pipe_in.open(my_pipe_name);
+   /* Avoid "This socket already in use" errors */
+   unlink(client_socket_path.c_str());
 
-      if(my_pipe_in.is_open())
-      {
-         string line;
-         while(getline(my_pipe_in,line))
-         {
-            cout << "CLI: Received --> " << "\"" << line << "\"\n"; 
-         }
-      }
-      my_pipe_in.close();
+
+   /* Bind client address to the socket */
+   rc = bind(client_sock,(struct sockaddr *)&client_sockaddr, len);
+   if(rc == -1)
+   {
+      CLI_EX err;
+      err.what = "[CLI:WHAT] | SOCKET BIND FAILED - E#: " + std::to_string(errno) + "\n";
+      err.why = "[CLI:WHY]  | See \'man bind \' for more information\n";
+      close(client_sock);
+      throw err;
    }
-   return 0;
+
+
+   /* Set-Up Server Socket and Connect */
+   server_sockaddr.sun_family = AF_UNIX;
+   strcpy(server_sockaddr.sun_path, server_socket_path.c_str());
+
+
+   rc = connect(client_sock, (struct sockaddr *)&server_sockaddr, len);
+   if(rc == -1)
+   {
+      CLI_EX err;
+      err.what = "[CLI:WHAT] | CONNECT TO SERVER FAILED - E#: " + std::to_string(errno) + "\n";
+      err.why = "[CLI:WHY]  | See \'man connect\' for more information\n";
+      close(client_sock);
+      throw err;
+   }
+//-------------------------------------------------------------------------------------------------
+
+   // Communication
+
+   rc = send(client_sock, cmnd, MAX_COMAND_SIZE,0);
+   if(rc == -1)
+   {
+      CLI_EX err;
+      err.what = "[CLI:WHAT] | MESSAGE SEND FAILED - E#: " + std::to_string(errno) + "\n";
+      err.why = "[CLI:WHY]  | See \' man send\' for more information\n";
+      close(client_sock);
+      throw err;
+   }
+
+   if(dbug) std::cout << "Awaiting Response...\n";
+
+   /* Set-Up Response Buffer */
+   char response_buff[MAX_COMAND_SIZE];
+   memset(response_buff,'\0',MAX_COMAND_SIZE);
+
+   rc = recv(client_sock,response_buff,sizeof(buff),0);
+   if(rc == -1)
+   {
+      CLI_EX err;
+      err.what = "[CLI:WHAT] | MESSAGE RECEIVE FAILED - E#: " + std::to_string(errno) + "\n";
+      err.why = "[CLI:WHY]  | See \'man recv\' for more information\n";
+      close(client_sock);
+      throw err;
+   }
+   close(client_sock);
+   return;
 }
 //[================================================================================================]
+
 
 
 
@@ -411,7 +635,7 @@ int CLI::send(char* command)
  * However I think that all of this code is very readable and pretty simple so it's not pressing
  */
 //[================================================================================================]
-char* CLI::build(int id,string input)
+char* CLI::build(int id,std::string input)
 {
    char* cmnd = new char[MAX_COMAND_SIZE];
    int offset = 0;
@@ -431,7 +655,7 @@ char* CLI::build(int id,string input)
          write_to_cmnd(cmnd,input,offset,INCLUSIVE,max_string_size);
 
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
+         std::cout << "Value: " << get_cmnd_id(cmnd) << std::endl;
          print_buffer(cmnd,MAX_COMAND_SIZE);
          check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
 
@@ -457,7 +681,7 @@ char* CLI::build(int id,string input)
          write_to_cmnd(cmnd,input,offset,EXCLUSIVE,max_string_size);
 
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
+         std::cout << "Value: " << get_cmnd_id(cmnd) << std::endl;
          print_buffer(cmnd,MAX_COMAND_SIZE);
          check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
 
@@ -482,7 +706,7 @@ char* CLI::build(int id,string input)
          write_to_cmnd(cmnd,input,offset,INCLUSIVE,max_string_size);
          
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
+         std::cout << "Value: " << get_cmnd_id(cmnd) << std::endl;
          print_buffer(cmnd,MAX_COMAND_SIZE);
          check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
 
@@ -508,7 +732,7 @@ char* CLI::build(int id,string input)
 
          
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
+         std::cout << "Value: " << get_cmnd_id(cmnd) << std::endl;
          print_buffer(cmnd,MAX_COMAND_SIZE);
          check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
 
@@ -533,7 +757,7 @@ char* CLI::build(int id,string input)
          write_to_cmnd(cmnd,input,offset,INCLUSIVE,max_string_size);
 
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
+         std::cout << "Value: " << get_cmnd_id(cmnd) << std::endl;
          print_buffer(cmnd,MAX_COMAND_SIZE);
          check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
 
@@ -558,7 +782,7 @@ char* CLI::build(int id,string input)
          write_to_cmnd(cmnd,input,offset,NEW_AND_TAG,max_string_size);
          
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
+         std::cout << "Value: " << get_cmnd_id(cmnd) << std::endl;
          print_buffer(cmnd,MAX_COMAND_SIZE);
          check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
 
@@ -583,7 +807,7 @@ char* CLI::build(int id,string input)
          write_to_cmnd(cmnd,input,offset,NEW_AND_TAG_EXC,max_string_size);
          
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
+         std::cout << "Value: " << get_cmnd_id(cmnd) << std::endl;
          print_buffer(cmnd,MAX_COMAND_SIZE);
          check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
 
@@ -608,7 +832,7 @@ char* CLI::build(int id,string input)
          write_to_cmnd(cmnd,input,offset,INCLUSIVE,max_string_size);
          
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
+         std::cout << "Value: " << get_cmnd_id(cmnd) << std::endl;
          print_buffer(cmnd,MAX_COMAND_SIZE);
          check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
 
@@ -633,7 +857,7 @@ char* CLI::build(int id,string input)
          write_to_cmnd(cmnd,input,offset,INCLUSIVE,max_string_size);
          
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
+         std::cout << "Value: " << get_cmnd_id(cmnd) << std::endl;
          print_buffer(cmnd,MAX_COMAND_SIZE);
          check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
 
@@ -658,7 +882,7 @@ char* CLI::build(int id,string input)
          write_to_cmnd(cmnd,input,offset,INCLUSIVE,max_string_size);
          
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
+         std::cout << "Value: " << get_cmnd_id(cmnd) << std::endl;
          print_buffer(cmnd,MAX_COMAND_SIZE);
          check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
 
@@ -683,7 +907,7 @@ char* CLI::build(int id,string input)
          write_to_cmnd(cmnd,input,offset,INCLUSIVE,max_string_size);
          
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
+         std::cout << "Value: " << get_cmnd_id(cmnd) << std::endl;
          print_buffer(cmnd,MAX_COMAND_SIZE);
          check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
 
@@ -708,7 +932,7 @@ char* CLI::build(int id,string input)
          write_to_cmnd(cmnd,input,offset,INCLUSIVE,max_string_size);
          
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
+         std::cout << "Value: " << get_cmnd_id(cmnd) << std::endl;
          print_buffer(cmnd,MAX_COMAND_SIZE);
          check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
 
@@ -733,7 +957,7 @@ char* CLI::build(int id,string input)
          write_to_cmnd(cmnd,input,offset,NEW_AND_TAG,max_string_size);
 
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
+         std::cout << "Value: " << get_cmnd_id(cmnd) << std::endl;
          print_buffer(cmnd,MAX_COMAND_SIZE);
          check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
 
@@ -758,7 +982,7 @@ char* CLI::build(int id,string input)
          write_to_cmnd(cmnd,input,offset,NEW_AND_TAG,max_string_size);
 
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
+         std::cout << "Value: " << get_cmnd_id(cmnd) << std::endl;
          print_buffer(cmnd,MAX_COMAND_SIZE);
          check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
 
@@ -783,7 +1007,7 @@ char* CLI::build(int id,string input)
          write_to_cmnd(cmnd,input,offset,INCLUSIVE,max_string_size);
          
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
+         std::cout << "Value: " << get_cmnd_id(cmnd) << std::endl;
          print_buffer(cmnd,MAX_COMAND_SIZE);
          check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
 
@@ -808,7 +1032,7 @@ char* CLI::build(int id,string input)
          write_to_cmnd(cmnd,input,offset,MERGE_1,max_string_size);
          
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
+         std::cout << "Value: " << get_cmnd_id(cmnd) << std::endl;
          print_buffer(cmnd,MAX_COMAND_SIZE);
          check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
 
@@ -833,7 +1057,7 @@ char* CLI::build(int id,string input)
          write_to_cmnd(cmnd,input,offset,MERGE_2,max_string_size);
          
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
+         std::cout << "Value: " << get_cmnd_id(cmnd) << std::endl;
          print_buffer(cmnd,MAX_COMAND_SIZE);
          check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
 
@@ -858,7 +1082,7 @@ char* CLI::build(int id,string input)
          write_to_cmnd(cmnd,input,offset,TAG_1,max_string_size);
          
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
+         std::cout << "Value: " << get_cmnd_id(cmnd) << std::endl;
          print_buffer(cmnd,MAX_COMAND_SIZE);
          check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
 
@@ -883,7 +1107,7 @@ char* CLI::build(int id,string input)
          write_to_cmnd(cmnd,input,offset,TAG_2,max_string_size);
          
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
+         std::cout << "Value: " << get_cmnd_id(cmnd) << std::endl;
          print_buffer(cmnd,MAX_COMAND_SIZE);
          check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
 
@@ -908,7 +1132,7 @@ char* CLI::build(int id,string input)
          write_to_cmnd(cmnd,input,offset,TAG_3,max_string_size);
          
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
+         std::cout << "Value: " << get_cmnd_id(cmnd) << std::endl;
          print_buffer(cmnd,MAX_COMAND_SIZE);
          check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
 
@@ -928,10 +1152,6 @@ char* CLI::build(int id,string input)
    return cmnd;
 }
 //[================================================================================================]
-
-
-
-
 
 
 

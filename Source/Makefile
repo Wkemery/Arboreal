@@ -20,11 +20,17 @@ driver: $(CPPFILES) $(HFILES)
 format: format.cpp
 	$(CXX) $(XXFLAGS) -o format format.cpp
 
-cli: clean cli_driver.cpp cli.h
+cli: clean-cli cli_driver.cpp cli.h
 	$(CXX) $(XXFLAGS) cli.cpp cli_driver.cpp -o cli
 
-liason: clean liason.cpp liason.h
+liason: clean-lson liason.cpp
 	$(CXX) $(XXFLAGS) liason.cpp -o liason
 
+clean-cli:
+	/bin/rm -f cli
+
+clean-lson:
+	/bin/rm -f liason
+
 clean: 
-/bin/rm -f *.o driver cli format DISK1 *.pipe
+	/bin/rm -f *.o driver cli format DISK1 liason
