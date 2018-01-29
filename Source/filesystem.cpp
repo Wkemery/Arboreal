@@ -19,7 +19,7 @@ bool EncryptionFlag = false;
 FileSystem::FileSystem(DiskManager *dm, string fileSystemName)
 {
   _FSName = fileSystemName;
-
+  
   /* set partition manager for my partition */
   _myPartitionManager = new PartitionManager(dm, fileSystemName);
   
@@ -42,53 +42,53 @@ FileSystem::~FileSystem()
 vector<FileInfo*>* FileSystem::tagSearch(vector<string> tags)
 {
   vector<FileInfo*>* ret = new vector<FileInfo*>;
-  //  - Single tag:
-  
-  if(tags.size() == 1)
+  if(tags.size() == 0)
   {
-    //   * find the tag in root tree
-    auto it = _RootTree->getMap()->find(tags[0]);  //Complexity: avg. 1, worst linear
-    it->second->getMap();
+    throw tag_error("No tags specified to search for", "FileSystem::tagSearch");
+  }
+  else if(tags.size() == 1)
+  {
+    /*find the tag in root tree*/
+    TreeObject* tagTree = _RootTree->find(tags[0]);
     
-    //   * list files in tag tree pointed to by root tree
+    /*List files in tag tree pointed to by root tree*/
     unordered_map<string, FileInfo*>* treeptr = it->second->getMap();
     
-    for(auto it2 = treeptr->begin(); it2 != treeptr->end(); it2++)//Complexity: number of files in answer
+    for(auto fileIt = tagTree->begin(); fileIt != tagTree->end(); fileIt++)//Complexity: number of files in answer
     {
-      ret->push_back(it2->second);
+      ret->push_back(fileIt->second);
     }
     
   }
   else
-  {
-    //   - Multi Tag:
-    
+  {    
     //   * Use size field in root node of tag tree to find smallest tree among the tags you want to search
-    //create vector of tagtrees that I want to search
+    /*create vector of tagtrees that we want to search*/
     vector<TagTree*> searchTrees;
-    for(unsigned int i = 0; i < tags.size(); i++)//Complexity: avg. number of tags specified, worst # tags specified*total number of user defined tags on filesystem
+    for(size_t i = 0; i < tags.size(); i++)
     {
-      auto it = _RootTree->getMap()->find(tags[i]);//complexity: avg. 1, worst linear
-      if(it == _RootTree->getMap()->end())
+      TreeObject* tagTree = _RootTree->find(tags[i]);
+      if(tagTree == 0)
       {
         cerr << tags[i] + " excluded from search : Tag Does not exist" << endl;
       }
       else
       {
-        searchTrees.push_back(it->second);
+        searchTrees.push_back(tagTree);
       }
     }
     
     TagTree* smallest = searchTrees[0];
-    for(unsigned int i = 1; i < searchTrees.size(); i++)//Complexity: number of tags specified
+    for(size_t i = 1; i < searchTrees.size(); i++)//Complexity: number of tags specified
     {
       if(searchTrees[i]->getMap()->size() < smallest->getMap()->size())
+      {
         smallest = searchTrees[i];
+      }
     }
     
-    //   * Search the smallest tree:
-    unordered_map<string, FileInfo*>* treeptr = smallest->getMap();
-    for(auto it = treeptr->begin(); it != treeptr->end(); it++)//Complexity: size of smallest specified tag tree * # of tags specified (worst case: size of smallest specified tag tree*# of tags specified* number of tags associated with file in question)
+    /*Search the smallest tree:*/
+    for(auto fileIt = smallest->begin(); fileIt != smallest->end(); fileIt++)//Complexity: size of smallest specified tag tree * # of tags specified (worst case: size of smallest specified tag tree*# of tags specified* number of tags associated with file in question)
     {
       //   # elimnate all nodes with tag count < the number of tags you are searching for
       if(it->second->getMap()->size() >= tags.size())
@@ -111,7 +111,7 @@ vector<FileInfo*>* FileSystem::tagSearch(vector<string> tags)
       }
     }
   }
-
+  
   //   # return (list) the found file(s)
   return ret;
 }
@@ -182,20 +182,20 @@ void FileSystem::deleteTag(string tagName)
   _RootTree->getMap()->erase(tagTreeIt);
   /*Note Root Tree was modified*/
   insertModification(_RootTree);
-    
+  
 }
 
 void FileSystem::mergeTags(string tag1, string tag2)
 {
   
-//   - create new tag tree if needed
-//   - Move all Nodes in largest tag tree to new (assuming new tree was created otherwise add to existsing tree) Tree
-//   * delete refrences to old tags in Fionde as you go
-//   - Move Nodes of second Tag Tree:
-//   * check that node is not already in destination tree
-//   * if Yes: Skip
-//   * if NO: Add
-//   * Repete
+  //   - create new tag tree if needed
+  //   - Move all Nodes in largest tag tree to new (assuming new tree was created otherwise add to existsing tree) Tree
+  //   * delete refrences to old tags in Fionde as you go
+  //   - Move Nodes of second Tag Tree:
+  //   * check that node is not already in destination tree
+  //   * if Yes: Skip
+  //   * if NO: Add
+  //   * Repete
   
 }
 
@@ -229,7 +229,7 @@ void FileSystem::tagFile(FileInfo* file, vector<string>& tags)
     }
     i++;
   }
-
+  
   if(found == false)
   {
     return;
@@ -276,7 +276,7 @@ void FileSystem::tagFile(FileInfo* file, vector<string>& tags)
       insertModification(it->second);
     }
   }
-
+  
   // (write updated Finode to disk)
   file->writeOut();
   
@@ -324,7 +324,7 @@ FileInfo* FileSystem::createFile(string filename, vector<string>& tags)
   FileInfo* newFile = new FileInfo(filename, newblknum, _myPartitionManager);
   //   - If tag not given then add file to "default" tag tree
   //   * File remains in default tag tree until a non-default tag is associated with file
-
+  
   if(tags.size() == 0)
   {
     vector<string> temp;
