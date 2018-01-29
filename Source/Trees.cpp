@@ -224,11 +224,24 @@ unordered_map<string, TreeObject*>::iterator TreeObject::begin(){return _myTree.
 
 unordered_map<string, TreeObject*>::iterator TreeObject::end(){return _myTree.end();}
 
-pair<unordered_map<string, TreeObject*>::iterator, bool>TreeObject::insert(string name, TreeObject* ptr)
-{return _myTree.insert(pair<string, TreeObject*>(name, ptr));}
+void TreeObject::insert(string name, TreeObject* ptr)
+{
+  auto ret = _myTree.insert(pair<string, TreeObject*>(name, ptr));
+  if(!ret.second)
+  {
+    throw tag_error (name + " is not unique", "TreeObject::insert");
+  }
+  
+  /*Keep track of addition to TreeObject*/
+  this->insertAddition(ptr);
+}
 
 void TreeObject::erase(string name)
-{_myTree.erase(name);}
+{
+  _myTree.erase(name);
+  _RootTree->insertDeletion(tagTree);
+  
+}
 
 void TreeObject::erase(unordered_map<string, TreeObject*>::iterator item)
 {_myTree.erase(item);}
@@ -593,6 +606,11 @@ void TagTree::readIn(unordered_multimap<string, FileInfo*>* allFiles)
 
 void TagTree::del()
 {
+  if(_myTree.size() > 0)
+  {
+    throw arboreal_logic_error("Attempt to delete nonempty TagTree", "TagTree::del");
+  }
+  
   char* buff = new char[_myPartitionManager->getBlockSize()];
   
   /*Read in the super block of this tagTree*/
