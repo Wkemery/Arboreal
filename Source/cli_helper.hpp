@@ -5,7 +5,7 @@
 //  Primary Author: Adrian Barberis
 //  For "Arboreal" Senior Design Project
 //  
-//  Fri. | Jan. 26th | 2018 | 11:27 PM
+//  Sun. | Jan. 28th | 2018 | 8:30 PM
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -37,58 +37,58 @@
  */
 void print_help()
 {
-    cout << "+-----------------------------------------------------------------------------------+\n";
-    cout << "|                                    Available Commands                             |\n";
-    cout << "+-----------------------------------------------------------------------------------+\n";
-    cout << "|                                                                                   |\n";
-    cout << "|  1)  { 'help' | 'h' }--> Display this printout                                    |\n";
-    cout << "|                                                                                   |\n";
-    cout << "|  2)  { 'quit' | 'q' }--> Quit this interface                                      |\n";
-    cout << "|                                                                                   |\n";
-    cout << "|  3)  { 'history' }--> Display the last 10 commands inputted                       |\n";
-    cout << "|                                                                                   |\n";
-    cout << "|  4)  { 'find' '-t' '[tagName,...]' }--> Find file(s) by tag(s)                    |\n";
-    cout << "|                                                                                   |\n";
-    cout << "|  5)  { 'find' '-t' '{tagName,...}' }--> Find file with all tags                   |\n";
-    cout << "|                                                                                   |\n";
-    cout << "|  6)  { 'find' '-f' '[filename(.ext),...]' }--> Find files by name                 |\n";
-    cout << "|                                                                                   |\n";
-    cout << "|  7)  { 'new' '-t' '[tagName,...]' }--> Create tags                                |\n";
-    cout << "|                                                                                   |\n";
-    cout << "|  8) { 'new' '-f' '[filename.ext,...]' }--> Create files                           |\n";
-    cout << "|                                                                                   |\n";
-    cout << "|  9) { 'new' '-f' '[filename.ext,...]' '-t' '[tagName,...] }--> Create&Tag files   |\n";            
-    cout << "|                                                                                   |\n";
-    cout << "|  10) { 'new' '-f' '[filename.ext,...]' '-t' '{tagName,...}' }--> Create&Tag files |\n";
-    cout << "|                                                                                   |\n";
-    cout << "|  11) { 'delete' '-t' '[tagName,...]' }--> Delete tags                             |\n";
-    cout << "|                                                                                   |\n";
-    cout << "|  12) { 'delete' '-f' '[filename.ext,...]' }--> Delete files                       |\n";
-    cout << "|                                                                                   |\n";
-    cout << "|  13) { 'fdelete' '-t' '[tagName,...]' }--> Force delete tags                      |\n";
-    cout << "|                                                                                   |\n";
-    cout << "|  14) { 'open' '[filename.ext,...]' }--> Open files  PATH                              |\n";
-    cout << "|                                                                                   |\n";
-    cout << "|  15) { 'close' '[filename.ext,...]' }--> Close files                              |\n";
-    cout << "|                                                                                   |\n";
-    cout << "|  16) { 'rename' '-t' '[tagName,...]' '-n' '[newName,...]' }--> Rename Tags        |\n";
-    cout << "|                                                                                   |\n";
-    cout << "|  17) { 'rename' '-f' '[filename.ext,...]' '-n' '[newName,...]' }--> Rename files  |\n";
-    cout << "|                                                                                   |\n";
-    cout << "|  18) { 'get' '[filename.ext,...]' }--> Get attributes of files                    |\n";
-    cout << "|                                                                                   |\n";
-    cout << "|  19) { 'merge' 'tagName1' '->' 'tagName2' }--> Merge two existing tags            |\n";
-    cout << "|                                                                                   |\n";
-    cout << "|  20) { 'merge' '[tagName,...]' '->' 'tagName' }--> Merge multiple tags into one   |\n";
-    cout << "|                                                                                   |\n";
-    cout << "|  21) { 'tag' 'filename.ext' '->' 'tagName' }--> Tag a file with a tag             |\n";
-    cout << "|                                                                                   |\n";
-    cout << "|  22) { 'tag' 'filename.ext' '->' '[tagName,...]' }--> Add tags to file            |\n";
-    cout << "|                                                                                   |\n";
-    cout << "|  23) { 'tag' '[filename.ext,...]' '->' 'tagName' }--> Tag multiple files          |\n";
-    cout << "|                                                                                   |\n";
-    cout << "+-----------------------------------------------------------------------------------+\n";
-    cout << "Arboreal >> ";
+    std::cout << "+-----------------------------------------------------------------------------------+\n";
+    std::cout << "|                                    Available Commands                             |\n";
+    std::cout << "+-----------------------------------------------------------------------------------+\n";
+    std::cout << "|                                                                                   |\n";
+    std::cout << "|  1)  { 'help' | 'h' }--> Display this printout                                    |\n";
+    std::cout << "|                                                                                   |\n";
+    std::cout << "|  2)  { 'quit' | 'q' }--> Quit this interface                                      |\n";
+    std::cout << "|                                                                                   |\n";
+    std::cout << "|  3)  { 'history' }--> Display the last 10 commands inputted                       |\n";
+    std::cout << "|                                                                                   |\n";
+    std::cout << "|  4)  { 'find' '-t' '[tagName,...]' }--> Find file(s) by tag(s)                    |\n";
+    std::cout << "|                                                                                   |\n";
+    std::cout << "|  5)  { 'find' '-t' '{tagName,...}' }--> Find file with all tags                   |\n";
+    std::cout << "|                                                                                   |\n";
+    std::cout << "|  6)  { 'find' '-f' '[filename(.ext),...]' }--> Find files by name                 |\n";
+    std::cout << "|                                                                                   |\n";
+    std::cout << "|  7)  { 'new' '-t' '[tagName,...]' }--> Create tags                                |\n";
+    std::cout << "|                                                                                   |\n";
+    std::cout << "|  8) { 'new' '-f' '[filename.ext,...]' }--> Create files                           |\n";
+    std::cout << "|                                                                                   |\n";
+    std::cout << "|  9) { 'new' '-f' '[filename.ext,...]' '-t' '[tagName,...] }--> Create&Tag files   |\n";            
+    std::cout << "|                                                                                   |\n";
+    std::cout << "|  10) { 'new' '-f' '[filename.ext,...]' '-t' '{tagName,...}' }--> Create&Tag files |\n";
+    std::cout << "|                                                                                   |\n";
+    std::cout << "|  11) { 'delete' '-t' '[tagName,...]' }--> Delete tags                             |\n";
+    std::cout << "|                                                                                   |\n";
+    std::cout << "|  12) { 'delete' '-f' '[filename.ext,...]' }--> Delete files                       |\n";
+    std::cout << "|                                                                                   |\n";
+    std::cout << "|  13) { 'fdelete' '-t' '[tagName,...]' }--> Force delete tags                      |\n";
+    std::cout << "|                                                                                   |\n";
+    std::cout << "|  14) { 'open' '[filename.ext,...]' }--> Open files  PATH                          |\n";
+    std::cout << "|                                                                                   |\n";
+    std::cout << "|  15) { 'close' '[filename.ext,...]' }--> Close files                              |\n";
+    std::cout << "|                                                                                   |\n";
+    std::cout << "|  16) { 'rename' '-t' '[tagName,...]' '-n' '[newName,...]' }--> Rename Tags        |\n";
+    std::cout << "|                                                                                   |\n";
+    std::cout << "|  17) { 'rename' '-f' '[filename.ext,...]' '-n' '[newName,...]' }--> Rename files  |\n";
+    std::cout << "|                                                                                   |\n";
+    std::cout << "|  18) { 'get' '[filename.ext,...]' }--> Get attributes of files                    |\n";
+    std::cout << "|                                                                                   |\n";
+    std::cout << "|  19) { 'merge' 'tagName1' '->' 'tagName2' }--> Merge two existing tags            |\n";
+    std::cout << "|                                                                                   |\n";
+    std::cout << "|  20) { 'merge' '[tagName,...]' '->' 'tagName' }--> Merge multiple tags into one   |\n";
+    std::cout << "|                                                                                   |\n";
+    std::cout << "|  21) { 'tag' 'filename.ext' '->' 'tagName' }--> Tag a file with a tag             |\n";
+    std::cout << "|                                                                                   |\n";
+    std::cout << "|  22) { 'tag' 'filename.ext' '->' '[tagName,...]' }--> Add tags to file            |\n";
+    std::cout << "|                                                                                   |\n";
+    std::cout << "|  23) { 'tag' '[filename.ext,...]' '->' 'tagName' }--> Tag multiple files          |\n";
+    std::cout << "|                                                                                   |\n";
+    std::cout << "+-----------------------------------------------------------------------------------+\n";
+    std::cout << "Arboreal >> ";
 } 
 //[================================================================================================]
 
@@ -109,20 +109,29 @@ void print_help()
 // 
 void print_header()
 {
-    cout << "\n[]==============================================================================[]\n";
-    cout << "||                              Welcome To Arboreal                             ||\n";
-    cout << "||------------------------------------------------------------------------------||\n";
-    cout << "||              Enter 'help' or 'h' to see a list of available commands         ||\n";
-    cout << "[]==============================================================================[]\n";
-    cout << "\n\n";
-    cout << "Arboreal >> ";
+    std::cout << "\n[]==============================================================================[]\n";
+    std::cout << "||                              Welcome To Arboreal                             ||\n";
+    std::cout << "||------------------------------------------------------------------------------||\n";
+    std::cout << "||              Enter 'help' or 'h' to see a list of available commands         ||\n";
+    std::cout << "[]==============================================================================[]\n";
+    std::cout << "\n\n";
+    std::cout << "Arboreal >> ";
 }
 //[================================================================================================]
 
 
 
 
+const char* build_pipe_path()
+{
+    char* buff = nullptr;
+    std::string pipe_path;
+    pipe_path += getcwd(buff,0);
+    pipe_path += "/pipe-" + std::to_string(getpid());
+    std::cout << "Pipe Path: " << pipe_path << std::endl;
 
+    return pipe_path.c_str();
+}
 
 
 
@@ -136,27 +145,16 @@ void print_header()
 //       
 void print_buffer(char* buff, int size)
 {
-    cout << "Buffer Contents: ";
+    std::cout << "Buffer Contents: ";
     for(unsigned int i = sizeof(int); i < size; i++)
     {
-        cout << buff[i];
+        std::cout << buff[i];
     }
-    cout << endl << endl;
+    std::cout << std::endl << std::endl;
 }
 //[================================================================================================]
 
 
-
-
-
-void print_buffer_to_out(char* buff, int size, ostream* out)
-{
-    for(unsigned int i = 0; i < size; i++)
-    {
-        *out << buff[i]; 
-    }
-    *out << endl;
-}
 
 
 
@@ -183,11 +181,11 @@ bool check_buffer(char* buff, int size)
 {
     for(unsigned int i = sizeof(int); i < size; i++)
     {
-        string temp;
+        std::string temp;
         temp += buff[i];
         if(!std::regex_match(temp,good_buffer) && buff[i] != '\0')
         {
-            cout << "\n\nBad Buffer!\n";
+            std::cout << "\n\nBad Buffer!\n";
             return false;
         }
     }
@@ -221,7 +219,7 @@ void check_buffer_partitioning(char* buffer,int size)
     int p_count = 1;
     for(unsigned int i = sizeof(int); i < size; i++)
     {
-        //cout << "Buffer [" << i << "]: " << buffer[i] << endl;
+        //std::cout << "Buffer [" << i << "]: " << buffer[i] << std::endl;
         if(buffer[i] == '\0' && !is_null){is_null = true;}
         else if(!is_null){alpha_count += 1;}
         else if(is_null)
@@ -229,18 +227,18 @@ void check_buffer_partitioning(char* buffer,int size)
             null_count += 1;
             if(null_count > 64)
             {
-                cout << "Partition " << p_count << " Consists Of:\n";
-                cout << "   " << alpha_count << " non-null characters\n";
-                cout << "Remaining Space is Free\n\n";
+                std::cout << "Partition " << p_count << " Consists Of:\n";
+                std::cout << "   " << alpha_count << " non-null characters\n";
+                std::cout << "Remaining Space is Free\n\n";
                 return;
             }
             if(buffer[i] != '\0')
             {
-                cout << "Partition " << p_count << " Consists Of:\n";
-                cout << "   " << alpha_count << " non-null characters\n";
-                cout << "   " << null_count << " null characters\n";
-                cout << "   With a total character count of: " << alpha_count + null_count << endl;
-                cout << endl;
+                std::cout << "Partition " << p_count << " Consists Of:\n";
+                std::cout << "   " << alpha_count << " non-null characters\n";
+                std::cout << "   " << null_count << " null characters\n";
+                std::cout << "   With a total character count of: " << alpha_count + null_count << std::endl;
+                std::cout << std::endl;
                 is_null = false;
                 alpha_count = 1;
                 null_count = 0;
@@ -274,7 +272,7 @@ void fix_buffer(char* buff,int size)
     int fixed_count = 0;
     for(unsigned int i = sizeof(int); i < size; i++)
     {
-        string temp;
+        std::string temp;
         temp += buff[i];
         if(buff[i] != '\0')
         {
@@ -286,13 +284,34 @@ void fix_buffer(char* buff,int size)
             fixed_count += 1;
         }
     }
-    cout << "\n\nBuffer Fixed!\n";
-    cout << "+-------------------------------------------+\n";
-    cout << "Non-Null Char Count: " << non_null << endl;
-    cout << "Fixed " << fixed_count << " Character(s) In Buffer\n";
-    cout << ".............................................\n";
+    std::cout << "\n\nBuffer Fixed!\n";
+    std::cout << "+-------------------------------------------+\n";
+    std::cout << "Non-Null Char Count: " << non_null << std::endl;
+    std::cout << "Fixed " << fixed_count << " Character(s) In Buffer\n";
+    std::cout << ".............................................\n";
 }
 //[================================================================================================]
+
+
+
+
+
+
+
+
+//[================================================================================================]
+// Used by CLI::build()
+// 
+// Zero out a buffer
+void zero_buffer(char* buff, int size)
+{
+    for(unsigned int i = 0; i < size; i++)
+    {
+        buff[i] = '\0';
+    }
+}
+//[================================================================================================]
+
 
 
 
@@ -335,7 +354,7 @@ int get_cmnd_id(char* cmnd)
 // A lot of the commands are built with similar syntax (this is on purpose)
 // Thus it made sense to avoid duplication and use a helper function
 // 
-void write_to_cmnd(char* cmnd, string input, int offset, int version, int max_string_size)
+void write_to_cmnd(char* cmnd, std::string input, int offset, int version, int max_string_size)
 {
     bool ignore = true;
     int temp_index = 0;
@@ -575,7 +594,7 @@ void write_to_cmnd(char* cmnd, string input, int offset, int version, int max_st
         // for single tag into single tag:  merge(tag1,tag2)
         for(unsigned int i = 0; i < input.length(); i++)
         {
-            // ignore the begin part i.e. the "merge" string of ther command
+            // ignore the begin part i.e. the "merge" std::string of ther command
             if(i < 6){continue;} 
             else
             {
