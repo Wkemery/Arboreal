@@ -24,22 +24,14 @@ FileSystem::FileSystem(DiskManager *dm, string fileSystemName)
   _myPartitionManager = new PartitionManager(dm, fileSystemName);
   
   /*Read in the root tree*/
-  _RootTree = new RootTree();
-  _RootTree->readIn(_myPartitionManager, &_allFiles);
+  _RootTree = new RootTree(_myPartitionManager);
+  _RootTree->readIn(&_allFiles);
   
   /*Read in every tag Tree*/
   for(auto it = _RootTree->getMap()->begin(); it != _RootTree->getMap()->end(); it++)
   {
-    it->second->readIn(_myPartitionManager, &_allFiles);
+    it->second->readIn(&_allFiles);
   }
-  
-  //TODO: right now finodes must be read in to read in a tag tree, because we need the tags to mangle a name.
-  
-//   /*Read in default tag Tree.*/
-//   auto it = _RootTree->getMap()->find("default");
-//   it->second->readIn(_myPartitionManager);
-//   _RootTree->setRead(it->second);
-  
 }
 
 FileSystem::~FileSystem()
@@ -147,7 +139,7 @@ void FileSystem::createTag(string tagName)
   newblknum = _myPartitionManager->getFreeDiskBlock();//Complexity: not our fucking problem, but linear with # of blocks on partition
   
   //   - initialize tree in main memory
-  TagTree* newTree = new TagTree(tagName, newblknum);
+  TagTree* newTree = new TagTree(tagName, newblknum, _myPartitionManager);
   //   - add respective node to root tree (write TagTree block num to Node as well as TagTree memory address to Node)
   
   auto ret = _RootTree->getMap()->insert(pair<string, TagTree*>(tagName, newTree));//Complexity: avg. 1, worst # of tags in filesystem
@@ -162,50 +154,35 @@ void FileSystem::createTag(string tagName)
   insertModification(_RootTree);
   
   /*Write out newly created TagTree. it will only write out the TagTree superblock*/
-  newTree->writeOut(_myPartitionManager); //Complexity: size of tag tree, this case 0;
+  newTree->writeOut(); //Complexity: size of tag tree, this case 0;
 }
 
-void FileSystem::deleteTag(string tagName, bool force)
+void FileSystem::deleteTag(string tagName)
 {
-  //   - find tagTree
-  auto it = _RootTree->getMap()->find(tagName);//Complexity: avg 1, worst # tags on system
-  if(it == _RootTree->getMap()->end())
+  /*find tagTree*/
+  auto tagTreeIt = _RootTree->getMap()->find(tagName);//Complexity: avg 1, worst # tags on system
+  if(tagTreeIt == _RootTree->getMap()->end())
   {
     throw tag_error(tagName + " Does Not Exist", "FileSystem::deleteTag");
   }
   
-  unordered_map<string, FileInfo*>* treeptr = it->second->getMap();
+  TagTree* tagTree = tagTreeIt->second;
+  unordered_map<string, FileInfo*>* tagTreeMap = tagTree->getMap();
   
-  //   - CANNOT delete tag if tag tree Size > 0
-  
-  if((treeptr->size() > 0) && (!force))
+  /* CANNOT delete tag if tag tree Size > 0 */
+  if(tagTreeMap->size() > 0)
   {
-    throw tag_error(tagName + " cannot be deleted: Tag has files associated with it, Consider running with force option", "FileSystem::deleteTag");
-    //cerr << "Warning! : Tag has files associated with it. This may take a while."
+    throw tag_error(tagName + " cannot be deleted: Tag has files associated with it", "FileSystem::deleteTag");
   }
   
-  //TODO: consider threading here to keep the programming running while deleting stuff in the background
-  if(force)
-  {
-    for(auto it2 = treeptr->begin(); it2 != treeptr->end(); it2++)//Complexity: avg: size of tag tree * sizeof file/block size, worst size of tag tree * avg tags associated with file * sizeof file/block size
-    {
-      //   - delete all references to the tag tree from Fileinodes
-      it2->second->getMap()->erase(tagName);//Complexity: avg 1, worst # of tags associated with file
-      it2->second->writeOut(_myPartitionManager);//Complexity: just super block of file
-    }
-  }
-
-//   /*Delete tagTree on disk*/
-//   it->second->del(_myPartitionManager);
-  //   - returning blocks always zeros them
-  //   - remove node from Root tree
-  /*Keep track of Deletion*/
-  _RootTree->insertDeletion(it->second);
-  _RootTree->getMap()->erase(it);
+  /*Delete tagTree on disk*/
+  tagTree->del();
+  /*Delete Node from Root Tree*/
+  _RootTree->insertDeletion(tagTree);
+  _RootTree->getMap()->erase(tagTreeIt);
   /*Note Root Tree was modified*/
-  
-  //   - write the root tree out to disk
-  
+  insertModification(_RootTree);
+    
 }
 
 void FileSystem::mergeTags(string tag1, string tag2)
@@ -288,7 +265,9 @@ void FileSystem::tagFile(FileInfo* file, vector<string>& tags)
       auto ret2 = treeptr->insert(pair<string, FileInfo*>(file->mangle(tags), file));//Complexity: Complexity: avg: 1, worst: size of tag tree
       if(!ret2.second)
       {
-        throw arboreal_logic_error(file->getName() + " with the specified tags already exists,\n THIS SHOULD HAVE BEEN TRIGGERED EARLIER", "FileSystem::tagFile");
+        throw arboreal_logic_error(file->getName() + " with the specified tags already exists \n THIS SHOULD HAVE BEEN TRIGGERED EARLIER", "FileSystem::tagFile");
+        //NOTE: this is a duplicate error check, but we check above to save a little time and not create a new file inode unnecesarily. 
+        //NOTE: That is also why this is a logic error
       }
       
       /*Keep track of addition*/
@@ -299,7 +278,7 @@ void FileSystem::tagFile(FileInfo* file, vector<string>& tags)
   }
 
   // (write updated Finode to disk)
-  file->writeOut(_myPartitionManager);
+  file->writeOut();
   
 }
 
@@ -331,7 +310,7 @@ void FileSystem::untagFile(FileInfo* file, vector<string> tags)
   }
   
   // (write updated Finode to disk)
-  file->writeOut(_myPartitionManager);
+  file->writeOut();
 }
 
 
@@ -342,7 +321,7 @@ FileInfo* FileSystem::createFile(string filename, vector<string>& tags)
   BlkNumType newblknum = 0;
   newblknum = _myPartitionManager->getFreeDiskBlock();
   
-  FileInfo* newFile = new FileInfo(filename, newblknum);
+  FileInfo* newFile = new FileInfo(filename, newblknum, _myPartitionManager);
   //   - If tag not given then add file to "default" tag tree
   //   * File remains in default tag tree until a non-default tag is associated with file
 
@@ -358,7 +337,7 @@ FileInfo* FileSystem::createFile(string filename, vector<string>& tags)
     tagFile(newFile, tags);
   }
   
-  newFile->writeOut(_myPartitionManager);
+  newFile->writeOut();
   _allFiles.insert(pair<string, FileInfo*>(filename, newFile));
   
   return newFile;
@@ -379,7 +358,7 @@ void FileSystem::deleteFile(FileInfo* file)
   
   //   - Free all data blocks
   //   - Free Finode block on disk
-  file->del(_myPartitionManager);
+  file->del();
   
   delete file;
   file = 0;
@@ -418,7 +397,7 @@ void FileSystem::writeChanges()
 {
   for(auto it = _modifiedObjects.begin(); it != _modifiedObjects.end(); it++)
   {
-    it->first->writeOut(_myPartitionManager);
+    it->first->writeOut();
   }
 }
 
@@ -430,7 +409,7 @@ void FileSystem::insertModification(TreeObject* object)
   _modifiedObjects.insert(pair<TreeObject*, int>(object, 0));
 }
 
-
+/*End Helper Functions*/
 void FileSystem::printRoot()
 {
   for(auto it = _RootTree->getMap()->begin(); it != _RootTree->getMap()->end(); it++)
@@ -444,18 +423,25 @@ void FileSystem::printTags()
   for(auto it = _RootTree->getMap()->begin(); it != _RootTree->getMap()->end(); it++)
   {
     cout << "TagName: " << it->first << " \tBlockNumber: " << it->second->getBlockNumber() << endl;
-    //TODO: cleanup here
-//     if(!_RootTree->isRead(it->second))
-//     {
-//       it->second->readIn(_myPartitionManager);
-//       _RootTree->setRead(it->second);
-//     }
     
     for(auto it2 = it->second->getMap()->begin(); it2 != it->second->getMap()->end(); it2++)
     {
-      cout << "\t FileName: " << it2->second->getName() << " \tBlockNumber: " << it2->second->getBlockNumber() << endl;
+      cout << "\t FilePath: " << it2->second->mangle() << " \tBlockNumber: " << it2->second->getBlockNumber() << endl;
     }
   }
+}
+
+void FileSystem::printFiles()
+{
+  for(auto it = _allFiles.begin(); it != _allFiles.end(); it++)
+  {
+    cout << "\t FilePath: " << it->second->mangle() << endl;//" \t\tBlockNumber: " << it->second->getBlockNumber() << endl;
+  }
+}
+
+int FileSystem::getFileNameSize()
+{
+  return _myPartitionManager->getFileNameSize();
 }
 
 bool operator==(const FileOpen& lhs, const FileOpen& rhs)

@@ -54,38 +54,56 @@ public:
   void writeOut (PartitionManager* pm);
 };
 
-//TODO: deleteContBlocks may need to be overriden in derived classes
 class TreeObject
 {
 protected:
   queue<Modification*> _modifications;
-  TreeObject(string name, BlkNumType blknum);
-  string _name;
-  BlkNumType _blockNumber;
-  Index _index;
-  Index _lastEntry; //points at the last entry
-  BlkNumType _startBlock;
-  unordered_map<TreeObject*, bool> _readable;
+  string _name;/*This TreeObject's name*/
+  BlkNumType _blockNumber; /*The Blocknumber of the Super block associated with this TreeObject on disk*/
+  Index _index;/*The location(s) of this TreeObject's superblock entry on disk*/
+  Index _lastEntry; /*The Index of the last entry of this TreeObject's data on disk*/
+  BlkNumType _startBlock; /*The blocknumber of the start of this TreeObject's data on disk*/
+  PartitionManager* _myPartitionManager;
+  unordered_map<string, TreeObject*> _myTree;
 public:
+/*Constructors*/
   virtual ~TreeObject();
-  virtual void writeOut(PartitionManager* pm) = 0;
-  virtual void readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*>* allFiles) = 0;
-  virtual void del(PartitionManager* pm) = 0;
-  bool isRead(TreeObject*);
-  void setRead(TreeObject*);
+  TreeObject(string name, BlkNumType blknum, PartitionManager* pm);
+  
+/*Accessor Functions*/
   string getName();
+  BlkNumType getBlockNumber();
   Index getIndex();
-  void setIndex(Index index);
-  void setLastEntry(Index index);
   Index getLastEntry();
   BlkNumType getStartBlock();
-  BlkNumType getBlockNumber();
-  void incrementAllocate(Index* index, PartitionManager* pm);
-  void incrementFollow(Index* index, PartitionManager* pm);
-  void deleteContBlocks(PartitionManager* pm, BlkNumType blknum);
+  size_t size();
+  unordered_map<string, TreeObject*>::iterator begin();
+  unordered_map<string, TreeObject*>::iterator end();
+  TreeObject* find(string name);
+  
+
+/*Modifier Functions*/
+  void setIndex(Index index);
+  void setLastEntry(Index index);
+  pair<unordered_map<string, TreeObject*>::iterator, bool> insert(string name, TreeObject* ptr);
+  void erase(string name);
+  void erase(unordered_map<string, TreeObject*>::iterator item);
+
+/*Disk Functions*/
+  virtual void writeOut() = 0;
+  virtual void readIn(unordered_multimap<string, FileInfo*>* allFiles) = 0;
+  virtual void del() = 0;
+    /*This will completely remove the TreeObject's presence on disk.*/
+    
+void incrementAllocate(Index* index);
+void incrementFollow(Index* index);
+  
+protected:
+/*Helper Functions*/
+  virtual void deleteContBlocks(BlkNumType blknum);
   /* deleteContBlocks will take a blknum and free it. it will follow the chain 
    * of continuation blocks and free all of them too*/
-protected:
+
   
 };
 
@@ -96,16 +114,17 @@ private:
   Attributes _myAttributes;
   Finode _myFinode;
 public:
-  FileInfo(string filename, BlkNumType blknum);
+  FileInfo(string filename, BlkNumType blknum, PartitionManager* pm);
   ~FileInfo();
   map<string, BlkNumType>* getMap();
   string mangle();
   string mangle(vector<string>& tags);
   /*Function Overrides*/
-  void writeOut(PartitionManager* pm);
-  void readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*>* allFiles);
-  void del(PartitionManager* pm);
-//   void deleteContBlocks(PartitionManager* pm, BlkNumType blknum);
+  void writeOut();
+  void readIn(unordered_multimap<string, FileInfo*>* allFiles);
+  void del();
+  void deleteContBlocks(BlkNumType blknum);
+    /*This will delete all the blocks with file data starting from any level*/
 
 };
 
@@ -117,20 +136,17 @@ private:
 //   queue<FileInfo*> _additions;
 //   unordered_multimap<BlkNumType, FileInfo*> _deletions;
 public:
-  TagTree(string tagName, BlkNumType blknum);
+  TagTree(string tagName, BlkNumType blknum, PartitionManager* pm);
   ~TagTree();
   unordered_map<string, FileInfo*>* getMap();
   void insertAddition(FileInfo* file);
   void insertDeletion(FileInfo* file);
-  void writeOutAdds(PartitionManager* pm);
-  void writeOutDels(PartitionManager* pm);
+  void writeOutAdds();
+  void writeOutDels();
   /*Function Overrides*/
-  void writeOut(PartitionManager* pm);
-  void readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*>* allFiles);
-//   void deleteContBlocks(PartitionManager* pm, BlkNumType blknum);
-  void del(PartitionManager* pm);
-  /*del() will remove the tag tree's presence on disk. That includes removing all 
-   * continuation blocks and returning them to the disk.*/
+  void writeOut();
+  void readIn(unordered_multimap<string, FileInfo*>* allFiles);
+  void del();
 };
 
 class RootTree : public TreeObject
@@ -140,19 +156,17 @@ private:
 //   queue<TagTree*> _additions;
 //   unordered_multimap<BlkNumType, TagTree*> _deletions;
 public:
-  RootTree();
+  RootTree(PartitionManager* pm);
   ~RootTree();
   unordered_map<string, TagTree*>* getMap();
   void insertAddition(TagTree* tag);
   void insertDeletion(TagTree* tag);
-//   void writeOutAdds(PartitionManager* pm);
-  void writeOutDels(PartitionManager* pm);
-  /*Function Overrides*/
-  void writeOut(PartitionManager* pm);
-  void readIn(PartitionManager* pm, unordered_multimap<string, FileInfo*>* allFiles);
-//   void deleteContBlocks(PartitionManager* pm, BlkNumType blknum);
-  void del(PartitionManager* pm);//TODO: maybe unnecesary?
+  void writeOutDels();
+  void del();
   
+  /*Function Overrides*/
+  void writeOut();
+  void readIn(unordered_multimap<string, FileInfo*>* allFiles);
 };
 
 #endif

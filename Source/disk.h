@@ -1,3 +1,5 @@
+
+#include<unordered_map>
 #include "types.h"
 
 #ifndef DISK_H
@@ -15,13 +17,7 @@ class Disk {
   Disk(BlkNumType numblocks, int blksz, char *fname);
     ~Disk();
     void readDiskBlock(BlkNumType blknum, char *blkdata);
-    /*
-     * Throws: invalid_arg, disk_error
-     */
     void writeDiskBlock(BlkNumType blknum, char *blkdata);
-    /*
-     * Throws: invalid_arg, disk_error
-     */
     int getBlockSize() {return (blkSize);};
     int getBlockCount() {return (blkCount);};
 };
