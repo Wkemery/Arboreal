@@ -25,12 +25,12 @@ FileSystem::FileSystem(DiskManager *dm, string fileSystemName)
   
   /*Read in the root tree*/
   _RootTree = new RootTree(_myPartitionManager);
-  _RootTree->readIn(&_allFiles);
+  _RootTree->readIn(&_allFiles, _RootTree);
   
   /*Read in every tag Tree*/
   for(auto it = _RootTree->begin(); it != _RootTree->end(); it++)
   {
-    it->second->readIn(&_allFiles);
+    it->second->readIn(&_allFiles, _RootTree);
   }
 }
 
@@ -55,7 +55,7 @@ vector<FileInfo*>* FileSystem::tagSearch(vector<string> tags)
     
     for(auto fileIt = tagTree->begin(); fileIt != tagTree->end(); fileIt++)//Complexity: number of files in answer
     {
-      ret->push_back(fileIt->second);
+      ret->push_back((FileInfo*)fileIt->second);
     }
     
   }
@@ -63,7 +63,7 @@ vector<FileInfo*>* FileSystem::tagSearch(vector<string> tags)
   {    
     //   * Use size field in root node of tag tree to find smallest tree among the tags you want to search
     /*create vector of tagtrees that we want to search*/
-    vector<TagTree*> searchTrees;
+    vector<TreeObject*> searchTrees;
     for(size_t i = 0; i < tags.size(); i++)
     {
       TreeObject* tagTree = _RootTree->find(tags[i]);
@@ -77,7 +77,7 @@ vector<FileInfo*>* FileSystem::tagSearch(vector<string> tags)
       }
     }
     
-    TagTree* smallest = searchTrees[0];
+    TreeObject* smallest = searchTrees[0];
     for(size_t i = 1; i < searchTrees.size(); i++)//Complexity: number of tags specified
     {
       if(searchTrees[i]->size() < smallest->size())
@@ -87,7 +87,7 @@ vector<FileInfo*>* FileSystem::tagSearch(vector<string> tags)
     }
     
     /*Search the smallest tree:*/
-    for(auto fileIt = smallest->begin(); fileIt != smallest->end(); fileIt++)/
+    for(auto fileIt = smallest->begin(); fileIt != smallest->end(); fileIt++)
     {
       /* elimnate all nodes with tag count < the number of tags you are searching for*/
       if(fileIt->second->size() >= tags.size())
@@ -106,7 +106,7 @@ vector<FileInfo*>* FileSystem::tagSearch(vector<string> tags)
         if(match)
         {
           /*Push back the matching file*/
-          ret->push_back(fileIt->second);
+          ret->push_back((FileInfo*)fileIt->second);
         }
       }
     }
@@ -196,7 +196,6 @@ void FileSystem::tagFile(FileInfo* file, vector<string>& tags)
   if(file == 0) {throw file_error ("File Does not Exist", "FileSystem::tagFile");}
   
   vector<string> tagSet;
-  bool found = true;
   TreeObject* tagTree = 0;
   
   for(size_t i = 0; i < tags.size(); i++)
@@ -213,7 +212,7 @@ void FileSystem::tagFile(FileInfo* file, vector<string>& tags)
     }
   }
   
-  if(tagSet.size == 0)
+  if(tagSet.size() == 0)
   {
     throw tag_error("No valid tags specified: file not tagged", "FileSystem::tagFile");
   }
@@ -231,7 +230,7 @@ void FileSystem::tagFile(FileInfo* file, vector<string>& tags)
     tagTree = _RootTree->find(tag);
     
     /*Add Tag to Finode */
-    file.insert(tag, tagTree);
+    file->insert(tag, tagTree);
     
     /*Add Finode to tagTree*/
     tagTree->insert(file->mangle(tagSet), file);
@@ -258,16 +257,16 @@ void FileSystem::untagFile(FileInfo* file, vector<string>& tags)
   {
     if(tag == "default")
     {
-      cerr << t + " cannot be removed from " << file->getName() << endl;
+      cerr << tag + " cannot be removed from " << file->getName() << endl;
     }
     
     /*find tagTree*/
-    tagTree = _RootTree->find(tag);
+    TreeObject* tagTree = _RootTree->find(tag);
     
     /*If tag does not exist print error and continue*/
     if(tagTree == 0)
     {
-      cerr << t + " cannot be removed from " << file->getName() << " : Tag Does not exist" << endl;
+      cerr << tag + " cannot be removed from " << file->getName() << " : Tag Does not exist" << endl;
     }
     
     /*Remove tag from Finode*/
@@ -277,7 +276,7 @@ void FileSystem::untagFile(FileInfo* file, vector<string>& tags)
     tagTree->erase(file->getName());
     
     /*Note Tag Tree was modified*/
-    insertModification(it->second);
+    insertModification(tagTree);
   }
   
   /*if removed all Tags from file, add default tag*/
@@ -300,9 +299,8 @@ FileInfo* FileSystem::createFile(string filename, vector<string>& tags)
   newblknum = _myPartitionManager->getFreeDiskBlock();
   
   FileInfo* newFile = new FileInfo(filename, newblknum, _myPartitionManager);
-  //   - If tag not given then add file to "default" tag tree
-  //   * File remains in default tag tree until a non-default tag is associated with file
-  
+  /* If no tag was specified then add file to "default" tag tree
+   * File remains in default tag tree until a non-default tag is associated with file*/
   if(tags.size() == 0)
   {
     vector<string> temp;
@@ -323,23 +321,17 @@ FileInfo* FileSystem::createFile(string filename, vector<string>& tags)
 
 void FileSystem::deleteFile(FileInfo* file)
 {
-  //   NOTE: File will be referenced by Finode block number(fidentifier)
-  //   - check to make sure file exists, you have a FileInfo*, so file must exist
+  /*Assuming FileInfo* passed from calling code is valid*/
   vector<string> tags;
-  auto fileTags = file->getMap();
-  for(auto it = fileTags->begin(); it != fileTags->end(); it++)//Complexity: number of tags associated with file
+  for(auto tagIt = file->begin(); tagIt != file->end(); tagIt++)
   {
-    tags.push_back(it->first);
+    tags.push_back(tagIt->first);
   }
-  //   - dissasociate all tags from the file (Call untagFile())
+  /*Dissasociate all tags from the file*/
   untagFile(file, tags);
   
-  //   - Free all data blocks
-  //   - Free Finode block on disk
+  /*Delete file from disk*/
   file->del();
-  
-  delete file;
-  file = 0;
 }
 
 int FileSystem::openFile(char *filename, int fnameLen, char mode, int lockId)
@@ -390,7 +382,7 @@ void FileSystem::insertModification(TreeObject* object)
 /*End Helper Functions*/
 void FileSystem::printRoot()
 {
-  for(auto it = _RootTree->getMap()->begin(); it != _RootTree->getMap()->end(); it++)
+  for(auto it = _RootTree->begin(); it != _RootTree->end(); it++)
   {
     cout << "Key: " << it->first << " Value: " << it->second->getBlockNumber() << endl;
   }
@@ -398,13 +390,13 @@ void FileSystem::printRoot()
 
 void FileSystem::printTags()
 {
-  for(auto it = _RootTree->getMap()->begin(); it != _RootTree->getMap()->end(); it++)
+  for(auto it = _RootTree->begin(); it != _RootTree->end(); it++)
   {
     cout << "TagName: " << it->first << " \tBlockNumber: " << it->second->getBlockNumber() << endl;
     
-    for(auto it2 = it->second->getMap()->begin(); it2 != it->second->getMap()->end(); it2++)
+    for(auto it2 = it->second->begin(); it2 != it->second->end(); it2++)
     {
-      cout << "\t FilePath: " << it2->second->mangle() << " \tBlockNumber: " << it2->second->getBlockNumber() << endl;
+      cout << "\t FilePath: " << ((FileInfo*)(it2->second))->mangle() << " \tBlockNumber: " << it2->second->getBlockNumber() << endl;
     }
   }
 }
