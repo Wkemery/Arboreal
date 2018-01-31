@@ -350,25 +350,32 @@ void FileSystem::deleteFile(FileInfo* file)
   file->del();
 }
 
-int FileSystem::openFile(char *filename, int fnameLen, char mode, int lockId)
-{
-  return 0;
-}
-
-int FileSystem::closeFile(int fileDesc)
+int FileSystem::openFile(vector<string>& filePath)
 {return 0;}
 
-int FileSystem::readFile(int fileDesc, char *data, int len)
+void FileSystem::closeFile(int fileDesc)
+{return;}
+
+int FileSystem::readFile(int fileDesc, char* data, int len)
 {return 0;}
 
-int FileSystem::writeFile(int fileDesc, const char *data, int len)
+int FileSystem::writeFile(int fileDesc, const char* data, int len)
 {return 0;}
 
-int FileSystem::appendFile(int fileDesc, char *data, int len)
+int FileSystem::appendFile(int fileDesc, char* data, int len)
 {return 0;}
 
-int FileSystem::seekFile(int fileDesc, int offset, int flag)
+void FileSystem::seekFileAbsolute(int fileDesc, long unsigned int offset)
+{return;}
+
+void FileSystem::seekFileRelative(int fileDesc, long unsigned int offset)
+{return;}
+
+Attributes* FileSystem::getAttributes(vector<string>& filePath)
 {return 0;}
+
+void FileSystem::setAttributes(vector<string>& filePath, Attributes* atts)
+{return;}
 
 void FileSystem::renameFile(vector<string>& originalFilePath, string newFileName)
 {
@@ -385,12 +392,6 @@ void FileSystem::renameFile(vector<string>& originalFilePath, string newFileName
   }
 }
 
-int FileSystem::getAttributes(char *filename, int fnameLen, char* buffer, int flag)
-{return 0;}
-
-int FileSystem::setAttributes(char *filename, int fnameLen, char* buffer, int flag)
-{return 0;}
-
 void FileSystem::writeChanges()
 {
   for(auto it = _modifiedObjects.begin(); it != _modifiedObjects.end(); it++)
@@ -404,41 +405,6 @@ void FileSystem::writeChanges()
 void FileSystem::insertModification(TreeObject* object)
 {
   _modifiedObjects.insert(pair<TreeObject*, int>(object, 0));
-}
-
-/*End Helper Functions*/
-void FileSystem::printRoot()
-{
-  for(auto it = _RootTree->begin(); it != _RootTree->end(); it++)
-  {
-    cout << "Key: " << it->first << " Value: " << it->second->getBlockNumber() << endl;
-  }
-}
-
-void FileSystem::printTags()
-{
-  for(auto it = _RootTree->begin(); it != _RootTree->end(); it++)
-  {
-    cout << "TagName: " << it->first << " \tBlockNumber: " << it->second->getBlockNumber() << endl;
-    
-    for(auto it2 = it->second->begin(); it2 != it->second->end(); it2++)
-    {
-      cout << "\t FilePath: " << ((FileInfo*)(it2->second))->mangle() << " \tBlockNumber: " << it2->second->getBlockNumber() << endl;
-    }
-  }
-}
-
-void FileSystem::printFiles()
-{
-  for(auto it = _allFiles.begin(); it != _allFiles.end(); it++)
-  {
-    cout << "\t FilePath: " << it->second->mangle() << endl;//" \t\tBlockNumber: " << it->second->getBlockNumber() << endl;
-  }
-}
-
-int FileSystem::getFileNameSize()
-{
-  return _myPartitionManager->getFileNameSize();
 }
 
 FileInfo* FileSystem::pathToFile(vector<string>& fullPath)
@@ -480,6 +446,43 @@ FileInfo* FileSystem::pathToFile(vector<string>& fullPath)
   delete temp;
   return (FileInfo*)file;
 }
+
+
+/*End Helper Functions*/
+void FileSystem::printRoot()
+{
+  for(auto it = _RootTree->begin(); it != _RootTree->end(); it++)
+  {
+    cout << "Key: " << it->first << " Value: " << it->second->getBlockNumber() << endl;
+  }
+}
+
+void FileSystem::printTags()
+{
+  for(auto it = _RootTree->begin(); it != _RootTree->end(); it++)
+  {
+    cout << "TagName: " << it->first << " \tBlockNumber: " << it->second->getBlockNumber() << endl;
+    
+    for(auto it2 = it->second->begin(); it2 != it->second->end(); it2++)
+    {
+      cout << "\t FilePath: " << ((FileInfo*)(it2->second))->mangle() << " \tBlockNumber: " << it2->second->getBlockNumber() << endl;
+    }
+  }
+}
+
+void FileSystem::printFiles()
+{
+  for(auto it = _allFiles.begin(); it != _allFiles.end(); it++)
+  {
+    cout << "\t FilePath: " << it->second->mangle() << endl;//" \t\tBlockNumber: " << it->second->getBlockNumber() << endl;
+  }
+}
+
+int FileSystem::getFileNameSize()
+{
+  return _myPartitionManager->getFileNameSize();
+}
+
 
 
 bool operator==(const FileOpen& lhs, const FileOpen& rhs)

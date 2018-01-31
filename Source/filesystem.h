@@ -50,7 +50,6 @@ class FileSystem {
 /******************************************************************************/
   RootTree* _RootTree;
   map<TreeObject*, int> _modifiedObjects;
-  void insertModification(TreeObject* object);
   unordered_multimap<string, FileInfo*> _allFiles;
 
 /******************************************************************************/
@@ -72,16 +71,15 @@ public:
   void writeChanges();
   
   void renameFile(vector<string>& originalFilePath, string newFileName);
-  
-  /*functions to redo*/
-  int openFile(char *filename, int fnameLen, char mode, int lockId);
-  int closeFile(int fileDesc);
-  int readFile(int fileDesc, char *data, int len);
-  int writeFile(int fileDesc, const char *data, int len);
-  int appendFile(int fileDesc, char *data, int len);
-  int seekFile(int fileDesc, int offset, int flag);
-  int getAttributes(char *filename, int fnameLen, char* buffer, int flag);
-  int setAttributes(char *filename, int fnameLen, char* buffer, int flag);
+  int openFile(vector<string>& filePath);
+  void closeFile(int fileDesc);
+  int readFile(int fileDesc, char* data, int len);
+  int writeFile(int fileDesc, const char* data, int len);
+  int appendFile(int fileDesc, char* data, int len);
+  void seekFileAbsolute(int fileDesc, long unsigned int offset);
+  void seekFileRelative(int fileDesc, long unsigned int offset);
+  Attributes* getAttributes(vector<string>& filePath);
+  void setAttributes(vector<string>& filePath, Attributes* atts);
 
   /* IPC Related */
 
@@ -94,6 +92,8 @@ public:
   
 private:
   FileInfo* pathToFile(vector<string>& path);
+  void insertModification(TreeObject* object);
+  
 };
 
 
