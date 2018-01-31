@@ -66,6 +66,7 @@ public:
   void mergeTags(string tag1, string tag2);
   void tagFile(FileInfo* file, vector<string>& tags);
   void untagFile(FileInfo* file, vector<string>& tags);
+  void renameTag(string originalTagName, string newTagName);
   FileInfo* createFile(string filename, vector<string>& tags);
   void deleteFile(FileInfo* file);
   void writeChanges();
@@ -84,7 +85,6 @@ public:
   /* IPC Related */
 
   int getFileNameSize();
-  void listen();
   
   /*DEBUG functions*/
   void printRoot();

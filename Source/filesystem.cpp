@@ -13,7 +13,6 @@
 #include<vector>
 #include<string>
 using namespace std;
-//TO
 bool EncryptionFlag = false;
 
 FileSystem::FileSystem(DiskManager *dm, string fileSystemName)
@@ -272,7 +271,7 @@ void FileSystem::untagFile(FileInfo* file, vector<string>& tags)
     /*Remove tag from Finode*/
     file->erase(tag);
     
-    /*remove Finode from tagTree*/
+    /*Remove Finode from tagTree*/
     tagTree->erase(file->getName());
     
     /*Note Tag Tree was modified*/
@@ -290,6 +289,15 @@ void FileSystem::untagFile(FileInfo* file, vector<string>& tags)
   file->writeOut();
 }
 
+void FileSystem::renameTag(string originalTagName, string newTagName)
+{
+  /* Need to rename the tag in the TagTree itself
+   * Rename this tag in all the places it occurs, ie look at the tagTree's contents and modify each FileInfo*'s tags list
+   * to have the new tag name with it. good thing is the blocknumber doesn't change. nor the pointer. just the key.
+   * Also need to change the name in the root tree as well.
+   * 
+   */
+}
 
 FileInfo* FileSystem::createFile(string filename, vector<string>& tags)
 {
