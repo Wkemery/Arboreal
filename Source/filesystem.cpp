@@ -370,8 +370,23 @@ int FileSystem::appendFile(int fileDesc, char *data, int len)
 int FileSystem::seekFile(int fileDesc, int offset, int flag)
 {return 0;}
 
-int FileSystem::renameFile(char *filename1, int fnameLen1, char *filename2, int fnameLen2)
-{return 0;}
+void FileSystem::renameFile(string originalFilePath, string newFilePath)
+{
+//   /*Rename the file*/
+//   FileInfo* file = _RootTree->find(originalTagName);
+//   tagTree->setName(newTagName);
+//   
+//   /*Change tagName in rootTree*/
+//   _RootTree->erase(originalTagName);
+//   _RootTree->insert(newTagName, tagTree);
+//   
+//   /*Change tagName in every FileInfo object of the tagTree*/
+//   for(auto fileIt = tagTree->begin(); fileIt != tagTree->end(); fileIt++)
+//   {
+//     fileIt->second->erase(originalTagName);
+//     fileIt->second->insert(newTagName, tagTree);
+//   }
+}
 
 int FileSystem::getAttributes(char *filename, int fnameLen, char* buffer, int flag)
 {return 0;}
@@ -428,6 +443,47 @@ int FileSystem::getFileNameSize()
 {
   return _myPartitionManager->getFileNameSize();
 }
+
+FileInfo* FileSystem::pathToFile(vector<string>& fullPath)
+{  
+  if(fullPath.size() == 0)
+  {
+    throw arboreal_logic_error("path must at least have a file name", "FileSystem::pathToFile");
+  }
+  
+  vector<string> path;
+  string filename = fullPath.at(fullPath.size() - 1);
+  
+  if(fullPath.size() == 1)
+  {
+    /*Search default tag tree*/
+    path.push_back("default");
+  }
+  else
+  {
+    /*Search first tag tree for mangled name*/
+    path = fullPath;
+    path.pop_back();
+    filename = fullPath.at(fullPath.size() - 1);
+  }
+  
+  TreeObject* tagTree = _RootTree->find(path[0]);
+  if(tagTree == 0)
+  {
+    throw tag_error(path[0] + "Does not Exist", "FileSystem::pathToFile");
+  }
+  
+  FileInfo* temp = new FileInfo(filename, 0, _myPartitionManager);
+  TreeObject* file = tagTree->find(temp->mangle(path));
+  if(file == 0)
+  {
+    throw file_error("File Does not exist", "FileSystem::pathToFile");
+  }
+  
+  delete temp;
+  return (FileInfo*)file;
+}
+
 
 bool operator==(const FileOpen& lhs, const FileOpen& rhs)
 {

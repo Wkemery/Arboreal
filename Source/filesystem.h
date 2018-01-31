@@ -71,14 +71,15 @@ public:
   void deleteFile(FileInfo* file);
   void writeChanges();
   
+  void renameFile(string originalFilePath, string newFilePath);
   
+  /*functions to redo*/
   int openFile(char *filename, int fnameLen, char mode, int lockId);
   int closeFile(int fileDesc);
   int readFile(int fileDesc, char *data, int len);
   int writeFile(int fileDesc, const char *data, int len);
   int appendFile(int fileDesc, char *data, int len);
   int seekFile(int fileDesc, int offset, int flag);
-  int renameFile(char *filename1, int fnameLen1, char *filename2, int fnameLen2);
   int getAttributes(char *filename, int fnameLen, char* buffer, int flag);
   int setAttributes(char *filename, int fnameLen, char* buffer, int flag);
 
@@ -91,6 +92,8 @@ public:
   void printTags();
   void printFiles();
   
+private:
+  FileInfo* pathToFile(vector<string>& path);
 };
 
 

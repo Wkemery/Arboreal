@@ -26,7 +26,6 @@ public:
   void del(PartitionManager* pm);
 };
 
-
 class Modification
 {
 protected:
