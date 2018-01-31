@@ -81,7 +81,7 @@ void Addition::writeOut(PartitionManager* pm)
   
   _parent->setLastEntry(nextEntry);
   
-  _mod->setIndex(_parent->getLastEntry());
+  _mod->addIndex(_parent, _parent->getLastEntry());
   
   pm->writeDiskBlock(_parent->getLastEntry().blknum, buff);
 }
@@ -95,23 +95,23 @@ void Deletion::writeOut(PartitionManager* pm)
   char* buff = new char[pm->getBlockSize()];
   memset(buff, 0, pm->getBlockSize()); //zero out memory
   
-  if(_mod->getIndex().blknum == 0)
+  if(_mod->getIndex(_parent).blknum == 0)
   {
     cerr << "Tag Tree was never written out. Not really an error, just here for debugging" << endl;
     //NOTE: even though it is just here for debugging don't remove the if, just the printout.
   }
   else
   {        
-    pm->readDiskBlock(_mod->getIndex().blknum, buff);
+    pm->readDiskBlock(_mod->getIndex(_parent).blknum, buff);
       
     /*Zero out name and blocknumber*/
-    memset(buff + _mod->getIndex().offset, 0, pm->getFileNameSize() + sizeof(BlkNumType));
+    memset(buff + _mod->getIndex(_parent).offset, 0, pm->getFileNameSize() + sizeof(BlkNumType));
     
     /*Remove that TagTrees presence on Disk*/
     _mod->del();
     
     /*Write out buff to mod blknum*/
-    pm->writeDiskBlock(_mod->getIndex().blknum, buff);
+    pm->writeDiskBlock(_mod->getIndex(_parent).blknum, buff);
   }
 }
 
@@ -124,9 +124,23 @@ TreeObject::~TreeObject(){}
 
 string TreeObject::getName(){return _name;}
 
-void TreeObject::setIndex(Index index){_index.blknum = index.blknum; _index.offset = index.offset;}
+void TreeObject::setName(string name){_name = name;}
 
-Index TreeObject::getIndex(){return _index;}
+void TreeObject::addIndex(TreeObject* obj, Index index)
+{
+  Index temp{index.blknum, index.offset};
+  _indeces.insert(pair<TreeObject*, Index>(obj, temp));
+}
+
+Index TreeObject::getIndex(TreeObject* obj)
+{
+  auto indexIt = _indeces.find(obj);
+  if(indexIt == _indeces.end())
+  {
+    throw arboreal_logic_error("TreeObject* does not exist in Index map", "TreeObject::getIndex");
+  }
+  return indexIt->second;
+}
 
 BlkNumType TreeObject::getBlockNumber(){return _blockNumber;}
 
@@ -389,7 +403,7 @@ void RootTree::readIn(unordered_multimap<string, FileInfo*>* allFiles, RootTree*
       
       /*Create TagTree object*/
       TagTree* tagTree = new TagTree(tagName, blknum, _myPartitionManager);
-      tagTree->setIndex(currentIndex);
+      tagTree->addIndex(this, currentIndex);
 
       
       /*Insert key and value into tagtree in memory*/
@@ -536,7 +550,7 @@ void TagTree::readIn(unordered_multimap<string, FileInfo*>* allFiles, RootTree* 
       
       /*Create FileInfo object*/
       FileInfo* finode = new FileInfo(fileName, blknum, _myPartitionManager);
-      finode->setIndex(currentIndex);
+      finode->addIndex(this, currentIndex);
 
       
       /*Read in the finode*/

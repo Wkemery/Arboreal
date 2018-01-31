@@ -291,12 +291,20 @@ void FileSystem::untagFile(FileInfo* file, vector<string>& tags)
 
 void FileSystem::renameTag(string originalTagName, string newTagName)
 {
-  /* Need to rename the tag in the TagTree itself
-   * Rename this tag in all the places it occurs, ie look at the tagTree's contents and modify each FileInfo*'s tags list
-   * to have the new tag name with it. good thing is the blocknumber doesn't change. nor the pointer. just the key.
-   * Also need to change the name in the root tree as well.
-   * 
-   */
+  /*Rename the tagTree*/
+  TreeObject* tagTree = _RootTree->find(originalTagName);
+  tagTree->setName(newTagName);
+  
+  /*Change tagName in rootTree*/
+  _RootTree->erase(originalTagName);
+  _RootTree->insert(newTagName, tagTree);
+  
+  /*Change tagName in every FileInfo object of the tagTree*/
+  for(auto fileIt = tagTree->begin(); fileIt != tagTree->end(); fileIt++)
+  {
+    fileIt->second->erase(originalTagName);
+    fileIt->second->insert(newTagName, tagTree);
+  }
 }
 
 FileInfo* FileSystem::createFile(string filename, vector<string>& tags)
@@ -378,7 +386,6 @@ void FileSystem::writeChanges()
     it->first->writeOut();
   }
 }
-
 
 /* Start Helper Functions */
 

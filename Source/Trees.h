@@ -15,9 +15,6 @@ using namespace std;
 #ifndef TREES_H
 #define TREES_H
 
-
-
-
 bool operator ==(Index& lhs, Index& rhs);
 bool operator !=(Index& lhs, Index& rhs);
 
@@ -60,7 +57,7 @@ protected:
   queue<Modification*> _modifications;
   string _name;/*This TreeObject's name*/
   BlkNumType _blockNumber; /*The Blocknumber of the Super block associated with this TreeObject on disk*/
-  Index _index;/*The location(s) of this TreeObject's superblock entry on disk*/
+  unordered_map<TreeObject*, Index> _indeces;/*The location(s) of this TreeObject's superblock entry(s) on disk*/
   Index _lastEntry; /*The Index of the last entry of this TreeObject's data on disk*/
   BlkNumType _startBlock; /*The blocknumber of the start of this TreeObject's data on disk*/
   PartitionManager* _myPartitionManager;
@@ -73,7 +70,7 @@ public:
 /*Accessor Functions*/
   string getName();
   BlkNumType getBlockNumber();
-  Index getIndex();
+  Index getIndex(TreeObject* obj);
   Index getLastEntry();
   BlkNumType getStartBlock();
   size_t size();
@@ -83,7 +80,8 @@ public:
   
 
 /*Modifier Functions*/
-  void setIndex(Index index);
+  void setName(string name);
+  void addIndex(TreeObject* obj, Index index);
   void setLastEntry(Index index);
   void insert(string name, TreeObject* ptr);
   void erase(string name);
