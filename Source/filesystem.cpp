@@ -370,22 +370,19 @@ int FileSystem::appendFile(int fileDesc, char *data, int len)
 int FileSystem::seekFile(int fileDesc, int offset, int flag)
 {return 0;}
 
-void FileSystem::renameFile(string originalFilePath, string newFilePath)
+void FileSystem::renameFile(vector<string>& originalFilePath, string newFileName)
 {
-//   /*Rename the file*/
-//   FileInfo* file = _RootTree->find(originalTagName);
-//   tagTree->setName(newTagName);
-//   
-//   /*Change tagName in rootTree*/
-//   _RootTree->erase(originalTagName);
-//   _RootTree->insert(newTagName, tagTree);
-//   
-//   /*Change tagName in every FileInfo object of the tagTree*/
-//   for(auto fileIt = tagTree->begin(); fileIt != tagTree->end(); fileIt++)
-//   {
-//     fileIt->second->erase(originalTagName);
-//     fileIt->second->insert(newTagName, tagTree);
-//   }
+  
+  /*Rename the file*/
+  FileInfo* file = pathToFile(originalFilePath);
+  file->setName(newFileName);
+  
+  /*Change fileName in every TagTree object associated with the file*/
+  for(auto tagIt = file->begin(); tagIt != file->end(); tagIt++)
+  {
+    tagIt->second->erase(file->getName());
+    tagIt->second->insert(newFileName, file);
+  }
 }
 
 int FileSystem::getAttributes(char *filename, int fnameLen, char* buffer, int flag)

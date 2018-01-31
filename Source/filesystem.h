@@ -71,7 +71,7 @@ public:
   void deleteFile(FileInfo* file);
   void writeChanges();
   
-  void renameFile(string originalFilePath, string newFilePath);
+  void renameFile(vector<string>& originalFilePath, string newFileName);
   
   /*functions to redo*/
   int openFile(char *filename, int fnameLen, char mode, int lockId);
