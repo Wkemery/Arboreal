@@ -887,6 +887,28 @@ void FileInfo::deleteContBlocks(BlkNumType blknum)
   _myPartitionManager->returnDiskBlock(blknum);
 }
 
+void FileInfo::insert(string name, TreeObject* ptr)
+{
+  /*Check for max tags*/
+  unsigned int maxTags = ((_myPartitionManager->getBlockSize() - _myPartitionManager->getFileNameSize() - sizeof(finode) 
+                          - sizeof(BlkNumType)) / sizeof(BlkNumType)) 
+                          + (_myPartitionManager->getBlockSize() / sizeof(BlkNumType));
+
+  if(_myTree.size() >= maxTags)
+  {
+    throw tag_error(_name + " cannot has reached its maximum number of tags", "FileInfo::insert");
+  }
+                
+  auto ret = _myTree.insert(pair<string, TreeObject*>(name, ptr));
+  if(!ret.second)
+  {
+    throw tag_error (_name + " already tagged with " + name, "FileInfo::insert");
+  }
+  
+  /*Write updated Finode superBlock to disk*/
+  this->writeOut();
+}
+
 void FileInfo::insertAddition(TreeObject* add)
 {
   throw arboreal_logic_error("Attempt to call insertAddition on FileInfo object", "FileInfo::insertAddition");

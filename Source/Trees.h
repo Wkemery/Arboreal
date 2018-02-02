@@ -82,7 +82,7 @@ public:
   void setName(string name);
   void addIndex(TreeObject* obj, Index index);
   void setLastEntry(Index index);
-  void insert(string name, TreeObject* ptr);
+  virtual void insert(string name, TreeObject* ptr);
   void erase(string name);
   void erase(unordered_map<string, TreeObject*>::iterator item);
   virtual void insertAddition(TreeObject* add);
@@ -117,6 +117,7 @@ public:
   /*Function Overrides*/
   void writeOut();
   void readIn(unordered_multimap<string, FileInfo*>* allFiles, RootTree* rootTree);
+  void insert(string name, TreeObject* ptr);
   void del();
   void deleteContBlocks(BlkNumType blknum);
   void insertAddition(TreeObject* add);

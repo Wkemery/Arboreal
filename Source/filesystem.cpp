@@ -189,7 +189,6 @@ void FileSystem::mergeTags(string tag1, string tag2)
 
 void FileSystem::tagFile(FileInfo* file, vector<string>& tags)
 {
-  //for all tags in the vector
   /*Validate the tagging of this file first*/
   if(tags.size() == 0) {throw tag_error("No tags specified","FileSystem::tagFile");}
   if(file == 0) {throw file_error ("File Does not Exist", "FileSystem::tagFile");}
@@ -244,10 +243,6 @@ void FileSystem::tagFile(FileInfo* file, vector<string>& tags)
   {
     file->erase("default");
   }
-  
-  /*write updated Finode superBlock to disk*/
-  file->writeOut();
-  
 }
 
 void FileSystem::untagFile(FileInfo* file, vector<string>& tags)
