@@ -15,6 +15,15 @@
 using namespace std;
 bool EncryptionFlag = false;
 
+FileOpen::FileOpen(FileInfo* file, char mode): _file(file), _mode(mode)
+{
+  _seek = file->getLastEntry();
+}
+
+FileInfo* FileOpen::getFile(){return _file;}
+Index FileOpen::getSeek(){return _seek;}
+char FileOpen::getMode(){return _mode;}
+
 FileSystem::FileSystem(DiskManager *dm, string fileSystemName)
 {
   _FSName = fileSystemName;
@@ -345,25 +354,45 @@ void FileSystem::deleteFile(FileInfo* file)
   file->del();
 }
 
-int FileSystem::openFile(vector<string>& filePath)
+int FileSystem::openFile(vector<string>& filePath, char mode)
+{
+  /*Find the file*/
+  FileInfo* file = pathToFile(filePath);
+  
+  /*Create a FileOpen object corresponding to this file descriptor*/
+  FileOpen* openFile = new FileOpen(file, mode);
+  
+  /*Add the FileOpen* to the fileOpen table*/
+  _fileOpenTable.push_back(openFile);
+  
+  /*Return the index of the FileOpen* in the fileopen table*/
+  return _fileOpenTable.size() - 1;
+}
+
+void FileSystem::closeFile(unsigned int fileDesc)
+{
+  if(fileDesc >= _fileOpenTable.size())
+  {
+    throw file_error("Invalid file descriptor", "FileSystem::closeFile");
+  }
+  
+  /*Close the File*/
+  _fileOpenTable.erase(_fileOpenTable.begin() + fileDesc);
+}
+
+long unsigned int FileSystem::readFile(unsigned int fileDesc, char* data, long unsigned int len)
 {return 0;}
 
-void FileSystem::closeFile(int fileDesc)
+long unsigned int FileSystem::writeFile(unsigned int fileDesc, const char* data, long unsigned int len)
+{return 0;}
+
+long unsigned int FileSystem::appendFile(unsigned int fileDesc, char* data, long unsigned int len)
+{return 0;}
+
+void FileSystem::seekFileAbsolute(unsigned int fileDesc, long unsigned int offset)
 {return;}
 
-int FileSystem::readFile(int fileDesc, char* data, int len)
-{return 0;}
-
-int FileSystem::writeFile(int fileDesc, const char* data, int len)
-{return 0;}
-
-int FileSystem::appendFile(int fileDesc, char* data, int len)
-{return 0;}
-
-void FileSystem::seekFileAbsolute(int fileDesc, long unsigned int offset)
-{return;}
-
-void FileSystem::seekFileRelative(int fileDesc, long unsigned int offset)
+void FileSystem::seekFileRelative(unsigned int fileDesc, long unsigned int offset)
 {return;}
 
 Attributes* FileSystem::getAttributes(vector<string>& filePath)
@@ -477,14 +506,5 @@ int FileSystem::getFileNameSize()
 {
   return _myPartitionManager->getFileNameSize();
 }
-
-
-
-bool operator==(const FileOpen& lhs, const FileOpen& rhs)
-{
-  if((lhs.finodeblk == rhs.finodeblk)) return true;
-  else return false;
-}
-
 
 

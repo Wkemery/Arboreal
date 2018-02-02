@@ -113,7 +113,7 @@ public:
   ~FileInfo();
   string mangle();
   string mangle(vector<string>& tags);
-  
+  Finode* getFinode();
   /*Function Overrides*/
   void writeOut();
   void readIn(unordered_multimap<string, FileInfo*>* allFiles, RootTree* rootTree);

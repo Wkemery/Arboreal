@@ -20,32 +20,22 @@
 #define FILESYSTEM_H
 
 class FileOpen{
+private:
+  FileInfo* _file;
+  Index _seek;
+  char _mode;
 public:
-  int finodeblk;
-  int seek;
-  char mode;
-  
-  FileOpen(int fblk = 0, int sk = 0, int md = 0) : finodeblk(fblk), seek(sk), mode(md) {}
-  FileOpen(const FileOpen& rhs)
-  {
-    finodeblk = rhs.finodeblk;
-    seek = rhs.seek;
-    mode = rhs.mode;
-  }
+  FileOpen(FileInfo* file, char mode);
+  FileInfo* getFile();
+  Index getSeek();
+  char getMode();
 };
-
-bool operator==(const FileOpen& lhs, const FileOpen& rhs);
-
 
 class FileSystem {
   PartitionManager *_myPartitionManager;
   string _FSName;
   
-  
-  unordered_map<int, int> lockIdT;
-  unsigned int numLocks = rand();
-  int open;
-  vector<FileOpen> FOT;   // File open table vector
+  vector<FileOpen*> _fileOpenTable;   // File open table vector
   
 /******************************************************************************/
   RootTree* _RootTree;
@@ -71,13 +61,13 @@ public:
   void writeChanges();
   
   void renameFile(vector<string>& originalFilePath, string newFileName);
-  int openFile(vector<string>& filePath);
-  void closeFile(int fileDesc);
-  int readFile(int fileDesc, char* data, int len);
-  int writeFile(int fileDesc, const char* data, int len);
-  int appendFile(int fileDesc, char* data, int len);
-  void seekFileAbsolute(int fileDesc, long unsigned int offset);
-  void seekFileRelative(int fileDesc, long unsigned int offset);
+  int openFile(vector<string>& filePath, char mode);
+  void closeFile(unsigned int fileDesc);
+  long unsigned int readFile(unsigned int fileDesc, char* data, long unsigned int len);
+  long unsigned int writeFile(unsigned int fileDesc, const char* data, long unsigned int len);
+  long unsigned int appendFile(unsigned int fileDesc, char* data, long unsigned int len);
+  void seekFileAbsolute(unsigned int fileDesc, long unsigned int offset);
+  void seekFileRelative(unsigned int fileDesc, long unsigned int offset);
   Attributes* getAttributes(vector<string>& filePath);
   void setAttributes(vector<string>& filePath, Attributes* atts);
 
