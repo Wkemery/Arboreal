@@ -20,9 +20,12 @@ FileOpen::FileOpen(FileInfo* file, char mode): _file(file), _mode(mode)
   _seek = file->getLastEntry();
 }
 
-FileInfo* FileOpen::getFile(){return _file;}
-Index FileOpen::getSeek(){return _seek;}
-char FileOpen::getMode(){return _mode;}
+void FileOpen::incrementSeek(long unsigned int bytes)
+{
+  //TODO: stub
+}
+
+/***********************************************************************/
 
 FileSystem::FileSystem(DiskManager *dm, string fileSystemName)
 {
@@ -386,14 +389,50 @@ long unsigned int FileSystem::readFile(unsigned int fileDesc, char* data, long u
 long unsigned int FileSystem::writeFile(unsigned int fileDesc, const char* data, long unsigned int len)
 {return 0;}
 
-long unsigned int FileSystem::appendFile(unsigned int fileDesc, char* data, long unsigned int len)
+long unsigned int FileSystem::appendFile(unsigned int fileDesc, const char* data, long unsigned int len)
 {return 0;}
 
 void FileSystem::seekFileAbsolute(unsigned int fileDesc, long unsigned int offset)
-{return;}
+{
+  if(fileDesc >= _fileOpenTable.size())
+  {
+    throw file_error("Invalid file descriptor", "FileSystem::closeFile");
+  }
+  FileOpen* openFile = _fileOpenTable.at(fileDesc);
+  
+  if(offset >= openFile->_file->getFileSize())
+  {
+    /*This is EOF*/
+    openFile->_seek.blknum = 0;
+    openFile->_seek.offset = 0;
+  }
+  else
+  {
+    openFile->_seek.blknum = openFile->_file->getStartBlock();
+    openFile->_seek.offset = 0;
+    openFile->incrementSeek(offset);
+  }
+}
 
 void FileSystem::seekFileRelative(unsigned int fileDesc, long unsigned int offset)
-{return;}
+{
+  if(fileDesc >= _fileOpenTable.size())
+  {
+    throw file_error("Invalid file descriptor", "FileSystem::closeFile");
+  }
+  FileOpen* openFile = _fileOpenTable.at(fileDesc);
+  
+  if(offset >= openFile->_file->getFileSize() - openFile->_byteSeek)
+  {
+    /*This is EOF*/
+    openFile->_seek.blknum = 0;
+    openFile->_seek.offset = 0;
+  }
+  else
+  {
+    openFile->incrementSeek(offset);
+  }
+}
 
 Attributes* FileSystem::getAttributes(vector<string>& filePath)
 {return 0;}

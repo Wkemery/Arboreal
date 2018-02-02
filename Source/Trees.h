@@ -20,6 +20,8 @@ bool operator !=(Index& lhs, Index& rhs);
 
 class Attributes
 {
+private:
+  long unsigned int fileSize;
 public:
   void writeOut(PartitionManager* pm);
   void readIn(PartitionManager* pm);
@@ -114,6 +116,7 @@ public:
   string mangle();
   string mangle(vector<string>& tags);
   Finode* getFinode();
+  long unsigned int getFileSize();
   /*Function Overrides*/
   void writeOut();
   void readIn(unordered_multimap<string, FileInfo*>* allFiles, RootTree* rootTree);

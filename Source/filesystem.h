@@ -20,15 +20,17 @@
 #define FILESYSTEM_H
 
 class FileOpen{
-private:
+public:
   FileInfo* _file;
   Index _seek;
+  long unsigned int _byteSeek;
   char _mode;
-public:
+  
   FileOpen(FileInfo* file, char mode);
   FileInfo* getFile();
   Index getSeek();
   char getMode();
+  void incrementSeek(long unsigned int bytes);
 };
 
 class FileSystem {
@@ -65,7 +67,7 @@ public:
   void closeFile(unsigned int fileDesc);
   long unsigned int readFile(unsigned int fileDesc, char* data, long unsigned int len);
   long unsigned int writeFile(unsigned int fileDesc, const char* data, long unsigned int len);
-  long unsigned int appendFile(unsigned int fileDesc, char* data, long unsigned int len);
+  long unsigned int appendFile(unsigned int fileDesc, const char* data, long unsigned int len);
   void seekFileAbsolute(unsigned int fileDesc, long unsigned int offset);
   void seekFileRelative(unsigned int fileDesc, long unsigned int offset);
   Attributes* getAttributes(vector<string>& filePath);

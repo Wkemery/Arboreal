@@ -921,6 +921,12 @@ void FileInfo::insertDeletion(TreeObject* del)
 
 Finode* FileInfo::getFinode(){return &_myFinode;}
 
+long unsigned int FileInfo::getFileSize()
+{
+  //TODO: stub
+  return 0;
+  
+}
 
 string FileInfo::mangle()
 {
