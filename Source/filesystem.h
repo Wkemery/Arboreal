@@ -24,6 +24,7 @@ public:
   FileInfo* _file;
   long unsigned int _seek;
   char _mode;
+  bool _EOF;
   
   FileOpen(FileInfo* file, char mode);
   FileInfo* getFile();
@@ -32,6 +33,8 @@ public:
   void incrementSeek(long unsigned int bytes);
   Index byteToIndex(PartitionManager* pm);
   void setEOF();
+  void resetSeek();
+  bool getEOF();
 };
 
 class FileSystem {

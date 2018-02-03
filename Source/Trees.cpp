@@ -919,7 +919,7 @@ void FileInfo::insertDeletion(TreeObject* del)
   throw arboreal_logic_error("Attempt to call insertDeletion on FileInfo object", "FileInfo::insertDeletion");
 }
 
-Finode* FileInfo::getFinode(){return &_myFinode;}
+Finode FileInfo::getFinode(){return _myFinode;}
 
 long unsigned int FileInfo::getFileSize()
 {

@@ -17,68 +17,148 @@ bool EncryptionFlag = false;
 
 FileOpen::FileOpen(FileInfo* file, char mode): _file(file), _mode(mode)
 {
-  _seek = file->getLastEntry();
+  _seek = 0;
+  _EOF = false;
 }
 
-FileInfo* getFile(){return _file;}
-long unsigned int getSeek(){return _seek;}
-char getMode(){return _mode;}
+FileInfo* FileOpen::getFile(){return _file;}
+long unsigned int FileOpen::getSeek(){return _seek;}
+char FileOpen::getMode(){return _mode;}
+bool FileOpen::getEOF(){return _EOF;}
 
 void FileOpen::incrementSeek(long unsigned int bytes)
 {
-  _seek += bytes;
-  //TODO: stub
+  if(bytes >= _file->getFileSize() - _seek)
+  {
+    setEOF();
+  }
+  else
+  {
+    _seek += bytes;
+  }
 }
 
 Index FileOpen::byteToIndex(PartitionManager* pm)
 {
-  int entriesInBlock = pm->getBlockSize() / sizeof(BlkNumType);
+  int entriesPerBlock = pm->getBlockSize() / sizeof(BlkNumType);
+  long unsigned int blockIndex = _seek / pm->getBlockSize(); //This will most likely have a remainder. Don't care yet.
   Index ret;
-  ret.offset = _seek % pm->getBlockSize();
-  int blockOffset = _seek/pm->getBlockSize();
+  vector<int> remainders;
   
-  if(blockOffset < 13)
+  ret.offset = _seek % pm->getBlockSize();
+  
+  if(blockIndex < 12)
   {
-    ret.blknum = _file->getFinode().directBlocks[blockOffset];
-  }
-  else if(blockOffset < (entriesInBlock + 13))
-  {
-    char* buff = new char[pm->getBlockSize()];
-    pm->readDiskBlock(_file->getFinode().level1Indirect, buff);
-    
-    memcpy(ret.blknum, buff + (blockOffset * sizeof(BlkNumType)), sizeof(BlkNumType));
-    delete buff;
-  }
-  else if(blockOffset < (entriesInBlock)^2 + 13))
-  {
-    char* buff = new char[pm->getBlockSize()];
-    pm->readDiskBlock(_file->getFinode().level2Indirect, buff);
-    
-    int blockIndex = (blockOffset - entriesInBlock - 12) / entriesInBlock;
-    blockOffset = (blockOffset - entriesInBlock - 12) % entriesInBlock;
-    
-    /*Read in BlockIndex blocknumber*/
-    char* buff2 = new char[pm->getBlockSize()];
-    pm->readDiskBlock(buff + (blockIndex * sizeof(BlkNumType)), buff2);
-    
-    memcpy(ret.blknum, buff2 + (blockOffset * sizeof(BlkNumType)), sizeof(BlkNumType));
-    delete buff;
-    delete buff2;
-  }
-  else if(blockOffset < ((entriesInBlock)^3 + 13))
-  {
-    
+    ret.blknum = _file->getFinode().directBlocks[blockIndex];
   }
   else
   {
-   throw arboreal_logic_error("Error converting byte value to index for file data location", "FileOpen::byteToIndex"); 
+    int levelCount = 0;
+    blockIndex -= 12;
+    while(blockIndex >= entriesPerBlock)
+    {
+      blockIndex /= entriesPerBlock;
+      remainders.push_back(blockIndex % entriesPerBlock);
+      levelCount++;
+    }
+    switch(levelCount)
+    {
+      case 0:
+      {
+        char* buff = new char[pm->getBlockSize()];
+        
+        /*Read in Level 1 indirect block*/
+        if(_file->getFinode().level1Indirect == 0)
+        {
+          throw arboreal_logic_error("Level 1 indirect block does not exist", "FileOpen::byteToIndex");
+        }
+        pm->readDiskBlock(_file->getFinode().level1Indirect, buff);
+  
+        /*blockIndex is the level 1 offest*/
+        BlkNumType blknum;
+        memcpy(&blknum, buff + (blockIndex * sizeof(BlkNumType)), sizeof(BlkNumType));
+        ret.blknum = blknum;
+        break; 
+      }
+      case 1:
+      {
+        char* buff = new char[pm->getBlockSize()];
+        
+        /*Read in Level 2 indirect block*/
+        if(_file->getFinode().level2Indirect == 0)
+        {
+          throw arboreal_logic_error("Level 1 indirect block does not exist", "FileOpen::byteToIndex");
+        }
+        pm->readDiskBlock(_file->getFinode().level3Indirect, buff);
+        
+        /*blockIndex - 1 is the level 2 offset*/
+        BlkNumType l1blknum;
+        memcpy(&l1blknum, buff + ((blockIndex - 1) * sizeof(BlkNumType)), sizeof(BlkNumType));
+        
+        /*Read in Level 1 indirect block*/
+        pm->readDiskBlock(l1blknum, buff);
+        
+        /*remainders[0] is the level 1 offset*/
+        BlkNumType blknum;
+        memcpy(&blknum, buff + (remainders[0] * sizeof(BlkNumType)), sizeof(BlkNumType));
+        
+        ret.blknum = blknum;
+        
+        break;
+      }
+      case 2:
+      {
+        char* buff = new char[pm->getBlockSize()];
+        
+        /*Read in Level 3 indirect block*/
+        if(_file->getFinode().level1Indirect == 0)
+        {
+          throw arboreal_logic_error("Level 1 indirect block does not exist", "FileOpen::byteToIndex");
+        }
+        
+        pm->readDiskBlock(_file->getFinode().level3Indirect, buff);
+        
+        /*blockIndex - 1 is the level 3 offset*/
+        BlkNumType l2blknum;
+        memcpy(&l2blknum, buff + ((blockIndex - 1) * sizeof(BlkNumType)), sizeof(BlkNumType));
+        
+        /*Read in level 2 indirect block*/
+        pm->readDiskBlock(l2blknum, buff);
+        
+        /*remainders[1] - 1 is the level 2 offset*/
+        BlkNumType l1blknum;
+        memcpy(&l1blknum, buff + ((remainders[1] - 1) * sizeof(BlkNumType)), sizeof(BlkNumType));
+        
+        /*Read in Level 1 indirect block*/
+        pm->readDiskBlock(l1blknum, buff);
+        
+        /*remainders[0] is the level 1 offset*/
+        BlkNumType blknum;
+        memcpy(&blknum, buff + (remainders[0] * sizeof(BlkNumType)), sizeof(BlkNumType));
+        
+        ret.blknum = blknum;
+        
+        break;
+      }
+      default:
+      {
+        throw arboreal_logic_error("Invalid level value", "FileOpen::byteToIndex");
+      }
+    }
   }
-  ret.offset = _seek % pm->getBlockSize();
+  return ret;
 }
 
-void setEOF()
+void FileOpen::setEOF()
 {
-  
+  _seek = -1;
+  _EOF = true;
+}
+
+void FileOpen::resetSeek()
+{
+  _seek = 0;
+  _EOF = false;
 }
 
 /***********************************************************************/
@@ -456,18 +536,8 @@ void FileSystem::seekFileAbsolute(unsigned int fileDesc, long unsigned int offse
   }
   FileOpen* openFile = _fileOpenTable.at(fileDesc);
   
-  if(offset >= openFile->_file->getFileSize())
-  {
-    /*This is EOF*/
-    openFile->_seek.blknum = 0;
-    openFile->_seek.offset = 0;
-  }
-  else
-  {
-    openFile->_seek.blknum = openFile->_file->getStartBlock();
-    openFile->_seek.offset = 0;
-    openFile->incrementSeek(offset);
-  }
+  openFile->resetSeek();
+  openFile->incrementSeek(offset);
 }
 
 void FileSystem::seekFileRelative(unsigned int fileDesc, long unsigned int offset)
@@ -478,14 +548,7 @@ void FileSystem::seekFileRelative(unsigned int fileDesc, long unsigned int offse
   }
   FileOpen* openFile = _fileOpenTable.at(fileDesc);
   
-  if(offset >= openFile->getFile()->getFileSize() - openFile->getSeek())
-  {
-    openFile->setEOF;
-  }
-  else
-  {
-    openFile->incrementSeek(offset);
-  }
+  openFile->incrementSeek(offset);
 }
 
 Attributes* FileSystem::getAttributes(vector<string>& filePath)
