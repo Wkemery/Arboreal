@@ -22,15 +22,16 @@
 class FileOpen{
 public:
   FileInfo* _file;
-  Index _seek;
-  long unsigned int _byteSeek;
+  long unsigned int _seek;
   char _mode;
   
   FileOpen(FileInfo* file, char mode);
   FileInfo* getFile();
-  Index getSeek();
+  long unsigned int getSeek();
   char getMode();
   void incrementSeek(long unsigned int bytes);
+  Index byteToIndex(PartitionManager* pm);
+  void setEOF();
 };
 
 class FileSystem {

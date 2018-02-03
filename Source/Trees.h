@@ -115,7 +115,7 @@ public:
   ~FileInfo();
   string mangle();
   string mangle(vector<string>& tags);
-  Finode* getFinode();
+  Finode getFinode();
   long unsigned int getFileSize();
   /*Function Overrides*/
   void writeOut();

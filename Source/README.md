@@ -43,7 +43,7 @@ possible tag cont. block = sizeof(blknumType)
 1. filename size restricted to no more than 1/2 block size
 2. block size should be a power of 2
 3. Hard cap on the number of tags that can be associated with a file. = (((blocksize - filenamesize - 136) / sizeof(BlkNumType)) + (blocksize / sizeof(BlkNumType)). 103 tags for blocksize of 512. and 64b filename
-4. 
+4. max block size = 16k
 
 **TODO:**
 1. Incorporate storing number of tags associated with file in Tag tree on disk, not yet

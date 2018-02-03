@@ -20,9 +20,65 @@ FileOpen::FileOpen(FileInfo* file, char mode): _file(file), _mode(mode)
   _seek = file->getLastEntry();
 }
 
+FileInfo* getFile(){return _file;}
+long unsigned int getSeek(){return _seek;}
+char getMode(){return _mode;}
+
 void FileOpen::incrementSeek(long unsigned int bytes)
 {
+  _seek += bytes;
   //TODO: stub
+}
+
+Index FileOpen::byteToIndex(PartitionManager* pm)
+{
+  int entriesInBlock = pm->getBlockSize() / sizeof(BlkNumType);
+  Index ret;
+  ret.offset = _seek % pm->getBlockSize();
+  int blockOffset = _seek/pm->getBlockSize();
+  
+  if(blockOffset < 13)
+  {
+    ret.blknum = _file->getFinode().directBlocks[blockOffset];
+  }
+  else if(blockOffset < (entriesInBlock + 13))
+  {
+    char* buff = new char[pm->getBlockSize()];
+    pm->readDiskBlock(_file->getFinode().level1Indirect, buff);
+    
+    memcpy(ret.blknum, buff + (blockOffset * sizeof(BlkNumType)), sizeof(BlkNumType));
+    delete buff;
+  }
+  else if(blockOffset < (entriesInBlock)^2 + 13))
+  {
+    char* buff = new char[pm->getBlockSize()];
+    pm->readDiskBlock(_file->getFinode().level2Indirect, buff);
+    
+    int blockIndex = (blockOffset - entriesInBlock - 12) / entriesInBlock;
+    blockOffset = (blockOffset - entriesInBlock - 12) % entriesInBlock;
+    
+    /*Read in BlockIndex blocknumber*/
+    char* buff2 = new char[pm->getBlockSize()];
+    pm->readDiskBlock(buff + (blockIndex * sizeof(BlkNumType)), buff2);
+    
+    memcpy(ret.blknum, buff2 + (blockOffset * sizeof(BlkNumType)), sizeof(BlkNumType));
+    delete buff;
+    delete buff2;
+  }
+  else if(blockOffset < ((entriesInBlock)^3 + 13))
+  {
+    
+  }
+  else
+  {
+   throw arboreal_logic_error("Error converting byte value to index for file data location", "FileOpen::byteToIndex"); 
+  }
+  ret.offset = _seek % pm->getBlockSize();
+}
+
+void setEOF()
+{
+  
 }
 
 /***********************************************************************/
@@ -422,11 +478,9 @@ void FileSystem::seekFileRelative(unsigned int fileDesc, long unsigned int offse
   }
   FileOpen* openFile = _fileOpenTable.at(fileDesc);
   
-  if(offset >= openFile->_file->getFileSize() - openFile->_byteSeek)
+  if(offset >= openFile->getFile()->getFileSize() - openFile->getSeek())
   {
-    /*This is EOF*/
-    openFile->_seek.blknum = 0;
-    openFile->_seek.offset = 0;
+    openFile->setEOF;
   }
   else
   {
