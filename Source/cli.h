@@ -27,19 +27,15 @@
 #include <sys/un.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
+#include "ErrorClass.h"
 
 
 #define MAX_HISTORY_SIZE 10
 #define MAX_COMAND_SIZE 2048
 #define SHMSZ 1
-
-
-struct CLI_EX
-{
-    std::string where;
-    std::string what;
-    std::string why;
-};
+#define PERMISSIONS 0666
+#define FLAG 0
+#define DEBUG false
 
 
 class CLI
@@ -55,21 +51,19 @@ public:
     void run();
     char* build(int id, std::string input);
     void send_cmnd(char* command);
-    int receive();
+    void await_response();
 private:
     std::string is_script;
     std::string my_pid;
-    std::string client_socket_path;
-    std::string server_socket_path;
+    std::string client_sockpath;
+    std::string server_sockpath;
     int max_string_size;
-    int shm_id;
     char* my_partition;
-    char* shared_mem;
 
-    int client_sock, rc, len;
+    int client_sock;
     struct sockaddr_un server_sockaddr;
     struct sockaddr_un client_sockaddr;
-    bool dbug = false;
+    bool dbug = true;
 };
 
 #endif

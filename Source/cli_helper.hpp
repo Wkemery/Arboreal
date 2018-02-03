@@ -91,15 +91,6 @@ void print_help()
     std::cout << "Arboreal >> ";
 } 
 //[================================================================================================]
-
-
-
-
-
-
-
-
-
 //[================================================================================================]
 // Used by CLI Process:
 // 
@@ -118,10 +109,7 @@ void print_header()
     std::cout << "Arboreal >> ";
 }
 //[================================================================================================]
-
-
-
-
+//[================================================================================================]
 const char* build_pipe_path()
 {
     char* buff = nullptr;
@@ -132,10 +120,44 @@ const char* build_pipe_path()
 
     return pipe_path.c_str();
 }
+//[================================================================================================]
+//[================================================================================================]
+void delete_shm(int shm_id, char* shm)
+{
+    if(shmdt(shm) == -1)
+    {
+        throw ERR(1,SHM_DET_ERR,129);
+    }
 
+    if(shmctl(shm_id, IPC_RMID, NULL) == -1)
+    {
+        throw ERR(1,SHM_RMV_ERR,134);
+    }
+}
+//[================================================================================================]
+//[================================================================================================]
+char* create_shm_seg(key_t key, int& id)
+{
+    int shm_id;
+    char*  shm;
 
+    /* Create Shared Memory Segment for Blocking */
+    if ((shm_id = shmget(key, SHMSZ, IPC_CREAT | PERMISSIONS)) < 0) 
+    {
+       throw ERR(1,SHM_GET_ERR, 147);
+    }
 
+    /* Attach the shared memory to this process so the CLI can access it */
+    if ((shm = (char*)shmat(shm_id, NULL, 0)) == (char *) -1) 
+    {
+       throw ERR(1,SHM_ATT_ERR,153);
+    }
 
+    id = shm_id;
+
+    return shm;
+}
+//[================================================================================================]
 //[================================================================================================]
 // Used by CLI::build()
 // 
@@ -150,18 +172,9 @@ void print_buffer(char* buff, int size)
     {
         std::cout << buff[i];
     }
-    std::cout << std::endl << std::endl;
+    std::cout << std::endl;
 }
 //[================================================================================================]
-
-
-
-
-
-
-
-
-
 //[================================================================================================]
 /* Used by CLI::build()
  *
@@ -192,14 +205,6 @@ bool check_buffer(char* buff, int size)
     return true;
 }
 //[================================================================================================]
-
-
-
-
-
-
-
-
 //[================================================================================================]
 /* Used by CLI::build()
  *
@@ -249,14 +254,6 @@ void check_buffer_partitioning(char* buffer,int size)
 
 }
 //[================================================================================================]
-
-
-
-
-
-
-
-
 //[================================================================================================]
 // Used by CLI::build()
 // 
@@ -291,36 +288,6 @@ void fix_buffer(char* buff,int size)
     std::cout << ".............................................\n";
 }
 //[================================================================================================]
-
-
-
-
-
-
-
-
-//[================================================================================================]
-// Used by CLI::build()
-// 
-// Zero out a buffer
-void zero_buffer(char* buff, int size)
-{
-    for(unsigned int i = 0; i < size; i++)
-    {
-        buff[i] = '\0';
-    }
-}
-//[================================================================================================]
-
-
-
-
-
-
-
-
-
-
 //[================================================================================================]
 // Used by CLI::build()
 // 
@@ -339,10 +306,70 @@ int get_cmnd_id(char* cmnd)
 }
 //[================================================================================================]
 
+int set_up_socket(std::string client_sockpath, struct sockaddr_un& client_sockaddr)
+{
+    int client_sock = socket(AF_UNIX, SOCK_STREAM, 0);
+    if(client_sock == -1)
+    {
+        throw ERR(1,SOK_CRT_ERR,314);
+    }
+
+    client_sockaddr.sun_family = AF_UNIX;   
+    strcpy(client_sockaddr.sun_path, client_sockpath.c_str()); 
+    socklen_t len = sizeof(client_sockaddr);
+
+    unlink(client_sockpath.c_str());
+
+    if(bind(client_sock, (struct sockaddr *) &client_sockaddr, len) < 0)
+    {
+        if(close(client_sock) < 0) throw ERR(1,SOK_CLOSE_ERR,333);
+        if(unlink(client_sockpath.c_str()) < 0) throw ERR(1,SOK_UNLNK_ERR,334);
+        throw ERR(1,SOK_BND_ERR,332);
+    }
+
+    return client_sock;
+}
 
 
+void connect_to_server(int client_sock, std::string client_sockpath, 
+    std::string server_sockpath, struct sockaddr_un& server_sockaddr, socklen_t len)
+{
+    server_sockaddr.sun_family = AF_UNIX;
+    strcpy(server_sockaddr.sun_path, server_sockpath.c_str());
+
+    if(connect(client_sock, (struct sockaddr *) &server_sockaddr, len) < 0)
+    {
+        if(close(client_sock) < 0) throw ERR(1,SOK_CLOSE_ERR,345);
+        if(unlink(client_sockpath.c_str()) < 0) throw ERR(1,SOK_UNLNK_ERR,346);
+        throw ERR(1,SOK_CNNCT_ERR,347);
+    }
+}
 
 
+void send_to_server(int client_sock, std::string client_sockpath, char* cmnd, int size, int flag)
+{              
+    if(send(client_sock, cmnd, size, flag) < 0) 
+    {
+        if(close(client_sock) < 0) throw ERR(1,SOK_CLOSE_ERR,356);
+        if(unlink(client_sockpath.c_str()) < 0) throw ERR(1,SOK_UNLNK_ERR,357);
+        throw ERR(1,SOK_SEND_ERR,358);
+    }   
+}
+
+
+char* receive_from_server(int client_sock, std::string client_sockpath, int size, int flag)
+{
+    char* data = new char[MAX_COMAND_SIZE];
+    memset(data, '\0', MAX_COMAND_SIZE);
+
+    if(recv(client_sock, data, size, flag) < 0) 
+    {
+        if(close(client_sock) < 0) throw ERR(1,SOK_CLOSE_ERR,370);
+        if(unlink(client_sockpath.c_str()) < 0) throw ERR(1,SOK_UNLNK_ERR,371);
+        throw ERR(1,SOK_RECV_ERR,372);
+    }   
+    return data;
+}
 
 
 
@@ -405,6 +432,8 @@ void write_to_cmnd(char* cmnd, std::string input, int offset, int version, int m
                 offset += max_string_size;
             }
         }
+        std::cout << "Command: ";
+        print_buffer(cmnd, MAX_COMAND_SIZE);
     }
 //[================================================================================================]
 

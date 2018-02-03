@@ -16,62 +16,24 @@ bool server_up = false;
 
 int main(int argc, char** argv)
 {
-    if(argc < 2 || argc >= 5)
-    {
-        std::cerr << "Ivalid Argument Count\n";
-        return 0;
-    }
-    if(argc == 4)
-    {
-        try
-        {
-            CLI cli(argv,argv[2],true);
-        }
-        catch(CLI_EX err)
-        {
-            std::cerr << err.what;
-            std::cerr << err.why;
-            exit(1);
-        }
-    }
-    else if(argc == 3 && !strncmp(argv[2],"-d",sizeof("-d")))
-    {
-        try
-        {
-            CLI cli(argv,argv[2]);
-        }
-        catch(CLI_EX err)
-        {
-            std::cerr << err.what;
-            std::cerr << err.why;
-            exit(1);
-        }
-    }
-    else if(argc == 3 && strncmp(argv[2],"-d",sizeof("-d")))
-    {
-        try
-        {
-            CLI cli(argv,true);
-        }
-        catch(CLI_EX err)
-        {
-            std::cerr << err.what;
-            std::cerr << err.why;
-            exit(1);
-        }
-    }
-    else
+    if(argc == 2)
     {
         try
         {
             CLI cli(argv);
         }
-        catch(CLI_EX err)
+        catch(ERR err)
         {
             std::cerr << err.what;
             std::cerr << err.why;
+            std::cerr << err.where;
             exit(1);
         }
     }
+    else
+    {
+        std::cerr << "Invalid Arg Count - Must define a partition on which to initialize the command line interface\n";
+    }
+    std::cout << "C: Command Line Interface Quit Successfully; Goodbye" << std::endl << std::endl;
     return 0;
 }

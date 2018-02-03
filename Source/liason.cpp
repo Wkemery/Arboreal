@@ -25,185 +25,123 @@
 #include <sys/un.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
-#include "liason_helper.hpp"
+#include <chrono>
+#include <ctime>
+#include "ErrorClass.h"
+
 
 
 #define PERMISSIONS 0666
 #define MAX_COMMAND_SIZE 2048
 #define SHMSZ 1
-
-struct LSON_EX
-{
-    std::string what;
-    std::string why;
-    std::string where;
-};
-
+#define BACKLOG 10
+#define FLAG 0
+#include "liason_helper.hpp"
 
 int main(int argc, char** argv)
 {
-    int max_string_size = 64;
-    std::string server_path = argv[0];
-    std::string client_path = argv[1];
-    std::string shared_mem_id = argv[2];
+    //int max_string_size = 64;
+    
+    bool dbug = true;
 
-    std::cout << "LSON: " << server_path << std::endl;
-    std::cout << "LSON: " << client_path << std::endl;
-    std::cout << "LSON: " << shared_mem_id << std::endl;
+    if(dbug) std::cout << "L: Beginning Liaison Process..." << std::endl;
+    std::string client_sockpath = argv[0];
+    std::string server_sockpath = argv[1];
+    if(dbug) std::cout << "L: Client Socket Path: " << client_sockpath << std::endl;
+    if(dbug) std::cout << "L: Server Socket Path: " << server_sockpath << std::endl;
 
-
-/* Set up Shared Mem for flags */
+    key_t shm_key = atoi(argv[2]);
     int shm_id;
-    key_t shm_key = atoi(shared_mem_id.c_str());
-    char *shm, *s;
+    if(dbug) std::cout << "L: Shared Memory Key: " << shm_key << std::endl;
+    if(dbug) std::cout << "-----------------------------------------------------------------" << std::endl;
 
-    if((shm_id = shmget(shm_key, SHMSZ, IPC_CREAT | PERMISSIONS)) < 0) {
-        perror("shmget");
-        exit(1);
-    }
+    if(dbug) std::cout << "L: Accessing Shared Memory For Interprocess Synchronization..." << std::endl;
+    char* shm = get_shm_seg(shm_key,shm_id);
+    if(dbug) std::cout << "L: Shared Memory Found; Attachment Successfull" << std::endl;
 
-    if ((shm = (char*)shmat(shm_id, NULL, 0)) == (char *) -1) {
-        perror("shmat");
-        exit(1);
-    }
-    s = shm;
-    s[0] = 0;
-
-
-    /* Set up socket */
-
-    int server_sock, client_sock, len, rc;
-    int bytes_rec = 0;
+    if(dbug) std::cout << "L: Initializing Server and Client Socket Addresses..." << std::endl;
     struct sockaddr_un server_sockaddr;
-    struct sockaddr_un client_sockaddr;     
-    char buf[MAX_COMMAND_SIZE];
-    int backlog = 10;
-    memset(&server_sockaddr, '\0', sizeof(struct sockaddr_un));
-    memset(&client_sockaddr, '\0', sizeof(struct sockaddr_un));
-    memset(buf, '\0', MAX_COMMAND_SIZE);  
+    struct sockaddr_un client_sockaddr;  
 
-    server_sock = socket(AF_UNIX, SOCK_STREAM, 0);
-    if (server_sock == -1){
-        printf("LIASON: SOCKET ERROR: %d\n", errno);
-        exit(1);
-    }
+    memset(&server_sockaddr, 0, sizeof(struct sockaddr_un));
+    memset(&client_sockaddr, 0, sizeof(struct sockaddr_un));
+    if(dbug) std::cout << "L: Server and Client Socket Address Initilization Successfull" << std::endl;
+    if(dbug) std::cout << "L: Setting Up Server Socket..." << std::endl;
+    int server_sock = set_up_socket(server_sockpath,server_sockaddr);
+    if(dbug) std::cout << "L: Server Socket Set Up Successfull" << std::endl;
+    if(dbug) std::cout << "L: Signaling Client..." << std::endl;
+    shm[0] = 1;
 
-    server_sockaddr.sun_family = AF_UNIX;   
-    strcpy(server_sockaddr.sun_path, server_path.c_str()); 
-    len = sizeof(server_sockaddr);
-    
-    unlink(server_path.c_str());
 
-    rc = bind(server_sock, (struct sockaddr *)&server_sockaddr, len);
-    if (rc == -1){
-        printf("LIASON: BIND ERROR: %d\n", errno);
-        close(server_sock);
-        exit(1);
-    }
+    if(dbug) std::cout << "L: Waiting For Permission To Continue..." << std::endl;
+    if(dbug) std::cout << "-----------------------------------------------------------------" << std::endl << std::endl;
+    while(shm[0] == 1);
+    if(dbug) std::cout << "L: Permission Received" << std::endl;
+    if(dbug) std::cout << "L: Unattatching Shared Memory Segment..." << std::endl;
+    unat_shm(shm_id,shm);
+    if(dbug) std::cout << "L: Shared Memory Succesfully Unattatched" << std::endl;
 
-    s[0] = 1;
+    if(dbug) std::cout << "L: Listening For Clients..." << std::endl;
+    listen_for_client(server_sock,server_sockpath);
+    if(dbug) std::cout << "L: Client Found" << std::endl;
 
-    while(true)
+    if(dbug) std::cout << "L: Accepting Client Connection..." << std::endl;
+    socklen_t length = sizeof(server_sockaddr);
+    int client_sock = accept_client(server_sock,client_sockaddr,length,server_sockpath);
+    if(dbug) std::cout << "L: Client Connection Accepted" << std::endl;
+    if(dbug) std::cout << "L: Retrieving Client Peername..." << std::endl;
+    get_peername(client_sock,client_sockaddr,server_sock,server_sockpath);
+    if(dbug) std::cout << "L: Client Peername Retrieved Successfully: " << client_sockaddr.sun_path << std::endl;
+
+
+    do
     {
-        std::cout << "Shared Mem[2]: " << (int)s[2] << std::endl;
-        rc = listen(server_sock, backlog);
-        if (rc == -1){ 
-            printf("LIASON: LISTEN ERROR: %d\n", errno);
-            close(server_sock);
-            exit(1);
-        }
-        printf("Liason: socket listening...\n\n\n");
     
-        client_sock = accept(server_sock, (struct sockaddr *)&client_sockaddr, (socklen_t*)&len);
-        if (client_sock == -1){
-            printf("LIASON: ACCEPT ERROR: %d\n", errno);
-            close(server_sock);
-            close(client_sock);
-            exit(1);
-        }
+        if(dbug) std::cout << "L: Awaiting Command From Client..." << std::endl;
+        char* msg = recv_msg(client_sock,MAX_COMMAND_SIZE,FLAG,server_sock,server_sockpath,client_sockpath);
+        if(dbug) std::cout << "L: Client Command Received Successfully" << std::endl;
+        if(dbug) std::cout << "L: Command Received From: " << client_sock << " @ " << client_sockpath << std::endl;
+        if(dbug) std::cout << "L: Command: ";
+        if(dbug) print_cmnd(msg,MAX_COMMAND_SIZE);
+        if(get_cmnd_id(msg) == 999) break;
     
-        len = sizeof(client_sockaddr);
-        rc = getpeername(client_sock, (struct sockaddr *) &client_sockaddr, (socklen_t*)&len);
-        if (rc == -1){
-            printf("LIASON: GETPEERNAME ERROR: %d\n", errno);
-            close(server_sock);
-            close(client_sock);
-            exit(1);
-        }
-        else {
-            printf("Liason: Client socket filepath: %s\n", client_sockaddr.sun_path);
-        }
     
-        printf("liason: waiting to read...\n");
-        bytes_rec = recv(client_sock, buf, sizeof(buf), 0);
-        if (bytes_rec == -1){
-            printf("LIASON: RECV ERROR: %d\n", errno);
-            close(server_sock);
-            close(client_sock);
-            exit(1);
-        }
-        else
-        {
-            std::cout << "Liason: Data Received:\n";
-
-            int cmnd_val = get_cmnd_id(buf);
-            std::cout << "Command ID: " << cmnd_val << std::endl;
-            std::cout << "Command Data: ";
-            char temp[max_string_size];
-            int temp_index = 0;
-            for(unsigned int i = sizeof(int); i < MAX_COMMAND_SIZE; i++)
-            {
-                if(i%64 != 0)
-                {
-                    temp[temp_index] = buf[i];
-                    temp_index += 1;
-                }
-                else
-                {
-                    std::string data = temp;
-                    if(data == "quit")
-                    {
-                        std::cout << "QUIT\n";
-                        std::cout << "Liason: Closing Connections\n";
-                        close(server_sock);
-                        close(client_sock);
-                        unlink(client_path.c_str());
-                        unlink(server_path.c_str());
-                        close(shm_id);
-                        clean_segments();
-                        return 0;
-                    }
-                    std::cout << data << std::endl;
-                    memset(temp,'\0',max_string_size);
-                    temp_index = 0;
-                }
-            }
-            std::cout << "\n\n\n";
-
-        }
+        //if(dbug) std::cout << "L: Sending Command to File System..." << std::endl;
+        //
+        //  TO DO:
+        //          Rebuild Commands For FS
+        //          Send To Daemon
+        //          Await Response
+        //          Send Response To CLI
+        //          ReWrite As Loop
+        //          
+        
     
-        memset(buf, '\0', MAX_COMMAND_SIZE);
-        strcpy(buf, "Command Received\n");      
-        printf("Liason: Sending data...\n");
-        rc = send(client_sock, buf, strlen(buf), 0);
-        if (rc == -1) {
-            printf("LIASON: SEND ERROR: %d", errno);
-            close(server_sock);
-            close(client_sock);
-            exit(1);
-        }   
-        else {
-            printf("Liason: Data sent!\n");
-        }
+        if(dbug) std::cout << "L: Building Response..." << std::endl;
+        auto end = std::chrono::system_clock::now();
+        std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+        std::string data = "Command Received @ ";
+        data += std::ctime(&end_time);
+        memset(msg,'\0', MAX_COMMAND_SIZE);
+        memcpy(msg,data.c_str(),data.length()); 
+        if(dbug) std::cout << "L: Response Built Successfully" << std::endl;
 
-    }
+        if(dbug) std::cout << "L: Sending Response to Client..." << std::endl;
+        send_response(client_sock,msg,MAX_COMMAND_SIZE,FLAG,server_sock,server_sockpath,client_sockpath);
+        if(dbug) std::cout << "L: Response Successfully Sent" << std::endl;
+        if(dbug) std::cout << "L: Response Sent To: " << client_sock << " @ " << client_sockpath << std::endl;
 
-    std::cout << "Liason: Closing Connections\n";
-    close(server_sock);
-    close(client_sock);
-    unlink(client_path.c_str());
-    unlink(server_path.c_str());
+    }while(true);
 
+
+
+
+    if(dbug) std::cout << "L: Closing Connections..." << std::endl;
+    if(close(server_sock) < 0) throw ERR(2,SOK_CLOSE_ERR,112);
+    if(dbug) std::cout << "L: Server Socket Successfully Closed" << std::endl;
+    if(unlink(server_sockpath.c_str()) < 0) throw ERR(2,SOK_UNLNK_ERR,114);
+    if(dbug) std::cout << "L: Server Socket Successfully Removed" << std::endl;
+    if(dbug) std::cout << "L: Liaison Process Closing; Goodbye" << std::endl;
     return 0;
 }
 
