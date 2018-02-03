@@ -99,6 +99,7 @@ void CLI::start()
    if(dbug) std::cout << "C: Creating a Shared Memory Segment For Inter-Process Synchronization" << std::endl;
    char* shm = create_shm_seg(shm_key,shm_id);
    if(dbug) std::cout << "C: Shared Memory Segment Creation Successfull" << std::endl;
+   shm[0] = 0;
 
    if(dbug) std::cout << "C: Initiating Liason Process Fork..." << std::endl;
    pid_t pid = fork();

@@ -69,26 +69,28 @@ int main(int argc, char** argv)
     if(dbug) std::cout << "L: Setting Up Server Socket..." << std::endl;
     int server_sock = set_up_socket(server_sockpath,server_sockaddr);
     if(dbug) std::cout << "L: Server Socket Set Up Successfull" << std::endl;
-    if(dbug) std::cout << "L: Signaling Client..." << std::endl;
+    if(dbug) std::cout << "L: Signaling Client" << std::endl;
+
     shm[0] = 1;
 
-
-    if(dbug) std::cout << "L: Waiting For Permission To Continue..." << std::endl;
+    if(dbug) std::cout << "L: Listening On Server Socket..." << std::endl;
+    listen_for_client(server_sock,server_sockpath);
+    if(dbug) std::cout << "L: Accepting Client Connections..." << std::endl;
     if(dbug) std::cout << "-----------------------------------------------------------------" << std::endl << std::endl;
-    while(shm[0] == 1);
-    if(dbug) std::cout << "L: Permission Received" << std::endl;
+
+    socklen_t length = sizeof(server_sockaddr);
+    int client_sock;
+    while(shm[0] == 1)
+    {
+        client_sock = accept_client(server_sock,client_sockaddr,length,server_sockpath);
+    }
+    if(dbug) std::cout << "L: Client Connection Accepted" << std::endl;
+
+
     if(dbug) std::cout << "L: Unattatching Shared Memory Segment..." << std::endl;
     unat_shm(shm_id,shm);
     if(dbug) std::cout << "L: Shared Memory Succesfully Unattatched" << std::endl;
 
-    if(dbug) std::cout << "L: Listening For Clients..." << std::endl;
-    listen_for_client(server_sock,server_sockpath);
-    if(dbug) std::cout << "L: Client Found" << std::endl;
-
-    if(dbug) std::cout << "L: Accepting Client Connection..." << std::endl;
-    socklen_t length = sizeof(server_sockaddr);
-    int client_sock = accept_client(server_sock,client_sockaddr,length,server_sockpath);
-    if(dbug) std::cout << "L: Client Connection Accepted" << std::endl;
     if(dbug) std::cout << "L: Retrieving Client Peername..." << std::endl;
     get_peername(client_sock,client_sockaddr,server_sock,server_sockpath);
     if(dbug) std::cout << "L: Client Peername Retrieved Successfully: " << client_sockaddr.sun_path << std::endl;
@@ -113,8 +115,6 @@ int main(int argc, char** argv)
         //          Send To Daemon
         //          Await Response
         //          Send Response To CLI
-        //          ReWrite As Loop
-        //          
         
     
         if(dbug) std::cout << "L: Building Response..." << std::endl;
