@@ -21,11 +21,28 @@ bool operator !=(Index& lhs, Index& rhs);
 class Attributes
 {
 private:
-  long unsigned int fileSize;
+  FileAttributes _atts;
+  BlkNumType _blockNumber;
+  PartitionManager* _myPartitionManager;
 public:
-  void writeOut(PartitionManager* pm);
-  void readIn(PartitionManager* pm);
-  void del(PartitionManager* pm);
+  Attributes(BlkNumType blknum, PartitionManager* pm);
+  void writeOut();
+  void readIn();
+  void del();
+  void setCreationTime();
+  void setOwner(int owner);
+  void setPermissions(char* perms);
+  void setAccess();
+  void setEdit();
+  void incrementSize(size_t size);
+  
+  /*Accessor Functions*/
+  time_t getCreationTime();
+  int getOwner();
+  char* getPermissions();
+  time_t getAccess();
+  time_t getEdit();
+  size_t getSize();
 };
 
 class Modification
@@ -108,7 +125,7 @@ public:
 class FileInfo : public TreeObject
 {
 private:
-  Attributes _myAttributes;
+  Attributes* _myAttributes;
   Finode _myFinode;
 public:
   FileInfo(string filename, BlkNumType blknum, PartitionManager* pm);
@@ -116,7 +133,7 @@ public:
   string mangle();
   string mangle(vector<string>& tags);
   Finode getFinode();
-  long unsigned int getFileSize();
+  size_t getFileSize();
   /*Function Overrides*/
   void writeOut();
   void readIn(unordered_multimap<string, FileInfo*>* allFiles, RootTree* rootTree);
@@ -125,6 +142,8 @@ public:
   void deleteContBlocks(BlkNumType blknum);
   void insertAddition(TreeObject* add);
   void insertDeletion(TreeObject* del);
+  void setAccess();
+  void setEdit();
     /*This will delete all the blocks with file data starting from any level*/
 };
 

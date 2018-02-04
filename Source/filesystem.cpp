@@ -22,11 +22,11 @@ FileOpen::FileOpen(FileInfo* file, char mode): _file(file), _mode(mode)
 }
 
 FileInfo* FileOpen::getFile(){return _file;}
-long unsigned int FileOpen::getSeek(){return _seek;}
+size_t FileOpen::getSeek(){return _seek;}
 char FileOpen::getMode(){return _mode;}
 bool FileOpen::getEOF(){return _EOF;}
 
-void FileOpen::incrementSeek(long unsigned int bytes)
+void FileOpen::incrementSeek(size_t bytes)
 {
   if(bytes >= _file->getFileSize() - _seek)
   {
@@ -40,11 +40,13 @@ void FileOpen::incrementSeek(long unsigned int bytes)
 
 Index FileOpen::byteToIndex(PartitionManager* pm)
 {
-  int entriesPerBlock = pm->getBlockSize() / sizeof(BlkNumType);
-  long unsigned int blockIndex = _seek / pm->getBlockSize(); //This will most likely have a remainder. Don't care yet.
+  unsigned int entriesPerBlock = pm->getBlockSize() / sizeof(BlkNumType);
+  size_t blockIndex = _seek / pm->getBlockSize();
   Index ret;
   vector<int> remainders;
+  char* buff = new char[pm->getBlockSize()];
   
+  /*Set the return offset*/
   ret.offset = _seek % pm->getBlockSize();
   
   if(blockIndex < 12)
@@ -64,9 +66,7 @@ Index FileOpen::byteToIndex(PartitionManager* pm)
     switch(levelCount)
     {
       case 0:
-      {
-        char* buff = new char[pm->getBlockSize()];
-        
+      {        
         /*Read in Level 1 indirect block*/
         if(_file->getFinode().level1Indirect == 0)
         {
@@ -78,12 +78,11 @@ Index FileOpen::byteToIndex(PartitionManager* pm)
         BlkNumType blknum;
         memcpy(&blknum, buff + (blockIndex * sizeof(BlkNumType)), sizeof(BlkNumType));
         ret.blknum = blknum;
+        
         break; 
       }
       case 1:
       {
-        char* buff = new char[pm->getBlockSize()];
-        
         /*Read in Level 2 indirect block*/
         if(_file->getFinode().level2Indirect == 0)
         {
@@ -107,9 +106,7 @@ Index FileOpen::byteToIndex(PartitionManager* pm)
         break;
       }
       case 2:
-      {
-        char* buff = new char[pm->getBlockSize()];
-        
+      {        
         /*Read in Level 3 indirect block*/
         if(_file->getFinode().level1Indirect == 0)
         {
@@ -146,6 +143,7 @@ Index FileOpen::byteToIndex(PartitionManager* pm)
       }
     }
   }
+  if(buff != 0) delete buff; buff = 0;
   return ret;
 }
 
@@ -519,16 +517,16 @@ void FileSystem::closeFile(unsigned int fileDesc)
   _fileOpenTable.erase(_fileOpenTable.begin() + fileDesc);
 }
 
-long unsigned int FileSystem::readFile(unsigned int fileDesc, char* data, long unsigned int len)
+size_t FileSystem::readFile(unsigned int fileDesc, char* data, size_t len)
 {return 0;}
 
-long unsigned int FileSystem::writeFile(unsigned int fileDesc, const char* data, long unsigned int len)
+size_t FileSystem::writeFile(unsigned int fileDesc, const char* data, size_t len)
 {return 0;}
 
-long unsigned int FileSystem::appendFile(unsigned int fileDesc, const char* data, long unsigned int len)
+size_t FileSystem::appendFile(unsigned int fileDesc, const char* data, size_t len)
 {return 0;}
 
-void FileSystem::seekFileAbsolute(unsigned int fileDesc, long unsigned int offset)
+void FileSystem::seekFileAbsolute(unsigned int fileDesc, size_t offset)
 {
   if(fileDesc >= _fileOpenTable.size())
   {
@@ -540,7 +538,7 @@ void FileSystem::seekFileAbsolute(unsigned int fileDesc, long unsigned int offse
   openFile->incrementSeek(offset);
 }
 
-void FileSystem::seekFileRelative(unsigned int fileDesc, long unsigned int offset)
+void FileSystem::seekFileRelative(unsigned int fileDesc, size_t offset)
 {
   if(fileDesc >= _fileOpenTable.size())
   {

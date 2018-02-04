@@ -22,15 +22,15 @@
 class FileOpen{
 public:
   FileInfo* _file;
-  long unsigned int _seek;
+  size_t _seek;
   char _mode;
   bool _EOF;
   
   FileOpen(FileInfo* file, char mode);
   FileInfo* getFile();
-  long unsigned int getSeek();
+  size_t getSeek();
   char getMode();
-  void incrementSeek(long unsigned int bytes);
+  void incrementSeek(size_t bytes);
   Index byteToIndex(PartitionManager* pm);
   void setEOF();
   void resetSeek();
@@ -69,11 +69,11 @@ public:
   void renameFile(vector<string>& originalFilePath, string newFileName);
   int openFile(vector<string>& filePath, char mode);
   void closeFile(unsigned int fileDesc);
-  long unsigned int readFile(unsigned int fileDesc, char* data, long unsigned int len);
-  long unsigned int writeFile(unsigned int fileDesc, const char* data, long unsigned int len);
-  long unsigned int appendFile(unsigned int fileDesc, const char* data, long unsigned int len);
-  void seekFileAbsolute(unsigned int fileDesc, long unsigned int offset);
-  void seekFileRelative(unsigned int fileDesc, long unsigned int offset);
+  size_t readFile(unsigned int fileDesc, char* data, size_t len);
+  size_t writeFile(unsigned int fileDesc, const char* data, size_t len);
+  size_t appendFile(unsigned int fileDesc, const char* data, size_t len);
+  void seekFileAbsolute(unsigned int fileDesc, size_t offset);
+  void seekFileRelative(unsigned int fileDesc, size_t offset);
   Attributes* getAttributes(vector<string>& filePath);
   void setAttributes(vector<string>& filePath, Attributes* atts);
 

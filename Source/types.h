@@ -15,11 +15,12 @@ typedef struct index Index;
 typedef struct rootSuperBlock RootSuperBlock;
 typedef struct tagTreeSuperBlock TagTreeSuperBlock;
 typedef struct finode Finode;
+typedef struct file_attributes FileAttributes;
 
 struct index
 {
   BlkNumType blknum;
-  long unsigned int offset;
+  size_t offset;
 };
 
 struct rootSuperBlock 
@@ -36,6 +37,15 @@ struct tagTreeSuperBlock
   BlkNumType startBlock;
 };
 
+struct file_attributes
+{
+  time_t creationTime;
+  time_t lastAccess;
+  time_t lastEdit;
+  size_t size;
+  char permissions[12];
+  int owner;
+};
 
 struct finode
 {
