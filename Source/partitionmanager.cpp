@@ -133,7 +133,7 @@ void PartitionManager::writeDiskBlock(BlkNumType blknum, char *blkdata)
   myDM->writeDiskBlock(_partitionName, blknum, blkdata);
 }
 
-int PartitionManager::getBlockSize()
+size_t PartitionManager::getBlockSize()
 {
   return myDM->getBlockSize();
 }

@@ -480,13 +480,6 @@ void RootTree::readIn(unordered_multimap<string, FileInfo*>* allFiles, RootTree*
       {
         throw arboreal_logic_error("Duplicate Tag Tree read in from disk", "RootTree::readIn");
       }
-//       /*Insert key into _readable */
-//       auto it_ret2 = _readable.insert(pair<TreeObject*, bool>(tagTree, false));
-//       if(!it_ret2.second)
-//       {
-//         //TODO: throw error
-//         cerr << "Error RootTree::readIn6" << endl;
-//       }
     }
     
     incrementFollow(&currentIndex);
@@ -561,7 +554,6 @@ void TagTree::writeOut()
 
 void TagTree::readIn(unordered_multimap<string, FileInfo*>* allFiles, RootTree* rootTree)
 {
-  //TODO: incorporate file number of tags
   char* buff = new char[_myPartitionManager->getBlockSize()];
   memset(buff, 0, _myPartitionManager->getBlockSize()); //zero out memory
   Index currentIndex{_blockNumber, 0};
@@ -654,14 +646,6 @@ void TagTree::readIn(unordered_multimap<string, FileInfo*>* allFiles, RootTree* 
       {
         allFiles->insert(pair<string, FileInfo*>(fileName, finode));
       }
-      
-//       /*add key to _readable*/
-//       auto it_ret2 = _readable.insert(pair<TreeObject*, bool>(finode, false));
-//       if(!it_ret2.second)
-//       {
-//         //TODO: throw error
-//         cerr << "Error TagTree::readIn6" << endl;
-//       }
     }
     
     incrementFollow(&currentIndex);
@@ -945,7 +929,7 @@ void FileInfo::deleteContBlocks(BlkNumType blknum)
   _myPartitionManager->readDiskBlock(blknum, buff);
   
   BlkNumType block;
-  int offset = 0;
+  size_t offset = 0;
   memcpy(&block, buff + offset, sizeof(BlkNumType));
   offset+= sizeof(BlkNumType);
   
@@ -997,9 +981,7 @@ Finode FileInfo::getFinode(){return _myFinode;}
 
 size_t FileInfo::getFileSize()
 {
-  //TODO: stub
-  return 0;
-  
+  return _myAttributes->getSize();
 }
 
 void FileInfo::setAccess(){_myAttributes->setAccess();}

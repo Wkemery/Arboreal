@@ -102,5 +102,5 @@ DiskPartition* DiskManager::findPart(string partitionName)
   return *it;
 }
 
-int DiskManager::getBlockSize()
+size_t DiskManager::getBlockSize()
 {return myDisk->getBlockSize();}

@@ -20,18 +20,22 @@
 #define FILESYSTEM_H
 
 class FileOpen{
-public:
+private:
   FileInfo* _file;
   size_t _seek;
   char _mode;
   bool _EOF;
+  PartitionManager* _myPartitionManager;
   
-  FileOpen(FileInfo* file, char mode);
+  BlkNumType levelInc(size_t RelativeBlock, BlkNumType LedgerBlock, short level);
+public:  
+  FileOpen(FileInfo* file, char mode, PartitionManager* pm);
   FileInfo* getFile();
   size_t getSeek();
   char getMode();
   void incrementSeek(size_t bytes);
-  Index byteToIndex(PartitionManager* pm);
+  Index byteToIndex();
+  Index incrementIndex();
   void setEOF();
   void resetSeek();
   bool getEOF();
@@ -75,7 +79,8 @@ public:
   void seekFileAbsolute(unsigned int fileDesc, size_t offset);
   void seekFileRelative(unsigned int fileDesc, size_t offset);
   Attributes* getAttributes(vector<string>& filePath);
-  void setAttributes(vector<string>& filePath, Attributes* atts);
+  void setPermissions(vector<string>& filePath, char* perms);
+  void setOwner(vector<string>& filePath, int owner);
 
   /* IPC Related */
 

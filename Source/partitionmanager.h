@@ -17,7 +17,7 @@ public:
   ~PartitionManager();
   void readDiskBlock(BlkNumType blknum, char *blkdata);
   void writeDiskBlock(BlkNumType blknum, char *blkdata);
-  int getBlockSize();
+  size_t getBlockSize();
   BlkNumType getFreeDiskBlock();
   void returnDiskBlock(BlkNumType blknum);
   /* Throws: invalid_arg */
