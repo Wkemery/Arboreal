@@ -5,7 +5,7 @@
 // Primary Author: Adrian Barberis
 // For "Arboreal" Senior Design Project
 // 
-//  Sun. | Jan. 28th | 2018 | 8:30 PM
+//  Mon. | Feb. 5th | 2018 | 8:30 AM
 // 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -15,7 +15,7 @@
 #include "cli_helper.hpp"
 
 
-
+//[================================================================================================]
 // Constructor 1 (Basic Command Line Interaction)
 //[================================================================================================]
 CLI::CLI(char** partition)
@@ -27,6 +27,7 @@ CLI::CLI(char** partition)
    start();
 }
 //[================================================================================================]
+// Constructor 2 (Basic Command Line Interaction + Debugging Enabled)
 //[================================================================================================]
 CLI::CLI(char** partition, bool debug)
 {
@@ -50,6 +51,7 @@ CLI::CLI(char** partition, char* isScript)
    start();
 }
 //[================================================================================================]
+// Constructor 3 (Used For Reading From A Text File + Debugging Enabled)
 //[================================================================================================]
 CLI::CLI(char** partition, char* isScript, bool debug)
 {
@@ -87,11 +89,13 @@ void CLI::start()
 
 
    if(dbug) std::cout << "C: Generating Argument Vector For Liason Process..." << std::endl;
+
    /* Create char** to send to Liason via main() argv param */
    std::vector<char*> argv;
    argv.push_back(const_cast<char*>(client_sockpath.c_str()));
    argv.push_back(const_cast<char*>(server_sockpath.c_str()));
    argv.push_back(const_cast<char*>(my_pid.c_str()));
+   if(dbug) argv.push_back(const_cast<char*>("-d"));
    argv.push_back(NULL);
    if(dbug) std::cout << "C: Argument Vector Generated Successfully" << std::endl;
 
@@ -121,6 +125,7 @@ void CLI::start()
       if(dbug) std::cout << "C: Waiting For Liaison Process to Initiate Server Socket..." << std::endl;
       if(dbug) std::cout << "-----------------------------------------------------------------" << std::endl <<std::endl;
 
+      /* Wait for Server to be set up */
       while(shm[0] == 0);
 
       if(dbug) std::cout << "C: Server Found" << std::endl;
@@ -133,7 +138,10 @@ void CLI::start()
       client_sock = set_up_socket(client_sockpath,client_sockaddr);
       if(dbug) std::cout << "C: Client Socket Creation Successfull" << std::endl;
       if(dbug) std::cout << "C: Signaling Server..." << std::endl;
+
+      /* Signal that Client is done setting up */
       shm[0] = 2;
+
       if(dbug) std::cout << "C: Deleting Shared Memory Segment..." << std::endl;
       delete_shm(shm_id,shm);
       if(dbug) std::cout << "C: Shared Memory Segment Deletion Successfull" << std::endl;
@@ -192,16 +200,9 @@ void CLI::start()
 void CLI::run()
 {
 
-   /*
-    * 1. Get input   (DONE)
-    * 2. Check if input is correct (DONE)
-    * 3. Convert user legible command to Liason legible command (DONE)
-    * 3. Send Command to Liason (TO DO)
-    */
 
    // user input
    std::string input;
-
    // last 10 inputs
    std::vector<std::string> history;
                            
@@ -261,8 +262,10 @@ void CLI::run()
             // sure we dont corrupt data
             std::cout << "Are you sure you would like to quit? (Y/N)\n";
             std::cin >> input;
+
             if(input == "Y" || input == "y")
             {
+               /* Send QUIT Command to Liaison Process */
                char* quit = new char[MAX_COMAND_SIZE];
                memset(quit,'\0',MAX_COMAND_SIZE);
                int val = 999;
@@ -301,10 +304,9 @@ void CLI::run()
          {
             // Test if the command is valid
             int rtrn = check_command(input);
+
             if(rtrn != 0)
             {
-               // Debug
-               std::cout << "Return: " << rtrn << std::endl;
                send_cmnd(build(rtrn,input));
                await_response();
                if(is_script != "-s"){std::cout << "Arboreal >> ";}
@@ -321,6 +323,9 @@ void CLI::run()
    return;
 }
 //[================================================================================================]
+// Send Command To Liaison Process
+// 
+// @ cmnd: Command to be sent
 //[================================================================================================]
 void CLI::send_cmnd(char* cmnd)
 {
@@ -331,6 +336,9 @@ void CLI::send_cmnd(char* cmnd)
    if(dbug) std::cout << "C: Command Successfully Sent" << std::endl;
    return;
 }
+//[================================================================================================]
+// Await Data From Liaison Process
+//[================================================================================================]
 void CLI::await_response()
 {
    if(dbug) std::cout << "C: Awaiting Response From Server..." << std::endl;
@@ -617,7 +625,7 @@ char* CLI::build(int id, std::string input)
          // then update offset and convert the command
          memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
-         write_to_cmnd(command,input,offset,INCLUSIVE,max_string_size);
+         write_to_cmnd(command,input,offset,OPEN,max_string_size);
          
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;

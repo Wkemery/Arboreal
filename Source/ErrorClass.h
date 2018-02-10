@@ -1,9 +1,16 @@
-//ErrorClass.h
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//  ErrorClass.h
+//  Error structure for use in exceptions
+//  Primary Author: Adrian Barberis
+//  For "Arboreal" Senior Design Project
+//  
+//  Mon. | Feb. 5th | 2018 | 8:30 AM
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-
-
+#ifndef ERR_H
+#define ERR_H
 
 #define SHM_GET_ERR 1
 #define SHM_ATT_ERR 2
@@ -35,7 +42,7 @@ struct ERR
     {
         std::string errmsg = strerror(errno);
 
-        if(ver == 1)
+        if(ver == 1) // Command Line Interface
         {
             if(val == SHM_GET_ERR)
             {
@@ -111,7 +118,7 @@ struct ERR
             }
 
         }
-        else if(ver == 2)
+        else if(ver == 2) // Liaison Process
         {
             if(val == SHM_GET_ERR)
             {
@@ -207,4 +214,4 @@ struct ERR
     }
 };
 
-
+#endif

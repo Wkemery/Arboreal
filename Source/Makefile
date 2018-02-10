@@ -1,11 +1,12 @@
-##############################
-# Makefile
-# Author: Arboreal 
-# Date: OCT 12, 2017
+###################################################################################################
 #
-# Senior Design project for Arboreal
+# Makefile
+# Makefile for "Arboreal"
+# By: "Arboreal" Team
 # 
-##############################
+#  Mon. | Feb. 5th | 2018 | 8:30 AM
+#
+###################################################################################################
 
 CXX=g++
 XXFLAGS = -ggdb -Wall -std=c++11 
@@ -34,3 +35,7 @@ clean-lson:
 
 clean: 
 	/bin/rm -f *.o driver cli format DISK1 liason
+
+
+
+	

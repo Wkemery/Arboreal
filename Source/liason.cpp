@@ -1,48 +1,47 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //  liason.cpp
 //  Liason process for communication between GUI,CLI,Filesystem
 //  Primary Author: Adrian Barberis
 //  For "Arboreal" Senior Design Project
 //  
-//  Sun. | Jan. 28th | 2018 | 8:30 PM
+//  Mon. | Feb. 5th | 2018 | 8:30 AM
 //
-////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-#include <string>
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <errno.h>
-#include <stdio.h>
-#include <fcntl.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <sys/socket.h>
-#include <sys/un.h>
-#include <sys/ipc.h>
-#include <sys/shm.h>
-#include <chrono>
-#include <ctime>
-#include "ErrorClass.h"
+#include <string>                   /* Strings */
+#include <iostream>                 /* cout */
+#include <vector>                   /* Vectors */
+#include <errno.h>                  /* errno Definitions */
+#include <stdio.h>                  /* C-Std Input/Output */
+#include <unistd.h>                 /* Unix Std. Stuff */
+#include <sys/socket.h>             /* Socket Handling */
+#include <sys/un.h>                 /* Unix Domain Socket Stuff */
+#include <sys/ipc.h>                /* Inter Process Communication Stds. */
+#include <sys/shm.h>                /* Shared Memory Handling */
+#include <chrono>                   /* System Time */
+#include <ctime>                    /* Time Utilities */
+#include "ErrorClass.h"             /* Exception Handling */
 
 
 
-#define PERMISSIONS 0666
-#define MAX_COMMAND_SIZE 2048
-#define SHMSZ 1
-#define BACKLOG 10
-#define FLAG 0
-#include "liason_helper.hpp"
+#define PERMISSIONS 0666            /* Socket Permissions */
+#define MAX_COMMAND_SIZE 2048       /* Maximum Size a FS Command Buffer Can Be */
+#define SHMSZ 1                     /* The Size of a Shared Memory Segment */
+#define BACKLOG 10                  /* Number of Connection Requests that the Server Can Queue */
+#define FLAG 0                      /* Flag for Send/Recv. Operations */
+#include "liason_helper.hpp"        /* Helper Functions */
+
+
 
 int main(int argc, char** argv)
 {
-    //int max_string_size = 64;
+    //int max_string_size = 64; // Will be set via handshake
     
-    bool dbug = true;
+    /* Turn on debug printing */
+    bool dbug = false;
+    if(argc == 4) dbug = true;
 
     if(dbug) std::cout << "L: Beginning Liaison Process..." << std::endl;
     std::string client_sockpath = argv[0];
@@ -63,6 +62,7 @@ int main(int argc, char** argv)
     struct sockaddr_un server_sockaddr;
     struct sockaddr_un client_sockaddr;  
 
+    /* Zero the structure buffers */
     memset(&server_sockaddr, 0, sizeof(struct sockaddr_un));
     memset(&client_sockaddr, 0, sizeof(struct sockaddr_un));
     if(dbug) std::cout << "L: Server and Client Socket Address Initilization Successfull" << std::endl;
@@ -71,6 +71,7 @@ int main(int argc, char** argv)
     if(dbug) std::cout << "L: Server Socket Set Up Successfull" << std::endl;
     if(dbug) std::cout << "L: Signaling Client" << std::endl;
 
+    /* Signal CLI that it is ok to continue */
     shm[0] = 1;
 
     if(dbug) std::cout << "L: Listening On Server Socket..." << std::endl;
@@ -80,6 +81,9 @@ int main(int argc, char** argv)
 
     socklen_t length = sizeof(server_sockaddr);
     int client_sock;
+
+    /* Wait until CLI is ready, if this is not done you will get a
+     * "Connection Refused Error" every once in a while */
     while(shm[0] == 1)
     {
         client_sock = accept_client(server_sock,client_sockaddr,length,server_sockpath);
@@ -96,6 +100,7 @@ int main(int argc, char** argv)
     if(dbug) std::cout << "L: Client Peername Retrieved Successfully: " << client_sockaddr.sun_path << std::endl;
 
 
+    /* Begin communication */
     do
     {
     
@@ -135,7 +140,6 @@ int main(int argc, char** argv)
 
 
 
-
     if(dbug) std::cout << "L: Closing Connections..." << std::endl;
     if(close(server_sock) < 0) throw ERR(2,SOK_CLOSE_ERR,112);
     if(dbug) std::cout << "L: Server Socket Successfully Closed" << std::endl;
@@ -144,49 +148,6 @@ int main(int argc, char** argv)
     if(dbug) std::cout << "L: Liaison Process Closing; Goodbye" << std::endl;
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
