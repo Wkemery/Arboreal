@@ -5,13 +5,15 @@
 //  Primary Author: Adrian Barberis
 //  For "Arboreal" Senior Design Project
 //  
-//  Sun. | Jan. 28th | 2018 | 8:30 PM
+//  Mon. | Feb. 5th | 2018 | 8:30 AM
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 #ifndef HELPER_FUNC
 #define HELPER_FUNC
+
+
 #define INCLUSIVE 0
 #define EXCLUSIVE 1
 #define NEW_AND_TAG 2
@@ -21,20 +23,22 @@
 #define TAG_1 6
 #define TAG_2 7
 #define TAG_3 8
+#define OPEN 9
 
 
 
 
 //[================================================================================================]
-/*  Used by CLI Process:
- *
+/* 
  *  Print a list of legal commands
+ *  
  *  Eventually I would like to change this to a more 'man pages' style output
  *  And make the 'help' command display only "Commonly Used" commands
  *  A lot of these commands have some quirks which are important to let the user know about
  *  But printing them all in a single print is not a very good idea (ergo the man pages)
  *  
  */
+//[================================================================================================]
 void print_help()
 {
     std::cout << "+-----------------------------------------------------------------------------------+\n";
@@ -89,24 +93,14 @@ void print_help()
     std::cout << "|                                                                                   |\n";
     std::cout << "+-----------------------------------------------------------------------------------+\n";
     std::cout << "Arboreal >> ";
+    return;
 } 
 //[================================================================================================]
-
-
-
-
-
-
-
-
-
-//[================================================================================================]
-// Used by CLI Process:
-// 
 // Print a Welcome Header
+// 
 // You may ask,  "Is this actually necessarry?"
 // I respond, "Yes, Yes it is."
-// 
+//[================================================================================================]
 void print_header()
 {
     std::cout << "\n[]==============================================================================[]\n";
@@ -116,33 +110,64 @@ void print_header()
     std::cout << "[]==============================================================================[]\n";
     std::cout << "\n\n";
     std::cout << "Arboreal >> ";
+    return;
 }
 //[================================================================================================]
-
-
-
-
-const char* build_pipe_path()
-{
-    char* buff = nullptr;
-    std::string pipe_path;
-    pipe_path += getcwd(buff,0);
-    pipe_path += "/pipe-" + std::to_string(getpid());
-    std::cout << "Pipe Path: " << pipe_path << std::endl;
-
-    return pipe_path.c_str();
-}
-
-
-
-
-//[================================================================================================]
-// Used by CLI::build()
+// Delete a Shared Memory Fragment
 // 
+// @ shm_id: The Shared Memory Fragment's identifier
+// @ shm:    The pointer to the Shared Memory
+//[================================================================================================]
+void delete_shm(int shm_id, char* shm)
+{
+    if(shmdt(shm) == -1)
+    {
+        throw ERR(1,SHM_DET_ERR,129);
+    }
+
+    if(shmctl(shm_id, IPC_RMID, NULL) == -1)
+    {
+        throw ERR(1,SHM_RMV_ERR,134);
+    }
+    return;
+}
+//[================================================================================================]
+// Create and attach a Shared Memory Segment
+// 
+// @ key: The Key required to access the Shared Memory Segment
+// @ id:  Address of an integer variable that will store the created segments identification number
+//[================================================================================================]
+char* create_shm_seg(key_t key, int& id)
+{
+    int shm_id;
+    char*  shm;
+
+    /* Create Shared Memory Segment for Blocking */
+    if ((shm_id = shmget(key, SHMSZ, IPC_CREAT | PERMISSIONS)) < 0) 
+    {
+       throw ERR(1,SHM_GET_ERR, 147);
+    }
+
+    /* Attach the shared memory to this process so the CLI can access it */
+    if ((shm = (char*)shmat(shm_id, NULL, 0)) == (char *) -1) 
+    {
+       throw ERR(1,SHM_ATT_ERR,153);
+    }
+
+    /* Save the Shared Memory Segment Id */
+    id = shm_id;
+
+    /* Return a pointer to the shared memory segment */
+    return shm;
+}
+//[================================================================================================]
 // Prints the contents of a buffer (Made to order for 'Command Buffers' but can be edited if need be)
 // NOTE: The first four characters (or rather whatever happens to be the size of an integer)
 //       are skipped since they need to be read all together to mean anything (avoids garbage output)
-//       
+// 
+// @ buff: The buffer to be printed
+// @ size: The size of the buffer to be printed
+//[================================================================================================]       
 void print_buffer(char* buff, int size)
 {
     std::cout << "Buffer Contents: ";
@@ -150,21 +175,11 @@ void print_buffer(char* buff, int size)
     {
         std::cout << buff[i];
     }
-    std::cout << std::endl << std::endl;
+    std::cout << std::endl;
+    return;
 }
 //[================================================================================================]
-
-
-
-
-
-
-
-
-
-//[================================================================================================]
-/* Used by CLI::build()
- *
+/* 
  * Checks the data within a buffer (Made to order for 'Command Buffers' but can be edited if need be)
  * This is a security feature (hopefully)
  * The only data allowed in a command buffer is aplhanumeric including "_" and the '\0' character
@@ -175,8 +190,12 @@ void print_buffer(char* buff, int size)
  *       Where X is the size of an integer.  This is especially important here
  *       otherwise the 'Command Id' data will be flagged as bad and will be overwritten
  *       with null characters ('\0')
+ *       
+ * @ buff: The buffer to be printed
+ * @ size: The size of the buffer to be printed
  * 
  */
+//[================================================================================================]
 bool check_buffer(char* buff, int size)
 {
     for(unsigned int i = sizeof(int); i < size; i++)
@@ -192,25 +211,19 @@ bool check_buffer(char* buff, int size)
     return true;
 }
 //[================================================================================================]
-
-
-
-
-
-
-
-
-//[================================================================================================]
-/* Used by CLI::build()
- *
+/* 
  * This is more of a debug function.
  * It can be used to test the "write_to_cmnd()" operations in order to make sure that they
  * are writing data in chunks of size = to "max_string_size" (even for data that is only 2 char long)
  *
  * NOTE: As in the case of print_buffer() the first X characters are skipped
  *       Where X is the size of an integer
+ *
+ * @ buff: The buffer to be printed
+ * @ size: The size of the buffer to be printed
  *       
  */
+//[================================================================================================]
 void check_buffer_partitioning(char* buffer,int size)
 {
     bool is_null = false;
@@ -219,7 +232,6 @@ void check_buffer_partitioning(char* buffer,int size)
     int p_count = 1;
     for(unsigned int i = sizeof(int); i < size; i++)
     {
-        //std::cout << "Buffer [" << i << "]: " << buffer[i] << std::endl;
         if(buffer[i] == '\0' && !is_null){is_null = true;}
         else if(!is_null){alpha_count += 1;}
         else if(is_null)
@@ -246,26 +258,19 @@ void check_buffer_partitioning(char* buffer,int size)
             }
         }
     }
-
+    return;
 }
 //[================================================================================================]
-
-
-
-
-
-
-
-
-//[================================================================================================]
-// Used by CLI::build()
-// 
 // Fixes a buffer flagged as bad by check_buffer()
 // It does this by overwriting all offending data with the '\0' character
 // 
 // NOTE: As in the case of print_buffer() the first X characters are ignored
 //       Where X is the size of an integer
-//       
+//
+// @ buff: The buffer to be printed
+// @ size: The size of the buffer to be printed
+// 
+//[================================================================================================]      
 void fix_buffer(char* buff,int size)
 {
     int  non_null = 0;
@@ -289,43 +294,15 @@ void fix_buffer(char* buff,int size)
     std::cout << "Non-Null Char Count: " << non_null << std::endl;
     std::cout << "Fixed " << fixed_count << " Character(s) In Buffer\n";
     std::cout << ".............................................\n";
+
+    return;
 }
 //[================================================================================================]
-
-
-
-
-
-
-
-
-//[================================================================================================]
-// Used by CLI::build()
-// 
-// Zero out a buffer
-void zero_buffer(char* buff, int size)
-{
-    for(unsigned int i = 0; i < size; i++)
-    {
-        buff[i] = '\0';
-    }
-}
-//[================================================================================================]
-
-
-
-
-
-
-
-
-
-
-//[================================================================================================]
-// Used by CLI::build()
-// 
 // Convert the first X characters in a 'Command Buffer' to an integer value
-// X is the size of an integer
+// X is the size of an integer and return it
+// 
+// @ cmnd: A Command Buffer (Buffer with the first n slots representing an integer)
+//[================================================================================================]
 int get_cmnd_id(char* cmnd)
 {
     char temp[sizeof(int)];
@@ -338,22 +315,113 @@ int get_cmnd_id(char* cmnd)
     return *id;
 }
 //[================================================================================================]
+// Create and set-up a socket used for communication with Liaison process
+// Returns the client socket's identification number
+// 
+// @ client_sockpath: Client Socket's pathname
+// @ client_sockaddr: A reference to a standard structure whose components I will not describe here 
+//                    and can be viewed in a Unix manual.  Suffice it to say, it stores the socket 
+//                    type and the socket path.  (Note that the "type" of the struct is sockaddr_un 
+//                    signifing that this is a unix domain socket)
+//[================================================================================================]
+int set_up_socket(std::string client_sockpath, struct sockaddr_un& client_sockaddr)
+{
+    int client_sock = socket(AF_UNIX, SOCK_STREAM, 0);
+    if(client_sock == -1)
+    {
+        throw ERR(1,SOK_CRT_ERR,314);
+    }
 
+    client_sockaddr.sun_family = AF_UNIX;   
+    strcpy(client_sockaddr.sun_path, client_sockpath.c_str()); 
+    socklen_t len = sizeof(client_sockaddr);
 
+    unlink(client_sockpath.c_str());
 
+    if(bind(client_sock, (struct sockaddr *) &client_sockaddr, len) < 0)
+    {
+        if(close(client_sock) < 0) throw ERR(1,SOK_CLOSE_ERR,333);
+        if(unlink(client_sockpath.c_str()) < 0) throw ERR(1,SOK_UNLNK_ERR,334);
+        throw ERR(1,SOK_BND_ERR,332);
+    }
 
+    return client_sock;
+}
+//[================================================================================================]
+// Attempt a connection to the Liaison process
+// 
+// @ client_sock: Client socket identifiaction number
+// @ client_sockpath: Client socket pathname
+// @ server_sockpath: Server socket pathname
+// @ server_sockaddr: A reference to a standard structure whose components I will not describe here 
+//                    and can be viewed in a Unix manual.  Suffice it to say, it stores the socket 
+//                    type and the socket path.  (Note that the "type" of the struct is sockaddr_un 
+//                    signifing that this is a unix domain socket)
+// @ len:             Size of server_sockaddr in bytes (from sizeof() )
+//[================================================================================================]
+void connect_to_server(int client_sock, std::string client_sockpath, 
+    std::string server_sockpath, struct sockaddr_un& server_sockaddr, socklen_t len)
+{
+    server_sockaddr.sun_family = AF_UNIX;
+    strcpy(server_sockaddr.sun_path, server_sockpath.c_str());
 
+    if(connect(client_sock, (struct sockaddr *) &server_sockaddr, len) < 0)
+    {
+        if(close(client_sock) < 0) throw ERR(1,SOK_CLOSE_ERR,345);
+        if(unlink(client_sockpath.c_str()) < 0) throw ERR(1,SOK_UNLNK_ERR,346);
+        throw ERR(1,SOK_CNNCT_ERR,347);
+    }
+    return;
+}
+//[================================================================================================]
+// Send a command to the Liaison process
+// 
+// @ client_sock:     Client socket identification number
+// @ client_sockpath: Client socket pathname
+// @ cmnd:            Command to be sent
+// @ size:            Size of 'cmnd'
+// @ flag:            Flag for 'send()' call (see 'man send')
+//[================================================================================================]
+void send_to_server(int client_sock, std::string client_sockpath, char* cmnd, int size, int flag)
+{              
+    if(send(client_sock, cmnd, size, flag) < 0) 
+    {
+        if(close(client_sock) < 0) throw ERR(1,SOK_CLOSE_ERR,356);
+        if(unlink(client_sockpath.c_str()) < 0) throw ERR(1,SOK_UNLNK_ERR,357);
+        throw ERR(1,SOK_SEND_ERR,358);
+    }
 
+    return;   
+}
+//[================================================================================================]
+// Receive data from server, returns a pointer to the data
+// 
+// @ client_sock:     Client socket identification number
+// @ client_sockpath: Client socket pathname
+// @ size:            Size of command to be recieved
+// @ flag:            Flag for 'recv()' call (see 'man recv')
+//[================================================================================================]
+char* receive_from_server(int client_sock, std::string client_sockpath, int size, int flag)
+{
+    char* data = new char[MAX_COMAND_SIZE];
+    memset(data, '\0', MAX_COMAND_SIZE);
 
-
-
+    if(recv(client_sock, data, size, flag) < 0) 
+    {
+        if(close(client_sock) < 0) throw ERR(1,SOK_CLOSE_ERR,370);
+        if(unlink(client_sockpath.c_str()) < 0) throw ERR(1,SOK_UNLNK_ERR,371);
+        throw ERR(1,SOK_RECV_ERR,372);
+    }   
+    return data;
+}
 //[================================================================================================]
 // Used by CLI::build()
 // 
 // Main logic used to write Liason redable commands to the 'Command Buffer'
 // A lot of the commands are built with similar syntax (this is on purpose)
 // Thus it made sense to avoid duplication and use a helper function
-// 
+//
+//[================================================================================================]
 void write_to_cmnd(char* cmnd, std::string input, int offset, int version, int max_string_size)
 {
     bool ignore = true;
@@ -363,9 +431,30 @@ void write_to_cmnd(char* cmnd, std::string input, int offset, int version, int m
     // Zero out the temp buffer
     memset(temp,'\0',max_string_size);
 
-
-
-    if(version == INCLUSIVE) // Command uses the '[]' rather than '{}'
+    if(version == OPEN)
+    {
+        for(unsigned int i = 5; i < input.length(); i++)
+        {
+            if(input[i] == ' ') continue;
+            else if(input[i] != '/')
+            {
+                temp[temp_index] = input[i];
+                temp_index += 1;
+            }
+            else
+            {
+                temp_index = 0;
+                memcpy(cmnd + offset,temp,max_string_size);
+                memset(temp,'\0',max_string_size);
+                offset += max_string_size;
+            }
+        }
+        temp_index = 0;
+        memcpy(cmnd + offset,temp,max_string_size);
+        memset(temp,'\0',max_string_size);
+        offset += max_string_size;
+    }
+    else if(version == INCLUSIVE) // Command uses the '[]' rather than '{}'
     {
         for(unsigned int i = 0; i < input.length(); i++)
         {
@@ -405,6 +494,8 @@ void write_to_cmnd(char* cmnd, std::string input, int offset, int version, int m
                 offset += max_string_size;
             }
         }
+        std::cout << "Command: ";
+        print_buffer(cmnd, MAX_COMAND_SIZE);
     }
 //[================================================================================================]
 

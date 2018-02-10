@@ -5,190 +5,206 @@
 // Primary Author: Adrian Barberis
 // For "Arboreal" Senior Design Project
 // 
-// Fri. | Jan. 26th | 2018 | 11:27 PM
+//  Mon. | Feb. 5th | 2018 | 8:30 AM
 // 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 #include "cli.h"
 #include "cmnd_validation.h"
-#include "helper_functions.hpp"
+#include "cli_helper.hpp"
 
 
-
+//[================================================================================================]
 // Constructor 1 (Basic Command Line Interaction)
 //[================================================================================================]
 CLI::CLI(char** partition)
 {
    my_partition = partition[1];
+   my_pid = std::to_string(getpid());
+   client_sockpath = "cli-" + my_pid + "-socket";
+   server_sockpath = "lson-" + my_pid + "-socket";
    start();
 }
 //[================================================================================================]
-
-
-
-
-
-
-
+// Constructor 2 (Basic Command Line Interaction + Debugging Enabled)
+//[================================================================================================]
+CLI::CLI(char** partition, bool debug)
+{
+   my_partition = partition[1];
+   my_pid = std::to_string(getpid());
+   client_sockpath = "cli-" + my_pid + "-socket";
+   server_sockpath = "lson-" + my_pid + "-socket";
+   dbug = debug;
+   start();
+}
+//[================================================================================================]
 // Constructor 2 (Used For Reading From A Text File)
 //[================================================================================================]
 CLI::CLI(char** partition, char* isScript)
 {
    my_partition = partition[1];
    is_script = isScript;
+   my_pid = std::to_string(getpid());
+   client_sockpath = "cli-" + my_pid + "-socket";
+   server_sockpath = "lson-" + my_pid + "-socket";
    start();
 }
 //[================================================================================================]
-
-
-
-
-
-
-
+// Constructor 3 (Used For Reading From A Text File + Debugging Enabled)
+//[================================================================================================]
+CLI::CLI(char** partition, char* isScript, bool debug)
+{
+   my_partition = partition[1];
+   is_script = isScript;
+   my_pid = std::to_string(getpid());
+   client_sockpath = "cli-" + my_pid + "-socket";
+   server_sockpath = "lson-" + my_pid + "-socket";
+   dbug = debug;
+   start();
+}
+//[================================================================================================]
 // Default Destructor
 //[================================================================================================]
 CLI::~CLI(){}
 //[================================================================================================]
-
-
-
-
-
-
-
 // Run Initial Setup (Store Info, Perform Handshakes, etc.)
 //[================================================================================================]
 void CLI::start()
 {
+   if(dbug) std::cout << std::endl << std::endl;
+   if(dbug) std::cout << "C: Command Line Interface Process Id: " << my_pid << std::endl;
+   if(dbug) std::cout << "C: Command Line Interface Client Socket Path: " << client_sockpath << std::endl;
+   if(dbug) std::cout << "C: Server Socket Path: " << server_sockpath << std::endl;
+   if(dbug) std::cout << "C: Initiating Handshake With Liaison Process..." << std::endl;
+   if(dbug) std::cout << "-----------------------------------------------------------------" << std::endl <<std::endl;
 
-   // Build pipe name for this CLI 
-   string pipe_name = ("pipe-"+std::to_string(getpid())+".pipe");
-   my_pipe_name = pipe_name;
+   /* Data for shared memory operations */
+   key_t shm_key;
+   int shm_id;
 
-   // Convert pipe_name to a format which we can send
-   // to the Liason Process as an argv for Liason's main() process
-   // Type will be char* const*
-   char* temp_name = const_cast<char*>(my_pipe_name.c_str());
-   vector<char*> arguments;
-   arguments.push_back(temp_name);
-   arguments.push_back(NULL);
+   if(dbug) std::cout << "C: Generating Shared Memory Key..." << std::endl;
+   shm_key = atoi(my_pid.c_str());
+   if(dbug) std::cout << "C: Shared Memory Key: " << shm_key << std::endl;
 
 
-   // Initiate Handshake
-   //[---------------------------------------------------------------------------------------------]
-   
-   // Open pipe to write out
-   ofstream my_pipe_out;
-   my_pipe_out.open(my_pipe_name);
+   if(dbug) std::cout << "C: Generating Argument Vector For Liason Process..." << std::endl;
 
-   if(!my_pipe_out.is_open())
+   /* Create char** to send to Liason via main() argv param */
+   std::vector<char*> argv;
+   argv.push_back(const_cast<char*>(client_sockpath.c_str()));
+   argv.push_back(const_cast<char*>(server_sockpath.c_str()));
+   argv.push_back(const_cast<char*>(my_pid.c_str()));
+   if(dbug) argv.push_back(const_cast<char*>("-d"));
+   argv.push_back(NULL);
+   if(dbug) std::cout << "C: Argument Vector Generated Successfully" << std::endl;
+
+
+   if(dbug) std::cout << "C: Creating a Shared Memory Segment For Inter-Process Synchronization" << std::endl;
+   char* shm = create_shm_seg(shm_key,shm_id);
+   if(dbug) std::cout << "C: Shared Memory Segment Creation Successfull" << std::endl;
+   shm[0] = 0;
+
+   if(dbug) std::cout << "C: Initiating Liason Process Fork..." << std::endl;
+   pid_t pid = fork();
+   if(pid == 0)
    {
-      my_pipe_out.close();
-      cerr << "CLI: Pipe Open (write) FAIL\n";
-      exit(1);
+      /* Child Process */
+      execv("liason",argv.data());
    }
-
-
-   // Convert the handshake command to a char array of size = MAX_COMAND_SIZE
-   // In order to emulate the format the build() returns
-   char command[MAX_COMAND_SIZE];
-   string temp = "handshake\n";
-
-   // Zero out buffer
-   for(unsigned int i = 0; i < MAX_COMAND_SIZE; i++)
+   else if(pid < 0)
    {
-      command[i] = '\0';
-   }
-
-   // Write "handshake" to command buffer
-   for(unsigned int i = 0; i < temp.length(); i++)
-   {
-      command[i] = temp[i];
-   }
-
-   // Write out command buffer
-   my_pipe_out.write(command,MAX_COMAND_SIZE);
-   my_pipe_out.close();
-   //[---------------------------------------------------------------------------------------------]
-
-
-
-   // Initiate a Liason Process
-   pid_t pID = vfork();
-   if(pID == 0)
-   {
-      // Replace child with Liason process
-      execv("liason",arguments.data());
-   }
-   else if(pID < 0)
-   {
-      cerr << "Fork Failed!\n";
-      exit(0);
+      /* Fork Failed */
+      delete_shm(shm_id,shm);
+      throw ERR(1,FORK_FAILED,104);
    }
    else
    {
-      // Wait for child to finish
-      while(wait(&pID) > 0){}
-      cout << "Returned to Parent\n";
+      /* Parent Process */
+      if(dbug) std::cout << "C: Fork Successful; Returned to CLI Process" << std::endl;
+      if(dbug) std::cout << "C: Waiting For Liaison Process to Initiate Server Socket..." << std::endl;
+      if(dbug) std::cout << "-----------------------------------------------------------------" << std::endl <<std::endl;
 
-      ifstream my_pipe_in;
-      my_pipe_in.open(my_pipe_name);
+      /* Wait for Server to be set up */
+      while(shm[0] == 0);
 
-      string line;
+      if(dbug) std::cout << "C: Server Found" << std::endl;
+      if(dbug) std::cout << "C: Initializing Server and Client Address Structures..." << std::endl;
+      memset(&server_sockaddr, 0, sizeof(struct sockaddr_un));
+      memset(&client_sockaddr, 0, sizeof(struct sockaddr_un));
+      if(dbug) std::cout << "C: Server and Client Address Structures Successfully Initialized" << std::endl;
 
-      if(!my_pipe_in.is_open())
-      {
-         my_pipe_in.close();
-         cerr << "CLI: Pipe Open (read) FAIL\n";
-         exit(1);
-      }
+      if(dbug) std::cout << "C: Creating Client Socket..." << std::endl;
+      client_sock = set_up_socket(client_sockpath,client_sockaddr);
+      if(dbug) std::cout << "C: Client Socket Creation Successfull" << std::endl;
+      if(dbug) std::cout << "C: Signaling Server..." << std::endl;
 
-      getline(my_pipe_in,line);
-      cout << "CLI: Received --> \"" << line << "\"\n";
+      /* Signal that Client is done setting up */
+      shm[0] = 2;
 
-      my_pipe_in.close();
-   
-      cout << "\n\nInitiating Command Line Interface Using Partition: " << my_partition << endl;
-      cout << ".................................................................................\n\n";
-   
+      if(dbug) std::cout << "C: Deleting Shared Memory Segment..." << std::endl;
+      delete_shm(shm_id,shm);
+      if(dbug) std::cout << "C: Shared Memory Segment Deletion Successfull" << std::endl;
+
+
+      if(dbug) std::cout << "C: Attempting to Connect to Server..." << std::endl;
+      socklen_t length = sizeof(client_sockaddr);
+      connect_to_server(client_sock,client_sockpath,server_sockpath,server_sockaddr,length);
+      if(dbug) std::cout << "C: Server Connection Successfull" << std::endl;
+
+      if(dbug) std::cout << "C: Building Handshake Command..." << std::endl;
+      char* cmnd = new char[MAX_COMAND_SIZE];
+      int cmnd_id = 0;
+      memset(cmnd,'\0',MAX_COMAND_SIZE);
+      memcpy(cmnd,&cmnd_id,sizeof(int));
+      memcpy(cmnd + sizeof(int), "HANDSHAKE", sizeof("HANDSHAKE"));
+      if(dbug) std::cout << "C: Handshake Command Built Successfully" << std::endl;
+
+      if(dbug) std::cout << "C: Sending Command To Server..." << std::endl;
+      if(dbug) std::cout << "C: Sending To: " << client_sock << " @ " << client_sockpath << std::endl;
+      send_to_server(client_sock,client_sockpath,cmnd,MAX_COMAND_SIZE,FLAG);
+      if(dbug) std::cout << "C: Command Successfully Sent" << std::endl;
+
+      if(dbug) std::cout << "C: Awaiting Response From Server..." << std::endl;
+      char* data = receive_from_server(client_sock,client_sockpath,MAX_COMAND_SIZE,FLAG);
+      std::string dta = data;
+      if(dbug) std::cout << "C: Data Received: " << dta << std::endl;
+      if(dbug) std::cout << "C: Data Received From: " << client_sock << " @ " << client_sockpath << std::endl;
+      if(dbug) std::cout << "C: Handshake Completed Successfully" << std::endl;
+      delete[] cmnd;
+      delete[] data;
+      if(dbug) std::cout << "=================================================================" << std::endl << std::endl;
+
+
+      if(dbug) std::cout << "C: Running Command Line Interface..." << std::endl;
       max_string_size = 64;
-
       run();
 
-      return;
-   }
+      if(dbug) std::cout << "C: Closing Client Socket Connection..." << std::endl;
+      if(close(client_sock) < 0) throw ERR(1,SOK_CLOSE_ERR,136);
+      if(dbug) std::cout << "C: Client Socket Closed Successfully" << std::endl;
+      if(dbug) std::cout << "C: Removing Client Socket..." << std::endl;
+      if(unlink(client_sockpath.c_str()) < 0) throw ERR(1,SOK_UNLNK_ERR,137);
+      if(dbug) std::cout << "C: Client Socket Removed Successfully" << std::endl;
+      if(dbug) std::cout << "C: Waiting For Child Process to Complete..." << std::endl;
 
+      int status;
+      waitpid(pid,&status,0);
+      if(dbug) std::cout << "C: Child Process Completed Successfully" << std::endl;
+      if(dbug) std::cout << "C: Quitting Command Line Interface..." << std::endl;
+   }
 }
 //[================================================================================================]
-
-
-
-
-
-
-
-
-
-
 // Begin The Command Reading Loop
 //[================================================================================================]
 void CLI::run()
 {
 
-   /*
-    * 1. Get input   (DONE)
-    * 2. Check if input is correct (DONE)
-    * 3. Convert user legible command to Liason legible command (DONE)
-    * 3. Send Command to Liason (TO DO)
-    */
 
    // user input
-   string input;
-
+   std::string input;
    // last 10 inputs
-   vector<string> history;
+   std::vector<std::string> history;
                            
    bool from_history = false; // unimportant at the moment
    
@@ -199,19 +215,18 @@ void CLI::run()
    // Operations will differ slightly if reading commands from a text file
    if(is_script == "-s")
    {
-      cout << "Reading from input file...\n";
-      cout << "+---------------------------------------\n\n\n";
+      std::cout << "Reading from input file...\n";
+      std::cout << "+---------------------------------------\n\n\n";
    }
-
 
    // Begin read loop
    while(true)
    {
       // Check for ENTER pressed (prints out a new line with 'Arboreal >> ')
-      char c = cin.get();
+      char c = std::cin.get();
       if(c == '\n')
       {
-         if(is_script != "-s"){cout << "Arboreal >> \n";}
+         if(is_script != "-s"){std::cout << "Arboreal >> \n";}
          continue;
       }
       else
@@ -230,178 +245,109 @@ void CLI::run()
           */
          if(!from_history) 
          {
-            cin.putback(c);
+            std::cin.putback(c);
 
             // Get the command
-            getline(cin,input);
+            getline(std::cin,input);
    
             // Add command to history
             history.push_back(input);
-            if(is_script == "-s"){cout << "Arboreal >> " << input << endl;}
+            if(is_script == "-s"){std::cout << "Arboreal >> " << input << std::endl;}
          }
          from_history = false;
-
-         //----------------------------------------------------------------------------------------+
-
 
          if(input == "quit" || input == "q")
          {
             // May need to do more than return in order to make
             // sure we dont corrupt data
-            cout << "Are you sure you would like to quit? (Y/N)\n";
-            cin >> input;
+            std::cout << "Are you sure you would like to quit? (Y/N)\n";
+            std::cin >> input;
+
             if(input == "Y" || input == "y")
             {
-               // delete pipe file
-               if(remove(my_pipe_name.c_str()) != 0)
-               {
-                  cerr << "CLI: Error Removing " << my_pipe_name << endl;
-               }
+               /* Send QUIT Command to Liaison Process */
+               char* quit = new char[MAX_COMAND_SIZE];
+               memset(quit,'\0',MAX_COMAND_SIZE);
+               int val = 999;
+               memcpy(quit,&val,sizeof(int));
+               memcpy(quit + sizeof(int), "QUIT", sizeof("QUIT"));
+               send_cmnd(quit);
                return;
             }
             else{continue;}
          }
-
-
-         //----------------------------------------------------------------------------------------+
-         
-
          else if(input == "h" || input == "help")
          {
             print_help();
          }
-
-
-         //----------------------------------------------------------------------------------------+
-         
-
          else if(input == "history")
          {
             for(unsigned int i = 0; i < history.size(); i++)
             {
-               cout << i << ": " << history[i] << "\n";
+               std::cout << i << ": " << history[i] << "\n";
             }
             if(history.size() >= MAX_HISTORY_SIZE)
             {
                history.clear();
             }
-            if(is_script == "-s"){cout << "\n";}
-            if(is_script != "-s"){cout << "Arboreal >> ";}
+            if(is_script == "-s"){std::cout << "\n";}
+            if(is_script != "-s"){std::cout << "Arboreal >> ";}
          }
 
          // If using a text file to read in commands
          if(input == "end" && is_script == "-s")
          {
-            cout << "\n\n";
+            std::cout << "\n\n";
             return;
          }
-
-
-         //----------------------------------------------------------------------------------------+
-         
-
          else
          {
             // Test if the command is valid
             int rtrn = check_command(input);
+
             if(rtrn != 0)
             {
-               // Debug
-               cout << "Return: " << rtrn << endl;
-               cout << "Buffer: \n";
-               send(build(rtrn,input));
-               // If pipe empty continue else output
-               if(is_script != "-s"){cout << "Arboreal >> ";}
+               send_cmnd(build(rtrn,input));
+               await_response();
+               if(is_script != "-s"){std::cout << "Arboreal >> ";}
             }
             else
             {
-               cerr << "Comand Not Valid\n";
-               if(is_script != "-s"){cout << "Arboreal >> ";}
+               std::cerr << "Comand Not Valid\n";
+               if(is_script != "-s"){std::cout << "Arboreal >> ";}
             }
 
          }
-         //----------------------------------------------------------------------------------------+
       }
    }
    return;
 }
 //[================================================================================================]
-
-
-
-
-
-
-
-
-// Send the newly built command to the Liason process
+// Send Command To Liaison Process
+// 
+// @ cmnd: Command to be sent
 //[================================================================================================]
-int CLI::send(char* command)
+void CLI::send_cmnd(char* cmnd)
 {
 
-   // FIX NULL CMND
-   // 
-   ofstream my_pipe_out;
-   char* temp_name = const_cast<char*>(my_pipe_name.c_str());
-   vector<char*> arguments;
-   arguments.push_back(temp_name);
-   arguments.push_back(NULL);
-
-   cout << "YES: " << command << endl;
-   my_pipe_out.open(my_pipe_name);
-   if(my_pipe_out.is_open())
-   {
-      my_pipe_out.write(command,MAX_COMAND_SIZE);
-      my_pipe_out.close();
-   }
-   else
-   {
-      cerr << "CLI: Pipe Open (write) FAIL\n";
-      return -1;
-   }
-
-
-   pid_t pID = vfork();
-
-   if(pID == 0)
-   {
-      execv("liason",arguments.data());
-   }
-   else if(pID < 0)
-   {
-      cerr << "CLID: Fork Creation Failed\n";
-      return -1;
-   }
-   else
-   {
-      while(wait(&pID) > 0);
-
-      ifstream my_pipe_in;
-      my_pipe_in.open(my_pipe_name);
-
-      if(my_pipe_in.is_open())
-      {
-         string line;
-         while(getline(my_pipe_in,line))
-         {
-            cout << "CLI: Received --> " << "\"" << line << "\"\n"; 
-         }
-      }
-      my_pipe_in.close();
-   }
-   return 0;
+   if(dbug) std::cout << "C: Sending Command To Server..." << std::endl;
+   if(dbug) std::cout << "C: Sending To: " << client_sock << " @ " << client_sockpath << std::endl;
+   send_to_server(client_sock,client_sockpath,cmnd,MAX_COMAND_SIZE,FLAG);
+   if(dbug) std::cout << "C: Command Successfully Sent" << std::endl;
+   return;
 }
 //[================================================================================================]
-
-
-
-
-
-
-
-
-
-
+// Await Data From Liaison Process
+//[================================================================================================]
+void CLI::await_response()
+{
+   if(dbug) std::cout << "C: Awaiting Response From Server..." << std::endl;
+   char* data = receive_from_server(client_sock,client_sockpath,MAX_COMAND_SIZE,FLAG);
+   std::string dta = data;
+   if(dbug) std::cout << "C: Data Received: " << dta << std::endl;
+   return;
+}
+//[================================================================================================]
 // Build the Liason Readable Command
 /* The majority of the logic here is offloaded to a helper function in 'helper_functions.hpp'
  * This was done in order to avoid code duplication
@@ -411,13 +357,13 @@ int CLI::send(char* command)
  * However I think that all of this code is very readable and pretty simple so it's not pressing
  */
 //[================================================================================================]
-char* CLI::build(int id,string input)
+char* CLI::build(int id, std::string input)
 {
-   char* cmnd = new char[MAX_COMAND_SIZE];
+   char* command = new char[MAX_COMAND_SIZE];
    int offset = 0;
 
    // Zero out the command buffer
-   memset(cmnd,'\0',MAX_COMAND_SIZE);
+   memset(command,'\0',MAX_COMAND_SIZE);
 
 
    switch(id)
@@ -426,25 +372,24 @@ char* CLI::build(int id,string input)
       {
          // Add the command Id to the command,
          // then update offset and convert the command
-         memcpy(cmnd,&id,sizeof(int));
+         memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
-         write_to_cmnd(cmnd,input,offset,INCLUSIVE,max_string_size);
+         write_to_cmnd(command,input,offset,INCLUSIVE,max_string_size);
 
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
-         print_buffer(cmnd,MAX_COMAND_SIZE);
-         check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
+         std::cout << "Value: " << get_cmnd_id(command) << std::endl;
+         print_buffer(command,MAX_COMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(cmnd,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMAND_SIZE))
          {
-            fix_buffer(cmnd,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMAND_SIZE);
 
             // Debug Print
-            print_buffer(cmnd,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMAND_SIZE);
          }
-         return cmnd;
-
+         return command;
       }
 //[================================================================================================]
       
@@ -452,24 +397,24 @@ char* CLI::build(int id,string input)
       {
          // Add the command Id to the command,
          // then update offset and convert the command
-         memcpy(cmnd,&id,sizeof(int));
+         memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
-         write_to_cmnd(cmnd,input,offset,EXCLUSIVE,max_string_size);
+         write_to_cmnd(command,input,offset,EXCLUSIVE,max_string_size);
 
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
-         print_buffer(cmnd,MAX_COMAND_SIZE);
-         check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
+         std::cout << "Value: " << get_cmnd_id(command) << std::endl;
+         print_buffer(command,MAX_COMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(cmnd,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMAND_SIZE))
          {
-            fix_buffer(cmnd,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMAND_SIZE);
 
             // Debug Print
-            print_buffer(cmnd,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMAND_SIZE);
          }
-         return cmnd;
+         return command;
       }
 //[================================================================================================]
       
@@ -477,24 +422,24 @@ char* CLI::build(int id,string input)
       {
          // Add the command Id to the command,
          // then update offset and convert the command
-         memcpy(cmnd,&id,sizeof(int));
+         memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
-         write_to_cmnd(cmnd,input,offset,INCLUSIVE,max_string_size);
+         write_to_cmnd(command,input,offset,INCLUSIVE,max_string_size);
          
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
-         print_buffer(cmnd,MAX_COMAND_SIZE);
-         check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
+         std::cout << "Value: " << get_cmnd_id(command) << std::endl;
+         print_buffer(command,MAX_COMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(cmnd,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMAND_SIZE))
          {
-            fix_buffer(cmnd,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMAND_SIZE);
 
             // Debug Print
-            print_buffer(cmnd,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMAND_SIZE);
          }
-         return cmnd;
+         return command;
       }
 //[================================================================================================]
       
@@ -502,25 +447,25 @@ char* CLI::build(int id,string input)
       {
          // Add the command Id to the command,
          // then update offset and convert the command
-         memcpy(cmnd,&id,sizeof(int));
+         memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
-         write_to_cmnd(cmnd,input,offset,INCLUSIVE,max_string_size);
+         write_to_cmnd(command,input,offset,INCLUSIVE,max_string_size);
 
          
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
-         print_buffer(cmnd,MAX_COMAND_SIZE);
-         check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
+         std::cout << "Value: " << get_cmnd_id(command) << std::endl;
+         print_buffer(command,MAX_COMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(cmnd,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMAND_SIZE))
          {
-            fix_buffer(cmnd,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMAND_SIZE);
 
             // Debug Print
-            print_buffer(cmnd,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMAND_SIZE);
          }
-         return cmnd;
+         return command;
       }
 //[================================================================================================]
       
@@ -528,24 +473,24 @@ char* CLI::build(int id,string input)
       {
          // Add the command Id to the command,
          // then update offset and convert the command
-         memcpy(cmnd,&id,sizeof(int));
+         memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
-         write_to_cmnd(cmnd,input,offset,INCLUSIVE,max_string_size);
+         write_to_cmnd(command,input,offset,INCLUSIVE,max_string_size);
 
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
-         print_buffer(cmnd,MAX_COMAND_SIZE);
-         check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
+         std::cout << "Value: " << get_cmnd_id(command) << std::endl;
+         print_buffer(command,MAX_COMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(cmnd,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMAND_SIZE))
          {
-            fix_buffer(cmnd,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMAND_SIZE);
 
             // Debug Print
-            print_buffer(cmnd,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMAND_SIZE);
          }
-         return cmnd;
+         return command;
       }
 //[================================================================================================]
 
@@ -553,24 +498,24 @@ char* CLI::build(int id,string input)
       {
          // Add the command Id to the command,
          // then update offset and convert the command
-         memcpy(cmnd,&id,sizeof(int));
+         memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
-         write_to_cmnd(cmnd,input,offset,NEW_AND_TAG,max_string_size);
+         write_to_cmnd(command,input,offset,NEW_AND_TAG,max_string_size);
          
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
-         print_buffer(cmnd,MAX_COMAND_SIZE);
-         check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
+         std::cout << "Value: " << get_cmnd_id(command) << std::endl;
+         print_buffer(command,MAX_COMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(cmnd,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMAND_SIZE))
          {
-            fix_buffer(cmnd,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMAND_SIZE);
 
             // Debug Print
-            print_buffer(cmnd,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMAND_SIZE);
          }
-         return cmnd;
+         return command;
       }
 //[================================================================================================]
 
@@ -578,24 +523,24 @@ char* CLI::build(int id,string input)
       {
          // Add the command Id to the command,
          // then update offset and convert the command
-         memcpy(cmnd,&id,sizeof(int));
+         memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
-         write_to_cmnd(cmnd,input,offset,NEW_AND_TAG_EXC,max_string_size);
+         write_to_cmnd(command,input,offset,NEW_AND_TAG_EXC,max_string_size);
          
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
-         print_buffer(cmnd,MAX_COMAND_SIZE);
-         check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
+         std::cout << "Value: " << get_cmnd_id(command) << std::endl;
+         print_buffer(command,MAX_COMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(cmnd,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMAND_SIZE))
          {
-            fix_buffer(cmnd,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMAND_SIZE);
 
             // Debug Print
-            print_buffer(cmnd,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMAND_SIZE);
          }
-         return cmnd;
+         return command;
       }
 //[================================================================================================]
 
@@ -603,24 +548,24 @@ char* CLI::build(int id,string input)
       {
          // Add the command Id to the command,
          // then update offset and convert the command
-         memcpy(cmnd,&id,sizeof(int));
+         memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
-         write_to_cmnd(cmnd,input,offset,INCLUSIVE,max_string_size);
+         write_to_cmnd(command,input,offset,INCLUSIVE,max_string_size);
          
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
-         print_buffer(cmnd,MAX_COMAND_SIZE);
-         check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
+         std::cout << "Value: " << get_cmnd_id(command) << std::endl;
+         print_buffer(command,MAX_COMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(cmnd,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMAND_SIZE))
          {
-            fix_buffer(cmnd,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMAND_SIZE);
 
             // Debug Print
-            print_buffer(cmnd,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMAND_SIZE);
          }
-         return cmnd;
+         return command;
       }
 //[================================================================================================]
 
@@ -628,24 +573,24 @@ char* CLI::build(int id,string input)
       {
          // Add the command Id to the command,
          // then update offset and convert the command
-         memcpy(cmnd,&id,sizeof(int));
+         memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
-         write_to_cmnd(cmnd,input,offset,INCLUSIVE,max_string_size);
+         write_to_cmnd(command,input,offset,INCLUSIVE,max_string_size);
          
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
-         print_buffer(cmnd,MAX_COMAND_SIZE);
-         check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
+         std::cout << "Value: " << get_cmnd_id(command) << std::endl;
+         print_buffer(command,MAX_COMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(cmnd,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMAND_SIZE))
          {
-            fix_buffer(cmnd,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMAND_SIZE);
 
             // Debug Print
-            print_buffer(cmnd,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMAND_SIZE);
          }
-         return cmnd;
+         return command;
       }
 //[================================================================================================]
 
@@ -653,24 +598,24 @@ char* CLI::build(int id,string input)
       {
          // Add the command Id to the command,
          // then update offset and convert the command
-         memcpy(cmnd,&id,sizeof(int));
+         memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
-         write_to_cmnd(cmnd,input,offset,INCLUSIVE,max_string_size);
+         write_to_cmnd(command,input,offset,INCLUSIVE,max_string_size);
          
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
-         print_buffer(cmnd,MAX_COMAND_SIZE);
-         check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
+         std::cout << "Value: " << get_cmnd_id(command) << std::endl;
+         print_buffer(command,MAX_COMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(cmnd,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMAND_SIZE))
          {
-            fix_buffer(cmnd,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMAND_SIZE);
 
             // Debug Print
-            print_buffer(cmnd,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMAND_SIZE);
          }
-         return cmnd;
+         return command;
       }
 //[================================================================================================]
 
@@ -678,24 +623,24 @@ char* CLI::build(int id,string input)
       {
          // Add the command Id to the command,
          // then update offset and convert the command
-         memcpy(cmnd,&id,sizeof(int));
+         memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
-         write_to_cmnd(cmnd,input,offset,INCLUSIVE,max_string_size);
+         write_to_cmnd(command,input,offset,OPEN,max_string_size);
          
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
-         print_buffer(cmnd,MAX_COMAND_SIZE);
-         check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
+         std::cout << "Value: " << get_cmnd_id(command) << std::endl;
+         print_buffer(command,MAX_COMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(cmnd,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMAND_SIZE))
          {
-            fix_buffer(cmnd,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMAND_SIZE);
 
             // Debug Print
-            print_buffer(cmnd,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMAND_SIZE);
          }
-         return cmnd;
+         return command;
       }
 //[================================================================================================]
 
@@ -703,24 +648,24 @@ char* CLI::build(int id,string input)
       {
          // Add the command Id to the command,
          // then update offset and convert the command
-         memcpy(cmnd,&id,sizeof(int));
+         memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
-         write_to_cmnd(cmnd,input,offset,INCLUSIVE,max_string_size);
+         write_to_cmnd(command,input,offset,INCLUSIVE,max_string_size);
          
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
-         print_buffer(cmnd,MAX_COMAND_SIZE);
-         check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
+         std::cout << "Value: " << get_cmnd_id(command) << std::endl;
+         print_buffer(command,MAX_COMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(cmnd,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMAND_SIZE))
          {
-            fix_buffer(cmnd,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMAND_SIZE);
 
             // Debug Print
-            print_buffer(cmnd,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMAND_SIZE);
          }
-         return cmnd;
+         return command;
       }
 //[================================================================================================]
 
@@ -728,24 +673,24 @@ char* CLI::build(int id,string input)
       {
          // Add the command Id to the command,
          // then update offset and convert the command
-         memcpy(cmnd,&id,sizeof(int));
+         memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
-         write_to_cmnd(cmnd,input,offset,NEW_AND_TAG,max_string_size);
+         write_to_cmnd(command,input,offset,NEW_AND_TAG,max_string_size);
 
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
-         print_buffer(cmnd,MAX_COMAND_SIZE);
-         check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
+         std::cout << "Value: " << get_cmnd_id(command) << std::endl;
+         print_buffer(command,MAX_COMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(cmnd,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMAND_SIZE))
          {
-            fix_buffer(cmnd,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMAND_SIZE);
 
             // Debug Print
-            print_buffer(cmnd,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMAND_SIZE);
          }
-         return cmnd;
+         return command;
       }
 //[================================================================================================]
 
@@ -753,24 +698,24 @@ char* CLI::build(int id,string input)
       {
          // Add the command Id to the command,
          // then update offset and convert the command
-         memcpy(cmnd,&id,sizeof(int));
+         memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
-         write_to_cmnd(cmnd,input,offset,NEW_AND_TAG,max_string_size);
+         write_to_cmnd(command,input,offset,NEW_AND_TAG,max_string_size);
 
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
-         print_buffer(cmnd,MAX_COMAND_SIZE);
-         check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
+         std::cout << "Value: " << get_cmnd_id(command) << std::endl;
+         print_buffer(command,MAX_COMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(cmnd,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMAND_SIZE))
          {
-            fix_buffer(cmnd,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMAND_SIZE);
 
             // Debug Print
-            print_buffer(cmnd,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMAND_SIZE);
          }
-         return cmnd;
+         return command;
       }
 //[================================================================================================]
 
@@ -778,24 +723,24 @@ char* CLI::build(int id,string input)
       {
          // Add the command Id to the command,
          // then update offset and convert the command
-         memcpy(cmnd,&id,sizeof(int));
+         memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
-         write_to_cmnd(cmnd,input,offset,INCLUSIVE,max_string_size);
+         write_to_cmnd(command,input,offset,INCLUSIVE,max_string_size);
          
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
-         print_buffer(cmnd,MAX_COMAND_SIZE);
-         check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
+         std::cout << "Value: " << get_cmnd_id(command) << std::endl;
+         print_buffer(command,MAX_COMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(cmnd,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMAND_SIZE))
          {
-            fix_buffer(cmnd,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMAND_SIZE);
 
             // Debug Print
-            print_buffer(cmnd,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMAND_SIZE);
          }
-         return cmnd;
+         return command;
       }
 //[================================================================================================]
 
@@ -803,24 +748,24 @@ char* CLI::build(int id,string input)
       {
          // Add the command Id to the command,
          // then update offset and convert the command
-         memcpy(cmnd,&id,sizeof(int));
+         memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
-         write_to_cmnd(cmnd,input,offset,MERGE_1,max_string_size);
+         write_to_cmnd(command,input,offset,MERGE_1,max_string_size);
          
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
-         print_buffer(cmnd,MAX_COMAND_SIZE);
-         check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
+         std::cout << "Value: " << get_cmnd_id(command) << std::endl;
+         print_buffer(command,MAX_COMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(cmnd,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMAND_SIZE))
          {
-            fix_buffer(cmnd,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMAND_SIZE);
 
             // Debug Print
-            print_buffer(cmnd,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMAND_SIZE);
          }
-         return cmnd;
+         return command;
       }
 //[================================================================================================]
 
@@ -828,24 +773,24 @@ char* CLI::build(int id,string input)
       {
          // Add the command Id to the command,
          // then update offset and convert the command
-         memcpy(cmnd,&id,sizeof(int));
+         memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
-         write_to_cmnd(cmnd,input,offset,MERGE_2,max_string_size);
+         write_to_cmnd(command,input,offset,MERGE_2,max_string_size);
          
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
-         print_buffer(cmnd,MAX_COMAND_SIZE);
-         check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
+         std::cout << "Value: " << get_cmnd_id(command) << std::endl;
+         print_buffer(command,MAX_COMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(cmnd,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMAND_SIZE))
          {
-            fix_buffer(cmnd,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMAND_SIZE);
 
             // Debug Print
-            print_buffer(cmnd,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMAND_SIZE);
          }
-         return cmnd;
+         return command;
       }
 //[================================================================================================]
 
@@ -853,24 +798,24 @@ char* CLI::build(int id,string input)
       {
          // Add the command Id to the command,
          // then update offset and convert the command
-         memcpy(cmnd,&id,sizeof(int));
+         memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
-         write_to_cmnd(cmnd,input,offset,TAG_1,max_string_size);
+         write_to_cmnd(command,input,offset,TAG_1,max_string_size);
          
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
-         print_buffer(cmnd,MAX_COMAND_SIZE);
-         check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
+         std::cout << "Value: " << get_cmnd_id(command) << std::endl;
+         print_buffer(command,MAX_COMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(cmnd,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMAND_SIZE))
          {
-            fix_buffer(cmnd,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMAND_SIZE);
 
             // Debug Print
-            print_buffer(cmnd,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMAND_SIZE);
          }
-         return cmnd;
+         return command;
       }
 //[================================================================================================]
 
@@ -878,24 +823,24 @@ char* CLI::build(int id,string input)
       {
          // Add the command Id to the command,
          // then update offset and convert the command
-         memcpy(cmnd,&id,sizeof(int));
+         memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
-         write_to_cmnd(cmnd,input,offset,TAG_2,max_string_size);
+         write_to_cmnd(command,input,offset,TAG_2,max_string_size);
          
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
-         print_buffer(cmnd,MAX_COMAND_SIZE);
-         check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
+         std::cout << "Value: " << get_cmnd_id(command) << std::endl;
+         print_buffer(command,MAX_COMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(cmnd,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMAND_SIZE))
          {
-            fix_buffer(cmnd,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMAND_SIZE);
 
             // Debug Print
-            print_buffer(cmnd,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMAND_SIZE);
          }
-         return cmnd;
+         return command;
       }
 //[================================================================================================]
 
@@ -903,35 +848,31 @@ char* CLI::build(int id,string input)
       {
          // Add the command Id to the command,
          // then update offset and convert the command
-         memcpy(cmnd,&id,sizeof(int));
+         memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
-         write_to_cmnd(cmnd,input,offset,TAG_3,max_string_size);
+         write_to_cmnd(command,input,offset,TAG_3,max_string_size);
          
          // Some Debug Printing
-         cout << "Value: " << get_cmnd_id(cmnd) << endl;
-         print_buffer(cmnd,MAX_COMAND_SIZE);
-         check_buffer_partitioning(cmnd,MAX_COMAND_SIZE);
+         std::cout << "Value: " << get_cmnd_id(command) << std::endl;
+         print_buffer(command,MAX_COMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(cmnd,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMAND_SIZE))
          {
-            fix_buffer(cmnd,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMAND_SIZE);
 
             // Debug Print
-            print_buffer(cmnd,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMAND_SIZE);
          }
-         return cmnd;
+         return command;
       }
    }
 
    // For completeness' sake
-   return cmnd;
+   return command;
 }
 //[================================================================================================]
-
-
-
-
 
 
 
