@@ -33,12 +33,21 @@ public:
   FileInfo* getFile();
   size_t getSeek();
   char getMode();
-  void incrementSeek(size_t bytes);
-  Index byteToIndex();
+  void incrementSeek(size_t bytes, bool write = false);
+  Index byteToIndex(short offset);
+    /* will return the index value of the seek pointer plus the offset. If the offset forces it to go past the end of 
+     * the current block(i.e the allocated space for file data), it will return an Index with a blknum of 0 as an "error",
+     * Also for now, do not call with an offset other than 1 or 0.*/
   Index incrementIndex();
+    /* Will always allocate a new block for the next bit of data. Only call when 2 conditions are satisfied:
+     * 1. Seek pointer is pointing to very last byte in file.
+     * 2. You are at the end of a block. so seek pointer is divisible by 512
+     * This will not change the status of EOF
+     */
   void setEOF();
   void resetSeek();
   bool getEOF();
+  void gotoLastByte();
 };
 
 class FileSystem {

@@ -945,6 +945,16 @@ void FileInfo::deleteContBlocks(BlkNumType blknum)
   _myPartitionManager->returnDiskBlock(blknum);
 }
 
+void FileInfo::addDirectBlock(BlkNumType blknum, int index)
+{
+  //TODO: stub
+}
+
+void FileInfo::addIndirectBlock(BlkNumType blknum, short level)
+{
+  //TODO: stub
+}
+
 void FileInfo::insert(string name, TreeObject* ptr)
 {
   /*Check for max tags*/
@@ -982,6 +992,11 @@ Finode FileInfo::getFinode(){return _myFinode;}
 size_t FileInfo::getFileSize()
 {
   return _myAttributes->getSize();
+}
+
+void FileInfo::updateFileSize(size_t bytes)
+{
+  //TODO: stub
 }
 
 void FileInfo::setAccess(){_myAttributes->setAccess();}

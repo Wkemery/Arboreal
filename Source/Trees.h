@@ -133,7 +133,12 @@ public:
   string mangle();
   string mangle(vector<string>& tags);
   Finode getFinode();
+  void addDirectBlock(BlkNumType blknum, int index);
+  void addIndirectBlock(BlkNumType blknum, short level);
   size_t getFileSize();
+  void updateFileSize(size_t bytes);
+  void setAccess();
+  void setEdit();
   /*Function Overrides*/
   void writeOut();
   void readIn(unordered_multimap<string, FileInfo*>* allFiles, RootTree* rootTree);
@@ -142,9 +147,8 @@ public:
   void deleteContBlocks(BlkNumType blknum);
   void insertAddition(TreeObject* add);
   void insertDeletion(TreeObject* del);
-  void setAccess();
-  void setEdit();
-    /*This will delete all the blocks with file data starting from any level*/
+
+  
 };
 
 class TagTree : public TreeObject
