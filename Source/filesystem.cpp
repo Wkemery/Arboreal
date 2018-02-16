@@ -744,16 +744,89 @@ void FileSystem::closeFile(unsigned int fileDesc)
 size_t FileSystem::readFile(unsigned int fileDesc, char* data, size_t len)
 {
   /*Start reading at seek pointer*/
+  if(fileDesc > _fileOpenTable.size() || _fileOpenTable[fileDesc] == 0)
+  {
+    throw file_error("Invalid File descriptor", "FileSystem::writeFile");
+  }
+  bool setEOF = false;//whether we will read past the end of the file
+  FileOpen* openFile = _fileOpenTable[fileDesc];
+  Index currentIndex;
+  size_t dataOffset = 0;
+  char* buff = new char[_myPartitionManager->getBlockSize()];
   
+  /*If seek pointer is past the end of the file, throw error*/
+  if(openFile->getEOF())
+  {
+    throw file_error("Attempt to read past EOF", "FileSystem::readFile()");
+  }
   
-  return 0;
+  /*Get the index we need to start reading from*/
+  currentIndex = openFile->byteToIndex(0);
+  if(currentIndex.blknum == 0)
+  {
+    throw arboreal_logic_error("A supposedly valid seek returned no valid index", "FileSystem::readFile()");
+  }
+  
+  /*Set len so we don't actually read past the end of valid data*/
+  if(len > (openFile->getFile()->getFileSize() - openFile->getSeek()))
+  {
+    len = openFile->getFile()->getFileSize(); 
+    setEOF = true;
+  }
+  
+  /*Read data remaining in current block*/
+  if(len <= _myPartitionManager->getBlockSize() - currentIndex.offset)
+  {
+    /*Read len bytes*/
+    _myPartitionManager->readDiskBlock(currentIndex.blknum, buff);
+    memcpy(data, buff, len);
+    openFile->incrementSeek(len);
+    if(setEOF)
+    {
+      openFile->setEOF();
+    }
+    return len;
+  }
+  
+  /*Read as many full blocks as we can*/
+  while(len >= _myPartitionManager->getBlockSize())
+  {
+    /*Read a full block*/
+    _myPartitionManager->readDiskBlock(currentIndex.blknum, buff);
+    memcpy(data + dataOffset, buff, _myPartitionManager->getBlockSize());
+    
+    openFile->incrementSeek(_myPartitionManager->getBlockSize());
+    dataOffset+= _myPartitionManager->getBlockSize(); len-= _myPartitionManager->getBlockSize();
+    
+    currentIndex = openFile->byteToIndex(0);
+    if(currentIndex.blknum == 0)
+    {
+      throw arboreal_logic_error("A supposedly valid seek returned no valid index", "FileSystem::readFile()");
+    }
+  }
+  
+  /*Read any leftover bytes*/
+  if(len > 0)
+  {
+    /*Read len bytes*/
+    _myPartitionManager->readDiskBlock(currentIndex.blknum, buff);
+    memcpy(data + dataOffset, buff, len);
+    openFile->incrementSeek(len);
+    dataOffset+= _myPartitionManager->getBlockSize(); len-= _myPartitionManager->getBlockSize();
+  }
+  
+  if(setEOF)
+  {
+    openFile->setEOF();
+  }
+  return dataOffset;
 }
 
 size_t FileSystem::writeFile(unsigned int fileDesc, const char* data, size_t len)
 {
   /*Start writing at one past seek pointer*/
   
-  if(fileDesc > _fileOpenTable.size())
+  if(fileDesc > _fileOpenTable.size() || _fileOpenTable[fileDesc] == 0)
   {
     throw file_error("Invalid File descriptor", "FileSystem::writeFile");
   }
@@ -766,8 +839,7 @@ size_t FileSystem::writeFile(unsigned int fileDesc, const char* data, size_t len
   /*If we are past the end of the File, go to the last byte to start writing.*/
   if(openFile->getEOF())
   {
-    openFile->resetSeek();
-    openFile->gotoLastByte();
+    throw file_error("Attempt to write past EOF", "FileSystem::write()");
   }
   
   /*Get the index we need to start writing to, 1 past the seek pointer*/
@@ -790,40 +862,30 @@ size_t FileSystem::writeFile(unsigned int fileDesc, const char* data, size_t len
     return len;
   }
   
-  memcpy(buff + currentIndex.offset, data, bytesToWrite);
-  _myPartitionManager->writeDiskBlock(currentIndex.blknum, buff);
-  openFile->incrementSeek(bytesToWrite, true); openFile->getFile()->setEdit();
-  len -= bytesToWrite; dataOffset += bytesToWrite; 
-  
-  /*Write out all the full blocks we can*/
+  /*Write out all the remaining full blocks we can*/
   while(len >= _myPartitionManager->getBlockSize())
   {
-    currentIndex = openFile->byteToIndex(1);
-    if(currentIndex.blknum == 0)
-    {
-      /*There is not space allocated yet, increment Index*/
-      currentIndex = openFile->incrementIndex();
-    }
-    
     /*Write a full block of data*/
     memcpy(buff, data + dataOffset, _myPartitionManager->getBlockSize());
     _myPartitionManager->writeDiskBlock(currentIndex.blknum, buff);
     openFile->incrementSeek(_myPartitionManager->getBlockSize(), true); openFile->getFile()->setEdit();
     len -= _myPartitionManager->getBlockSize(); dataOffset += _myPartitionManager->getBlockSize(); 
+    
+    /*get Current Index*/
+    if(len > 0)
+    {
+      currentIndex = openFile->byteToIndex(1);
+      if(currentIndex.blknum == 0)
+      {
+        /*There is not space allocated yet, increment Index*/
+        currentIndex = openFile->incrementIndex();
+      }
+    }
   }
   
   if(len > 0)
   {
     /*More, but not a full block of data to write*/
-    /*Increment Index*/
-    currentIndex = openFile->byteToIndex(1);
-    if(currentIndex.blknum == 0)
-    {
-      /*There is not space allocated yet, increment Index*/
-      currentIndex = openFile->incrementIndex();
-    }
-    
-    /*Write a partial block of data*/
     memset(buff, 0, _myPartitionManager->getBlockSize());
     memcpy(buff, data + dataOffset, len);
     _myPartitionManager->writeDiskBlock(currentIndex.blknum, buff);
