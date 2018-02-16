@@ -10,15 +10,15 @@ class Disk {
   public:
 
   BlkNumType diskSize;
-  int blkSize;
+  size_t blkSize;
   BlkNumType blkCount;
   char *diskFilename;
 
-  Disk(BlkNumType numblocks, int blksz, char *fname);
+  Disk(BlkNumType numblocks, size_t blksz, char *fname);
     ~Disk();
     void readDiskBlock(BlkNumType blknum, char *blkdata);
     void writeDiskBlock(BlkNumType blknum, char *blkdata);
-    int getBlockSize() {return (blkSize);};
+    size_t getBlockSize() {return (blkSize);};
     int getBlockCount() {return (blkCount);};
 };
 

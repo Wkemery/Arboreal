@@ -28,12 +28,9 @@ private:
     ~DiskManager();
     void readDiskBlock(string partitionName, BlkNumType blknum, char *blkdata);
     void writeDiskBlock(string partitionName, BlkNumType blknum, char *blkdata);
-    int getBlockSize();
+    size_t getBlockSize();
     BlkNumType getPartitionSize(string partitionName);
     DiskPartition* findPart(string partitionName);
-    /*Throws:
-      tag_error
-      */
     
 };
 

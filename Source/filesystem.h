@@ -20,21 +20,34 @@
 #define FILESYSTEM_H
 
 class FileOpen{
-public:
+private:
   FileInfo* _file;
-  long unsigned int _seek;
+  size_t _seek;
   char _mode;
   bool _EOF;
+  PartitionManager* _myPartitionManager;
   
-  FileOpen(FileInfo* file, char mode);
+  BlkNumType levelInc(size_t RelativeBlock, BlkNumType LedgerBlock, short level);
+public:  
+  FileOpen(FileInfo* file, char mode, PartitionManager* pm);
   FileInfo* getFile();
-  long unsigned int getSeek();
+  size_t getSeek();
   char getMode();
-  void incrementSeek(long unsigned int bytes);
-  Index byteToIndex(PartitionManager* pm);
+  void incrementSeek(size_t bytes, bool write = false);
+  Index byteToIndex(short offset);
+    /* will return the index value of the seek pointer plus the offset. If the offset forces it to go past the end of 
+     * the current block(i.e the allocated space for file data), it will return an Index with a blknum of 0 as an "error",
+     * Also for now, do not call with an offset other than 1 or 0.*/
+  Index incrementIndex();
+    /* Will always allocate a new block for the next bit of data. Only call when 2 conditions are satisfied:
+     * 1. Seek pointer is pointing to very last byte in file.
+     * 2. You are at the end of a block. so seek pointer is divisible by 512
+     * This will not change the status of EOF
+     */
   void setEOF();
   void resetSeek();
   bool getEOF();
+  void gotoLastByte();
 };
 
 class FileSystem {
@@ -69,13 +82,13 @@ public:
   void renameFile(vector<string>& originalFilePath, string newFileName);
   int openFile(vector<string>& filePath, char mode);
   void closeFile(unsigned int fileDesc);
-  long unsigned int readFile(unsigned int fileDesc, char* data, long unsigned int len);
-  long unsigned int writeFile(unsigned int fileDesc, const char* data, long unsigned int len);
-  long unsigned int appendFile(unsigned int fileDesc, const char* data, long unsigned int len);
-  void seekFileAbsolute(unsigned int fileDesc, long unsigned int offset);
-  void seekFileRelative(unsigned int fileDesc, long unsigned int offset);
+  size_t readFile(unsigned int fileDesc, char* data, size_t len);
+  size_t writeFile(unsigned int fileDesc, const char* data, size_t len);
+  size_t appendFile(unsigned int fileDesc, const char* data, size_t len);
+  void seekFileAbsolute(unsigned int fileDesc, size_t offset);
+  void seekFileRelative(unsigned int fileDesc, size_t offset);
   Attributes* getAttributes(vector<string>& filePath);
-  void setAttributes(vector<string>& filePath, Attributes* atts);
+  void setPermissions(vector<string>& filePath, char* perms);
 
   /* IPC Related */
 

@@ -6,7 +6,7 @@
 
 using namespace std;
 
-Disk::Disk(BlkNumType numblocks, int blksz, char *fname)
+Disk::Disk(BlkNumType numblocks, size_t blksz, char *fname)
 {
   blkCount = numblocks;
   diskSize = numblocks * blksz;

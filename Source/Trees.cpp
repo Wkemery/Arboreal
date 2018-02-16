@@ -5,11 +5,15 @@
 
 
 #include "Trees.h"
+#include <time.h>
 #include<string>
 #include<string.h>
 #include<unordered_map>
 #include<iostream>
 using namespace std;
+
+#define DEFAULTOWNER 1
+#define DEFAULTPERMISSIONS 0
 
 bool operator ==(Index& lhs, Index& rhs)
 {
@@ -30,15 +34,79 @@ Modification::Modification(TreeObject* obj, TreeObject* parent)
 
 /******************************************************************************/
 
-void Attributes::writeOut(PartitionManager* pm)
+Attributes::Attributes(BlkNumType blknum, PartitionManager* pm): _blockNumber(blknum), _myPartitionManager(pm)
+{}
+
+
+void Attributes::writeOut()
 {
-  
+  char* buff = new char[_myPartitionManager->getBlockSize()];
+  memset(buff, 0, _myPartitionManager->getBlockSize());
+  memcpy(buff, &_atts, sizeof(FileAttributes));
+  _myPartitionManager->writeDiskBlock(_blockNumber, buff);
+  delete buff;
 }
 
-void Attributes::readIn(PartitionManager* pm)
+void Attributes::readIn()
 {
+  char* buff = new char[_myPartitionManager->getBlockSize()];
+  _myPartitionManager->readDiskBlock(_blockNumber, buff);
+  memcpy(&_atts, buff, sizeof(FileAttributes));
+  delete buff;
+}
+
+void Attributes::del()
+{
+  _myPartitionManager->returnDiskBlock(_blockNumber);
+}
+
+void Attributes::setCreationTime()
+{
+  _atts.creationTime = time(0);
+  writeOut();
+}
+void Attributes::setOwner(int owner)
+{
+  _atts.owner = owner;
+  writeOut();
+}
+void Attributes::setPermissions(char* perms)
+{
+  if(perms == 0)
+  {
+    char dperms[12] = {0,0,0,1,1,0,1,0,0,0,0,0};
+    memcpy(_atts.permissions, dperms, 12);
+  }
+  else
+  {
+    memcpy(_atts.permissions, perms, 12);
+  }
+  writeOut();
   
 }
+void Attributes::setAccess()
+{
+  _atts.lastAccess = time(0);
+  writeOut();
+}
+void Attributes::setEdit()
+{
+  _atts.lastEdit = time(0);
+  writeOut();
+}
+void Attributes::updateSize(size_t size)
+{
+  _atts.size = size;
+  writeOut();
+}
+
+/*Accessor Functions*/
+time_t Attributes::getCreationTime(){return _atts.creationTime;}
+int Attributes::getOwner(){return _atts.owner;}
+char* Attributes::getPermissions(){return _atts.permissions;}
+time_t Attributes::getAccess(){return _atts.lastAccess;}
+time_t Attributes::getEdit(){return _atts.lastEdit;}
+size_t Attributes::getSize(){return _atts.size;}
 
 /******************************************************************************/
 
@@ -412,13 +480,6 @@ void RootTree::readIn(unordered_multimap<string, FileInfo*>* allFiles, RootTree*
       {
         throw arboreal_logic_error("Duplicate Tag Tree read in from disk", "RootTree::readIn");
       }
-//       /*Insert key into _readable */
-//       auto it_ret2 = _readable.insert(pair<TreeObject*, bool>(tagTree, false));
-//       if(!it_ret2.second)
-//       {
-//         //TODO: throw error
-//         cerr << "Error RootTree::readIn6" << endl;
-//       }
     }
     
     incrementFollow(&currentIndex);
@@ -493,7 +554,6 @@ void TagTree::writeOut()
 
 void TagTree::readIn(unordered_multimap<string, FileInfo*>* allFiles, RootTree* rootTree)
 {
-  //TODO: incorporate file number of tags
   char* buff = new char[_myPartitionManager->getBlockSize()];
   memset(buff, 0, _myPartitionManager->getBlockSize()); //zero out memory
   Index currentIndex{_blockNumber, 0};
@@ -586,14 +646,6 @@ void TagTree::readIn(unordered_multimap<string, FileInfo*>* allFiles, RootTree* 
       {
         allFiles->insert(pair<string, FileInfo*>(fileName, finode));
       }
-      
-//       /*add key to _readable*/
-//       auto it_ret2 = _readable.insert(pair<TreeObject*, bool>(finode, false));
-//       if(!it_ret2.second)
-//       {
-//         //TODO: throw error
-//         cerr << "Error TagTree::readIn6" << endl;
-//       }
     }
     
     incrementFollow(&currentIndex);
@@ -637,9 +689,18 @@ FileInfo::FileInfo(string fileName,BlkNumType blknum, PartitionManager* pm)
 :TreeObject(fileName, blknum, pm)
 {
   memset(&_myFinode, 0, sizeof(Finode));
+  BlkNumType attsBlock =  pm->getFreeDiskBlock();
+  _myAttributes = new Attributes(attsBlock, pm);
+  _myFinode.attributes = attsBlock;
+  _myAttributes->setCreationTime();
+  _myAttributes->setOwner(DEFAULTOWNER);
+  _myAttributes->setPermissions(DEFAULTPERMISSIONS);
 }
 
-FileInfo::~FileInfo(){}
+FileInfo::~FileInfo()
+{
+  delete _myAttributes;
+}
 
 void FileInfo::writeOut()
 {
@@ -741,7 +802,7 @@ void FileInfo::writeOut()
   _myPartitionManager->writeDiskBlock(_blockNumber, buff);
     
   /*Write out attributes*/
-  _myAttributes.writeOut(_myPartitionManager);
+  _myAttributes->writeOut();
   
 }
 
@@ -837,7 +898,7 @@ void FileInfo::readIn(unordered_multimap<string, FileInfo*>* allFiles, RootTree*
   }
   
   /*Read in the Attributes*/
-  _myAttributes.readIn(_myPartitionManager);
+  _myAttributes->readIn();
 }
 
 void FileInfo::del()
@@ -871,7 +932,7 @@ void FileInfo::deleteContBlocks(BlkNumType blknum)
   _myPartitionManager->readDiskBlock(blknum, buff);
   
   BlkNumType block;
-  int offset = 0;
+  size_t offset = 0;
   memcpy(&block, buff + offset, sizeof(BlkNumType));
   offset+= sizeof(BlkNumType);
   
@@ -885,6 +946,46 @@ void FileInfo::deleteContBlocks(BlkNumType blknum)
   
   delete buff; buff = 0;
   _myPartitionManager->returnDiskBlock(blknum);
+}
+
+void FileInfo::addDirectBlock(BlkNumType blknum, int index)
+{
+  if(index < 0 || index > 11)
+  {
+    throw arboreal_logic_error("index out of bounds", "FileInfo::addDirectBlock");
+  }
+  
+  _myFinode.directBlocks[index] = blknum;
+  writeOut();
+}
+
+void FileInfo::addIndirectBlock(BlkNumType blknum, short level)
+{
+  switch(level)
+  {
+    case 1:
+    {
+      _myFinode.level1Indirect = blknum;
+      break;
+    }
+    case 2:
+    {
+      _myFinode.level2Indirect = blknum;
+     break; 
+    }
+    case 3:
+    {
+      _myFinode.level3Indirect = blknum;
+      break;
+    }
+    default:
+    {
+      throw arboreal_logic_error("Invalid level " + level, "FileInfo::addIndirectBlock");
+      
+    }
+  }
+  
+  writeOut();
 }
 
 void FileInfo::insert(string name, TreeObject* ptr)
@@ -919,14 +1020,24 @@ void FileInfo::insertDeletion(TreeObject* del)
   throw arboreal_logic_error("Attempt to call insertDeletion on FileInfo object", "FileInfo::insertDeletion");
 }
 
+Attributes* FileInfo::getAttributes(){return _myAttributes;}
+
 Finode FileInfo::getFinode(){return _myFinode;}
 
-long unsigned int FileInfo::getFileSize()
+size_t FileInfo::getFileSize()
 {
-  //TODO: stub
-  return 0;
-  
+  return _myAttributes->getSize();
 }
+
+void FileInfo::updateFileSize(size_t bytes)
+{
+  _myAttributes->updateSize(bytes);
+}
+
+void FileInfo::setAccess(){_myAttributes->setAccess();}
+void FileInfo::setEdit(){_myAttributes->setEdit();}
+void FileInfo::setPermissions(char* perms){_myAttributes->setPermissions(perms);}
+
 
 string FileInfo::mangle()
 {
