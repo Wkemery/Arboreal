@@ -343,7 +343,6 @@ void TreeObject::erase(string name)
   }
   this->insertDeletion(object->second);
   _myTree.erase(object);
-  
 }
 
 TreeObject* TreeObject::find(string name)
@@ -1013,6 +1012,16 @@ void FileInfo::insert(string name, TreeObject* ptr)
 void FileInfo::insertAddition(TreeObject* add)
 {
   throw arboreal_logic_error("Attempt to call insertAddition on FileInfo object", "FileInfo::insertAddition");
+}
+
+void FileInfo::erase(string name)
+{
+  auto object = _myTree.find(name);
+  if(object == _myTree.end())
+  {
+    throw arboreal_logic_error(name + "Does not exist", "TreeObject::erase");
+  }
+  _myTree.erase(object);
 }
 
 void FileInfo::insertDeletion(TreeObject* del) 

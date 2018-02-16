@@ -587,6 +587,8 @@ void FileSystem::tagFile(FileInfo* file, vector<string>& tags)
   {
     file->erase("default");
   }
+  
+  file->writeOut();
 }
 
 void FileSystem::untagFile(FileInfo* file, vector<string>& tags)
