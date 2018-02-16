@@ -27,7 +27,7 @@ char FileOpen::getMode(){return _mode;}
 bool FileOpen::getEOF(){return _EOF;}
 void FileOpen::gotoLastByte()
 {
-  //TODO: stub
+  _seek = _file->getFileSize();
 }
 
 void FileOpen::incrementSeek(size_t bytes, bool write)
@@ -54,7 +54,7 @@ Index FileOpen::byteToIndex(short offset)
 {
   if(offset != 0 && offset != 1)
   {
-    //TODO: throw error
+    throw arboreal_logic_error("Provided an offset other than 0 or 1", "FileOpen::byteToIndex()");
   }
   size_t seek = _seek + offset;
   unsigned int entriesPerBlock = _myPartitionManager->getBlockSize() / sizeof(BlkNumType);
@@ -207,10 +207,10 @@ Index FileOpen::incrementIndex()
   {
     throw arboreal_logic_error("Called incrementIndex when seekptr was not at end of a block", "FileOpen::incrementIndex");
   }
-  if(!getEOF())
+  if(_seek != _file->getFileSize())
   {
-    /*Assuming this function is only called when the seek is at the EOF*/
-    throw arboreal_logic_error("EOF not set when trying to increment index", "FileOpen::incrementIndex");
+    /*Assuming this function is only called when the seek is at the last byte of the file*/
+    throw arboreal_logic_error("Called incrementIndex when seek pointer was not pointing to last byte of file", "FileOpen::incrementIndex");
   }
   
   Index ret{0,0};
@@ -267,7 +267,7 @@ Index FileOpen::incrementIndex()
   {
     case 0:
     {
-      /*We're in level 1'*/
+      /*We're in level 1*/
       /*blockIndex is the level 1 relativeBlock*/
       ret.blknum = levelInc(blockIndex, _file->getFinode().level1Indirect, 1);
       break;
@@ -282,7 +282,7 @@ Index FileOpen::incrementIndex()
     }
     case 2:
     {
-      /*We're in level 3'*/
+      /*We're in level 3*/
       /*blockIndex - (level2Offset + directOffset) is the level 3 relativeBlock*/
       size_t relativeBlock = blockIndex - (level2Offset + directOffset);
       ret.blknum = levelInc(relativeBlock, _file->getFinode().level3Indirect, 3);
@@ -290,7 +290,7 @@ Index FileOpen::incrementIndex()
     }
     default:
     {
-      //TODO: throw error 
+      throw arboreal_logic_error("Invalid level Count", "FileOpen::incrementIndex()");
     }
   }
   return ret;
@@ -691,6 +691,8 @@ void FileSystem::deleteFile(FileInfo* file)
 
 int FileSystem::openFile(vector<string>& filePath, char mode)
 {
+  int fileDesc = -1;
+    
   /*Find the file*/
   FileInfo* file = pathToFile(filePath);
   
@@ -698,10 +700,32 @@ int FileSystem::openFile(vector<string>& filePath, char mode)
   FileOpen* openFile = new FileOpen(file, mode, _myPartitionManager);
   
   /*Add the FileOpen* to the fileOpen table*/
-  _fileOpenTable.push_back(openFile);
+  
+  if(_fileOpenTable.size() <= MAXOPENFILES)
+  {
+    _fileOpenTable.push_back(openFile);
+    fileDesc = _fileOpenTable.size() - 1;
+  }
+  else
+  {
+   /*Search for an open space*/
+   for(size_t i = 0; i < _fileOpenTable.size(); i++)
+    {
+      if (_fileOpenTable[i] == 0)
+      {
+        fileDesc = i;
+        _fileOpenTable[i] = openFile;
+      }
+    }
+    if(fileDesc == -1)
+    {
+      /*Never found an open space. Reached maximum number of open files*/
+      throw file_error("Reached maximum number of open Files", "FileSystem::openFile()");
+    }
+  }
   
   /*Return the index of the FileOpen* in the fileopen table*/
-  return _fileOpenTable.size() - 1;
+  return fileDesc;
 }
 
 void FileSystem::closeFile(unsigned int fileDesc)
@@ -712,12 +736,14 @@ void FileSystem::closeFile(unsigned int fileDesc)
   }
   
   /*Close the File*/
-  _fileOpenTable.erase(_fileOpenTable.begin() + fileDesc);
+  delete _fileOpenTable[fileDesc]; _fileOpenTable[fileDesc] = 0;
 }
 
 size_t FileSystem::readFile(unsigned int fileDesc, char* data, size_t len)
 {
   /*Start reading at seek pointer*/
+  
+  
   return 0;
 }
 
@@ -807,8 +833,16 @@ size_t FileSystem::writeFile(unsigned int fileDesc, const char* data, size_t len
 
 size_t FileSystem::appendFile(unsigned int fileDesc, const char* data, size_t len)
 {
-  return 0;
+  /*Start writing at last byte of file*/
   
+  if(fileDesc > _fileOpenTable.size())
+  {
+    throw file_error("Invalid File descriptor", "FileSystem::writeFile");
+  }
+  
+  FileOpen* openFile = _fileOpenTable[fileDesc];
+  openFile->gotoLastByte();
+  return writeFile(fileDesc, data, len);
 }
 
 void FileSystem::seekFileAbsolute(unsigned int fileDesc, size_t offset)
@@ -835,19 +869,20 @@ void FileSystem::seekFileRelative(unsigned int fileDesc, size_t offset)
 }
 
 Attributes* FileSystem::getAttributes(vector<string>& filePath)
-{return 0;}
-
-void FileSystem::setOwner(vector<string>& filePath, int owner)
-{//TODO: stub
+{
+  /*Find the file*/
+  FileInfo* file = pathToFile(filePath);
   
-  return;
-  
+  return file->getAttributes();
 }
 
 void FileSystem::setPermissions(vector<string>& filePath, char* perms)
 {
-  //TODO: stub
-  return;}
+  /*Find the file*/
+  FileInfo* file = pathToFile(filePath);
+  
+  file->setPermissions(perms);
+}
 
 void FileSystem::renameFile(vector<string>& originalFilePath, string newFileName)
 {

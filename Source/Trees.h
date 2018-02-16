@@ -34,7 +34,7 @@ public:
   void setPermissions(char* perms);
   void setAccess();
   void setEdit();
-  void incrementSize(size_t size);
+  void updateSize(size_t size);
   
   /*Accessor Functions*/
   time_t getCreationTime();
@@ -139,6 +139,8 @@ public:
   void updateFileSize(size_t bytes);
   void setAccess();
   void setEdit();
+  void setPermissions(char* perms);
+  Attributes* getAttributes();
   /*Function Overrides*/
   void writeOut();
   void readIn(unordered_multimap<string, FileInfo*>* allFiles, RootTree* rootTree);

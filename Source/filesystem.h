@@ -89,7 +89,6 @@ public:
   void seekFileRelative(unsigned int fileDesc, size_t offset);
   Attributes* getAttributes(vector<string>& filePath);
   void setPermissions(vector<string>& filePath, char* perms);
-  void setOwner(vector<string>& filePath, int owner);
 
   /* IPC Related */
 

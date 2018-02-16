@@ -94,9 +94,9 @@ void Attributes::setEdit()
   _atts.lastEdit = time(0);
   writeOut();
 }
-void Attributes::incrementSize(size_t size)
+void Attributes::updateSize(size_t size)
 {
-  _atts.size += size;
+  _atts.size = size;
   writeOut();
 }
 
@@ -697,7 +697,10 @@ FileInfo::FileInfo(string fileName,BlkNumType blknum, PartitionManager* pm)
   _myAttributes->setPermissions(DEFAULTPERMISSIONS);
 }
 
-FileInfo::~FileInfo(){}
+FileInfo::~FileInfo()
+{
+  delete _myAttributes;
+}
 
 void FileInfo::writeOut()
 {
@@ -947,12 +950,42 @@ void FileInfo::deleteContBlocks(BlkNumType blknum)
 
 void FileInfo::addDirectBlock(BlkNumType blknum, int index)
 {
-  //TODO: stub
+  if(index < 0 || index > 11)
+  {
+    throw arboreal_logic_error("index out of bounds", "FileInfo::addDirectBlock");
+  }
+  
+  _myFinode.directBlocks[index] = blknum;
+  writeOut();
 }
 
 void FileInfo::addIndirectBlock(BlkNumType blknum, short level)
 {
-  //TODO: stub
+  switch(level)
+  {
+    case 1:
+    {
+      _myFinode.level1Indirect = blknum;
+      break;
+    }
+    case 2:
+    {
+      _myFinode.level2Indirect = blknum;
+     break; 
+    }
+    case 3:
+    {
+      _myFinode.level3Indirect = blknum;
+      break;
+    }
+    default:
+    {
+      throw arboreal_logic_error("Invalid level " + level, "FileInfo::addIndirectBlock");
+      
+    }
+  }
+  
+  writeOut();
 }
 
 void FileInfo::insert(string name, TreeObject* ptr)
@@ -987,6 +1020,8 @@ void FileInfo::insertDeletion(TreeObject* del)
   throw arboreal_logic_error("Attempt to call insertDeletion on FileInfo object", "FileInfo::insertDeletion");
 }
 
+Attributes* FileInfo::getAttributes(){return _myAttributes;}
+
 Finode FileInfo::getFinode(){return _myFinode;}
 
 size_t FileInfo::getFileSize()
@@ -996,11 +1031,13 @@ size_t FileInfo::getFileSize()
 
 void FileInfo::updateFileSize(size_t bytes)
 {
-  //TODO: stub
+  _myAttributes->updateSize(bytes);
 }
 
 void FileInfo::setAccess(){_myAttributes->setAccess();}
 void FileInfo::setEdit(){_myAttributes->setEdit();}
+void FileInfo::setPermissions(char* perms){_myAttributes->setPermissions(perms);}
+
 
 string FileInfo::mangle()
 {
