@@ -591,6 +591,18 @@ void FileSystem::tagFile(FileInfo* file, vector<string>& tags)
   file->writeOut();
 }
 
+void FileSystem::tagFile(vector<string>& filePath, vector<string>& tags)
+{
+  FileInfo* file = pathToFile(filePath);
+  tagFile(file, tags);
+}
+
+void FileSystem::untagFile(vector<string>& filePath, vector<string>& tags)
+{
+  FileInfo* file = pathToFile(filePath);
+  untagFile(file, tags);
+}
+
 void FileSystem::untagFile(FileInfo* file, vector<string>& tags)
 {
   for(string tag : tags)
@@ -609,14 +621,17 @@ void FileSystem::untagFile(FileInfo* file, vector<string>& tags)
       cerr << tag + " cannot be removed from " << file->getName() << " : Tag Does not exist" << endl;
     }
     
-    /*Remove tag from Finode*/
-    file->erase(tag);
-    
     /*Remove Finode from tagTree*/
-    tagTree->erase(file->getName());
+    tagTree->erase(file->mangle());
     
     /*Note Tag Tree was modified*/
     insertModification(tagTree);
+  }
+  
+  for(string tag : tags)
+  {
+    /*Remove tag from Finode*/
+    file->erase(tag);
   }
   
   /*if removed all Tags from file, add default tag*/
@@ -678,6 +693,10 @@ FileInfo* FileSystem::createFile(string filename, vector<string>& tags)
 
 void FileSystem::deleteFile(FileInfo* file)
 {
+  if(file == 0)
+  {
+    throw arboreal_logic_error("Invalid FileInfo*", "FileSystem::deleteFile()");
+  }
   /*Assuming FileInfo* passed from calling code is valid*/
   vector<string> tags;
   for(auto tagIt = file->begin(); tagIt != file->end(); tagIt++)
@@ -689,6 +708,12 @@ void FileSystem::deleteFile(FileInfo* file)
   
   /*Delete file from disk*/
   file->del();
+}
+
+void FileSystem::deleteFile(vector<string>& filePath)
+{
+  FileInfo* file = pathToFile(filePath);
+  deleteFile(file);
 }
 
 int FileSystem::openFile(vector<string>& filePath, char mode)

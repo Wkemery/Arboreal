@@ -10,6 +10,7 @@
 #include<string.h>
 #include<unordered_map>
 #include<iostream>
+#include<algorithm>
 using namespace std;
 
 #define DEFAULTOWNER 1
@@ -339,7 +340,7 @@ void TreeObject::erase(string name)
   auto object = _myTree.find(name);
   if(object == _myTree.end())
   {
-    throw arboreal_logic_error(name + "Does not exist", "TreeObject::erase");
+    throw arboreal_logic_error(name + " Does not exist", "TreeObject::erase");
   }
   this->insertDeletion(object->second);
   _myTree.erase(object);
@@ -609,8 +610,6 @@ void TagTree::readIn(unordered_multimap<string, FileInfo*>* allFiles, RootTree* 
       
       /*Create FileInfo object*/
       FileInfo* finode = new FileInfo(fileName, blknum, _myPartitionManager);
-      finode->addIndex(this, currentIndex);
-
       
       /*Read in the finode*/
       finode->readIn(allFiles, rootTree);
@@ -631,6 +630,8 @@ void TagTree::readIn(unordered_multimap<string, FileInfo*>* allFiles, RootTree* 
           break;
         }
       }
+      
+      finode->addIndex(this, currentIndex);
       
       /*Insert key and value into FileInfo object in memory*/
       auto it_ret = _myTree.insert(pair<string, FileInfo*>(finode->mangle(), finode));
@@ -1051,33 +1052,40 @@ void FileInfo::setPermissions(char* perms){_myAttributes->setPermissions(perms);
 string FileInfo::mangle()
 {
   string ret = _name;
+  vector<string> tempTags;
+
   for(auto it = _myTree.begin(); it != _myTree.end(); it++)
   {
+    tempTags.push_back(it->first);
+  }
+  
+  std::sort(tempTags.begin(), tempTags.end());
+  
+  
+  for(size_t i = 0; i < tempTags.size(); i++)
+  {
     ret.append("_");
-    ret.append(it->first);
+    ret.append(tempTags[i]);
   }
   return ret;
 }
 
 string FileInfo::mangle(vector<string>& tags)
 {
-  map<string, int> tempTags;
+  vector<string> tempTags;
   string ret = _name;
   
   for(size_t i = 0; i < tags.size(); i++)
   {
-    tempTags.insert(pair<string, int>(tags[i], 0));
+    tempTags.push_back(tags[i]);
   }
   
-  for(auto it = _myTree.begin(); it != _myTree.end(); it++)
-  {
-    tempTags.insert(pair<string, int>(it->first, 0));
-  }
+  std::sort(tempTags.begin(), tempTags.end());
   
-  for(auto it = tempTags.begin(); it != tempTags.end(); it++)
+  for(size_t i = 0; i < tempTags.size(); i++)
   {
     ret.append("_");
-    ret.append(it->first);
+    ret.append(tempTags[i]);
   }
   
   return ret.substr(0, ret.find_first_of('\0'));

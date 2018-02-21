@@ -67,12 +67,23 @@ int main(int argc, char** argv)
     {
       try 
       {
-        cout << "Root Tree and Tag Tree's Contents:" << endl;
-        cout << "Partition A" << endl;
-        //       fs1->printRoot();
-//         fs1->printTags();
+        string delimiter(80, '-'); 
+        
+        cout << "Partition A:" << endl;
+        cout << delimiter << endl << endl;
+        
+        cout << "Root Tree" << endl;
+        fs1->printRoot();
+        cout << delimiter << endl << endl;
+        
+        cout << "Tag Tree Contents:" << endl;
+        fs1->printTags();
+        cout << delimiter << endl << endl;
+        
+        cout << "All Files:" << endl;
         fs1->printFiles();
-        cout << endl << endl;
+        cout << delimiter << endl << endl;
+        
         
 //         cout << "Partition B" << endl;
         //       fs2->printRoot();
@@ -382,7 +393,7 @@ int main(int argc, char** argv)
     }
     case 6:
     {
-      cout << "Testing tag deletion force" << endl << endl; 
+      cout << "Testing tag creation/Association" << endl << endl; 
       string tagName = "Tag";
       string fileName = "File";
       vector<string> tags;
@@ -421,24 +432,9 @@ int main(int argc, char** argv)
         fs1->createFile("File5", tags); tags.clear();
         
         
-        /*Create a bunch of files with just Tag1 in order to test the deleteContBlocks function*/
-//         tags.push_back("Tag1");
-//         for(int i = 10; i < 35; i++)
-//         {
-//           fileName.append(to_string(i));
-//           try{fs1->createFile(fileName, tags);}
-//           catch(arboreal_exception& e)
-//           {cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
-//           fileName = fileName.substr(0, 4);
-//         }
-        
         fs1->writeChanges();
         fs1->printFiles();
         cout << endl <<  endl;
-        fs1->deleteTag("Tag1");
-        
-        fs1->writeChanges();
-        fs1->printFiles();
         
       }
       catch(arboreal_exception& e)
@@ -446,6 +442,68 @@ int main(int argc, char** argv)
         cerr << "Error! " << e.what() << " in " << e.where()<< endl;
       }
 
+      break;
+    }
+    case 7:
+    {
+      cout << "Testing simple tag deletion and file deletion with path names and tagging and some untagging" << endl << endl; 
+      string tagName = "Tag";
+      string fileName = "File";
+      vector<string> tags;
+      
+      try
+      {
+        FileInfo* file = 0;
+        vector<string> fullPath;
+        vector<string> tags;
+        
+        fullPath.push_back("Tag0"); fullPath.push_back("Tag1"); fullPath.push_back("Tag2"); fullPath.push_back("File1");
+        fs1->deleteFile(fullPath); fullPath.clear();
+        fullPath.clear();
+        
+        
+        fullPath.push_back("Tag1"); fullPath.push_back("Tag5"); fullPath.push_back("File3");
+        fs1->deleteFile(fullPath); fullPath.clear();
+        fullPath.clear();
+        
+        
+        fullPath.push_back("Tag0"); fullPath.push_back("Tag2"); fullPath.push_back("Tag4"); fullPath.push_back("File5");
+        fs1->deleteFile(fullPath); fullPath.clear();
+        fullPath.clear();
+        
+        
+        fullPath.push_back("Tag0"); fullPath.push_back("Tag2"); fullPath.push_back("File1");
+        file = fs1->pathToFile(fullPath); 
+        tags.push_back("Tag0"); fs1->untagFile(file, tags); tags.clear();
+        tags.push_back("Tag5"); fs1->tagFile(file, tags); tags.clear();
+        fullPath.clear();
+        
+        
+        fullPath.push_back("Tag1"); fullPath.push_back("File2");
+        file = fs1->pathToFile(fullPath); 
+        tags.push_back("Tag7"); tags.push_back("Tag9"); fs1->tagFile(file, tags); tags.clear();
+        fullPath.clear();
+        
+        
+        fullPath.push_back("Tag0"); fullPath.push_back("Tag2"); fullPath.push_back("Tag5"); fullPath.push_back("File4");
+        tags.push_back("Tag6"); fs1->tagFile(fullPath, tags); tags.clear();
+        fullPath.clear();
+        
+        fs1->deleteTag("Tag3");
+        fs1->deleteTag("Tag4");
+        fs1->deleteTag("Tag8");
+        
+        
+        fs1->writeChanges();
+        fs1->printFiles();
+        cout << endl <<  endl;
+        
+      }
+      catch(arboreal_exception& e)
+      {
+        cerr << "Error! " << e.what() << " in " << e.where()<< endl;
+      }
+      
       break;
     }
     default:

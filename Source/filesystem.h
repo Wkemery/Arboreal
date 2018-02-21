@@ -74,9 +74,13 @@ public:
   void mergeTags(string tag1, string tag2);
   void tagFile(FileInfo* file, vector<string>& tags);
   void untagFile(FileInfo* file, vector<string>& tags);
+  void tagFile(vector<string>& filePath, vector<string>& tags);
+  void untagFile(vector<string>& filePath, vector<string>& tags);
+  
   void renameTag(string originalTagName, string newTagName);
   FileInfo* createFile(string filename, vector<string>& tags);
   void deleteFile(FileInfo* file);
+  void deleteFile(vector<string>& filePath);
   void writeChanges();
   
   void renameFile(vector<string>& originalFilePath, string newFileName);
@@ -90,6 +94,10 @@ public:
   Attributes* getAttributes(vector<string>& filePath);
   void setPermissions(vector<string>& filePath, char* perms);
 
+  
+  
+  FileInfo* pathToFile(vector<string>& path);
+  
   /* IPC Related */
 
   int getFileNameSize();
@@ -99,8 +107,9 @@ public:
   void printTags();
   void printFiles();
   
+  
+  
 private:
-  FileInfo* pathToFile(vector<string>& path);
   void insertModification(TreeObject* object);
   
 };
