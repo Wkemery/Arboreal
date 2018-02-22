@@ -340,7 +340,7 @@ void TreeObject::erase(string name)
   auto object = _myTree.find(name);
   if(object == _myTree.end())
   {
-    throw arboreal_logic_error(name + " Does not exist", "TreeObject::erase");
+    throw arboreal_logic_error(name + " Does not exist in the TagTree " + _name, "TreeObject::erase");
   }
   this->insertDeletion(object->second);
   _myTree.erase(object);

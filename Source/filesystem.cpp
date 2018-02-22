@@ -582,7 +582,7 @@ void FileSystem::tagFile(FileInfo* file, vector<string>& tags)
   
   }
   
-  /*Remove default tag, it exists in this file*/
+  /*Remove default tag, if it exists in this file */
   if(file->find("default") != 0)
   {
     file->erase("default");
@@ -605,6 +605,13 @@ void FileSystem::untagFile(vector<string>& filePath, vector<string>& tags)
 
 void FileSystem::untagFile(FileInfo* file, vector<string>& tags)
 {
+  if(file == 0)
+  {
+    throw arboreal_logic_error("Invalid FileInfo*", "FileSystem::untagFile()");
+  }
+  
+  string originalFileName = file->mangle();
+  
   for(string tag : tags)
   {
     if(tag == "default")
@@ -622,16 +629,13 @@ void FileSystem::untagFile(FileInfo* file, vector<string>& tags)
     }
     
     /*Remove Finode from tagTree*/
-    tagTree->erase(file->mangle());
+    tagTree->erase(originalFileName);
+    
+    /*Remove tag from Finode*/
+    file->erase(tag);
     
     /*Note Tag Tree was modified*/
     insertModification(tagTree);
-  }
-  
-  for(string tag : tags)
-  {
-    /*Remove tag from Finode*/
-    file->erase(tag);
   }
   
   /*if removed all Tags from file, add default tag*/
@@ -639,6 +643,9 @@ void FileSystem::untagFile(FileInfo* file, vector<string>& tags)
   {
     TreeObject* defaultTree = _RootTree->find("default");
     file->insert("default", defaultTree);
+    vector<string> tagSet; tagSet.push_back("default");
+    defaultTree->insert(file->mangle(tagSet), file);
+    insertModification(defaultTree);
   }
   
   /* write updated Finode to disk*/
@@ -693,21 +700,41 @@ FileInfo* FileSystem::createFile(string filename, vector<string>& tags)
 
 void FileSystem::deleteFile(FileInfo* file)
 {
+  string originalFileName = file->mangle();
   if(file == 0)
   {
     throw arboreal_logic_error("Invalid FileInfo*", "FileSystem::deleteFile()");
   }
-  /*Assuming FileInfo* passed from calling code is valid*/
+  
   vector<string> tags;
   for(auto tagIt = file->begin(); tagIt != file->end(); tagIt++)
   {
     tags.push_back(tagIt->first);
   }
+  
   /*Dissasociate all tags from the file*/
   untagFile(file, tags);
   
+  /*Remove the explicit default tag*/
+  TreeObject* defaultTagTree = _RootTree->find("default");
+  defaultTagTree->erase(file->mangle());
+  
+  /*Note Default Tag Tree was modified*/
+  insertModification(defaultTagTree);
+
   /*Delete file from disk*/
   file->del();
+  
+  /*Delete file from _allFiles*/
+  auto ret = _allFiles.equal_range(file->getName());
+  for(auto fileIt = ret.first; fileIt != ret.second; fileIt++)
+  {
+    if(fileIt->second == file)
+    {
+      _allFiles.erase(fileIt);
+      break;
+    }
+  }
 }
 
 void FileSystem::deleteFile(vector<string>& filePath)
