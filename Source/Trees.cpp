@@ -176,8 +176,8 @@ void Deletion::writeOut(PartitionManager* pm)
     /*Zero out name and blocknumber*/
     memset(buff + _mod->getIndex(_parent).offset, 0, pm->getFileNameSize() + sizeof(BlkNumType));
     
-    /*Remove that TagTrees presence on Disk*/
-    _mod->del();
+//     /*Remove that TagTrees presence on Disk*/
+//     _mod->del();
     
     /*Write out buff to mod blknum*/
     pm->writeDiskBlock(_mod->getIndex(_parent).blknum, buff);
@@ -784,18 +784,18 @@ void FileInfo::writeOut()
     }
     
     offset = 0;
-    memset(buff, 0, _myPartitionManager->getBlockSize());
+    char* contBlockData = new char[_myPartitionManager->getBlockSize()];
     for(it = it; it != _myTree.end(); it++)
     {
       /*Write out the rest of the tags into the cont block*/
       BlkNumType blknum = it->second->getBlockNumber();
-      memcpy(buff + offset, &blknum, sizeof(BlkNumType));
+      memcpy(contBlockData + offset, &blknum, sizeof(BlkNumType));
       offset+= sizeof(BlkNumType);
       it++;
     }
     
     /*Write out the contBlock of tags*/
-    _myPartitionManager->writeDiskBlock(contBlock, buff);
+    _myPartitionManager->writeDiskBlock(contBlock, contBlockData);
   }
   delete localBuff;
   /*Write out Finode*/

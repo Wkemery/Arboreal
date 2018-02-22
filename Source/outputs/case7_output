@@ -1,0 +1,43 @@
+Partition A:
+--------------------------------------------------------------------------------
+
+Root Tree
+Key: Tag9 Value: 22
+Key: Tag7 Value: 18
+Key: Tag6 Value: 16
+Key: Tag5 Value: 14
+Key: default Value: 3
+Key: Tag2 Value: 8
+Key: Tag0 Value: 4
+Key: Tag1 Value: 6
+--------------------------------------------------------------------------------
+
+Tag Tree Contents:
+TagName: Tag9 	BlockNumber: 22
+	 FilePath: File2_Tag1_Tag7_Tag9 	BlockNumber: 30
+TagName: Tag7 	BlockNumber: 18
+	 FilePath: File2_Tag1_Tag7_Tag9 	BlockNumber: 30
+TagName: Tag6 	BlockNumber: 16
+	 FilePath: File4_Tag0_Tag2_Tag5_Tag6 	BlockNumber: 34
+TagName: Tag5 	BlockNumber: 14
+	 FilePath: File1_Tag2_Tag5 	BlockNumber: 28
+	 FilePath: File4_Tag0_Tag2_Tag5_Tag6 	BlockNumber: 34
+TagName: default 	BlockNumber: 3
+TagName: Tag2 	BlockNumber: 8
+	 FilePath: File4_Tag0_Tag2_Tag5_Tag6 	BlockNumber: 34
+	 FilePath: File1_Tag2_Tag5 	BlockNumber: 28
+TagName: Tag0 	BlockNumber: 4
+	 FilePath: File4_Tag0_Tag2_Tag5_Tag6 	BlockNumber: 34
+	 FilePath: File1_Tag0_Tag1 	BlockNumber: 26
+TagName: Tag1 	BlockNumber: 6
+	 FilePath: File2_Tag1_Tag7_Tag9 	BlockNumber: 30
+	 FilePath: File1_Tag0_Tag1 	BlockNumber: 26
+--------------------------------------------------------------------------------
+
+All Files:
+	 FilePath: File1_Tag0_Tag1
+	 FilePath: File1_Tag2_Tag5
+	 FilePath: File4_Tag0_Tag2_Tag5_Tag6
+	 FilePath: File2_Tag1_Tag7_Tag9
+--------------------------------------------------------------------------------
+

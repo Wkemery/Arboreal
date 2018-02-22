@@ -471,11 +471,16 @@ int main(int argc, char** argv)
         fs1->deleteFile(fullPath); fullPath.clear();
         fullPath.clear();
         
+        fs1->writeChanges();
         
         fullPath.push_back("Tag0"); fullPath.push_back("Tag2"); fullPath.push_back("File1");
         file = fs1->pathToFile(fullPath); 
         tags.push_back("Tag0"); fs1->untagFile(file, tags); tags.clear();
+        fs1->writeChanges();
+        
         tags.push_back("Tag5"); fs1->tagFile(file, tags); tags.clear();
+        fs1->writeChanges();
+        
         fullPath.clear();
         
         

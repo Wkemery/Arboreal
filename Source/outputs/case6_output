@@ -21,12 +21,12 @@ TagName: Tag1 	BlockNumber: 6
 	 FilePath: File3_Tag1_Tag5 	BlockNumber: 32
 	 FilePath: File2_Tag1 	BlockNumber: 30
 	 FilePath: File1_Tag0_Tag1 	BlockNumber: 26
-	 FilePath: File1_Tag0_Tag2_Tag1 	BlockNumber: 24
+	 FilePath: File1_Tag0_Tag1_Tag2 	BlockNumber: 24
 TagName: Tag0 	BlockNumber: 4
 	 FilePath: File5_Tag0_Tag2_Tag4 	BlockNumber: 36
-	 FilePath: File1_Tag0_Tag2_Tag1 	BlockNumber: 24
 	 FilePath: File1_Tag0_Tag1 	BlockNumber: 26
 	 FilePath: File1_Tag0_Tag2 	BlockNumber: 28
+	 FilePath: File1_Tag0_Tag1_Tag2 	BlockNumber: 24
 	 FilePath: File4_Tag0_Tag2_Tag5 	BlockNumber: 34
 TagName: Tag4 	BlockNumber: 12
 	 FilePath: File5_Tag0_Tag2_Tag4 	BlockNumber: 36
@@ -41,7 +41,7 @@ TagName: Tag2 	BlockNumber: 8
 	 FilePath: File5_Tag0_Tag2_Tag4 	BlockNumber: 36
 	 FilePath: File4_Tag0_Tag2_Tag5 	BlockNumber: 34
 	 FilePath: File1_Tag0_Tag2 	BlockNumber: 28
-	 FilePath: File1_Tag0_Tag2_Tag1 	BlockNumber: 24
+	 FilePath: File1_Tag0_Tag1_Tag2 	BlockNumber: 24
 TagName: Tag8 	BlockNumber: 20
 --------------------------------------------------------------------------------
 
@@ -50,7 +50,7 @@ All Files:
 	 FilePath: File4_Tag0_Tag2_Tag5
 	 FilePath: File1_Tag0_Tag2
 	 FilePath: File1_Tag0_Tag1
-	 FilePath: File1_Tag0_Tag2_Tag1
+	 FilePath: File1_Tag0_Tag1_Tag2
 	 FilePath: File2_Tag1
 	 FilePath: File3_Tag1_Tag5
 --------------------------------------------------------------------------------
