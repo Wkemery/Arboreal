@@ -789,7 +789,7 @@ void FileSystem::deleteFile(FileInfo* file)
   unordered_set<string> tags = file->getTags();
   
   /*Dissasociate all tags from the file*/
-  untagFile(file, tags);
+  untagFile(file, tags, true);
 
   /*Delete file from disk*/
   file->del();
