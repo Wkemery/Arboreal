@@ -622,6 +622,8 @@ int main(int argc, char** argv)
       catch(arboreal_exception& e){/*cerr << "Error! " << e.what() << " in " << e.where()<< endl;*/}
       fullPath.clear(); tags.clear();
       
+      fs1->writeChanges();
+      
       break;
     }
     
