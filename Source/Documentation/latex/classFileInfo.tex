@@ -1,0 +1,176 @@
+\hypertarget{classFileInfo}{}\section{File\+Info Class Reference}
+\label{classFileInfo}\index{File\+Info@{File\+Info}}
+Inheritance diagram for File\+Info\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classFileInfo}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classFileInfo_a3586bb4f50c4a0f63ff4ea0a1e56ce9c}\label{classFileInfo_a3586bb4f50c4a0f63ff4ea0a1e56ce9c}} 
+{\bfseries File\+Info} (string filename, Blk\+Num\+Type blknum, \mbox{\hyperlink{classPartitionManager}{Partition\+Manager}} $\ast$pm)
+\item 
+\mbox{\Hypertarget{classFileInfo_a96827c2e48fb1a15d468e9afd545383e}\label{classFileInfo_a96827c2e48fb1a15d468e9afd545383e}} 
+string {\bfseries mangle} ()
+\item 
+\mbox{\Hypertarget{classFileInfo_a105ad751f21bead6fc2a76e79cb3b701}\label{classFileInfo_a105ad751f21bead6fc2a76e79cb3b701}} 
+string {\bfseries mangle} (vector$<$ string $>$ \&tags)
+\item 
+\mbox{\Hypertarget{classFileInfo_aec8a60addbed54097f6cac0a6a516717}\label{classFileInfo_aec8a60addbed54097f6cac0a6a516717}} 
+string {\bfseries mangle} (unordered\+\_\+set$<$ string $>$ \&tags)
+\item 
+\mbox{\Hypertarget{classFileInfo_a80777be7ba01a63cca90c8d9062c49b3}\label{classFileInfo_a80777be7ba01a63cca90c8d9062c49b3}} 
+\mbox{\hyperlink{structfinode}{Finode}} {\bfseries get\+Finode} ()
+\item 
+\mbox{\Hypertarget{classFileInfo_a83e728ab41847e3b0d4eee9c98b89965}\label{classFileInfo_a83e728ab41847e3b0d4eee9c98b89965}} 
+void {\bfseries add\+Direct\+Block} (Blk\+Num\+Type blknum, int \mbox{\hyperlink{structindex}{index}})
+\item 
+\mbox{\Hypertarget{classFileInfo_a59e56b96bc289112ed0f967c7cd60ed9}\label{classFileInfo_a59e56b96bc289112ed0f967c7cd60ed9}} 
+void {\bfseries add\+Indirect\+Block} (Blk\+Num\+Type blknum, short level)
+\item 
+\mbox{\Hypertarget{classFileInfo_a7c33e236c627e7a4557207e9831342eb}\label{classFileInfo_a7c33e236c627e7a4557207e9831342eb}} 
+size\+\_\+t {\bfseries get\+File\+Size} ()
+\item 
+\mbox{\Hypertarget{classFileInfo_ae0389f01dbb6b4d365d1d062a9f5b146}\label{classFileInfo_ae0389f01dbb6b4d365d1d062a9f5b146}} 
+void {\bfseries update\+File\+Size} (size\+\_\+t bytes)
+\item 
+\mbox{\Hypertarget{classFileInfo_aba223845c8a1e7091626e6d241e5f069}\label{classFileInfo_aba223845c8a1e7091626e6d241e5f069}} 
+void {\bfseries set\+Access} ()
+\item 
+\mbox{\Hypertarget{classFileInfo_a911b6fe0c76dbeb57613f447106b4d6a}\label{classFileInfo_a911b6fe0c76dbeb57613f447106b4d6a}} 
+void {\bfseries set\+Edit} ()
+\item 
+\mbox{\Hypertarget{classFileInfo_ab2b69861ecef1b8e0f465906c8eaa7a7}\label{classFileInfo_ab2b69861ecef1b8e0f465906c8eaa7a7}} 
+void {\bfseries set\+Permissions} (char $\ast$perms)
+\item 
+\mbox{\Hypertarget{classFileInfo_abc9f651fdf3daf17e5526628b9edc272}\label{classFileInfo_abc9f651fdf3daf17e5526628b9edc272}} 
+\mbox{\hyperlink{classAttributes}{Attributes}} $\ast$ {\bfseries get\+Attributes} ()
+\item 
+\mbox{\Hypertarget{classFileInfo_a0335ecd3301d3dd709de5e004567fd29}\label{classFileInfo_a0335ecd3301d3dd709de5e004567fd29}} 
+unordered\+\_\+set$<$ string $>$ {\bfseries get\+Tags} ()
+\item 
+void \mbox{\hyperlink{classFileInfo_a15d8f9279f1d60e4db4618cb81e68414}{write\+Out}} ()
+\item 
+\mbox{\Hypertarget{classFileInfo_a0e74605dd535e73027ad1c1c6242db09}\label{classFileInfo_a0e74605dd535e73027ad1c1c6242db09}} 
+void {\bfseries read\+In} (unordered\+\_\+multimap$<$ string, \mbox{\hyperlink{classFileInfo}{File\+Info}} $\ast$$>$ $\ast$all\+Files, \mbox{\hyperlink{classRootTree}{Root\+Tree}} $\ast$root\+Tree)
+\item 
+void \mbox{\hyperlink{classFileInfo_ae058242283d3317eaf2b79428e6137f6}{erase}} (string name)
+\item 
+void \mbox{\hyperlink{classFileInfo_ad93a84b63e417b07aa68b619051ab746}{insert}} (string name, \mbox{\hyperlink{classTreeObject}{Tree\+Object}} $\ast$ptr)
+\item 
+\mbox{\Hypertarget{classFileInfo_a2ca34d945ed1208f227a249ba72ee427}\label{classFileInfo_a2ca34d945ed1208f227a249ba72ee427}} 
+void {\bfseries del} ()
+\item 
+\mbox{\Hypertarget{classFileInfo_a530a418e213a0a945b75ee1dcb8f6acb}\label{classFileInfo_a530a418e213a0a945b75ee1dcb8f6acb}} 
+void {\bfseries delete\+Cont\+Blocks} (Blk\+Num\+Type blknum)
+\item 
+void \mbox{\hyperlink{classFileInfo_a7f788f31521c535646eebfa9959bbb24}{insert\+\_\+addition}} (\mbox{\hyperlink{classTreeObject}{Tree\+Object}} $\ast$add)
+\item 
+void \mbox{\hyperlink{classFileInfo_a278136b1d68f55dc56a4be807076fc0d}{insert\+\_\+deletion}} (\mbox{\hyperlink{classTreeObject}{Tree\+Object}} $\ast$del)
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classFileInfo_ae058242283d3317eaf2b79428e6137f6}\label{classFileInfo_ae058242283d3317eaf2b79428e6137f6}} 
+\index{File\+Info@{File\+Info}!erase@{erase}}
+\index{erase@{erase}!File\+Info@{File\+Info}}
+\subsubsection{\texorpdfstring{erase()}{erase()}}
+{\footnotesize\ttfamily void File\+Info\+::erase (\begin{DoxyParamCaption}\item[{string}]{name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Disassociate the given name from this object 
+\begin{DoxyParams}{Parameters}
+{\em name} & the name of the object to be erased. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em \mbox{\hyperlink{classarboreal__logic__error}{arboreal\+\_\+logic\+\_\+error}}} & \\
+\hline
+\end{DoxyExceptions}
+\begin{DoxySeeAlso}{See also}
+\mbox{\hyperlink{classFileInfo_ae058242283d3317eaf2b79428e6137f6}{File\+Info\+::erase()}} 
+\end{DoxySeeAlso}
+
+
+Reimplemented from \mbox{\hyperlink{classTreeObject_a453b5df2a9ef7c6faad259900d574ee2}{Tree\+Object}}.
+
+\mbox{\Hypertarget{classFileInfo_ad93a84b63e417b07aa68b619051ab746}\label{classFileInfo_ad93a84b63e417b07aa68b619051ab746}} 
+\index{File\+Info@{File\+Info}!insert@{insert}}
+\index{insert@{insert}!File\+Info@{File\+Info}}
+\subsubsection{\texorpdfstring{insert()}{insert()}}
+{\footnotesize\ttfamily void File\+Info\+::insert (\begin{DoxyParamCaption}\item[{string}]{name,  }\item[{\mbox{\hyperlink{classTreeObject}{Tree\+Object}} $\ast$}]{obj }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Associate a \mbox{\hyperlink{classTreeObject}{Tree\+Object}} with this object 
+\begin{DoxyParams}{Parameters}
+{\em name} & name of the object, mangled if inserting a \mbox{\hyperlink{classFileInfo}{File\+Info}} \\
+\hline
+{\em obj} & the object to be inserted \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em \mbox{\hyperlink{classtag__error}{tag\+\_\+error}}} & \\
+\hline
+\end{DoxyExceptions}
+\begin{DoxySeeAlso}{See also}
+\mbox{\hyperlink{classFileInfo_ad93a84b63e417b07aa68b619051ab746}{File\+Info\+::insert()}} 
+\end{DoxySeeAlso}
+
+
+Reimplemented from \mbox{\hyperlink{classTreeObject_af8cc57edba9f435b52ccf33cfbbb2fc6}{Tree\+Object}}.
+
+\mbox{\Hypertarget{classFileInfo_a7f788f31521c535646eebfa9959bbb24}\label{classFileInfo_a7f788f31521c535646eebfa9959bbb24}} 
+\index{File\+Info@{File\+Info}!insert\+\_\+addition@{insert\+\_\+addition}}
+\index{insert\+\_\+addition@{insert\+\_\+addition}!File\+Info@{File\+Info}}
+\subsubsection{\texorpdfstring{insert\+\_\+addition()}{insert\_addition()}}
+{\footnotesize\ttfamily void File\+Info\+::insert\+\_\+addition (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classTreeObject}{Tree\+Object}} $\ast$}]{add }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Add an \mbox{\hyperlink{classAddition}{Addition}} to the list of Modifications so that it can be written out later. Note\+: Do not call this on a \mbox{\hyperlink{classFileInfo}{File\+Info}}. 
+\begin{DoxyParams}{Parameters}
+{\em add} & the object that was previously inserted to this object which will be added to the list of Modifications \\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+File\+System\+::write\+Out() \mbox{\hyperlink{classTreeObject_af8cc57edba9f435b52ccf33cfbbb2fc6}{Tree\+Object\+::insert()}} 
+\end{DoxySeeAlso}
+
+
+Reimplemented from \mbox{\hyperlink{classTreeObject_a41ce6080e0df5adcea4b0a76d35af885}{Tree\+Object}}.
+
+\mbox{\Hypertarget{classFileInfo_a278136b1d68f55dc56a4be807076fc0d}\label{classFileInfo_a278136b1d68f55dc56a4be807076fc0d}} 
+\index{File\+Info@{File\+Info}!insert\+\_\+deletion@{insert\+\_\+deletion}}
+\index{insert\+\_\+deletion@{insert\+\_\+deletion}!File\+Info@{File\+Info}}
+\subsubsection{\texorpdfstring{insert\+\_\+deletion()}{insert\_deletion()}}
+{\footnotesize\ttfamily void File\+Info\+::insert\+\_\+deletion (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classTreeObject}{Tree\+Object}} $\ast$}]{del }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Add a \mbox{\hyperlink{classDeletion}{Deletion}} to the list of Modifications so that it can be written out later. Note\+: Do not call this on a \mbox{\hyperlink{classFileInfo}{File\+Info}}. 
+\begin{DoxyParams}{Parameters}
+{\em del} & the object that was previously erased from this object which will be added to the list of Modifications \\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+File\+System\+::write\+Out() \mbox{\hyperlink{classTreeObject_a453b5df2a9ef7c6faad259900d574ee2}{Tree\+Object\+::erase()}} 
+\end{DoxySeeAlso}
+
+
+Reimplemented from \mbox{\hyperlink{classTreeObject_afcc4b3928d2b77ff080aa229a9706215}{Tree\+Object}}.
+
+\mbox{\Hypertarget{classFileInfo_a15d8f9279f1d60e4db4618cb81e68414}\label{classFileInfo_a15d8f9279f1d60e4db4618cb81e68414}} 
+\index{File\+Info@{File\+Info}!write\+Out@{write\+Out}}
+\index{write\+Out@{write\+Out}!File\+Info@{File\+Info}}
+\subsubsection{\texorpdfstring{write\+Out()}{writeOut()}}
+{\footnotesize\ttfamily void File\+Info\+::write\+Out (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Intended to write out the object to disk 
+
+Implements \mbox{\hyperlink{classTreeObject_abf2bf88337bec961784b5dfeb9b795ed}{Tree\+Object}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Trees.\+h\item 
+Trees.\+cpp\end{DoxyCompactItemize}

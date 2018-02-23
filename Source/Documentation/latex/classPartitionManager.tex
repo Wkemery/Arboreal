@@ -1,0 +1,38 @@
+\hypertarget{classPartitionManager}{}\section{Partition\+Manager Class Reference}
+\label{classPartitionManager}\index{Partition\+Manager@{Partition\+Manager}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPartitionManager_aa875b0b19b7ab9f32b02d2c9be383b75}\label{classPartitionManager_aa875b0b19b7ab9f32b02d2c9be383b75}} 
+{\bfseries Partition\+Manager} (\mbox{\hyperlink{classDiskManager}{Disk\+Manager}} $\ast$dm, string partition\+Name)
+\item 
+\mbox{\Hypertarget{classPartitionManager_a7aca34c24770b7b9290c489475655ada}\label{classPartitionManager_a7aca34c24770b7b9290c489475655ada}} 
+void {\bfseries read\+Disk\+Block} (Blk\+Num\+Type blknum, char $\ast$blkdata)
+\item 
+\mbox{\Hypertarget{classPartitionManager_a114d5d4f8d90b6e9207b09d99e246bed}\label{classPartitionManager_a114d5d4f8d90b6e9207b09d99e246bed}} 
+void {\bfseries write\+Disk\+Block} (Blk\+Num\+Type blknum, char $\ast$blkdata)
+\item 
+\mbox{\Hypertarget{classPartitionManager_aa1026e17e77f154d7034fafd188bda02}\label{classPartitionManager_aa1026e17e77f154d7034fafd188bda02}} 
+size\+\_\+t {\bfseries get\+Block\+Size} ()
+\item 
+\mbox{\Hypertarget{classPartitionManager_a682ce5963a31cf7009455cb1c229b26a}\label{classPartitionManager_a682ce5963a31cf7009455cb1c229b26a}} 
+Blk\+Num\+Type {\bfseries get\+Free\+Disk\+Block} ()
+\item 
+\mbox{\Hypertarget{classPartitionManager_a3ce9b50aa5e7d9063919fc55d125246b}\label{classPartitionManager_a3ce9b50aa5e7d9063919fc55d125246b}} 
+void {\bfseries return\+Disk\+Block} (Blk\+Num\+Type blknum)
+\item 
+\mbox{\Hypertarget{classPartitionManager_a7c756dba2665e5a7b62b2ccb261f1158}\label{classPartitionManager_a7c756dba2665e5a7b62b2ccb261f1158}} 
+string {\bfseries get\+Partition\+Name} ()
+\item 
+\mbox{\Hypertarget{classPartitionManager_a5bd37532cafac27e5b77fe1b58322412}\label{classPartitionManager_a5bd37532cafac27e5b77fe1b58322412}} 
+int {\bfseries get\+File\+Name\+Size} ()
+\item 
+\mbox{\Hypertarget{classPartitionManager_a8f19809bbfe06885d476fa0ac4632243}\label{classPartitionManager_a8f19809bbfe06885d476fa0ac4632243}} 
+bool {\bfseries operator==} (const \mbox{\hyperlink{classPartitionManager}{Partition\+Manager}} \&rhs)
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+partitionmanager.\+h\item 
+partitionmanager.\+cpp\end{DoxyCompactItemize}

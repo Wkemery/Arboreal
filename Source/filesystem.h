@@ -67,18 +67,18 @@ public:
   FileSystem(DiskManager *dm, string fileSystemName);
   ~FileSystem();
   
-  vector<FileInfo*>* tagSearch(vector<string> tags);
+  vector<FileInfo*>* tagSearch(unordered_set<string>& tags);
   vector<FileInfo*>* fileSearch(string name);
   void createTag(string tagName);
   void deleteTag(string tagName);
   void mergeTags(string tag1, string tag2);
-  void tagFile(FileInfo* file, vector<string>& tags);
-  void untagFile(FileInfo* file, vector<string>& tags);
-  void tagFile(vector<string>& filePath, vector<string>& tags);
-  void untagFile(vector<string>& filePath, vector<string>& tags);
+  void tagFile(FileInfo* file, unordered_set<string> tagsToAdd);
+  void untagFile(FileInfo* file, unordered_set<string> tagsToRemove, bool deleting = false);
+  void tagFile(vector<string>& filePath, unordered_set<string> tags);
+  void untagFile(vector<string>& filePath, unordered_set<string> tags);
   
   void renameTag(string originalTagName, string newTagName);
-  FileInfo* createFile(string filename, vector<string>& tags);
+  FileInfo* createFile(string filename, unordered_set<string>& tags);
   void deleteFile(FileInfo* file);
   void deleteFile(vector<string>& filePath);
   void writeChanges();

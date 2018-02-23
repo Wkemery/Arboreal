@@ -13,6 +13,7 @@
 #include "Trees.h"
 #include <string>
 #include <string.h>
+#include<unordered_set>
 using namespace std;
 
 int main(int argc, char** argv)
@@ -114,17 +115,17 @@ int main(int argc, char** argv)
 //         fs1->printRoot();
         fs1->writeChanges();
         
-        vector<string> tagSet;
+        unordered_set<string> tagSet;
         fs1->createFile("myfile1", tagSet);
         fs1->createFile("myfile2", tagSet);
         fs1->createFile("myfile3", tagSet);
         
-        tagSet.push_back("tag1");
+        tagSet.insert("tag1");
         fs1->createFile("myfile1", tagSet);
         fs1->createFile("myfile2", tagSet);
         fs1->createFile("myfile3", tagSet);
         
-        tagSet.push_back("tag2");
+        tagSet.insert("tag2");
         fs1->createFile("myfile1", tagSet);
         fs1->createFile("myfile2", tagSet);
         fs1->createFile("myfile3", tagSet);
@@ -144,11 +145,11 @@ int main(int argc, char** argv)
     {
       try 
       {
-        vector<string> tagSet;
+        unordered_set<string> tagSet;
         fs1->createFile("myfile1", tagSet);
-        tagSet.push_back("tag2");
+        tagSet.insert("tag2");
         fs1->createFile("myfile2", tagSet);
-        tagSet.push_back("tag3");
+        tagSet.insert("tag3");
         fs1->createFile("myfile3", tagSet);
         
         fs1->writeChanges();
@@ -161,13 +162,13 @@ int main(int argc, char** argv)
     }
     case 3:
     {
-      vector<string> tagSet;
+      unordered_set<string> tagSet;
       try{fs1->createFile("myfile1", tagSet);}//This should fail, creating duplicate file
       catch(arboreal_exception& e) {cerr << "Error! " << e.what() << " in " << e.where() << endl;}
-      tagSet.push_back("tag2");
+      tagSet.insert("tag2");
       try{fs1->createFile("myfile2", tagSet);}//This should fail, creating duplicate file
       catch(arboreal_exception& e) {cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
-      tagSet.push_back("badtag");
+      tagSet.insert("badtag");
       try{fs1->createFile("myfile3", tagSet);}//
       catch(arboreal_exception& e) {cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
       break;
@@ -197,7 +198,7 @@ int main(int argc, char** argv)
     case 5:
     {
       string fileName = "myFile";
-      vector<string> tags;
+      unordered_set<string> tags;
       /*Create 15 files tagged with default*/
       for(int i = 0; i < 15; i++)
       {
@@ -268,7 +269,7 @@ int main(int argc, char** argv)
 
       
       /*Create 5 files tagged with tag 0*/
-      tags.push_back("myTag0");
+      tags.insert("myTag0");
       
       for(int i = 0; i < 5; i++)
       {
@@ -282,8 +283,8 @@ int main(int argc, char** argv)
       fs1->writeChanges();
       
       /*create 5 files tagged with 0,2,4*/
-      tags.push_back("myTag2");
-      tags.push_back("myTag4");
+      tags.insert("myTag2");
+      tags.insert("myTag4");
       
       for(int i = 0; i < 5; i++)
       {
@@ -298,8 +299,8 @@ int main(int argc, char** argv)
       
       /*Create 5 files tagged with 1,3*/
       tags.clear();
-      tags.push_back("myTag1");
-      tags.push_back("myTag3");
+      tags.insert("myTag1");
+      tags.insert("myTag3");
       
       for(int i = 0; i < 5; i++)
       {
@@ -324,9 +325,9 @@ int main(int argc, char** argv)
       
       /*Create 5 files tagged with 1,3,5*/
       tags.clear();
-      tags.push_back("myTag1");
-      tags.push_back("myTag3");
-      tags.push_back("myTag5");
+      tags.insert("myTag1");
+      tags.insert("myTag3");
+      tags.insert("myTag5");
       
       for(int i = 0; i < 5; i++)
       {
@@ -342,7 +343,7 @@ int main(int argc, char** argv)
       /*Try to tag the previous 5 files with tag 5*/
       cout << "Tag File Errors: should be 5 errors" << endl;
       tags.clear();
-      tags.push_back("myTag5");
+      tags.insert("myTag5");
       for(size_t i = 0; i < foundFiles->size(); i++)
       {
         try{fs1->tagFile(foundFiles->at(i), tags);}
@@ -355,9 +356,9 @@ int main(int argc, char** argv)
       /*try to create another file with tags 1,3,5*/
       cout << "File Creation Errors: SHould be 2 errors" << endl;
       tags.clear(); 
-      tags.push_back("myTag1");
-      tags.push_back("myTag3");
-      tags.push_back("myTag5");
+      tags.insert("myTag1");
+      tags.insert("myTag3");
+      tags.insert("myTag5");
       
       try{fs1->createFile("myFile0", tags);}
       catch(arboreal_exception& e)
@@ -366,9 +367,9 @@ int main(int argc, char** argv)
       /*Try to create another file with tags 0,2,4*/
       
       tags.clear(); 
-      tags.push_back("myTag0");
-      tags.push_back("myTag2");
-      tags.push_back("myTag4");
+      tags.insert("myTag0");
+      tags.insert("myTag2");
+      tags.insert("myTag4");
       
       try{fs1->createFile("myFile0", tags);}
       catch(arboreal_exception& e)
@@ -396,7 +397,7 @@ int main(int argc, char** argv)
       cout << "Testing tag creation/Association" << endl << endl; 
       string tagName = "Tag";
       string fileName = "File";
-      vector<string> tags;
+      unordered_set<string> tags;
       
       /*create 10 tags*/
       for(int i = 0; i < 10; i++)
@@ -410,25 +411,25 @@ int main(int argc, char** argv)
       
       try
       {
-        tags.push_back("Tag0"); tags.push_back("Tag1"); tags.push_back("Tag2");
+        tags.insert("Tag0"); tags.insert("Tag1"); tags.insert("Tag2");
         fs1->createFile("File1", tags); tags.clear();
         
-        tags.push_back("Tag0"); tags.push_back("Tag1");
+        tags.insert("Tag0"); tags.insert("Tag1");
         fs1->createFile("File1", tags); tags.clear();
         
-        tags.push_back("Tag0"); tags.push_back("Tag2");
+        tags.insert("Tag0"); tags.insert("Tag2");
         fs1->createFile("File1", tags); tags.clear();
         
-        tags.push_back("Tag1");
+        tags.insert("Tag1");
         fs1->createFile("File2", tags); tags.clear();
         
-        tags.push_back("Tag1"); tags.push_back("Tag5");
+        tags.insert("Tag1"); tags.insert("Tag5");
         fs1->createFile("File3", tags); tags.clear();
         
-        tags.push_back("Tag0"); tags.push_back("Tag2"); tags.push_back("Tag5");
+        tags.insert("Tag0"); tags.insert("Tag2"); tags.insert("Tag5");
         fs1->createFile("File4", tags); tags.clear();
         
-        tags.push_back("Tag0"); tags.push_back("Tag2"); tags.push_back("Tag4");
+        tags.insert("Tag0"); tags.insert("Tag2"); tags.insert("Tag4");
         fs1->createFile("File5", tags); tags.clear();
         
         
@@ -447,15 +448,12 @@ int main(int argc, char** argv)
     case 7:
     {
       cout << "Testing simple tag deletion and file deletion with path names and tagging and some untagging" << endl << endl; 
-      string tagName = "Tag";
-      string fileName = "File";
-      vector<string> tags;
       
       try
       {
         FileInfo* file = 0;
         vector<string> fullPath;
-        vector<string> tags;
+        unordered_set<string> tags;
         
         fullPath.push_back("Tag0"); fullPath.push_back("Tag1"); fullPath.push_back("Tag2"); fullPath.push_back("File1");
         fs1->deleteFile(fullPath); fullPath.clear();
@@ -475,10 +473,10 @@ int main(int argc, char** argv)
         
         fullPath.push_back("Tag0"); fullPath.push_back("Tag2"); fullPath.push_back("File1");
         file = fs1->pathToFile(fullPath); 
-        tags.push_back("Tag0"); fs1->untagFile(file, tags); tags.clear();
+        tags.insert("Tag0"); fs1->untagFile(file, tags); tags.clear();
         fs1->writeChanges();
         
-        tags.push_back("Tag5"); fs1->tagFile(file, tags); tags.clear();
+        tags.insert("Tag5"); fs1->tagFile(file, tags); tags.clear();
         fs1->writeChanges();
         
         fullPath.clear();
@@ -486,12 +484,12 @@ int main(int argc, char** argv)
         
         fullPath.push_back("Tag1"); fullPath.push_back("File2");
         file = fs1->pathToFile(fullPath); 
-        tags.push_back("Tag7"); tags.push_back("Tag9"); fs1->tagFile(file, tags); tags.clear();
+        tags.insert("Tag7"); tags.insert("Tag9"); fs1->tagFile(file, tags); tags.clear();
         fullPath.clear();
         
         
         fullPath.push_back("Tag0"); fullPath.push_back("Tag2"); fullPath.push_back("Tag5"); fullPath.push_back("File4");
-        tags.push_back("Tag6"); fs1->tagFile(fullPath, tags); tags.clear();
+        tags.insert("Tag6"); fs1->tagFile(fullPath, tags); tags.clear();
         fullPath.clear();
         
         fs1->deleteTag("Tag3");
@@ -511,6 +509,122 @@ int main(int argc, char** argv)
       
       break;
     }
+    case 8:
+    {
+      cout << "Testing file tagging and untagging conflicts and renaming tags. I've stopped printing errors for this one. Warnings still print" << endl << endl; 
+      
+      
+      vector<string> fullPath;
+      unordered_set<string> tags;
+      
+      try
+      {
+        tags.insert("Tag0"); fs1->createFile("File1", tags);
+      }
+      catch(arboreal_exception& e){cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
+      
+      fullPath.clear(); tags.clear();
+      
+//       cout << "TagFile error: should fail" << endl;
+      try
+      {
+        fullPath.push_back("Tag0"); fullPath.push_back("File1"); 
+        tags.insert("Tag1"); fs1->tagFile(fullPath, tags);
+      }
+      catch(arboreal_exception& e){/*cerr << "Error! " << e.what() << " in " << e.where()<< endl;*/}
+      
+      fullPath.clear(); tags.clear();
+      
+      try
+      {
+        tags.insert("Tag1"); tags.insert("Tag7"); fs1->createFile("File2", tags);
+      }
+      catch(arboreal_exception& e){cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
+      
+      fullPath.clear(); tags.clear();
+      
+      
+//       cout << "UntagFile error:" << endl;
+      try
+      {
+        fullPath.push_back("Tag1"); fullPath.push_back("Tag7"); fullPath.push_back("Tag9"); fullPath.push_back("File2");
+        tags.insert("Tag9"); fs1->untagFile(fullPath, tags); 
+      }
+      catch(arboreal_exception& e){/*cerr << "Error! " << e.what() << " in " << e.where()<< endl;*/}
+      
+      fullPath.clear(); tags.clear();
+      
+      cout << "UntagFile Warnings:" << endl;
+      try
+      {
+        fullPath.push_back("Tag1"); fullPath.push_back("Tag7"); fullPath.push_back("Tag9"); fullPath.push_back("File2");
+        tags.insert("Tag0"); tags.insert("Tag3"); tags.insert("Tag8"); tags.insert("Tag6"); 
+        fs1->untagFile(fullPath, tags);
+      }
+      catch(arboreal_exception& e){/*cerr << "Error! " << e.what() << " in " << e.where()<< endl;*/}
+      
+      fullPath.clear(); tags.clear();
+      
+      cout << "UntagFile: Warnings" << endl;
+      try
+      {
+        fullPath.push_back("Tag1"); fullPath.push_back("Tag7"); fullPath.push_back("Tag9"); fullPath.push_back("File2");
+        tags.insert("Tag0"); tags.insert("Tag8"); tags.insert("Tag1");
+        fs1->untagFile(fullPath, tags);
+      }
+      catch(arboreal_exception& e){cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
+      
+      fullPath.clear(); tags.clear();
+      
+      cout << "TagFile: Warnings" << endl;
+      try
+      {
+        fullPath.push_back("Tag0"); fullPath.push_back("Tag1"); fullPath.push_back("File1");
+        tags.insert("Tag0"); tags.insert("Tag3"); tags.insert("Tag6");
+        fs1->tagFile(fullPath, tags);
+      }
+      catch(arboreal_exception& e){cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
+      
+      fullPath.clear(); tags.clear();
+      
+      try
+      {
+        fs1->renameTag("Tag1", "Tag8");
+      }
+      catch(arboreal_exception& e){cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
+      
+      fullPath.clear(); tags.clear();
+      
+//       cout << "CreateTag Error: " << endl;
+      try
+      {
+        fs1->createTag("Tag8");
+      }
+      catch(arboreal_exception& e){/*cerr << "Error! " << e.what() << " in " << e.where()<< endl;*/}
+      
+      fullPath.clear(); tags.clear();
+      
+//       cout << "DeleteTag: Error" << endl;
+      try
+      {
+        fs1->deleteTag("Tag1");
+      }
+      catch(arboreal_exception& e){/*cerr << "Error! " << e.what() << " in " << e.where()<< endl;*/}
+      
+      fullPath.clear(); tags.clear();
+      
+//       cout << "DeleteFile Error:" << endl;
+      try
+      {
+        fullPath.push_back("NotATaG"); fullPath.push_back("File1");
+        fs1->deleteFile(fullPath);
+      }
+      catch(arboreal_exception& e){/*cerr << "Error! " << e.what() << " in " << e.where()<< endl;*/}
+      fullPath.clear(); tags.clear();
+      
+      break;
+    }
+    
     default:
     {
       cerr << "Driver Error! Behavior not defined for specified number" << endl;

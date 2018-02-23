@@ -1,0 +1,101 @@
+\hypertarget{classFileSystem}{}\section{File\+System Class Reference}
+\label{classFileSystem}\index{File\+System@{File\+System}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classFileSystem_a3c9bf0d395385ca84319dcfaf9d005f4}\label{classFileSystem_a3c9bf0d395385ca84319dcfaf9d005f4}} 
+{\bfseries File\+System} (\mbox{\hyperlink{classDiskManager}{Disk\+Manager}} $\ast$dm, string file\+System\+Name)
+\item 
+\mbox{\Hypertarget{classFileSystem_afa5afeedec00348c8d1ab922dac9b086}\label{classFileSystem_afa5afeedec00348c8d1ab922dac9b086}} 
+vector$<$ \mbox{\hyperlink{classFileInfo}{File\+Info}} $\ast$ $>$ $\ast$ {\bfseries tag\+Search} (unordered\+\_\+set$<$ string $>$ \&tags)
+\item 
+\mbox{\Hypertarget{classFileSystem_aaa02d1a13bb71582a2a4268d32cba5b6}\label{classFileSystem_aaa02d1a13bb71582a2a4268d32cba5b6}} 
+vector$<$ \mbox{\hyperlink{classFileInfo}{File\+Info}} $\ast$ $>$ $\ast$ {\bfseries file\+Search} (string name)
+\item 
+\mbox{\Hypertarget{classFileSystem_abbfcd839f871fe07c49de3d8b18045da}\label{classFileSystem_abbfcd839f871fe07c49de3d8b18045da}} 
+void {\bfseries create\+Tag} (string tag\+Name)
+\item 
+\mbox{\Hypertarget{classFileSystem_a551828d32231172c1a5099ade343c8ed}\label{classFileSystem_a551828d32231172c1a5099ade343c8ed}} 
+void {\bfseries delete\+Tag} (string tag\+Name)
+\item 
+\mbox{\Hypertarget{classFileSystem_ad631369beaeeb64657756d17deaa5ca5}\label{classFileSystem_ad631369beaeeb64657756d17deaa5ca5}} 
+void {\bfseries merge\+Tags} (string tag1, string tag2)
+\item 
+\mbox{\Hypertarget{classFileSystem_a94f949610e3011c15bf683db760ce9a5}\label{classFileSystem_a94f949610e3011c15bf683db760ce9a5}} 
+void {\bfseries tag\+File} (\mbox{\hyperlink{classFileInfo}{File\+Info}} $\ast$file, unordered\+\_\+set$<$ string $>$ tags\+To\+Add)
+\item 
+\mbox{\Hypertarget{classFileSystem_a04dae702272527472dc78846da3f13b2}\label{classFileSystem_a04dae702272527472dc78846da3f13b2}} 
+void {\bfseries untag\+File} (\mbox{\hyperlink{classFileInfo}{File\+Info}} $\ast$file, unordered\+\_\+set$<$ string $>$ tags\+To\+Remove, bool deleting=false)
+\item 
+\mbox{\Hypertarget{classFileSystem_a93a4194b1f12fb81f9816be51d1bdfa7}\label{classFileSystem_a93a4194b1f12fb81f9816be51d1bdfa7}} 
+void {\bfseries tag\+File} (vector$<$ string $>$ \&file\+Path, unordered\+\_\+set$<$ string $>$ tags)
+\item 
+\mbox{\Hypertarget{classFileSystem_aea4ea7f9e9910c3b6bdf153a8f801eb8}\label{classFileSystem_aea4ea7f9e9910c3b6bdf153a8f801eb8}} 
+void {\bfseries untag\+File} (vector$<$ string $>$ \&file\+Path, unordered\+\_\+set$<$ string $>$ tags)
+\item 
+\mbox{\Hypertarget{classFileSystem_ad4a7152f3ef95780b0ee5d907a526bdc}\label{classFileSystem_ad4a7152f3ef95780b0ee5d907a526bdc}} 
+void {\bfseries rename\+Tag} (string original\+Tag\+Name, string new\+Tag\+Name)
+\item 
+\mbox{\Hypertarget{classFileSystem_a345e38c71ac44fb898a86f7fe6fd5b8b}\label{classFileSystem_a345e38c71ac44fb898a86f7fe6fd5b8b}} 
+\mbox{\hyperlink{classFileInfo}{File\+Info}} $\ast$ {\bfseries create\+File} (string filename, unordered\+\_\+set$<$ string $>$ \&tags)
+\item 
+\mbox{\Hypertarget{classFileSystem_a09faf11ddeba6c8df97971fef765faa6}\label{classFileSystem_a09faf11ddeba6c8df97971fef765faa6}} 
+void {\bfseries delete\+File} (\mbox{\hyperlink{classFileInfo}{File\+Info}} $\ast$file)
+\item 
+\mbox{\Hypertarget{classFileSystem_ad311df477641088bdd2c7b12474d5887}\label{classFileSystem_ad311df477641088bdd2c7b12474d5887}} 
+void {\bfseries delete\+File} (vector$<$ string $>$ \&file\+Path)
+\item 
+\mbox{\Hypertarget{classFileSystem_a29e11a70216913489dc7231fc676c2b9}\label{classFileSystem_a29e11a70216913489dc7231fc676c2b9}} 
+void {\bfseries write\+Changes} ()
+\item 
+\mbox{\Hypertarget{classFileSystem_a3af47649f3cb88b9b36282a3c2feea41}\label{classFileSystem_a3af47649f3cb88b9b36282a3c2feea41}} 
+void {\bfseries rename\+File} (vector$<$ string $>$ \&original\+File\+Path, string new\+File\+Name)
+\item 
+\mbox{\Hypertarget{classFileSystem_ad074d316d2f5eabf3540e02f467536d2}\label{classFileSystem_ad074d316d2f5eabf3540e02f467536d2}} 
+int {\bfseries open\+File} (vector$<$ string $>$ \&file\+Path, char mode)
+\item 
+\mbox{\Hypertarget{classFileSystem_abe55cad8f243127218c4fd2229269186}\label{classFileSystem_abe55cad8f243127218c4fd2229269186}} 
+void {\bfseries close\+File} (unsigned int file\+Desc)
+\item 
+\mbox{\Hypertarget{classFileSystem_ae8d0b2314a26136a09e2edceab68fae1}\label{classFileSystem_ae8d0b2314a26136a09e2edceab68fae1}} 
+size\+\_\+t {\bfseries read\+File} (unsigned int file\+Desc, char $\ast$data, size\+\_\+t len)
+\item 
+\mbox{\Hypertarget{classFileSystem_ad8f59355b3eec94ee8fb88acb4179c69}\label{classFileSystem_ad8f59355b3eec94ee8fb88acb4179c69}} 
+size\+\_\+t {\bfseries write\+File} (unsigned int file\+Desc, const char $\ast$data, size\+\_\+t len)
+\item 
+\mbox{\Hypertarget{classFileSystem_a34ef1d823d338aa7190a4acf137a015d}\label{classFileSystem_a34ef1d823d338aa7190a4acf137a015d}} 
+size\+\_\+t {\bfseries append\+File} (unsigned int file\+Desc, const char $\ast$data, size\+\_\+t len)
+\item 
+\mbox{\Hypertarget{classFileSystem_ae7e60d804eddbb5552cbbcec3d48483e}\label{classFileSystem_ae7e60d804eddbb5552cbbcec3d48483e}} 
+void {\bfseries seek\+File\+Absolute} (unsigned int file\+Desc, size\+\_\+t offset)
+\item 
+\mbox{\Hypertarget{classFileSystem_ab1c0196f975bd9afe3912bdb11b73a0f}\label{classFileSystem_ab1c0196f975bd9afe3912bdb11b73a0f}} 
+void {\bfseries seek\+File\+Relative} (unsigned int file\+Desc, size\+\_\+t offset)
+\item 
+\mbox{\Hypertarget{classFileSystem_aa95e4a2637d1aaca39f1672fc98345b5}\label{classFileSystem_aa95e4a2637d1aaca39f1672fc98345b5}} 
+\mbox{\hyperlink{classAttributes}{Attributes}} $\ast$ {\bfseries get\+Attributes} (vector$<$ string $>$ \&file\+Path)
+\item 
+\mbox{\Hypertarget{classFileSystem_ab4d83c124999807d6ea9ff76e95dac06}\label{classFileSystem_ab4d83c124999807d6ea9ff76e95dac06}} 
+void {\bfseries set\+Permissions} (vector$<$ string $>$ \&file\+Path, char $\ast$perms)
+\item 
+\mbox{\Hypertarget{classFileSystem_a33e11c3a6b9eeda2e85c8e61b50ddeed}\label{classFileSystem_a33e11c3a6b9eeda2e85c8e61b50ddeed}} 
+\mbox{\hyperlink{classFileInfo}{File\+Info}} $\ast$ {\bfseries path\+To\+File} (vector$<$ string $>$ \&path)
+\item 
+\mbox{\Hypertarget{classFileSystem_a4c23a9aab388ac27008682e3977672e3}\label{classFileSystem_a4c23a9aab388ac27008682e3977672e3}} 
+int {\bfseries get\+File\+Name\+Size} ()
+\item 
+\mbox{\Hypertarget{classFileSystem_af6adc05d57f715de07432a897070eec4}\label{classFileSystem_af6adc05d57f715de07432a897070eec4}} 
+void {\bfseries print\+Root} ()
+\item 
+\mbox{\Hypertarget{classFileSystem_a4caa6452a78caf023ff522c5846f1391}\label{classFileSystem_a4caa6452a78caf023ff522c5846f1391}} 
+void {\bfseries print\+Tags} ()
+\item 
+\mbox{\Hypertarget{classFileSystem_a0bc788485811b7307193ee282ff5ba53}\label{classFileSystem_a0bc788485811b7307193ee282ff5ba53}} 
+void {\bfseries print\+Files} ()
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+filesystem.\+h\item 
+filesystem.\+cpp\end{DoxyCompactItemize}

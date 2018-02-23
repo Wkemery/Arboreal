@@ -11,6 +11,7 @@
 #include<unordered_map>
 #include<iostream>
 #include<algorithm>
+#include<unordered_set>
 using namespace std;
 
 #define DEFAULTOWNER 1
@@ -122,37 +123,37 @@ void Addition::writeOut(PartitionManager* pm)
   Index nextEntry{0,0};
   
   
-  pm->readDiskBlock(_parent->getLastEntry().blknum, buff);
+  pm->readDiskBlock(_parent->get_last_entry().blknum, buff);
   
-  if(_parent->getLastEntry().blknum == 0)
+  if(_parent->get_last_entry().blknum == 0)
   {
-    nextEntry.blknum = _parent->getStartBlock();
+    nextEntry.blknum = _parent->get_start_block();
     nextEntry.offset = 0;
   }
   else
   {
-    nextEntry = _parent->getLastEntry();
+    nextEntry = _parent->get_last_entry();
     _parent->incrementAllocate(&nextEntry);
   }
   
-  if(_parent->getLastEntry().blknum != nextEntry.blknum)
+  if(_parent->get_last_entry().blknum != nextEntry.blknum)
   {
     pm->readDiskBlock(nextEntry.blknum, buff);
   }
   
-  int keySize = _mod->getName().length();
-  strncpy(buff + nextEntry.offset, _mod->getName().c_str(), keySize);
+  int keySize = _mod->get_name().length();
+  strncpy(buff + nextEntry.offset, _mod->get_name().c_str(), keySize);
   memset(buff + nextEntry.offset + keySize, 0, pm->getFileNameSize() - keySize);
   
-  /*write out the blocknumber of the tagTree to buffer, probably 8 bytes?*/
-  BlkNumType tagBlk = _mod->getBlockNumber();
+  /*write out the blocknumber of the tagTree/Finode to buffer*/
+  BlkNumType tagBlk = _mod->get_block_number();
   memcpy(buff + nextEntry.offset + pm->getFileNameSize(), &tagBlk, sizeof(BlkNumType));
   
-  _parent->setLastEntry(nextEntry);
+  _parent->set_last_entry(nextEntry);
   
-  _mod->addIndex(_parent, _parent->getLastEntry());
+  _mod->add_index(_parent, _parent->get_last_entry());
   
-  pm->writeDiskBlock(_parent->getLastEntry().blknum, buff);
+  pm->writeDiskBlock(_parent->get_last_entry().blknum, buff);
 }
 /******************************************************************************/
 
@@ -164,23 +165,23 @@ void Deletion::writeOut(PartitionManager* pm)
   char* buff = new char[pm->getBlockSize()];
   memset(buff, 0, pm->getBlockSize()); //zero out memory
   
-  if(_mod->getIndex(_parent).blknum == 0)
+  if(_mod->get_index(_parent).blknum == 0)
   {
     cerr << "Tag Tree was never written out. Not really an error, just here for debugging" << endl;
     //NOTE: even though it is just here for debugging don't remove the if, just the printout.
   }
   else
   {        
-    pm->readDiskBlock(_mod->getIndex(_parent).blknum, buff);
+    pm->readDiskBlock(_mod->get_index(_parent).blknum, buff);
       
     /*Zero out name and blocknumber*/
-    memset(buff + _mod->getIndex(_parent).offset, 0, pm->getFileNameSize() + sizeof(BlkNumType));
+    memset(buff + _mod->get_index(_parent).offset, 0, pm->getFileNameSize() + sizeof(BlkNumType));
     
 //     /*Remove that TagTrees presence on Disk*/
 //     _mod->del();
     
     /*Write out buff to mod blknum*/
-    pm->writeDiskBlock(_mod->getIndex(_parent).blknum, buff);
+    pm->writeDiskBlock(_mod->get_index(_parent).blknum, buff);
   }
 }
 
@@ -191,33 +192,33 @@ TreeObject::TreeObject(string name, BlkNumType blknum, PartitionManager* pm)
 
 TreeObject::~TreeObject(){}
 
-string TreeObject::getName(){return _name;}
+string TreeObject::get_name() const {return _name;}
 
-void TreeObject::setName(string name){_name = name;}
+void TreeObject::set_name(string name){_name = name;}
 
-void TreeObject::addIndex(TreeObject* obj, Index index)
+void TreeObject::add_index(TreeObject* obj, Index index)
 {
   Index temp{index.blknum, index.offset};
   _indeces.insert(pair<TreeObject*, Index>(obj, temp));
 }
 
-Index TreeObject::getIndex(TreeObject* obj)
+Index TreeObject::get_index(TreeObject* obj) const
 {
   auto indexIt = _indeces.find(obj);
   if(indexIt == _indeces.end())
   {
-    throw arboreal_logic_error("TreeObject* does not exist in Index map", "TreeObject::getIndex");
+    throw arboreal_logic_error("TreeObject* does not exist in Index map", "TreeObject::get_index");
   }
   return indexIt->second;
 }
 
-BlkNumType TreeObject::getBlockNumber(){return _blockNumber;}
+BlkNumType TreeObject::get_block_number() const {return _blockNumber;}
 
-Index TreeObject::getLastEntry(){return _lastEntry;}
+Index TreeObject::get_last_entry() const {return _lastEntry;}
 
-BlkNumType TreeObject::getStartBlock(){return _startBlock;}
+BlkNumType TreeObject::get_start_block() const {return _startBlock;}
 
-void TreeObject::setLastEntry(Index index){_lastEntry = index;}
+void TreeObject::set_last_entry(Index index){_lastEntry = index;}
 
 
 void TreeObject::incrementAllocate(Index* index)
@@ -301,7 +302,7 @@ void TreeObject::deleteContBlocks(BlkNumType blknum)
   _myPartitionManager->returnDiskBlock(blknum);
 }
 
-void TreeObject::insertAddition(TreeObject* add)
+void TreeObject::insert_addition(TreeObject* add)
 {
   if(add != 0)
   {
@@ -309,7 +310,7 @@ void TreeObject::insertAddition(TreeObject* add)
   }
 }
 
-void TreeObject::insertDeletion(TreeObject* del)
+void TreeObject::insert_deletion(TreeObject* del)
 {
   if(del != 0)
   {
@@ -317,22 +318,22 @@ void TreeObject::insertDeletion(TreeObject* del)
   }
 }
 
-size_t TreeObject::size(){return _myTree.size();}
+size_t TreeObject::size() const {return _myTree.size();}
 
-unordered_map<string, TreeObject*>::iterator TreeObject::begin(){return _myTree.begin();}
+unordered_map<string, TreeObject*>::iterator TreeObject::begin() {return _myTree.begin();}
 
-unordered_map<string, TreeObject*>::iterator TreeObject::end(){return _myTree.end();}
+unordered_map<string, TreeObject*>::iterator TreeObject::end() {return _myTree.end();}
 
-void TreeObject::insert(string name, TreeObject* ptr)
+void TreeObject::insert(string name, TreeObject* obj)
 {
-  auto ret = _myTree.insert(pair<string, TreeObject*>(name, ptr));
+  auto ret = _myTree.insert(pair<string, TreeObject*>(name, obj));
   if(!ret.second)
   {
     throw tag_error (name + " is not unique", "TreeObject::insert");
   }
   
   /*Keep track of addition to TreeObject*/
-  this->insertAddition(ptr);
+  this->insert_addition(obj);
 }
 
 void TreeObject::erase(string name)
@@ -342,11 +343,11 @@ void TreeObject::erase(string name)
   {
     throw arboreal_logic_error(name + " Does not exist in the TagTree " + _name, "TreeObject::erase");
   }
-  this->insertDeletion(object->second);
+  this->insert_deletion(object->second);
   _myTree.erase(object);
 }
 
-TreeObject* TreeObject::find(string name)
+TreeObject* TreeObject::find(string name) const
 {
   auto it = _myTree.find(name);
   if(it == _myTree.end())
@@ -471,7 +472,7 @@ void RootTree::readIn(unordered_multimap<string, FileInfo*>* allFiles, RootTree*
       
       /*Create TagTree object*/
       TagTree* tagTree = new TagTree(tagName, blknum, _myPartitionManager);
-      tagTree->addIndex(this, currentIndex);
+      tagTree->add_index(this, currentIndex);
 
       
       /*Insert key and value into tagtree in memory*/
@@ -631,7 +632,7 @@ void TagTree::readIn(unordered_multimap<string, FileInfo*>* allFiles, RootTree* 
         }
       }
       
-      finode->addIndex(this, currentIndex);
+      finode->add_index(this, currentIndex);
       
       /*Insert key and value into FileInfo object in memory*/
       auto it_ret = _myTree.insert(pair<string, FileInfo*>(finode->mangle(), finode));
@@ -755,7 +756,7 @@ void FileInfo::writeOut()
     /*There is room to store all the tags locally*/
     for(auto it = _myTree.begin(); it != _myTree.end(); it++)
     {
-      BlkNumType blknum = it->second->getBlockNumber();
+      BlkNumType blknum = it->second->get_block_number();
       memcpy(buff + offset, &blknum, sizeof(BlkNumType));
       offset+= sizeof(BlkNumType);
     }
@@ -768,7 +769,7 @@ void FileInfo::writeOut()
     for(size_t i = 0; i < localTagCount; i++)
     {
       /*Write out as many as we can*/
-      BlkNumType blknum = it->second->getBlockNumber();
+      BlkNumType blknum = it->second->get_block_number();
       memcpy(buff + offset, &blknum, sizeof(BlkNumType));
       offset+= sizeof(BlkNumType);
       it++;
@@ -788,7 +789,7 @@ void FileInfo::writeOut()
     for(it = it; it != _myTree.end(); it++)
     {
       /*Write out the rest of the tags into the cont block*/
-      BlkNumType blknum = it->second->getBlockNumber();
+      BlkNumType blknum = it->second->get_block_number();
       memcpy(contBlockData + offset, &blknum, sizeof(BlkNumType));
       offset+= sizeof(BlkNumType);
       it++;
@@ -1010,9 +1011,9 @@ void FileInfo::insert(string name, TreeObject* ptr)
   this->writeOut();
 }
 
-void FileInfo::insertAddition(TreeObject* add)
+void FileInfo::insert_addition(TreeObject* add)
 {
-  throw arboreal_logic_error("Attempt to call insertAddition on FileInfo object", "FileInfo::insertAddition");
+  throw arboreal_logic_error("Attempt to call insert_addition on FileInfo object", "FileInfo::insert_addition");
 }
 
 void FileInfo::erase(string name)
@@ -1025,14 +1026,24 @@ void FileInfo::erase(string name)
   _myTree.erase(object);
 }
 
-void FileInfo::insertDeletion(TreeObject* del) 
+void FileInfo::insert_deletion(TreeObject* del) 
 {
-  throw arboreal_logic_error("Attempt to call insertDeletion on FileInfo object", "FileInfo::insertDeletion");
+  throw arboreal_logic_error("Attempt to call insert_deletion on FileInfo object", "FileInfo::insert_deletion");
 }
 
 Attributes* FileInfo::getAttributes(){return _myAttributes;}
 
 Finode FileInfo::getFinode(){return _myFinode;}
+
+unordered_set<string> FileInfo::getTags()
+{
+  unordered_set<string> ret;
+  for(auto it = _myTree.begin(); it != _myTree.end(); it++)
+  {
+    ret.insert(it->first);
+  }
+  return ret;
+}
 
 size_t FileInfo::getFileSize()
 {
@@ -1061,35 +1072,39 @@ string FileInfo::mangle()
   
   std::sort(tempTags.begin(), tempTags.end());
   
-  
-  for(size_t i = 0; i < tempTags.size(); i++)
+  for(string tag : tempTags)
   {
     ret.append("_");
-    ret.append(tempTags[i]);
+    ret.append(tag);
   }
+  
   return ret;
 }
 
 string FileInfo::mangle(vector<string>& tags)
 {
-  vector<string> tempTags;
   string ret = _name;
   
-  for(size_t i = 0; i < tags.size(); i++)
-  {
-    tempTags.push_back(tags[i]);
-  }
+  std::sort(tags.begin(), tags.end());
   
-  std::sort(tempTags.begin(), tempTags.end());
-  
-  for(size_t i = 0; i < tempTags.size(); i++)
+  for(string tag : tags)
   {
     ret.append("_");
-    ret.append(tempTags[i]);
+    ret.append(tag);
   }
   
-  return ret.substr(0, ret.find_first_of('\0'));
+  return ret;
   
+}
+
+string FileInfo::mangle(unordered_set<string>& tags)
+{
+  vector<string> tagVec;
+  for(string tag : tags)
+  {
+    tagVec.push_back(tag);
+  }
+  return mangle(tagVec);
 }
 
 /******************************************************************************/

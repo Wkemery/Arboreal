@@ -382,7 +382,7 @@ FileSystem::~FileSystem()
   delete _myPartitionManager;
 }
 
-vector<FileInfo*>* FileSystem::tagSearch(vector<string> tags)
+vector<FileInfo*>* FileSystem::tagSearch(unordered_set<string>& tags)
 {
   vector<FileInfo*>* ret = new vector<FileInfo*>;
   if(tags.size() == 0)
@@ -392,7 +392,7 @@ vector<FileInfo*>* FileSystem::tagSearch(vector<string> tags)
   else if(tags.size() == 1)
   {
     /*find the tag in root tree*/
-    TreeObject* tagTree = _RootTree->find(tags[0]);
+    TreeObject* tagTree = _RootTree->find(*(tags.begin()));
     
     /*List files in tag tree pointed to by root tree*/
     
@@ -407,12 +407,12 @@ vector<FileInfo*>* FileSystem::tagSearch(vector<string> tags)
     //   * Use size field in root node of tag tree to find smallest tree among the tags you want to search
     /*create vector of tagtrees that we want to search*/
     vector<TreeObject*> searchTrees;
-    for(size_t i = 0; i < tags.size(); i++)
+    for(string tag : tags)
     {
-      TreeObject* tagTree = _RootTree->find(tags[i]);
+      TreeObject* tagTree = _RootTree->find(tag);
       if(tagTree == 0)
       {
-        cerr << tags[i] + " excluded from search : Tag Does not exist" << endl;
+        cerr << tag + " excluded from search : Tag Does not exist" << endl;
       }
       else
       {
@@ -438,14 +438,15 @@ vector<FileInfo*>* FileSystem::tagSearch(vector<string> tags)
         /* could be a matching file*/
         bool match = true;
         /* search remainng Tags for exact tag match*/
-        for(size_t i = 0; i < tags.size(); i++)
+        for(string tag : tags)
         {
-          if(fileIt->second->find(tags[i]) == 0)
+          if(fileIt->second->find(tag) == 0)
           {
             match = false;
             break;
           }
         }
+        
         if(match)
         {
           /*Push back the matching file*/
@@ -531,42 +532,71 @@ void FileSystem::mergeTags(string tag1, string tag2)
   
 }
 
-void FileSystem::tagFile(FileInfo* file, vector<string>& tags)
+void FileSystem::tagFile(FileInfo* file, unordered_set<string> tags)
 {
   /*Validate the tagging of this file first*/
-  if(tags.size() == 0) {throw tag_error("No tags specified","FileSystem::tagFile");}
+  unordered_set<string> tagsToAdd = tags;
+  
+  if(tagsToAdd.size() == 0) {throw tag_error("No tags specified","FileSystem::tagFile");}
   if(file == 0) {throw file_error ("File Does not Exist", "FileSystem::tagFile");}
   
-  vector<string> tagSet;
+  unordered_set<string> wholeTagSet = file->getTags();
+  
   TreeObject* tagTree = 0;
   
-  for(size_t i = 0; i < tags.size(); i++)
+  for(string tag : tags)
   {
-    /*Only add the tags that exist to the tagSet*/
-    tagTree = _RootTree->find(tags[i]);
+    /*Remove tags that do not exist*/
+    tagTree = _RootTree->find(tag);
     if(tagTree == 0)
     {
-      cerr << tags[i] << " Does Not Exist: Not added to file tag set" << endl;
+      cerr << tag << " Does Not Exist: Not added to file tag set" << endl;
+      tagsToAdd.erase(tag);
     }
     else
     {
-      tagSet.push_back(tags[i]);
+      wholeTagSet.insert(tag);
     }
   }
   
-  if(tagSet.size() == 0)
+  if(tagsToAdd.size() == 0)
   {
-    throw tag_error("No valid tags specified: file not tagged", "FileSystem::tagFile");
+    throw tag_error("No valid tags specified: file not Changed", "FileSystem::tagFile");
   }
   
-  TreeObject* fileCheck =  tagTree->find(file->mangle(tagSet));
+
+  /*Validate the new file*/
+  TreeObject* fileCheck = 0;
+  
+  tagTree = _RootTree->find(*(wholeTagSet.begin()));
+  if(tagTree == 0)
+  {
+    throw arboreal_logic_error(*wholeTagSet.begin() + " does not exist", "FileSystem::untagFile");
+  }
+  fileCheck =  tagTree->find(file->mangle(wholeTagSet));
+  
   if(fileCheck != 0)
   {
-    throw file_error(file->getName() + " with the specified tags already exists", "FileSystem::tagFile");
+    throw file_error(file->get_name() + " with the specified tags already exists", "FileSystem::tagFile");
   }
   
-  /*For every tag in tagSet*/
-  for(string tag : tagSet)
+  /*Remove tags already that the file already has*/
+  unordered_set<string> fileTagSet = file->getTags();
+  for(string tag : fileTagSet)
+  {
+    wholeTagSet.erase(tag);
+  }
+  
+  if(wholeTagSet.size() == 0)
+  {
+    cerr << "File was not tagged with anything new" << endl;
+    return;
+  }
+  
+
+  
+  /*For every tag in newTags*/
+  for(string tag : wholeTagSet)
   {
     /*find tagTree*/
     tagTree = _RootTree->find(tag);
@@ -575,7 +605,7 @@ void FileSystem::tagFile(FileInfo* file, vector<string>& tags)
     file->insert(tag, tagTree);
     
     /*Add Finode to tagTree*/
-    tagTree->insert(file->mangle(tagSet), file);
+    tagTree->insert(file->mangle(wholeTagSet), file);
     
     /*Note TagTree was modified*/
     insertModification(tagTree);
@@ -591,19 +621,19 @@ void FileSystem::tagFile(FileInfo* file, vector<string>& tags)
   file->writeOut();
 }
 
-void FileSystem::tagFile(vector<string>& filePath, vector<string>& tags)
+void FileSystem::tagFile(vector<string>& filePath, unordered_set<string> tagsToAdd)
 {
   FileInfo* file = pathToFile(filePath);
-  tagFile(file, tags);
+  tagFile(file, tagsToAdd);
 }
 
-void FileSystem::untagFile(vector<string>& filePath, vector<string>& tags)
+void FileSystem::untagFile(vector<string>& filePath, unordered_set<string> tagsToRemove)
 {
   FileInfo* file = pathToFile(filePath);
-  untagFile(file, tags);
+  untagFile(file, tagsToRemove);
 }
 
-void FileSystem::untagFile(FileInfo* file, vector<string>& tags)
+void FileSystem::untagFile(FileInfo* file, unordered_set<string> tags, bool deleting)
 {
   if(file == 0)
   {
@@ -611,22 +641,65 @@ void FileSystem::untagFile(FileInfo* file, vector<string>& tags)
   }
   
   string originalFileName = file->mangle();
+  unordered_set<string> tagsToRemove = tags;
+  unordered_set<string> currentTagSet = file->getTags();
+  
+  TreeObject* tagTree = 0;
   
   for(string tag : tags)
   {
+    /*Remove tags that do not exist and that are not part of the file's current tag set*/
+    tagTree = _RootTree->find(tag);
+    if(tagTree == 0)
+    {
+      cerr << tag << " Does Not Exist: Tag cannot be removed" << endl;
+      tagsToRemove.erase(tag);
+    }
+    else if(currentTagSet.find(tag) == currentTagSet.end())
+    {
+      tagsToRemove.erase(tag);
+    }
+  }
+  
+  unordered_set<string> potentialTagSet = file->getTags();
+  for(string tag : tagsToRemove)
+  {
+    potentialTagSet.erase(tag);
+  }
+  
+  /*Validate the new file*/
+  TreeObject* fileCheck = 0;
+  if(potentialTagSet.size() == 0)
+  {
+    if(!deleting)
+    {
+      /*TODO: Search default tree for file*/
+    }
+  }
+  else
+  {
+    tagTree = _RootTree->find(*(potentialTagSet.begin()));
+    if(tagTree == 0)
+    {
+      throw arboreal_logic_error(*potentialTagSet.begin() + " does not exist", "FileSystem::untagFile");
+    }
+    fileCheck =  tagTree->find(file->mangle(potentialTagSet));
+  }
+
+  if(fileCheck != 0)
+  {
+    throw file_error(file->get_name() + " with the specified tags already exists", "FileSystem::tagFile");
+  }
+  
+  for(string tag : tagsToRemove)
+  {
     if(tag == "default")
     {
-      cerr << tag + " cannot be removed from " << file->getName() << endl;
+      cerr << tag + " cannot be removed from " << file->get_name() << endl;
     }
     
     /*find tagTree*/
     TreeObject* tagTree = _RootTree->find(tag);
-    
-    /*If tag does not exist print error and continue*/
-    if(tagTree == 0)
-    {
-      cerr << tag + " cannot be removed from " << file->getName() << " : Tag Does not exist" << endl;
-    }
     
     /*Remove Finode from tagTree*/
     tagTree->erase(originalFileName);
@@ -639,7 +712,7 @@ void FileSystem::untagFile(FileInfo* file, vector<string>& tags)
   }
   
   /*if removed all Tags from file, add default tag*/
-  if(file->size() == 0)
+  if(file->size() == 0 && !deleting)
   {
     TreeObject* defaultTree = _RootTree->find("default");
     file->insert("default", defaultTree);
@@ -654,9 +727,16 @@ void FileSystem::untagFile(FileInfo* file, vector<string>& tags)
 
 void FileSystem::renameTag(string originalTagName, string newTagName)
 {
+  /*Cannot rename tag to something that already exists*/
+  TreeObject* tagTreeCheck = _RootTree->find(newTagName);
+  if(tagTreeCheck != 0)
+  {
+    throw tag_error("new Tag name must not already exist!", " FileSystem::renameTag()");
+  }
+  
   /*Rename the tagTree*/
   TreeObject* tagTree = _RootTree->find(originalTagName);
-  tagTree->setName(newTagName);
+  tagTree->set_name(newTagName);
   
   /*Change tagName in rootTree*/
   _RootTree->erase(originalTagName);
@@ -670,7 +750,7 @@ void FileSystem::renameTag(string originalTagName, string newTagName)
   }
 }
 
-FileInfo* FileSystem::createFile(string filename, vector<string>& tags)
+FileInfo* FileSystem::createFile(string filename, unordered_set<string>& tags)
 {
   /*Get a block from disk to store Finode*/
   
@@ -682,8 +762,8 @@ FileInfo* FileSystem::createFile(string filename, vector<string>& tags)
    * File remains in default tag tree until a non-default tag is associated with file*/
   if(tags.size() == 0)
   {
-    vector<string> temp;
-    temp.push_back("default");
+    unordered_set<string> temp;
+    temp.insert("default");
     
     tagFile(newFile, temp);
   }
@@ -706,27 +786,16 @@ void FileSystem::deleteFile(FileInfo* file)
     throw arboreal_logic_error("Invalid FileInfo*", "FileSystem::deleteFile()");
   }
   
-  vector<string> tags;
-  for(auto tagIt = file->begin(); tagIt != file->end(); tagIt++)
-  {
-    tags.push_back(tagIt->first);
-  }
+  unordered_set<string> tags = file->getTags();
   
   /*Dissasociate all tags from the file*/
   untagFile(file, tags);
-  
-  /*Remove the explicit default tag*/
-  TreeObject* defaultTagTree = _RootTree->find("default");
-  defaultTagTree->erase(file->mangle());
-  
-  /*Note Default Tag Tree was modified*/
-  insertModification(defaultTagTree);
 
   /*Delete file from disk*/
   file->del();
   
   /*Delete file from _allFiles*/
-  auto ret = _allFiles.equal_range(file->getName());
+  auto ret = _allFiles.equal_range(file->get_name());
   for(auto fileIt = ret.first; fileIt != ret.second; fileIt++)
   {
     if(fileIt->second == file)
@@ -1005,12 +1074,12 @@ void FileSystem::renameFile(vector<string>& originalFilePath, string newFileName
   
   /*Rename the file*/
   FileInfo* file = pathToFile(originalFilePath);
-  file->setName(newFileName);
+  file->set_name(newFileName);
   
   /*Change fileName in every TagTree object associated with the file*/
   for(auto tagIt = file->begin(); tagIt != file->end(); tagIt++)
   {
-    tagIt->second->erase(file->getName());
+    tagIt->second->erase(file->get_name());
     tagIt->second->insert(newFileName, file);
   }
 }
@@ -1050,7 +1119,6 @@ FileInfo* FileSystem::pathToFile(vector<string>& fullPath)
     /*Search first tag tree for mangled name*/
     path = fullPath;
     path.pop_back();
-    filename = fullPath.at(fullPath.size() - 1);
   }
   
   TreeObject* tagTree = _RootTree->find(path[0]);
@@ -1075,7 +1143,7 @@ void FileSystem::printRoot()
 {
   for(auto it = _RootTree->begin(); it != _RootTree->end(); it++)
   {
-    cout << "Key: " << it->first << " Value: " << it->second->getBlockNumber() << endl;
+    cout << "Key: " << it->first << " Value: " << it->second->get_block_number() << endl;
   }
 }
 
@@ -1083,11 +1151,11 @@ void FileSystem::printTags()
 {
   for(auto it = _RootTree->begin(); it != _RootTree->end(); it++)
   {
-    cout << "TagName: " << it->first << " \tBlockNumber: " << it->second->getBlockNumber() << endl;
+    cout << "TagName: " << it->first << " \tBlockNumber: " << it->second->get_block_number() << endl;
     
     for(auto it2 = it->second->begin(); it2 != it->second->end(); it2++)
     {
-      cout << "\t FilePath: " << ((FileInfo*)(it2->second))->mangle() << " \tBlockNumber: " << it2->second->getBlockNumber() << endl;
+      cout << "\t FilePath: " << ((FileInfo*)(it2->second))->mangle() << " \tBlockNumber: " << it2->second->get_block_number() << endl;
     }
   }
 }
@@ -1096,7 +1164,7 @@ void FileSystem::printFiles()
 {
   for(auto it = _allFiles.begin(); it != _allFiles.end(); it++)
   {
-    cout << "\t FilePath: " << it->second->mangle() << endl;//" \t\tBlockNumber: " << it->second->getBlockNumber() << endl;
+    cout << "\t FilePath: " << it->second->mangle() << endl;//" \t\tBlockNumber: " << it->second->get_block_number() << endl;
   }
 }
 
