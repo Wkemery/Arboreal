@@ -626,6 +626,53 @@ int main(int argc, char** argv)
       
       break;
     }
+    case 9:
+    {
+      cout << "Testing file opening and closing and associated errors" << endl << endl; 
+      
+      
+      vector<string> fullPath;
+      unordered_set<string> tags;
+      
+      cout << "This first part should have no errors" << endl << endl;
+      fullPath.push_back("Tag2"); fullPath.push_back("Tag5"); fullPath.push_back("File1");
+      try
+      {
+        int fd1 = fs1->openFile(fullPath, 'r');
+        fullPath.clear();
+        
+        
+        fullPath.push_back("Tag0"); fullPath.push_back("Tag6"); fullPath.push_back("Tag8"); fullPath.push_back("File1"); 
+        int fd2 = fs1->openFile(fullPath, 'w'); 
+        
+        int fd3 = fs1->openFile(fullPath, 'r'); fullPath.clear();
+        
+        fs1->closeFile(fd1);
+        fs1->closeFile(fd2);
+        fs1->closeFile(fd3);
+        
+      }
+      catch(arboreal_exception& e){cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
+      
+      fs1->writeChanges();
+      
+      cout << "Here is where errors/warning should begin:" << endl << endl;
+      
+      cout << "Attempting to close Invalid fd:" << endl; 
+      
+      try{fs1->closeFile(-1);}
+      catch(arboreal_exception& e){cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
+      
+      cout << endl << "Attempting to close same fd twice:" << endl;
+      
+      fullPath.push_back("Tag0"); fullPath.push_back("Tag6"); fullPath.push_back("Tag8"); fullPath.push_back("File1"); 
+      int fd = fs1->openFile(fullPath, 'x'); fullPath.clear();
+      try{fs1->closeFile(fd); fs1->closeFile(fd);}
+      catch(arboreal_exception& e){cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
+      
+      
+      break;
+    }
     
     default:
     {

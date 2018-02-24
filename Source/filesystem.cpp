@@ -738,15 +738,23 @@ void FileSystem::renameTag(string originalTagName, string newTagName)
   TreeObject* tagTree = _RootTree->find(originalTagName);
   tagTree->set_name(newTagName);
   
+  /*Note TagTree was modified*/
+  insertModification(tagTree);
+  
   /*Change tagName in rootTree*/
   _RootTree->erase(originalTagName);
   _RootTree->insert(newTagName, tagTree);
+  
+  /*Note RootTree was modified*/
+  insertModification(_RootTree);
+  
   
   /*Change tagName in every FileInfo object of the tagTree*/
   for(auto fileIt = tagTree->begin(); fileIt != tagTree->end(); fileIt++)
   {
     fileIt->second->erase(originalTagName);
     fileIt->second->insert(newTagName, tagTree);
+    fileIt->second->writeOut();
   }
 }
 
@@ -853,10 +861,11 @@ int FileSystem::openFile(vector<string>& filePath, char mode)
 
 void FileSystem::closeFile(unsigned int fileDesc)
 {
-  if(fileDesc >= _fileOpenTable.size())
+  if(fileDesc >= _fileOpenTable.size() || _fileOpenTable[fileDesc] == 0)
   {
     throw file_error("Invalid file descriptor", "FileSystem::closeFile");
   }
+  
   
   /*Close the File*/
   delete _fileOpenTable[fileDesc]; _fileOpenTable[fileDesc] = 0;
