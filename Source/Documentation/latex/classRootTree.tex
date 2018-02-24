@@ -14,16 +14,41 @@ Inheritance diagram for Root\+Tree\+:\begin{figure}[H]
 \item 
 void \mbox{\hyperlink{classRootTree_a6df5a227c60c44ad84207eb296c52af9}{write\+Out}} ()
 \item 
-\mbox{\Hypertarget{classRootTree_a1d1084e9fc3333f10b3146d096da1dd4}\label{classRootTree_a1d1084e9fc3333f10b3146d096da1dd4}} 
-void {\bfseries read\+In} (unordered\+\_\+multimap$<$ string, \mbox{\hyperlink{classFileInfo}{File\+Info}} $\ast$$>$ $\ast$all\+Files, \mbox{\hyperlink{classRootTree}{Root\+Tree}} $\ast$root\+Tree)
+void \mbox{\hyperlink{classRootTree_a1d1084e9fc3333f10b3146d096da1dd4}{read\+In}} (unordered\+\_\+multimap$<$ string, \mbox{\hyperlink{classFileInfo}{File\+Info}} $\ast$$>$ $\ast$all\+Files, \mbox{\hyperlink{classRootTree}{Root\+Tree}} $\ast$root\+Tree)
 \item 
-\mbox{\Hypertarget{classRootTree_ac431dc04b767fc66791c251d8173650d}\label{classRootTree_ac431dc04b767fc66791c251d8173650d}} 
-void {\bfseries del} ()
+void \mbox{\hyperlink{classRootTree_ac431dc04b767fc66791c251d8173650d}{del}} ()
 \end{DoxyCompactItemize}
 \subsection*{Additional Inherited Members}
 
 
 \subsection{Member Function Documentation}
+\mbox{\Hypertarget{classRootTree_ac431dc04b767fc66791c251d8173650d}\label{classRootTree_ac431dc04b767fc66791c251d8173650d}} 
+\index{Root\+Tree@{Root\+Tree}!del@{del}}
+\index{del@{del}!Root\+Tree@{Root\+Tree}}
+\subsubsection{\texorpdfstring{del()}{del()}}
+{\footnotesize\ttfamily void Root\+Tree\+::del (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Will completely remove the \mbox{\hyperlink{classTreeObject}{Tree\+Object}}\textquotesingle{}s presence on disk 
+
+Implements \mbox{\hyperlink{classTreeObject_af390b7479aa972888e594c07a85740b6}{Tree\+Object}}.
+
+\mbox{\Hypertarget{classRootTree_a1d1084e9fc3333f10b3146d096da1dd4}\label{classRootTree_a1d1084e9fc3333f10b3146d096da1dd4}} 
+\index{Root\+Tree@{Root\+Tree}!read\+In@{read\+In}}
+\index{read\+In@{read\+In}!Root\+Tree@{Root\+Tree}}
+\subsubsection{\texorpdfstring{read\+In()}{readIn()}}
+{\footnotesize\ttfamily void Root\+Tree\+::read\+In (\begin{DoxyParamCaption}\item[{unordered\+\_\+multimap$<$ string, \mbox{\hyperlink{classFileInfo}{File\+Info}} $\ast$$>$ $\ast$}]{all\+Files,  }\item[{\mbox{\hyperlink{classRootTree}{Root\+Tree}} $\ast$}]{root\+Tree }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Will read in all object data from disk 
+\begin{DoxyParams}{Parameters}
+{\em all\+Files} & a pointer to the map of all files \\
+\hline
+{\em root\+Tree} & a pointer to the root tree \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{classTreeObject_a8247e79f2b4c1760649ac6f1af1c583f}{Tree\+Object}}.
+
 \mbox{\Hypertarget{classRootTree_a6df5a227c60c44ad84207eb296c52af9}\label{classRootTree_a6df5a227c60c44ad84207eb296c52af9}} 
 \index{Root\+Tree@{Root\+Tree}!write\+Out@{write\+Out}}
 \index{write\+Out@{write\+Out}!Root\+Tree@{Root\+Tree}}

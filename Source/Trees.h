@@ -194,7 +194,6 @@ public:
    * Disassociate the given name from this object
    * @param name the name of the object to be erased.
    * @throw arboreal_logic_error
-   * @sa FileInfo::erase()
    */
   virtual void erase(string name);
   
@@ -227,20 +226,45 @@ public:
  * Intended to write out the object to disk
  */
   virtual void writeOut() = 0;
+  
+  /*!
+   * Will read in all object data from disk
+   * @param allFiles a pointer to the map of all files 
+   * @param rootTree a pointer to the root tree
+   */
   virtual void readIn(unordered_multimap<string, FileInfo*>* allFiles, RootTree* rootTree) = 0;
+  
+  /*!
+   * Will completely remove the TreeObject's presence on disk
+   */
   virtual void del() = 0;
-    /*This will completely remove the TreeObject's presence on disk.*/
-    
+
+  /*!
+   * Will increment the Index passed and allocate blocks if necessary to do so
+   * @param index the Index to be incremented
+   */
   void incrementAllocate(Index* index);
+  
+  /*!
+   * Will increment the Index passed but only follow the chain of already allocated blocks
+   * @param index the Index to be incremented
+   */
   void incrementFollow(Index* index);
+
   
   ///@}
   
 /*Helper Functions*/
 protected:
+  
+  /*!
+   * Will follow the chain of continuation blocks and free all of them
+   * @param blknum will free the blknum and use it to follow the chain of continuation blocks
+   */
   virtual void deleteContBlocks(BlkNumType blknum);
   /* deleteContBlocks will take a blknum and free it. it will follow the chain 
    * of continuation blocks and free all of them too*/
+
 };
 
 class FileInfo : public TreeObject

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['end',['end',['../classTreeObject.html#a2544e2976f3b75cd1f0230f5f908059c',1,'TreeObject']]],
-  ['erase',['erase',['../classTreeObject.html#a453b5df2a9ef7c6faad259900d574ee2',1,'TreeObject::erase()'],['../classFileInfo.html#ae058242283d3317eaf2b79428e6137f6',1,'FileInfo::erase()']]]
+  ['del',['del',['../classTreeObject.html#af390b7479aa972888e594c07a85740b6',1,'TreeObject::del()'],['../classFileInfo.html#a2ca34d945ed1208f227a249ba72ee427',1,'FileInfo::del()'],['../classTagTree.html#ad8108969f4d28b938e55c8339f19db35',1,'TagTree::del()'],['../classRootTree.html#ac431dc04b767fc66791c251d8173650d',1,'RootTree::del()']]],
+  ['deletecontblocks',['deleteContBlocks',['../classTreeObject.html#a74c73604c877bec03f6188147af7c509',1,'TreeObject::deleteContBlocks()'],['../classFileInfo.html#a530a418e213a0a945b75ee1dcb8f6acb',1,'FileInfo::deleteContBlocks()']]]
 ];

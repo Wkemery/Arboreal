@@ -53,27 +53,49 @@ unordered\+\_\+set$<$ string $>$ {\bfseries get\+Tags} ()
 \item 
 void \mbox{\hyperlink{classFileInfo_a15d8f9279f1d60e4db4618cb81e68414}{write\+Out}} ()
 \item 
-\mbox{\Hypertarget{classFileInfo_a0e74605dd535e73027ad1c1c6242db09}\label{classFileInfo_a0e74605dd535e73027ad1c1c6242db09}} 
-void {\bfseries read\+In} (unordered\+\_\+multimap$<$ string, \mbox{\hyperlink{classFileInfo}{File\+Info}} $\ast$$>$ $\ast$all\+Files, \mbox{\hyperlink{classRootTree}{Root\+Tree}} $\ast$root\+Tree)
+void \mbox{\hyperlink{classFileInfo_a0e74605dd535e73027ad1c1c6242db09}{read\+In}} (unordered\+\_\+multimap$<$ string, \mbox{\hyperlink{classFileInfo}{File\+Info}} $\ast$$>$ $\ast$all\+Files, \mbox{\hyperlink{classRootTree}{Root\+Tree}} $\ast$root\+Tree)
 \item 
 void \mbox{\hyperlink{classFileInfo_ae058242283d3317eaf2b79428e6137f6}{erase}} (string name)
 \item 
 void \mbox{\hyperlink{classFileInfo_ad93a84b63e417b07aa68b619051ab746}{insert}} (string name, \mbox{\hyperlink{classTreeObject}{Tree\+Object}} $\ast$ptr)
 \item 
-\mbox{\Hypertarget{classFileInfo_a2ca34d945ed1208f227a249ba72ee427}\label{classFileInfo_a2ca34d945ed1208f227a249ba72ee427}} 
-void {\bfseries del} ()
+void \mbox{\hyperlink{classFileInfo_a2ca34d945ed1208f227a249ba72ee427}{del}} ()
 \item 
-\mbox{\Hypertarget{classFileInfo_a530a418e213a0a945b75ee1dcb8f6acb}\label{classFileInfo_a530a418e213a0a945b75ee1dcb8f6acb}} 
-void {\bfseries delete\+Cont\+Blocks} (Blk\+Num\+Type blknum)
+void \mbox{\hyperlink{classFileInfo_a530a418e213a0a945b75ee1dcb8f6acb}{delete\+Cont\+Blocks}} (Blk\+Num\+Type blknum)
 \item 
 void \mbox{\hyperlink{classFileInfo_a7f788f31521c535646eebfa9959bbb24}{insert\+\_\+addition}} (\mbox{\hyperlink{classTreeObject}{Tree\+Object}} $\ast$add)
 \item 
-void \mbox{\hyperlink{classFileInfo_a278136b1d68f55dc56a4be807076fc0d}{insert\+\_\+deletion}} (\mbox{\hyperlink{classTreeObject}{Tree\+Object}} $\ast$del)
+void \mbox{\hyperlink{classFileInfo_a278136b1d68f55dc56a4be807076fc0d}{insert\+\_\+deletion}} (\mbox{\hyperlink{classTreeObject}{Tree\+Object}} $\ast$\mbox{\hyperlink{classFileInfo_a2ca34d945ed1208f227a249ba72ee427}{del}})
 \end{DoxyCompactItemize}
 \subsection*{Additional Inherited Members}
 
 
 \subsection{Member Function Documentation}
+\mbox{\Hypertarget{classFileInfo_a2ca34d945ed1208f227a249ba72ee427}\label{classFileInfo_a2ca34d945ed1208f227a249ba72ee427}} 
+\index{File\+Info@{File\+Info}!del@{del}}
+\index{del@{del}!File\+Info@{File\+Info}}
+\subsubsection{\texorpdfstring{del()}{del()}}
+{\footnotesize\ttfamily void File\+Info\+::del (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Will completely remove the \mbox{\hyperlink{classTreeObject}{Tree\+Object}}\textquotesingle{}s presence on disk 
+
+Implements \mbox{\hyperlink{classTreeObject_af390b7479aa972888e594c07a85740b6}{Tree\+Object}}.
+
+\mbox{\Hypertarget{classFileInfo_a530a418e213a0a945b75ee1dcb8f6acb}\label{classFileInfo_a530a418e213a0a945b75ee1dcb8f6acb}} 
+\index{File\+Info@{File\+Info}!delete\+Cont\+Blocks@{delete\+Cont\+Blocks}}
+\index{delete\+Cont\+Blocks@{delete\+Cont\+Blocks}!File\+Info@{File\+Info}}
+\subsubsection{\texorpdfstring{delete\+Cont\+Blocks()}{deleteContBlocks()}}
+{\footnotesize\ttfamily void File\+Info\+::delete\+Cont\+Blocks (\begin{DoxyParamCaption}\item[{Blk\+Num\+Type}]{blknum }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Will follow the chain of continuation blocks and free all of them 
+\begin{DoxyParams}{Parameters}
+{\em blknum} & will free the blknum and use it to follow the chain of continuation blocks \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{classTreeObject_a74c73604c877bec03f6188147af7c509}{Tree\+Object}}.
+
 \mbox{\Hypertarget{classFileInfo_ae058242283d3317eaf2b79428e6137f6}\label{classFileInfo_ae058242283d3317eaf2b79428e6137f6}} 
 \index{File\+Info@{File\+Info}!erase@{erase}}
 \index{erase@{erase}!File\+Info@{File\+Info}}
@@ -90,9 +112,6 @@ Disassociate the given name from this object
 {\em \mbox{\hyperlink{classarboreal__logic__error}{arboreal\+\_\+logic\+\_\+error}}} & \\
 \hline
 \end{DoxyExceptions}
-\begin{DoxySeeAlso}{See also}
-\mbox{\hyperlink{classFileInfo_ae058242283d3317eaf2b79428e6137f6}{File\+Info\+::erase()}} 
-\end{DoxySeeAlso}
 
 
 Reimplemented from \mbox{\hyperlink{classTreeObject_a453b5df2a9ef7c6faad259900d574ee2}{Tree\+Object}}.
@@ -157,6 +176,23 @@ File\+System\+::write\+Out() \mbox{\hyperlink{classTreeObject_a453b5df2a9ef7c6fa
 
 
 Reimplemented from \mbox{\hyperlink{classTreeObject_afcc4b3928d2b77ff080aa229a9706215}{Tree\+Object}}.
+
+\mbox{\Hypertarget{classFileInfo_a0e74605dd535e73027ad1c1c6242db09}\label{classFileInfo_a0e74605dd535e73027ad1c1c6242db09}} 
+\index{File\+Info@{File\+Info}!read\+In@{read\+In}}
+\index{read\+In@{read\+In}!File\+Info@{File\+Info}}
+\subsubsection{\texorpdfstring{read\+In()}{readIn()}}
+{\footnotesize\ttfamily void File\+Info\+::read\+In (\begin{DoxyParamCaption}\item[{unordered\+\_\+multimap$<$ string, \mbox{\hyperlink{classFileInfo}{File\+Info}} $\ast$$>$ $\ast$}]{all\+Files,  }\item[{\mbox{\hyperlink{classRootTree}{Root\+Tree}} $\ast$}]{root\+Tree }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Will read in all object data from disk 
+\begin{DoxyParams}{Parameters}
+{\em all\+Files} & a pointer to the map of all files \\
+\hline
+{\em root\+Tree} & a pointer to the root tree \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{classTreeObject_a8247e79f2b4c1760649ac6f1af1c583f}{Tree\+Object}}.
 
 \mbox{\Hypertarget{classFileInfo_a15d8f9279f1d60e4db4618cb81e68414}\label{classFileInfo_a15d8f9279f1d60e4db4618cb81e68414}} 
 \index{File\+Info@{File\+Info}!write\+Out@{write\+Out}}

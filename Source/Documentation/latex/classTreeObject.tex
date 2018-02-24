@@ -48,7 +48,7 @@ virtual void \mbox{\hyperlink{classTreeObject_a453b5df2a9ef7c6faad259900d574ee2}
 \item 
 virtual void \mbox{\hyperlink{classTreeObject_a41ce6080e0df5adcea4b0a76d35af885}{insert\+\_\+addition}} (\mbox{\hyperlink{classTreeObject}{Tree\+Object}} $\ast$add)
 \item 
-virtual void \mbox{\hyperlink{classTreeObject_afcc4b3928d2b77ff080aa229a9706215}{insert\+\_\+deletion}} (\mbox{\hyperlink{classTreeObject}{Tree\+Object}} $\ast$del)
+virtual void \mbox{\hyperlink{classTreeObject_afcc4b3928d2b77ff080aa229a9706215}{insert\+\_\+deletion}} (\mbox{\hyperlink{classTreeObject}{Tree\+Object}} $\ast$\mbox{\hyperlink{classTreeObject_af390b7479aa972888e594c07a85740b6}{del}})
 \end{DoxyCompactItemize}
 \end{Indent}
 \begin{Indent}\textbf{ Disk Functions}\par
@@ -56,24 +56,19 @@ virtual void \mbox{\hyperlink{classTreeObject_afcc4b3928d2b77ff080aa229a9706215}
 \item 
 virtual void \mbox{\hyperlink{classTreeObject_abf2bf88337bec961784b5dfeb9b795ed}{write\+Out}} ()=0
 \item 
-\mbox{\Hypertarget{classTreeObject_a8247e79f2b4c1760649ac6f1af1c583f}\label{classTreeObject_a8247e79f2b4c1760649ac6f1af1c583f}} 
-virtual void {\bfseries read\+In} (unordered\+\_\+multimap$<$ string, \mbox{\hyperlink{classFileInfo}{File\+Info}} $\ast$$>$ $\ast$all\+Files, \mbox{\hyperlink{classRootTree}{Root\+Tree}} $\ast$root\+Tree)=0
+virtual void \mbox{\hyperlink{classTreeObject_a8247e79f2b4c1760649ac6f1af1c583f}{read\+In}} (unordered\+\_\+multimap$<$ string, \mbox{\hyperlink{classFileInfo}{File\+Info}} $\ast$$>$ $\ast$all\+Files, \mbox{\hyperlink{classRootTree}{Root\+Tree}} $\ast$root\+Tree)=0
 \item 
-\mbox{\Hypertarget{classTreeObject_af390b7479aa972888e594c07a85740b6}\label{classTreeObject_af390b7479aa972888e594c07a85740b6}} 
-virtual void {\bfseries del} ()=0
+virtual void \mbox{\hyperlink{classTreeObject_af390b7479aa972888e594c07a85740b6}{del}} ()=0
 \item 
-\mbox{\Hypertarget{classTreeObject_a0660e393ded8a24c5a7e211ad7891de3}\label{classTreeObject_a0660e393ded8a24c5a7e211ad7891de3}} 
-void {\bfseries increment\+Allocate} (\mbox{\hyperlink{structindex}{Index}} $\ast$\mbox{\hyperlink{structindex}{index}})
+void \mbox{\hyperlink{classTreeObject_a0660e393ded8a24c5a7e211ad7891de3}{increment\+Allocate}} (\mbox{\hyperlink{structindex}{Index}} $\ast$\mbox{\hyperlink{structindex}{index}})
 \item 
-\mbox{\Hypertarget{classTreeObject_a1a58b541ca7c6d442c0fd7a0f587cfdc}\label{classTreeObject_a1a58b541ca7c6d442c0fd7a0f587cfdc}} 
-void {\bfseries increment\+Follow} (\mbox{\hyperlink{structindex}{Index}} $\ast$\mbox{\hyperlink{structindex}{index}})
+void \mbox{\hyperlink{classTreeObject_a1a58b541ca7c6d442c0fd7a0f587cfdc}{increment\+Follow}} (\mbox{\hyperlink{structindex}{Index}} $\ast$\mbox{\hyperlink{structindex}{index}})
 \end{DoxyCompactItemize}
 \end{Indent}
 \subsection*{Protected Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classTreeObject_a74c73604c877bec03f6188147af7c509}\label{classTreeObject_a74c73604c877bec03f6188147af7c509}} 
-virtual void {\bfseries delete\+Cont\+Blocks} (Blk\+Num\+Type blknum)
+virtual void \mbox{\hyperlink{classTreeObject_a74c73604c877bec03f6188147af7c509}{delete\+Cont\+Blocks}} (Blk\+Num\+Type blknum)
 \end{DoxyCompactItemize}
 \subsection*{Protected Attributes}
 \begin{DoxyCompactItemize}
@@ -145,6 +140,31 @@ Add an index to \+\_\+indeces for the specified \mbox{\hyperlink{classTreeObject
 \begin{DoxyReturn}{Returns}
 An iterator to the beginning of the Tree\+Objects associated with this object 
 \end{DoxyReturn}
+\mbox{\Hypertarget{classTreeObject_af390b7479aa972888e594c07a85740b6}\label{classTreeObject_af390b7479aa972888e594c07a85740b6}} 
+\index{Tree\+Object@{Tree\+Object}!del@{del}}
+\index{del@{del}!Tree\+Object@{Tree\+Object}}
+\subsubsection{\texorpdfstring{del()}{del()}}
+{\footnotesize\ttfamily virtual void Tree\+Object\+::del (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+Will completely remove the \mbox{\hyperlink{classTreeObject}{Tree\+Object}}\textquotesingle{}s presence on disk 
+
+Implemented in \mbox{\hyperlink{classRootTree_ac431dc04b767fc66791c251d8173650d}{Root\+Tree}}, \mbox{\hyperlink{classTagTree_ad8108969f4d28b938e55c8339f19db35}{Tag\+Tree}}, and \mbox{\hyperlink{classFileInfo_a2ca34d945ed1208f227a249ba72ee427}{File\+Info}}.
+
+\mbox{\Hypertarget{classTreeObject_a74c73604c877bec03f6188147af7c509}\label{classTreeObject_a74c73604c877bec03f6188147af7c509}} 
+\index{Tree\+Object@{Tree\+Object}!delete\+Cont\+Blocks@{delete\+Cont\+Blocks}}
+\index{delete\+Cont\+Blocks@{delete\+Cont\+Blocks}!Tree\+Object@{Tree\+Object}}
+\subsubsection{\texorpdfstring{delete\+Cont\+Blocks()}{deleteContBlocks()}}
+{\footnotesize\ttfamily void Tree\+Object\+::delete\+Cont\+Blocks (\begin{DoxyParamCaption}\item[{Blk\+Num\+Type}]{blknum }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+Will follow the chain of continuation blocks and free all of them 
+\begin{DoxyParams}{Parameters}
+{\em blknum} & will free the blknum and use it to follow the chain of continuation blocks \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented in \mbox{\hyperlink{classFileInfo_a530a418e213a0a945b75ee1dcb8f6acb}{File\+Info}}.
+
 \mbox{\Hypertarget{classTreeObject_a2544e2976f3b75cd1f0230f5f908059c}\label{classTreeObject_a2544e2976f3b75cd1f0230f5f908059c}} 
 \index{Tree\+Object@{Tree\+Object}!end@{end}}
 \index{end@{end}!Tree\+Object@{Tree\+Object}}
@@ -170,9 +190,6 @@ Disassociate the given name from this object
 {\em \mbox{\hyperlink{classarboreal__logic__error}{arboreal\+\_\+logic\+\_\+error}}} & \\
 \hline
 \end{DoxyExceptions}
-\begin{DoxySeeAlso}{See also}
-\mbox{\hyperlink{classFileInfo_ae058242283d3317eaf2b79428e6137f6}{File\+Info\+::erase()}} 
-\end{DoxySeeAlso}
 
 
 Reimplemented in \mbox{\hyperlink{classFileInfo_ae058242283d3317eaf2b79428e6137f6}{File\+Info}}.
@@ -246,6 +263,28 @@ The name
 \begin{DoxyReturn}{Returns}
 The start block of data for this object 
 \end{DoxyReturn}
+\mbox{\Hypertarget{classTreeObject_a0660e393ded8a24c5a7e211ad7891de3}\label{classTreeObject_a0660e393ded8a24c5a7e211ad7891de3}} 
+\index{Tree\+Object@{Tree\+Object}!increment\+Allocate@{increment\+Allocate}}
+\index{increment\+Allocate@{increment\+Allocate}!Tree\+Object@{Tree\+Object}}
+\subsubsection{\texorpdfstring{increment\+Allocate()}{incrementAllocate()}}
+{\footnotesize\ttfamily void Tree\+Object\+::increment\+Allocate (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structindex}{Index}} $\ast$}]{index }\end{DoxyParamCaption})}
+
+Will increment the Index passed and allocate blocks if necessary to do so 
+\begin{DoxyParams}{Parameters}
+{\em index} & the Index to be incremented \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classTreeObject_a1a58b541ca7c6d442c0fd7a0f587cfdc}\label{classTreeObject_a1a58b541ca7c6d442c0fd7a0f587cfdc}} 
+\index{Tree\+Object@{Tree\+Object}!increment\+Follow@{increment\+Follow}}
+\index{increment\+Follow@{increment\+Follow}!Tree\+Object@{Tree\+Object}}
+\subsubsection{\texorpdfstring{increment\+Follow()}{incrementFollow()}}
+{\footnotesize\ttfamily void Tree\+Object\+::increment\+Follow (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structindex}{Index}} $\ast$}]{index }\end{DoxyParamCaption})}
+
+Will increment the Index passed but only follow the chain of already allocated blocks 
+\begin{DoxyParams}{Parameters}
+{\em index} & the Index to be incremented \\
+\hline
+\end{DoxyParams}
 \mbox{\Hypertarget{classTreeObject_af8cc57edba9f435b52ccf33cfbbb2fc6}\label{classTreeObject_af8cc57edba9f435b52ccf33cfbbb2fc6}} 
 \index{Tree\+Object@{Tree\+Object}!insert@{insert}}
 \index{insert@{insert}!Tree\+Object@{Tree\+Object}}
@@ -306,6 +345,23 @@ File\+System\+::write\+Out() \mbox{\hyperlink{classTreeObject_a453b5df2a9ef7c6fa
 
 
 Reimplemented in \mbox{\hyperlink{classFileInfo_a278136b1d68f55dc56a4be807076fc0d}{File\+Info}}.
+
+\mbox{\Hypertarget{classTreeObject_a8247e79f2b4c1760649ac6f1af1c583f}\label{classTreeObject_a8247e79f2b4c1760649ac6f1af1c583f}} 
+\index{Tree\+Object@{Tree\+Object}!read\+In@{read\+In}}
+\index{read\+In@{read\+In}!Tree\+Object@{Tree\+Object}}
+\subsubsection{\texorpdfstring{read\+In()}{readIn()}}
+{\footnotesize\ttfamily virtual void Tree\+Object\+::read\+In (\begin{DoxyParamCaption}\item[{unordered\+\_\+multimap$<$ string, \mbox{\hyperlink{classFileInfo}{File\+Info}} $\ast$$>$ $\ast$}]{all\+Files,  }\item[{\mbox{\hyperlink{classRootTree}{Root\+Tree}} $\ast$}]{root\+Tree }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+Will read in all object data from disk 
+\begin{DoxyParams}{Parameters}
+{\em all\+Files} & a pointer to the map of all files \\
+\hline
+{\em root\+Tree} & a pointer to the root tree \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \mbox{\hyperlink{classRootTree_a1d1084e9fc3333f10b3146d096da1dd4}{Root\+Tree}}, \mbox{\hyperlink{classTagTree_a2e72921ccc19667331c64d3d0100b269}{Tag\+Tree}}, and \mbox{\hyperlink{classFileInfo_a0e74605dd535e73027ad1c1c6242db09}{File\+Info}}.
 
 \mbox{\Hypertarget{classTreeObject_a2ec94bc9d2647275049ddf2a70b8510e}\label{classTreeObject_a2ec94bc9d2647275049ddf2a70b8510e}} 
 \index{Tree\+Object@{Tree\+Object}!set\+\_\+last\+\_\+entry@{set\+\_\+last\+\_\+entry}}
