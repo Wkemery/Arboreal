@@ -50,5 +50,8 @@ Trees.o: Trees.cpp
 Arboreal_Exceptions.o: Arboreal_Exceptions.cpp
 	$(CXX) $(XXFLAGS) -c Arboreal_Exceptions.cpp
 
+word_count: 
+	/usr/bin/wc *.h *.cpp
+
 clean:
 	/bin/rm -f *.o driver cli format DISK1 *.pipe liason
