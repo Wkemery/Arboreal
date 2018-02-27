@@ -37,7 +37,9 @@ Modification::Modification(TreeObject* obj, TreeObject* parent)
 /******************************************************************************/
 
 Attributes::Attributes(BlkNumType blknum, PartitionManager* pm): _blockNumber(blknum), _myPartitionManager(pm)
-{}
+{
+  memset(&_atts, 0, sizeof(FileAttributes));
+}
 
 
 void Attributes::writeOut()
@@ -690,17 +692,12 @@ FileInfo::FileInfo(string fileName,BlkNumType blknum, PartitionManager* pm)
 :TreeObject(fileName, blknum, pm)
 {
   memset(&_myFinode, 0, sizeof(Finode));
-  BlkNumType attsBlock =  pm->getFreeDiskBlock();
-  _myAttributes = new Attributes(attsBlock, pm);
-  _myFinode.attributes = attsBlock;
-  _myAttributes->setCreationTime();
-  _myAttributes->setOwner(DEFAULTOWNER);
-  _myAttributes->setPermissions(DEFAULTPERMISSIONS);
+  _myAttributes = 0;
 }
 
 FileInfo::~FileInfo()
 {
-  delete _myAttributes;
+  if(_myAttributes == 0)delete _myAttributes;
 }
 
 void FileInfo::writeOut()
@@ -799,6 +796,11 @@ void FileInfo::writeOut()
     _myPartitionManager->writeDiskBlock(contBlock, contBlockData);
   }
   delete localBuff;
+  
+  if(_myFinode.attributes == 0)
+  {
+    init_attributes();
+  }
   /*Write out Finode*/
   _myPartitionManager->writeDiskBlock(_blockNumber, buff);
     
@@ -817,6 +819,7 @@ void FileInfo::readIn(unordered_multimap<string, FileInfo*>* allFiles, RootTree*
   _myPartitionManager->readDiskBlock(_blockNumber, buff);
     
   memcpy(&_myFinode, buff + (_myPartitionManager->getFileNameSize()), sizeof(Finode));
+  
   
   /*This is the maximum number of tags we can store before needing a cont block*/
   int localTagCount = ((_myPartitionManager->getBlockSize() - _myPartitionManager->getFileNameSize() 
@@ -899,6 +902,10 @@ void FileInfo::readIn(unordered_multimap<string, FileInfo*>* allFiles, RootTree*
   }
   
   /*Read in the Attributes*/
+  if(_myAttributes == 0)
+  {
+    _myAttributes = new Attributes(_myFinode.attributes, _myPartitionManager);
+  }
   _myAttributes->readIn();
 }
 
@@ -1043,6 +1050,16 @@ unordered_set<string> FileInfo::getTags()
     ret.insert(it->first);
   }
   return ret;
+}
+
+void FileInfo::init_attributes()
+{
+  BlkNumType attsBlock =  _myPartitionManager->getFreeDiskBlock();
+  _myAttributes = new Attributes(attsBlock, _myPartitionManager);
+  _myFinode.attributes = attsBlock;
+  _myAttributes->setCreationTime();
+  _myAttributes->setOwner(DEFAULTOWNER);
+  _myAttributes->setPermissions(DEFAULTPERMISSIONS); 
 }
 
 size_t FileInfo::getFileSize()

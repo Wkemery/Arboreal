@@ -53,5 +53,13 @@ Arboreal_Exceptions.o: Arboreal_Exceptions.cpp
 word_count: 
 	/usr/bin/wc *.h *.cpp
 
+reset:
+	/bin/rm -f *.o driver DISK1
+	make
+	./format diskInfo.d
+	./driver 6
+	./driver 7
+	./driver 8
+
 clean:
 	/bin/rm -f *.o driver cli format DISK1 *.pipe liason

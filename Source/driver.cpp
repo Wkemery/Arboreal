@@ -673,6 +673,60 @@ int main(int argc, char** argv)
       
       break;
     }
+    case 10:
+    {
+      cout << "Testing file read and write" << endl << endl; 
+      
+      
+      vector<string> fullPath;
+      unordered_set<string> tags;
+      
+      try
+      {
+        fullPath.push_back("Tag7"); fullPath.push_back("Tag9"); fullPath.push_back("File2");
+        int fd1 = fs1->openFile(fullPath, 'w');
+        int fd2 = fs1->openFile(fullPath, 'r'); fullPath.clear();
+        
+        fullPath.push_back("Tag0"); fullPath.push_back("Tag2"); fullPath.push_back("Tag5"); fullPath.push_back("Tag6"); 
+        fullPath.push_back("File4"); 
+        int fd3 = fs1->openFile(fullPath, 'x'); 
+        fullPath.clear();
+        
+        size_t bufferSize = 4096;
+        char* buff = new char[bufferSize];
+        size_t bytes = dm->getBlockSize() * 3;
+        for(size_t i = 0; i < bytes; i++)
+        {
+          buff[i] = '@';
+        }
+        
+        size_t ret = fs1->writeFile(fd1, buff, bytes);
+        cout << "Bytes written: " << ret << " @ symbols To FD 1" << endl;
+        
+        cout << "Resetting Buffer: " << endl;
+        memset(buff, 0, bufferSize);
+        ret = fs1->readFile(fd2, buff, bytes);
+        
+        cout << "Bytes Read: " << ret << " symbols from FD 2" << endl;
+        int count = 0;
+        
+        for(size_t i = 0; i < ret; i++)
+        {
+          if (buff[i] == '@') count++;
+        }
+        
+        cout << "\t" << count << " @ symbols read" << endl << endl;
+        
+        fs1->closeFile(fd1);
+        fs1->closeFile(fd2);
+        fs1->closeFile(fd3);
+        
+      }
+      catch(arboreal_exception& e){cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
+      
+      
+      break;
+    }
     
     default:
     {

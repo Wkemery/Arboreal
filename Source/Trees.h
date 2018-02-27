@@ -298,6 +298,8 @@ public:
   void insert_addition(TreeObject* add);
   void insert_deletion(TreeObject* del);
 
+private:
+  void init_attributes();
   
 };
 
