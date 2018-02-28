@@ -717,6 +717,12 @@ int main(int argc, char** argv)
         
         cout << "\t" << count << " @ symbols read" << endl << endl;
         
+        
+        /*Lets try writing in not multiples of 512.and non consecutive writes*/
+        
+        memset(buff, 0, bufferSize);
+        bytes = 666;
+        
         fs1->closeFile(fd1);
         fs1->closeFile(fd2);
         fs1->closeFile(fd3);
