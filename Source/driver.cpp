@@ -694,9 +694,9 @@ int main(int argc, char** argv)
         int fd3 = fs1->openFile(fullPath, 'x'); 
         fullPath.clear();
         
-        size_t bufferSize = 4096;
+        int bufferSize = 4096;
         char* buff = new char[bufferSize];
-        size_t bytes = dm->getBlockSize() * 3;
+        int bytes = dm->getBlockSize() * 3;
         char symbol = '@';
         memset(buff, symbol, bytes);
         
@@ -747,7 +747,7 @@ int main(int argc, char** argv)
         /*Jump back to byte 600 and write $*/
         cout << "Attempting seek to byte 600 on FD3 and writing 100 $\'s" << endl << endl;
         
-        fs1->seekFileAbsolute(fd3, 600);
+        fs1->seekFileAbsolute(fd3, 599);
         
         bytes = 100;
         memset(buff, 0, bufferSize);
@@ -788,7 +788,7 @@ int main(int argc, char** argv)
         cout << "Resetting Buffer: " << endl;
         memset(buff, 0, bufferSize);
         cout << "Moving the fd to the ! with seekFileAbsolute" << endl;
-        fs1->seekFileAbsolute(fd3, 766); //should point directly at the !
+        fs1->seekFileAbsolute(fd3, 700); //should point directly at the !
         ret = fs1->readFile(fd3, buff, bytes);
         
         cout << "Bytes Read return val: " << ret << " " << symbol << " symbols from FD 3" << endl;
@@ -806,17 +806,18 @@ int main(int argc, char** argv)
         cout << "Append 8000 % signs. should go into first level indirect" << endl;
         bufferSize*= 2;
         bytes = 8000;
+        symbol = '%';
         delete buff; buff = 0;
         buff = new char[bufferSize];
         memset(buff, 0, bufferSize);
-        memset(buff, '%', bytes);
+        memset(buff, symbol, bytes);
         ret = fs1->appendFile(fd3, buff, bytes);
         cout << "Bytes written: " << ret << " " << symbol << " symbols To FD 3" << endl;
 
         cout << "Resetting Buffer: " << endl;
         memset(buff, 0, bufferSize);
-        cout << "moving the fd back 8000 spots" << endl;
-        fs1->seekFileRelative(fd3, -8000);
+        cout << "moving the fd back 7999 spots" << endl;
+        fs1->seekFileRelative(fd3, -7999);
         ret = fs1->readFile(fd3, buff, bytes);
         
         cout << "Bytes Read return val: " << ret << " " << symbol << " symbols from FD 3" << endl;

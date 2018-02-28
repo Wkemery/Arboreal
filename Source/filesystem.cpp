@@ -19,6 +19,10 @@ FileOpen::FileOpen(FileInfo* file, char mode, PartitionManager* pm): _file(file)
 {
   _seek = 0;
   _EOF = false;
+  if(_file->getFileSize() > 0)
+  {
+    _seek = 1;
+  }
 }
 
 FileInfo* FileOpen::getFile(){return _file;}
@@ -27,6 +31,7 @@ char FileOpen::getMode(){return _mode;}
 bool FileOpen::getEOF(){return _EOF;}
 void FileOpen::gotoLastByte()
 {
+  resetSeek();
   _seek = _file->getFileSize();
 }
 
@@ -34,7 +39,7 @@ void FileOpen::incrementSeek(long int bytes, bool write)
 {
   if(bytes > 0)
   {
-    if(bytes > _file->getFileSize() - _seek)
+    if(bytes > (_file->getFileSize() - _seek))
     {
       if(write)
       {
@@ -74,10 +79,22 @@ void FileOpen::incrementSeek(long int bytes, bool write)
 
 Index FileOpen::byteToIndex(short offset)
 {
+  refresh();
   if(offset != 0 && offset != 1)
   {
     throw arboreal_logic_error("Provided an offset other than 0 or 1", "FileOpen::byteToIndex()");
   }
+  if(getEOF())
+  {
+    throw arboreal_logic_error("Cannot get index when past EOF", "FileOPen::byteToIndex()");
+  }
+  
+  if(_seek == 0)
+  {
+    /*Empty file. return {0,0}*/
+    return Index{0,0};
+  }
+  
   size_t seek = _seek + offset;
   unsigned int entriesPerBlock = _myPartitionManager->getBlockSize() / sizeof(BlkNumType);
   size_t blockIndex = seek / _myPartitionManager->getBlockSize();
@@ -86,7 +103,7 @@ Index FileOpen::byteToIndex(short offset)
   char* buff = new char[_myPartitionManager->getBlockSize()];
   
   /*Set the return offset*/
-  ret.offset = seek % _myPartitionManager->getBlockSize();
+  ret.offset = (seek - 1) % _myPartitionManager->getBlockSize();
   
   if(blockIndex < 12)
   {
@@ -114,10 +131,6 @@ Index FileOpen::byteToIndex(short offset)
       {        
         /*Read in Level 1 indirect block*/
         if(_file->getFinode().level1Indirect == 0)
-        {
-          throw arboreal_logic_error("Level 1 indirect block does not exist", "FileOpen::byteToIndex");
-        }
-        if(_file->getFinode().level1Indirect == 0)
         { 
           /*Space not yet allocated*/
           return Index{0,0};
@@ -134,10 +147,6 @@ Index FileOpen::byteToIndex(short offset)
       case 1:
       {
         /*Read in Level 2 indirect block*/
-        if(_file->getFinode().level2Indirect == 0)
-        {
-          throw arboreal_logic_error("Level 1 indirect block does not exist", "FileOpen::byteToIndex");
-        }
         if(_file->getFinode().level2Indirect == 0)
         { 
           /*Space not yet allocated*/
@@ -168,10 +177,6 @@ Index FileOpen::byteToIndex(short offset)
       case 2:
       {        
         /*Read in Level 3 indirect block*/
-        if(_file->getFinode().level1Indirect == 0)
-        {
-          throw arboreal_logic_error("Level 1 indirect block does not exist", "FileOpen::byteToIndex");
-        }
         
         if(_file->getFinode().level3Indirect == 0)
         { 
@@ -224,6 +229,7 @@ Index FileOpen::byteToIndex(short offset)
 
 Index FileOpen::incrementIndex()
 {
+  refresh();
   /*Assuming this function is only called when the seek pointing to the end of a block*/
   int check = (_seek) % _myPartitionManager->getBlockSize();
   if(check != 0 && (_seek != 0))
@@ -231,7 +237,7 @@ Index FileOpen::incrementIndex()
     throw arboreal_logic_error("Called incrementIndex when seekptr was not at end of a block", "FileOpen::incrementIndex");
   }
   
-  if(((_seek) != _file->getFileSize()) && (_seek != 0))
+  if(getEOF() || ((_seek != _file->getFileSize()) && (_seek != 0)))
   {
     /*Assuming this function is only called when the seek is at the last byte of the file*/
     throw arboreal_logic_error("Called incrementIndex when seek pointer was not pointing to last byte of file", "FileOpen::incrementIndex");
@@ -379,14 +385,29 @@ BlkNumType FileOpen::levelInc(size_t relativeBlock, BlkNumType ledgerBlock, shor
 
 void FileOpen::setEOF()
 {
-  _seek = -1;
+  _seek = 0;
   _EOF = true;
 }
 
 void FileOpen::resetSeek()
 {
-  _seek = 0;
+  if(_file->getFileSize() > 0)
+  {
+    _seek = 1;
+  }
+  else
+  {
+    _seek = 0;
+  }
   _EOF = false;
+}
+
+void FileOpen::refresh()
+{
+  if(_file->getFileSize() > 0 && _seek == 0)
+  {
+    _seek = 1;
+  }
 }
 
 /***********************************************************************/
@@ -934,7 +955,7 @@ size_t FileSystem::readFile(unsigned int fileDesc, char* data, size_t len)
   }
   
   /*Set len so we don't actually read past the end of valid data*/
-  if(len > (openFile->getFile()->getFileSize() - openFile->getSeek()))
+  if(len > (openFile->getFile()->getFileSize() - (openFile->getSeek() - 1)))
   {
     len = openFile->getFile()->getFileSize() - openFile->getSeek(); 
     setEOF = true;
@@ -947,7 +968,7 @@ size_t FileSystem::readFile(unsigned int fileDesc, char* data, size_t len)
   if(len <= bytesToRead)
   {
     _myPartitionManager->readDiskBlock(currentIndex.blknum, buff);
-    memcpy(data, buff, len);
+    memcpy(data, buff + currentIndex.offset, len);
     openFile->incrementSeek(len);
     if(setEOF)
     {
@@ -958,7 +979,7 @@ size_t FileSystem::readFile(unsigned int fileDesc, char* data, size_t len)
   else
   {
     _myPartitionManager->readDiskBlock(currentIndex.blknum, buff);
-    memcpy(data, buff, bytesToRead);
+    memcpy(data, buff + currentIndex.offset, bytesToRead);
     openFile->incrementSeek(bytesToRead);
   }
 
@@ -975,7 +996,7 @@ size_t FileSystem::readFile(unsigned int fileDesc, char* data, size_t len)
     
     /*Read a full block*/
     _myPartitionManager->readDiskBlock(currentIndex.blknum, buff);
-    memcpy(data + dataOffset, buff, _myPartitionManager->getBlockSize());
+    memcpy(data + dataOffset, buff + currentIndex.offset, _myPartitionManager->getBlockSize());
     
     openFile->incrementSeek(_myPartitionManager->getBlockSize());
     dataOffset+= _myPartitionManager->getBlockSize(); len-= _myPartitionManager->getBlockSize();
@@ -992,7 +1013,7 @@ size_t FileSystem::readFile(unsigned int fileDesc, char* data, size_t len)
     
     /*Read len bytes*/
     _myPartitionManager->readDiskBlock(currentIndex.blknum, buff);
-    memcpy(data + dataOffset, buff, len);
+    memcpy(data + dataOffset, buff + currentIndex.offset, len);
     openFile->incrementSeek(len);
     dataOffset+= len;
   }
@@ -1021,7 +1042,7 @@ size_t FileSystem::writeFile(unsigned int fileDesc, const char* data, size_t len
   
   if(openFile->getMode() != 'w' && openFile->getMode() != 'x')
   {
-    throw file_error("File not opened with read permissions", "FileSystem::writeFile");
+    throw file_error("File not opened with write permissions", "FileSystem::writeFile");
   }
 
   /*If we are past the end of the File, go to the last byte to start writing.*/
@@ -1091,7 +1112,7 @@ size_t FileSystem::writeFile(unsigned int fileDesc, const char* data, size_t len
     }
     
     memset(buff, 0, _myPartitionManager->getBlockSize());
-    memcpy(buff, data + dataOffset, len);
+    memcpy(buff + currentIndex.offset, data + dataOffset, len);
     _myPartitionManager->writeDiskBlock(currentIndex.blknum, buff);
     openFile->incrementSeek(len, true); openFile->getFile()->setEdit();
     dataOffset += len; 
@@ -1117,9 +1138,10 @@ size_t FileSystem::appendFile(unsigned int fileDesc, const char* data, size_t le
 
 void FileSystem::seekFileAbsolute(unsigned int fileDesc, size_t offset)
 {
+  /*NOTE: to the outside world seek is 0 indexed.*/
   if(fileDesc >= _fileOpenTable.size())
   {
-    throw file_error("Invalid file descriptor", "FileSystem::closeFile");
+    throw file_error("Invalid file descriptor", "FileSystem::seekFileAbsolute");
   }
   FileOpen* openFile = _fileOpenTable.at(fileDesc);
   
@@ -1131,7 +1153,7 @@ void FileSystem::seekFileRelative(unsigned int fileDesc, long int offset)
 {
   if(fileDesc >= _fileOpenTable.size())
   {
-    throw file_error("Invalid file descriptor", "FileSystem::closeFile");
+    throw file_error("Invalid file descriptor", "FileSystem::seekFileRelative");
   }
   FileOpen* openFile = _fileOpenTable.at(fileDesc);
   

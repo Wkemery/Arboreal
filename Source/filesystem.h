@@ -48,6 +48,7 @@ public:
   void resetSeek();
   bool getEOF();
   void gotoLastByte();
+  void refresh();
 };
 
 class FileSystem {
