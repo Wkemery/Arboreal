@@ -61,5 +61,14 @@ reset:
 	./driver 7
 	./driver 8
 
+rest:
+	/bin/rm -f driver DISK1
+	make
+	./format diskInfo.d
+	./driver 6
+	./driver 7
+	./driver 8
+
+
 clean:
 	/bin/rm -f *.o driver cli format DISK1 *.pipe liason

@@ -33,7 +33,7 @@ public:
   FileInfo* getFile();
   size_t getSeek();
   char getMode();
-  void incrementSeek(size_t bytes, bool write = false);
+  void incrementSeek(long int bytes, bool write = false);
   Index byteToIndex(short offset);
     /* will return the index value of the seek pointer plus the offset. If the offset forces it to go past the end of 
      * the current block(i.e the allocated space for file data), it will return an Index with a blknum of 0 as an "error",
@@ -90,7 +90,7 @@ public:
   size_t writeFile(unsigned int fileDesc, const char* data, size_t len);
   size_t appendFile(unsigned int fileDesc, const char* data, size_t len);
   void seekFileAbsolute(unsigned int fileDesc, size_t offset);
-  void seekFileRelative(unsigned int fileDesc, size_t offset);
+  void seekFileRelative(unsigned int fileDesc, long int offset);
   Attributes* getAttributes(vector<string>& filePath);
   void setPermissions(vector<string>& filePath, char* perms);
 

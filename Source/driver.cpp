@@ -675,7 +675,9 @@ int main(int argc, char** argv)
     }
     case 10:
     {
-      cout << "Testing file read and write" << endl << endl; 
+      string delimiter(80, '-'); 
+      
+      cout << "Testing file read and write" << endl << delimiter << endl << endl; 
       
       
       vector<string> fullPath;
@@ -695,33 +697,137 @@ int main(int argc, char** argv)
         size_t bufferSize = 4096;
         char* buff = new char[bufferSize];
         size_t bytes = dm->getBlockSize() * 3;
-        for(size_t i = 0; i < bytes; i++)
-        {
-          buff[i] = '@';
-        }
+        char symbol = '@';
+        memset(buff, symbol, bytes);
+        
         
         size_t ret = fs1->writeFile(fd1, buff, bytes);
-        cout << "Bytes written: " << ret << " @ symbols To FD 1" << endl;
+        cout << "Bytes written return val: " << ret << " " << symbol << " symbols To FD 1" << endl;
         
         cout << "Resetting Buffer: " << endl;
         memset(buff, 0, bufferSize);
         ret = fs1->readFile(fd2, buff, bytes);
         
-        cout << "Bytes Read: " << ret << " symbols from FD 2" << endl;
+        cout << "Bytes Read return val: " << ret << " " << symbol << " symbols from FD 2" << endl;
         int count = 0;
         
         for(size_t i = 0; i < ret; i++)
         {
-          if (buff[i] == '@') count++;
+          if (buff[i] == symbol) count++;
         }
         
-        cout << "\t" << count << " @ symbols read" << endl << endl;
-        
+        cout << "\t" << count << " " << symbol << " symbols in buffer" << endl << delimiter << endl << endl;
         
         /*Lets try writing in not multiples of 512.and non consecutive writes*/
+        cout << "Attempting 666 byte write/read on FD3" << endl << endl;
         
-        memset(buff, 0, bufferSize);
         bytes = 666;
+        memset(buff, 0, bufferSize);
+        symbol = '#';
+        memset(buff, symbol, bytes);
+        ret = fs1->writeFile(fd3, buff, bytes);
+        cout << "Bytes written: " << ret << " " << symbol << " symbols To FD 3" << endl;
+        
+        cout << "Resetting Buffer: " << endl;
+        memset(buff, 0, bufferSize);
+        cout << "Resetting fd: " << endl;
+        fs1->seekFileAbsolute(fd3, 0);
+        ret = fs1->readFile(fd3, buff, bytes);
+        
+        cout << "Bytes Read return val: " << ret << " " << symbol << " symbols from FD 3" << endl;
+        count = 0;
+        
+        for(size_t i = 0; i < ret; i++)
+        {
+          if (buff[i] == symbol) count++;
+        }
+        
+        cout << "\t" << count << " " << symbol << " symbols in buffer" << endl << delimiter << endl << endl;
+        
+        /*Jump back to byte 600 and write $*/
+        cout << "Attempting seek to byte 600 on FD3 and writing 100 $\'s" << endl << endl;
+        
+        fs1->seekFileAbsolute(fd3, 600);
+        
+        bytes = 100;
+        memset(buff, 0, bufferSize);
+        symbol = '$';
+        memset(buff, symbol, bytes);
+        ret = fs1->writeFile(fd3, buff, bytes);
+        cout << "Bytes written: " << ret << " " << symbol << " symbols To FD 3" << endl;
+        
+        cout << "Resetting Buffer: " << endl;
+        cout << "Moving fd back 50 spots" << endl;
+        memset(buff, 0, bufferSize);
+        fs1->seekFileRelative(fd3, -50);
+        
+        cout << "Attempt to read 100 bytes even though there are only " << 50 << " bytes left in the file" << endl;
+        ret = fs1->readFile(fd3, buff, bytes);
+        
+        
+        cout << "Bytes Read return val: " << ret << " " << symbol << " symbols from FD 3" << endl;
+        count = 0;
+        
+        for(size_t i = 0; i < ret; i++)
+        {
+          if (buff[i] == symbol) count++;
+        }
+        
+        cout << "\t" << count << " " << symbol << " symbols in buffer" << endl << delimiter << endl << endl;
+        
+        cout << "Appending a single !" << endl << endl;
+        /*Now append a single ! to check on the absolute seek*/
+        symbol = '!';
+        bytes = 1;
+        memset(buff, 0, bufferSize);
+        memset(buff, symbol, bytes);
+        ret = fs1->appendFile(fd3, buff, bytes);
+        cout << "Bytes written: " << ret << " " << symbol << " symbols To FD 3" << endl;
+        
+        
+        cout << "Resetting Buffer: " << endl;
+        memset(buff, 0, bufferSize);
+        cout << "Moving the fd to the ! with seekFileAbsolute" << endl;
+        fs1->seekFileAbsolute(fd3, 766); //should point directly at the !
+        ret = fs1->readFile(fd3, buff, bytes);
+        
+        cout << "Bytes Read return val: " << ret << " " << symbol << " symbols from FD 3" << endl;
+        count = 0;
+        
+        for(size_t i = 0; i < ret; i++)
+        {
+          if (buff[i] == symbol) count++;
+        }
+        
+        cout << "\t" << count << " " << symbol << " symbols in buffer" << endl << delimiter << endl << endl;
+        
+        
+        /*Now append 8000 %'s. will go into first level indirect*/
+        cout << "Append 8000 % signs. should go into first level indirect" << endl;
+        bufferSize*= 2;
+        bytes = 8000;
+        delete buff; buff = 0;
+        buff = new char[bufferSize];
+        memset(buff, 0, bufferSize);
+        memset(buff, '%', bytes);
+        ret = fs1->appendFile(fd3, buff, bytes);
+        cout << "Bytes written: " << ret << " " << symbol << " symbols To FD 3" << endl;
+
+        cout << "Resetting Buffer: " << endl;
+        memset(buff, 0, bufferSize);
+        cout << "moving the fd back 8000 spots" << endl;
+        fs1->seekFileRelative(fd3, -8000);
+        ret = fs1->readFile(fd3, buff, bytes);
+        
+        cout << "Bytes Read return val: " << ret << " " << symbol << " symbols from FD 3" << endl;
+        count = 0;
+        
+        for(size_t i = 0; i < ret; i++)
+        {
+          if (buff[i] == symbol) count++;
+        }
+        
+        cout << "\t" << count << " " << symbol << " symbols in buffer" << endl << delimiter << endl << endl;
         
         fs1->closeFile(fd1);
         fs1->closeFile(fd2);
