@@ -840,7 +840,69 @@ int main(int argc, char** argv)
       
       break;
     }
-    
+    case 11:
+    {
+      try
+      {
+        vector<string> fullPath;
+        string delimiter(80, '-'); 
+        
+        fullPath.push_back("Tag0"); fullPath.push_back("File1");
+        int fd1 = fs1->openFile(fullPath, 'x');      
+        int ret;
+        int bufferSize = 8192;
+        char* buff = new char[bufferSize];
+        int bytes = dm->getBlockSize() * 12;
+        char symbol = '&';
+        memset(buff, symbol, bytes);
+        
+        ret = fs1->writeFile(fd1, buff, bytes);
+        cout << "Bytes written: " << ret << " " << symbol << " symbols " << endl;
+        
+        cout << "Resetting fd with seekFileAbsolute" << endl;
+        fs1->seekFileAbsolute(fd1, 0); 
+        memset(buff, 0, bufferSize);
+        
+        ret = fs1->readFile(fd1, buff, bytes);
+        cout << "Bytes Read return val: " << ret << " " << symbol << " symbols" << endl;
+        
+        int count = 0;
+        for(size_t i = 0; i < ret; i++)
+        {
+          if (buff[i] == symbol) count++;
+        }
+        
+        cout << "\t" << count << " " << symbol << " symbols in buffer" << endl << delimiter << endl << endl;
+        
+        
+        /*Start writing to indirect*/
+        cout << "Beginning indirect writing" << endl;
+        symbol = '*';
+        memset(buff, 0, bufferSize);
+        memset(buff, symbol, bytes);
+        
+        ret = fs1->writeFile(fd1, buff, bytes);
+        cout << "Bytes written: " << ret << " " << symbol << " symbols " << endl;
+        
+        cout << "turning back fd with seekFileRelative" << endl;
+        fs1->seekFileRelative(fd1, -bytes); 
+        memset(buff, 0, bufferSize);
+        
+        ret = fs1->readFile(fd1, buff, bytes);
+        cout << "Bytes Read return val: " << ret << " " << symbol << " symbols" << endl;
+        
+        count = 0;
+        for(size_t i = 0; i < ret; i++)
+        {
+          if (buff[i] == symbol) count++;
+        }
+        
+        cout << "\t" << count << " " << symbol << " symbols in buffer" << endl << delimiter << endl << endl;
+        
+      }
+      catch(arboreal_exception& e){cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
+      break;
+    }
     default:
     {
       cerr << "Driver Error! Behavior not defined for specified number" << endl;

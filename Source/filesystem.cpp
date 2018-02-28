@@ -39,12 +39,18 @@ void FileOpen::incrementSeek(long int bytes, bool write)
 {
   if(bytes > 0)
   {
-    if(bytes > (_file->getFileSize() - _seek))
+    if(bytes > ((_file->getFileSize() + 1) - _seek))
     {
       if(write)
       {
+        if(_seek == 0)
+        {
+          _seek++;
+        }
+
         _seek += bytes;
-        _file->updateFileSize(_seek);
+        _file->updateFileSize(bytes);
+        
       }
       else
       {
@@ -137,7 +143,7 @@ Index FileOpen::byteToIndex(short offset)
         }
         _myPartitionManager->readDiskBlock(_file->getFinode().level1Indirect, buff);
   
-        /*blockIndex is the level 1 offest*/
+        /*blockIndex is the level 1 offset*/
         BlkNumType blknum;
         memcpy(&blknum, buff + (blockIndex * sizeof(BlkNumType)), sizeof(BlkNumType));
         ret.blknum = blknum;
@@ -230,14 +236,15 @@ Index FileOpen::byteToIndex(short offset)
 Index FileOpen::incrementIndex()
 {
   refresh();
+  
   /*Assuming this function is only called when the seek pointing to the end of a block*/
-  int check = (_seek) % _myPartitionManager->getBlockSize();
+  int check = (_seek - 1) % _myPartitionManager->getBlockSize();
   if(check != 0 && (_seek != 0))
   {
     throw arboreal_logic_error("Called incrementIndex when seekptr was not at end of a block", "FileOpen::incrementIndex");
   }
   
-  if(getEOF() || ((_seek != _file->getFileSize()) && (_seek != 0)))
+  if(getEOF() || ((_seek != _file->getFileSize() + 1) && (_seek != 0)))
   {
     /*Assuming this function is only called when the seek is at the last byte of the file*/
     throw arboreal_logic_error("Called incrementIndex when seek pointer was not pointing to last byte of file", "FileOpen::incrementIndex");
@@ -1028,7 +1035,7 @@ size_t FileSystem::readFile(unsigned int fileDesc, char* data, size_t len)
 
 size_t FileSystem::writeFile(unsigned int fileDesc, const char* data, size_t len)
 {
-  /*Start writing at one past seek pointer*/
+  /*Start writing at seek pointer*/
   
   if(fileDesc > _fileOpenTable.size() || _fileOpenTable[fileDesc] == 0)
   {
@@ -1052,7 +1059,7 @@ size_t FileSystem::writeFile(unsigned int fileDesc, const char* data, size_t len
   }
   
   /*Get the index we need to start writing to, 1 past the seek pointer*/
-  currentIndex = openFile->byteToIndex(1);
+  currentIndex = openFile->byteToIndex(0);
   if(currentIndex.blknum == 0)
   {
     /*There is not space allocated yet, increment Index*/
@@ -1085,7 +1092,7 @@ size_t FileSystem::writeFile(unsigned int fileDesc, const char* data, size_t len
     /*get Current Index*/
     if(len > 0)
     {
-      currentIndex = openFile->byteToIndex(1);
+      currentIndex = openFile->byteToIndex(0);
       if(currentIndex.blknum == 0)
       {
         /*There is not space allocated yet, increment Index*/
@@ -1104,7 +1111,7 @@ size_t FileSystem::writeFile(unsigned int fileDesc, const char* data, size_t len
   if(len > 0)
   {
     /*More, but not a full block of data to write*/
-    currentIndex = openFile->byteToIndex(1);
+    currentIndex = openFile->byteToIndex(0);
     if(currentIndex.blknum == 0)
     {
       /*There is not space allocated yet, increment Index*/

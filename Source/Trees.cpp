@@ -100,7 +100,7 @@ void Attributes::setEdit()
 }
 void Attributes::updateSize(size_t size)
 {
-  _atts.size = size;
+  _atts.size += size;
   writeOut();
 }
 
@@ -962,9 +962,14 @@ void FileInfo::addDirectBlock(BlkNumType blknum, int index)
   {
     throw arboreal_logic_error("index out of bounds", "FileInfo::addDirectBlock");
   }
+  char* buff = new char[_myPartitionManager->getBlockSize()];
+  memset(buff, 0, _myPartitionManager->getBlockSize());
+  
+  _myPartitionManager->writeDiskBlock(blknum, buff);
   
   _myFinode.directBlocks[index] = blknum;
   writeOut();
+  delete buff;
 }
 
 void FileInfo::addIndirectBlock(BlkNumType blknum, short level)
@@ -992,6 +997,9 @@ void FileInfo::addIndirectBlock(BlkNumType blknum, short level)
       
     }
   }
+  char* buff = new char[_myPartitionManager->getBlockSize()];
+  memset(buff, 0, _myPartitionManager->getBlockSize());
+  _myPartitionManager->writeDiskBlock(blknum, buff);
   
   writeOut();
 }
