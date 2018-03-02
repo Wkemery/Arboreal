@@ -100,7 +100,7 @@ void Attributes::setEdit()
 }
 void Attributes::updateSize(size_t size)
 {
-  _atts.size += size;
+  _atts.size = size;
   writeOut();
 }
 

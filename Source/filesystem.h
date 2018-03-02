@@ -33,7 +33,9 @@ public:
   FileInfo* getFile();
   size_t getSeek();
   char getMode();
-  void incrementSeek(long int bytes, bool write = false);
+  void incrementSeek(size_t bytes, bool write = false);
+  void decrementSeek(size_t bytes);
+  
   Index byteToIndex(short offset);
     /* will return the index value of the seek pointer plus the offset. If the offset forces it to go past the end of 
      * the current block(i.e the allocated space for file data), it will return an Index with a blknum of 0 as an "error",
@@ -47,7 +49,7 @@ public:
   void setEOF();
   void resetSeek();
   bool getEOF();
-  void gotoLastByte();
+  void gotoPastLastByte();
   void refresh();
 };
 

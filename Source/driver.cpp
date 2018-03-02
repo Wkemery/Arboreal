@@ -816,8 +816,8 @@ int main(int argc, char** argv)
 
         cout << "Resetting Buffer: " << endl;
         memset(buff, 0, bufferSize);
-        cout << "moving the fd back 7999 spots" << endl;
-        fs1->seekFileRelative(fd3, -7999);
+        cout << "moving the fd back 8000 spots" << endl;
+        fs1->seekFileRelative(fd3, -8000);
         ret = fs1->readFile(fd3, buff, bytes);
         
         cout << "Bytes Read return val: " << ret << " " << symbol << " symbols from FD 3" << endl;
@@ -844,6 +844,9 @@ int main(int argc, char** argv)
     {
       try
       {
+        
+        cout << "Start testing indirectness " << endl;
+        
         vector<string> fullPath;
         string delimiter(80, '-'); 
         
@@ -856,6 +859,7 @@ int main(int argc, char** argv)
         char symbol = '&';
         memset(buff, symbol, bytes);
         
+        cout << "Writing 12 full blocks" << endl;
         ret = fs1->writeFile(fd1, buff, bytes);
         cout << "Bytes written: " << ret << " " << symbol << " symbols " << endl;
         
@@ -877,25 +881,42 @@ int main(int argc, char** argv)
         
         /*Start writing to indirect*/
         cout << "Beginning indirect writing" << endl;
-        symbol = '*';
+        cout << "Fill up the 1st level indirect block, write 64 blocks" << endl;
+        symbol = '^';
+        bufferSize = 512;
+        bytes = 512;
+        delete buff;
+        buff = new char[bufferSize];
         memset(buff, 0, bufferSize);
         memset(buff, symbol, bytes);
         
-        ret = fs1->writeFile(fd1, buff, bytes);
-        cout << "Bytes written: " << ret << " " << symbol << " symbols " << endl;
+        int pret = 0;
+        for(int i = 0; i < 512; i++)
+        {
+           ret = fs1->writeFile(fd1, buff, bytes);
+           pret+=ret;
+        }
+        
+        cout << "Bytes written: " << pret << " " << symbol << " symbols " << endl;
         
         cout << "turning back fd with seekFileRelative" << endl;
-        fs1->seekFileRelative(fd1, -bytes); 
+        fs1->seekFileRelative(fd1, -(bytes * 64)); 
         memset(buff, 0, bufferSize);
         
-        ret = fs1->readFile(fd1, buff, bytes);
-        cout << "Bytes Read return val: " << ret << " " << symbol << " symbols" << endl;
-        
-        count = 0;
-        for(size_t i = 0; i < ret; i++)
+        pret = 0;
+        for(int i = 0; i < 512; i++)
         {
-          if (buff[i] == symbol) count++;
+          memset(buff, 0, bufferSize);
+          ret = fs1->readFile(fd1, buff, bytes);
+          pret += ret;
+          
+          count = 0;
+          for(size_t i = 0; i < ret; i++)
+          {
+            if (buff[i] == symbol) count++;
+          }
         }
+        cout << "Bytes Read return val: " << pret << " " << symbol << " symbols" << endl;
         
         cout << "\t" << count << " " << symbol << " symbols in buffer" << endl << delimiter << endl << endl;
         

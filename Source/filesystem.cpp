@@ -29,58 +29,53 @@ FileInfo* FileOpen::getFile(){return _file;}
 size_t FileOpen::getSeek(){return _seek;}
 char FileOpen::getMode(){return _mode;}
 bool FileOpen::getEOF(){return _EOF;}
-void FileOpen::gotoLastByte()
+void FileOpen::gotoPastLastByte()
 {
   resetSeek();
-  _seek = _file->getFileSize();
+  _seek = _file->getFileSize() + 1;
 }
 
-void FileOpen::incrementSeek(long int bytes, bool write)
+void FileOpen::incrementSeek(size_t bytes, bool write)
 {
-  if(bytes > 0)
+  
+  if(bytes > ((_file->getFileSize() + 1) - _seek))
   {
-    if(bytes > ((_file->getFileSize() + 1) - _seek))
+    if(write)
     {
-      if(write)
+      size_t newSize = 0;
+      if(_seek > _file->getFileSize()) newSize = bytes + _seek - 1;
+      else newSize = bytes + _seek;
+      if(_seek == 0)
       {
-        if(_seek == 0)
-        {
-          _seek++;
-        }
-
-        _seek += bytes;
-        _file->updateFileSize(bytes);
-        
+        _seek++;
       }
-      else
+      _seek += bytes;
+      if(_file->getFileSize() < newSize)
       {
-        setEOF();
+        _file->updateFileSize(newSize);
       }
     }
     else
     {
-      _seek += bytes;
+      setEOF();
     }
   }
   else
   {
-    if(-bytes > _seek)
-    {
-      if(write)
-      {
-        throw arboreal_logic_error("Trying to write a negative amount of bytes!", "FileOpen::incrementSeek");
-      }
-      else
-      {
-        setEOF();
-      }
-    }
-    else
-    {
-      _seek += bytes;
-    }
+    _seek += bytes;
   }
+}
 
+void FileOpen::decrementSeek(size_t bytes)
+{
+  if(bytes >= _seek)
+  {
+    setEOF();
+  }
+  else
+  {
+    _seek -= bytes;
+  }
 }
 
 Index FileOpen::byteToIndex(short offset)
@@ -321,7 +316,7 @@ Index FileOpen::incrementIndex()
     {
       /*We're in level 2*/
       /*blockIndex - (level1Offset + directOffset) is the level 2 relativeBlock*/
-      size_t relativeBlock = blockIndex - (level1Offset + directOffset);
+      size_t relativeBlock = blockIndex - (level1Offset);
       ret.blknum = levelInc(relativeBlock, _file->getFinode().level2Indirect, 2);
       break;
     }
@@ -329,7 +324,7 @@ Index FileOpen::incrementIndex()
     {
       /*We're in level 3*/
       /*blockIndex - (level2Offset + directOffset) is the level 3 relativeBlock*/
-      size_t relativeBlock = blockIndex - (level2Offset + directOffset);
+      size_t relativeBlock = blockIndex - (level2Offset);
       ret.blknum = levelInc(relativeBlock, _file->getFinode().level3Indirect, 3);
       break;
     }
@@ -355,8 +350,9 @@ BlkNumType FileOpen::levelInc(size_t relativeBlock, BlkNumType ledgerBlock, shor
       BlkNumType dataBlock = _myPartitionManager->getFreeDiskBlock();
       memcpy(buff + (relativeBlock * sizeof(BlkNumType)), &dataBlock, sizeof(BlkNumType));
       _myPartitionManager->writeDiskBlock(ledgerBlock, buff);
-      
+      delete buff;
       return dataBlock;
+      
     }
     case 2:
     {
@@ -368,6 +364,7 @@ BlkNumType FileOpen::levelInc(size_t relativeBlock, BlkNumType ledgerBlock, shor
         _myPartitionManager->writeDiskBlock(ledgerBlock, buff);
       }
       memcpy(&level1Block, buff + (relativeBlock * sizeof(BlkNumType) / blockSize), sizeof(BlkNumType));
+      delete buff;
       return levelInc(relativeBlock % blockSize, level1Block, level - 1);
     }
     case 3:
@@ -380,6 +377,7 @@ BlkNumType FileOpen::levelInc(size_t relativeBlock, BlkNumType ledgerBlock, shor
         _myPartitionManager->writeDiskBlock(ledgerBlock, buff);
       }
       memcpy(&level2Block, buff + (relativeBlock * sizeof(BlkNumType) / (blockSize^2)), sizeof(BlkNumType));
+      delete buff;
       return levelInc(relativeBlock % (blockSize^2), level2Block, level - 1);
     }
     default:
@@ -387,6 +385,7 @@ BlkNumType FileOpen::levelInc(size_t relativeBlock, BlkNumType ledgerBlock, shor
       throw arboreal_logic_error("Invalid level", "FileOpen::levelInc");
     }
   }
+  delete buff;
   return 0;
 }
 
@@ -1139,7 +1138,7 @@ size_t FileSystem::appendFile(unsigned int fileDesc, const char* data, size_t le
   }
   
   FileOpen* openFile = _fileOpenTable[fileDesc];
-  openFile->gotoLastByte();
+  openFile->gotoPastLastByte();
   return writeFile(fileDesc, data, len);
 }
 
@@ -1164,7 +1163,14 @@ void FileSystem::seekFileRelative(unsigned int fileDesc, long int offset)
   }
   FileOpen* openFile = _fileOpenTable.at(fileDesc);
   
-  openFile->incrementSeek(offset);
+  if(offset < 0)
+  {
+    openFile->decrementSeek(-offset);
+  }
+  else if(offset > 0)
+  {
+    openFile->incrementSeek(offset);
+  }
 }
 
 Attributes* FileSystem::getAttributes(vector<string>& filePath)
