@@ -62,7 +62,7 @@ BlkNumType PartitionManager::getFreeDiskBlock()
   if(blknum == 0)
   {
     /*There is no next free block, this must be the last one*/
-    cerr << "WARNING! Last free block allocated" << endl;
+    cerr << "WARNING! Last free block on Partition has been allocated" << endl;
   }
   
   _freeBlockStart = blknum;
@@ -82,6 +82,10 @@ BlkNumType PartitionManager::getFreeDiskBlock()
   memset(buff, 0, sizeof(BlkNumType));
   writeDiskBlock(_freeBlockStart, buff);
   
+  if(ret == 0)
+  {
+    throw disk_error("Partition is Full!", "PartitionManager::getFreeDiskBlock()");
+  }
   return ret;
   
 }

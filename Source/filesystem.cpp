@@ -122,8 +122,8 @@ Index FileOpen::byteToIndex(short offset)
     blockIndex -= 12;
     while(blockIndex >= entriesPerBlock)
     {
-      blockIndex /= entriesPerBlock;
       remainders.push_back(blockIndex % entriesPerBlock);
+      blockIndex /= entriesPerBlock;
       levelCount++;
     }
     switch(levelCount)
@@ -339,7 +339,11 @@ Index FileOpen::incrementIndex()
 BlkNumType FileOpen::levelInc(size_t relativeBlock, BlkNumType ledgerBlock, short level)
 {
   int blockSize = _myPartitionManager->getBlockSize();
+  int entriesPerBlock = blockSize / sizeof(BlkNumType);
   char* buff = new char[blockSize];
+  memset(buff, 0, blockSize);
+  char* zeroBuff = new char[blockSize];
+  memset(zeroBuff, 0, blockSize);
   
   _myPartitionManager->readDiskBlock(ledgerBlock, buff);
   
@@ -350,35 +354,38 @@ BlkNumType FileOpen::levelInc(size_t relativeBlock, BlkNumType ledgerBlock, shor
       BlkNumType dataBlock = _myPartitionManager->getFreeDiskBlock();
       memcpy(buff + (relativeBlock * sizeof(BlkNumType)), &dataBlock, sizeof(BlkNumType));
       _myPartitionManager->writeDiskBlock(ledgerBlock, buff);
-      delete buff;
+      delete buff; delete zeroBuff;
       return dataBlock;
       
     }
     case 2:
     {
       BlkNumType level1Block;
-      if(relativeBlock % blockSize == 0)
+      if(relativeBlock % entriesPerBlock == 0)
       {
-        level1Block = _myPartitionManager->getFreeDiskBlock();;
-        memcpy(buff + (relativeBlock * sizeof(BlkNumType) / blockSize), &level1Block, sizeof(BlkNumType));
+        level1Block = _myPartitionManager->getFreeDiskBlock();
+        _myPartitionManager->writeDiskBlock(level1Block, zeroBuff);
+        memcpy(buff + ((relativeBlock/entriesPerBlock) * sizeof(BlkNumType)), &level1Block, sizeof(BlkNumType));
         _myPartitionManager->writeDiskBlock(ledgerBlock, buff);
       }
-      memcpy(&level1Block, buff + (relativeBlock * sizeof(BlkNumType) / blockSize), sizeof(BlkNumType));
-      delete buff;
-      return levelInc(relativeBlock % blockSize, level1Block, level - 1);
+      memcpy(&level1Block, buff + ((relativeBlock/entriesPerBlock) * sizeof(BlkNumType)), sizeof(BlkNumType));
+      delete buff; delete zeroBuff;
+      return levelInc(relativeBlock % entriesPerBlock, level1Block, level - 1);
     }
     case 3:
     {
       BlkNumType level2Block;
-      if(relativeBlock % (blockSize^2) == 0)
+      if(relativeBlock % (entriesPerBlock^2) == 0)
       {
-        level2Block = _myPartitionManager->getFreeDiskBlock();;
-        memcpy(buff + (relativeBlock * sizeof(BlkNumType) / (blockSize^2)), &level2Block, sizeof(BlkNumType));
+        level2Block = _myPartitionManager->getFreeDiskBlock();
+        _myPartitionManager->writeDiskBlock(level2Block, zeroBuff);
+        
+        memcpy(buff + ((relativeBlock/entriesPerBlock^2) * sizeof(BlkNumType)), &level2Block, sizeof(BlkNumType));
         _myPartitionManager->writeDiskBlock(ledgerBlock, buff);
       }
-      memcpy(&level2Block, buff + (relativeBlock * sizeof(BlkNumType) / (blockSize^2)), sizeof(BlkNumType));
-      delete buff;
-      return levelInc(relativeBlock % (blockSize^2), level2Block, level - 1);
+      memcpy(&level2Block, buff + ((relativeBlock/entriesPerBlock) * sizeof(BlkNumType)), sizeof(BlkNumType));
+      delete buff; delete zeroBuff;
+      return levelInc(relativeBlock % (entriesPerBlock^2), level2Block, level - 1);
     }
     default:
     {
@@ -931,6 +938,11 @@ void FileSystem::closeFile(unsigned int fileDesc)
 
 size_t FileSystem::readFile(unsigned int fileDesc, char* data, size_t len)
 {
+  if(len == 0)
+  {
+    return 0;
+  }
+  
   /*Start reading at seek pointer*/
   if(fileDesc > _fileOpenTable.size() || _fileOpenTable[fileDesc] == 0)
   {
@@ -957,7 +969,9 @@ size_t FileSystem::readFile(unsigned int fileDesc, char* data, size_t len)
   currentIndex = openFile->byteToIndex(0);
   if(currentIndex.blknum == 0)
   {
-    throw arboreal_logic_error("A supposedly valid seek returned no valid index", "FileSystem::readFile()");
+//     throw arboreal_logic_error("A supposedly valid seek returned no valid index", "FileSystem::readFile()");
+    openFile->setEOF();
+    return 0;
   }
   
   /*Set len so we don't actually read past the end of valid data*/

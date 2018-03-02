@@ -891,7 +891,7 @@ int main(int argc, char** argv)
         memset(buff, symbol, bytes);
         
         int pret = 0;
-        for(int i = 0; i < 512; i++)
+        for(int i = 0; i < 64; i++)
         {
            ret = fs1->writeFile(fd1, buff, bytes);
            pret+=ret;
@@ -904,13 +904,56 @@ int main(int argc, char** argv)
         memset(buff, 0, bufferSize);
         
         pret = 0;
-        for(int i = 0; i < 512; i++)
+        count = 0;
+        
+        for(int i = 0; i < 64; i++)
         {
           memset(buff, 0, bufferSize);
           ret = fs1->readFile(fd1, buff, bytes);
           pret += ret;
           
-          count = 0;
+          for(size_t i = 0; i < ret; i++)
+          {
+            if (buff[i] == symbol) count++;
+          }
+        }
+        cout << "Bytes Read return val: " << pret << " " << symbol << " symbols" << endl;
+        
+        cout << "\t" << count << " " << symbol << " symbols in buffer" << endl << delimiter << endl << endl;
+        
+        
+        cout << "Start Writing to 2nd level indirect block" << endl;
+        
+        symbol = '$';
+        bufferSize = 512;
+        bytes = 512;
+        delete buff;
+        buff = new char[bufferSize];
+        memset(buff, 0, bufferSize);
+        memset(buff, symbol, bytes);
+        
+        pret = 0;
+        for(int i = 0; i < 100; i++)
+        {
+          ret = fs1->writeFile(fd1, buff, bytes);
+          pret+=ret;
+        }
+        
+        cout << "Bytes written: " << pret << " " << symbol << " symbols " << endl;
+        
+        cout << "turning back fd with seekFileRelative" << endl;
+        fs1->seekFileRelative(fd1, -(bytes * 100)); 
+        memset(buff, 0, bufferSize);
+        
+        pret = 0;
+        count = 0;
+        
+        for(int i = 0; i < 100; i++)
+        {
+          memset(buff, 0, bufferSize);
+          ret = fs1->readFile(fd1, buff, bytes);
+          pret += ret;
+          
           for(size_t i = 0; i < ret; i++)
           {
             if (buff[i] == symbol) count++;
@@ -922,6 +965,60 @@ int main(int argc, char** argv)
         
       }
       catch(arboreal_exception& e){cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
+      break;
+    }
+    case 12:
+    {
+      try
+      {
+        cout << "Let's fill up the disk by writing to a file!!" << endl;
+        vector<string> fullPath;
+        string delimiter(80, '-'); 
+        
+        fullPath.push_back("Tag0"); fullPath.push_back("File1");
+        int fd1 = fs1->openFile(fullPath, 'x');      
+        int ret;
+        int bufferSize = 512;
+        char* buff = new char[bufferSize];
+        int bytes = 512;
+        char symbol = '@';
+        memset(buff, symbol, bytes);
+        
+        
+        int pret = 0;
+        for(int i = 0; i < 500; i++)
+        {
+          ret = fs1->writeFile(fd1, buff, bytes);
+          pret+=ret;
+        }
+        
+        cout << "Bytes written: " << pret << " " << symbol << " symbols " << endl;
+        
+        cout << "turning back fd with seekFileRelative" << endl;
+        fs1->seekFileRelative(fd1, -(pret)); 
+        memset(buff, 0, bufferSize);
+        
+        pret = 0;
+        int count = 0;
+        for(int i = 0; i < 500; i++)
+        {
+          memset(buff, 0, bufferSize);
+          ret = fs1->readFile(fd1, buff, bytes);
+          pret += ret;
+          
+          
+          for(size_t i = 0; i < ret; i++)
+          {
+            if (buff[i] == symbol) count++;
+          }
+        }
+        cout << "Bytes Read return val: " << pret << " " << symbol << " symbols" << endl;
+        
+        cout << "\t" << count << " " << symbol << " symbols in buffer" << endl << delimiter << endl << endl;
+        
+      }
+      catch(arboreal_exception& e){cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
+      
       break;
     }
     default:
