@@ -10,7 +10,9 @@
 #ifndef TYPES_H
 #define TYPES_H
 
-#define MAXOPENFILES 1000
+#define MAXopen_fileS 1000
+extern bool DEBUG;
+
 typedef unsigned long BlkNumType;
 typedef struct index Index;
 typedef struct rootSuperBlock RootSuperBlock;

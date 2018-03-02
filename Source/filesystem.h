@@ -33,23 +33,23 @@ public:
   FileInfo* getFile();
   size_t getSeek();
   char getMode();
-  void incrementSeek(size_t bytes, bool write = false);
-  void decrementSeek(size_t bytes);
+  void increment_seek(size_t bytes, bool write = false);
+  void decrement_seek(size_t bytes);
   
-  Index byteToIndex(short offset);
+  Index byte_to_index(short offset);
     /* will return the index value of the seek pointer plus the offset. If the offset forces it to go past the end of 
      * the current block(i.e the allocated space for file data), it will return an Index with a blknum of 0 as an "error",
      * Also for now, do not call with an offset other than 1 or 0.*/
-  Index incrementIndex();
+  Index increment_index();
     /* Will always allocate a new block for the next bit of data. Only call when 2 conditions are satisfied:
      * 1. Seek pointer is pointing to very last byte in file.
      * 2. You are at the end of a block. so seek pointer is divisible by 512
      * This will not change the status of EOF
      */
-  void setEOF();
-  void resetSeek();
-  bool getEOF();
-  void gotoPastLastByte();
+  void set_EOF();
+  void reset_seek();
+  bool get_EOF();
+  void go_past_last_byte();
   void refresh();
 };
 
@@ -72,48 +72,48 @@ public:
   
   vector<FileInfo*>* tagSearch(unordered_set<string>& tags);
   vector<FileInfo*>* fileSearch(string name);
-  void createTag(string tagName);
-  void deleteTag(string tagName);
-  void mergeTags(string tag1, string tag2);
-  void tagFile(FileInfo* file, unordered_set<string> tagsToAdd);
-  void untagFile(FileInfo* file, unordered_set<string> tagsToRemove, bool deleting = false);
-  void tagFile(vector<string>& filePath, unordered_set<string> tags);
-  void untagFile(vector<string>& filePath, unordered_set<string> tags);
+  void create_tag(string tagName);
+  void delete_tag(string tagName);
+  void merge_tags(string tag1, string tag2);
+  void tag_file(FileInfo* file, unordered_set<string> tagsToAdd);
+  void untag_file(FileInfo* file, unordered_set<string> tagsToRemove, bool deleting = false);
+  void tag_file(vector<string>& filePath, unordered_set<string> tags);
+  void untag_file(vector<string>& filePath, unordered_set<string> tags);
   
-  void renameTag(string originalTagName, string newTagName);
-  FileInfo* createFile(string filename, unordered_set<string>& tags);
-  void deleteFile(FileInfo* file);
-  void deleteFile(vector<string>& filePath);
-  void writeChanges();
+  void rename_tag(string originalTagName, string newTagName);
+  FileInfo* create_file(string filename, unordered_set<string>& tags);
+  void delete_file(FileInfo* file);
+  void delete_file(vector<string>& filePath);
+  void write_changes();
   
-  void renameFile(vector<string>& originalFilePath, string newFileName);
-  int openFile(vector<string>& filePath, char mode);
-  void closeFile(unsigned int fileDesc);
-  size_t readFile(unsigned int fileDesc, char* data, size_t len);
-  size_t writeFile(unsigned int fileDesc, const char* data, size_t len);
-  size_t appendFile(unsigned int fileDesc, const char* data, size_t len);
-  void seekFileAbsolute(unsigned int fileDesc, size_t offset);
-  void seekFileRelative(unsigned int fileDesc, long int offset);
-  Attributes* getAttributes(vector<string>& filePath);
-  void setPermissions(vector<string>& filePath, char* perms);
+  void rename_file(vector<string>& originalFilePath, string newFileName);
+  int open_file(vector<string>& filePath, char mode);
+  void close_file(unsigned int fileDesc);
+  size_t read_file(unsigned int fileDesc, char* data, size_t len);
+  size_t write_file(unsigned int fileDesc, const char* data, size_t len);
+  size_t append_file(unsigned int fileDesc, const char* data, size_t len);
+  void seek_file_absolute(unsigned int fileDesc, size_t offset);
+  void seek_file_relative(unsigned int fileDesc, long int offset);
+  Attributes* get_attributes(vector<string>& filePath);
+  void set_permissions(vector<string>& filePath, char* perms);
 
   
   
-  FileInfo* pathToFile(vector<string>& path);
+  FileInfo* path_to_file(vector<string>& path);
   
   /* IPC Related */
 
-  int getFileNameSize();
+  int get_file_name_size();
   
   /*DEBUG functions*/
-  void printRoot();
-  void printTags();
-  void printFiles();
+  void print_root();
+  void print_tags();
+  void print_files();
   
   
   
 private:
-  void insertModification(TreeObject* object);
+  void insert_modification(TreeObject* object);
   
 };
 

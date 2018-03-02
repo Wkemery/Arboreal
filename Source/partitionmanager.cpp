@@ -25,9 +25,7 @@ PartitionManager::PartitionManager(DiskManager *dm, string partitionName)
   if(blknum == 0)
   {
     /*No freelist, disk must be full*/
-    //TODO: this is probably gonna print twice
-    cerr << "Partition" << _partitionName << " has run out of space!" << endl;
-//     throw disk_error("Partition Full", "PartitionManager::PartitionManager");
+    throw disk_error("Partition is Full!", "PartitionManager::PartitionManager()");
   }
   
   _freeBlockStart = blknum;
@@ -35,10 +33,8 @@ PartitionManager::PartitionManager(DiskManager *dm, string partitionName)
   memcpy(&blknum, buff + offset, sizeof(BlkNumType));
   if(blknum == 0)
   {
-    //TODO: same thing as above.
     /*No freelist, disk must be full*/
-    cerr << "Partition" << _partitionName << " has run out of space!" << endl;
-//     throw disk_error("Partition Full", "PartitionManager::PartitionManager");
+    throw disk_error("Partition Full", "PartitionManager::PartitionManager");
   }
   
   _freeBlockEnd = blknum;
@@ -62,7 +58,7 @@ BlkNumType PartitionManager::getFreeDiskBlock()
   if(blknum == 0)
   {
     /*There is no next free block, this must be the last one*/
-    cerr << "WARNING! Last free block on Partition has been allocated" << endl;
+    if(DEBUG) cerr << "WARNING! Last free block on Partition has been allocated" << endl;
   }
   
   _freeBlockStart = blknum;
@@ -142,7 +138,7 @@ size_t PartitionManager::getBlockSize()
   return myDM->getBlockSize();
 }
 
-int PartitionManager::getFileNameSize()
+int PartitionManager::get_file_name_size()
 {
   return _fileNameSize;
 }  

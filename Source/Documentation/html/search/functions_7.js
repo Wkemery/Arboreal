@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['readin',['readIn',['../classTreeObject.html#a8247e79f2b4c1760649ac6f1af1c583f',1,'TreeObject::readIn()'],['../classFileInfo.html#a0e74605dd535e73027ad1c1c6242db09',1,'FileInfo::readIn()'],['../classTagTree.html#a2e72921ccc19667331c64d3d0100b269',1,'TagTree::readIn()'],['../classRootTree.html#a1d1084e9fc3333f10b3146d096da1dd4',1,'RootTree::readIn()']]]
+  ['mangle',['mangle',['../classFileInfo.html#a96827c2e48fb1a15d468e9afd545383e',1,'FileInfo::mangle()'],['../classFileInfo.html#a105ad751f21bead6fc2a76e79cb3b701',1,'FileInfo::mangle(vector&lt; string &gt; &amp;tags)'],['../classFileInfo.html#aec8a60addbed54097f6cac0a6a516717',1,'FileInfo::mangle(unordered_set&lt; string &gt; &amp;tags)']]]
 ];

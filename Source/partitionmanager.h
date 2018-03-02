@@ -22,7 +22,7 @@ public:
   void returnDiskBlock(BlkNumType blknum);
   /* Throws: invalid_arg */
   string getPartitionName();
-  int getFileNameSize();
+  int get_file_name_size();
   bool operator==(const PartitionManager& rhs);
   
     
