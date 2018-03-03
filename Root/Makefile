@@ -14,7 +14,7 @@ CPPFILES=driver.cpp disk.cpp diskmanager.cpp partitionmanager.cpp filesystem.cpp
 HFILES=disk.h disk.cpp diskmanager.h partitionmanager.h filesystem.h Trees.h Arboreal_Exceptions.h
 all: driver
 
-daemon: ConnectionDaemon.cpp
+daemon: clean cli liason ConnectionDaemon.cpp
 	$(CXX) $(XXFLAGS) -o daemon ConnectionDaemon.cpp
 
 driver: $(CPPFILES) $(HFILES)
@@ -23,10 +23,10 @@ driver: $(CPPFILES) $(HFILES)
 format: format.cpp
 	$(CXX) $(XXFLAGS) -o format format.cpp
 
-cli: clean cli_driver.cpp cli.h
+cli: cli_driver.cpp cli.h
 	$(CXX) $(XXFLAGS) cli.cpp cli_driver.cpp -o cli
 
-liason: clean liason.cpp
+liason: liason.cpp
 	$(CXX) $(XXFLAGS) liason.cpp -o liason
 
 clean: 
