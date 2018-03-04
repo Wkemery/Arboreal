@@ -111,9 +111,11 @@ Index FileOpen::byte_to_index(short offset)
     if(_file->get_finode().directBlocks[blockIndex] == 0)
     { 
       /*Space not yet allocated*/
+      delete[] buff;
       return Index{0,0};
     }
     ret.blknum = _file->get_finode().directBlocks[blockIndex];
+    delete[] buff;
     return ret;
   }
   else
@@ -134,9 +136,11 @@ Index FileOpen::byte_to_index(short offset)
         if(_file->get_finode().level1Indirect == 0)
         { 
           /*Space not yet allocated*/
+          delete[] buff;
           return Index{0,0};
         }
-        _myPartitionManager->readDiskBlock(_file->get_finode().level1Indirect, buff);
+        try{_myPartitionManager->readDiskBlock(_file->get_finode().level1Indirect, buff);}
+        catch(arboreal_exception& e) { delete buff; throw; }
   
         /*blockIndex is the level 1 offset*/
         BlkNumType blknum;
@@ -151,9 +155,11 @@ Index FileOpen::byte_to_index(short offset)
         if(_file->get_finode().level2Indirect == 0)
         { 
           /*Space not yet allocated*/
+          delete[] buff;
           return Index{0,0};
         }
-        _myPartitionManager->readDiskBlock(_file->get_finode().level2Indirect, buff);
+        try{_myPartitionManager->readDiskBlock(_file->get_finode().level2Indirect, buff);}
+        catch(arboreal_exception& e) { delete buff; throw; }
         
         /*blockIndex - 1 is the level 2 offset*/
         BlkNumType l1blknum;
@@ -163,9 +169,11 @@ Index FileOpen::byte_to_index(short offset)
         if(l1blknum == 0)
         { 
           /*Space not yet allocated*/
+          delete[] buff;
           return Index{0,0};
         }
-        _myPartitionManager->readDiskBlock(l1blknum, buff);
+        try{_myPartitionManager->readDiskBlock(l1blknum, buff);}
+        catch(arboreal_exception& e) { delete buff; throw; }
         
         /*remainders[0] is the level 1 offset*/
         BlkNumType blknum;
@@ -182,9 +190,11 @@ Index FileOpen::byte_to_index(short offset)
         if(_file->get_finode().level3Indirect == 0)
         { 
           /*Space not yet allocated*/
+          delete[] buff;
           return Index{0,0};
         }
-        _myPartitionManager->readDiskBlock(_file->get_finode().level3Indirect, buff);
+        try{_myPartitionManager->readDiskBlock(_file->get_finode().level3Indirect, buff);}
+        catch(arboreal_exception& e) { delete buff; throw; }
         
         /*blockIndex - 1 is the level 3 offset*/
         BlkNumType l2blknum;
@@ -194,9 +204,11 @@ Index FileOpen::byte_to_index(short offset)
         if(l2blknum == 0)
         { 
           /*Space not yet allocated*/
+          delete[] buff;
           return Index{0,0};
         }
-        _myPartitionManager->readDiskBlock(l2blknum, buff);
+        try{_myPartitionManager->readDiskBlock(l2blknum, buff);}
+        catch(arboreal_exception& e) { delete buff; throw; }
         
         /*remainders[1] - 1 is the level 2 offset*/
         BlkNumType l1blknum;
@@ -206,9 +218,11 @@ Index FileOpen::byte_to_index(short offset)
         if(l1blknum == 0)
         { 
           /*Space not yet allocated*/
+          delete[] buff;
           return Index{0,0};
         }
-        _myPartitionManager->readDiskBlock(l1blknum, buff);
+        try{_myPartitionManager->readDiskBlock(l1blknum, buff);}
+        catch(arboreal_exception& e) { delete buff; throw; }
         
         /*remainders[0] is the level 1 offset*/
         BlkNumType blknum;
@@ -220,11 +234,12 @@ Index FileOpen::byte_to_index(short offset)
       }
       default:
       {
+        delete[] buff;
         throw arboreal_logic_error("Invalid level value", "FileOpen::byte_to_index");
       }
     }
   }
-  if(buff != 0) delete buff; buff = 0;
+  if(buff != 0) delete[] buff; buff = 0;
   return ret;
 }
 
@@ -345,7 +360,8 @@ BlkNumType FileOpen::levelInc(size_t relativeBlock, BlkNumType ledgerBlock, shor
   char* zeroBuff = new char[blockSize];
   memset(zeroBuff, 0, blockSize);
   
-  _myPartitionManager->readDiskBlock(ledgerBlock, buff);
+  try{ _myPartitionManager->readDiskBlock(ledgerBlock, buff); }
+  catch(arboreal_exception& e) { delete buff; throw; }
   
   switch(level)
   {
@@ -353,8 +369,9 @@ BlkNumType FileOpen::levelInc(size_t relativeBlock, BlkNumType ledgerBlock, shor
     {
       BlkNumType dataBlock = _myPartitionManager->getFreeDiskBlock();
       memcpy(buff + (relativeBlock * sizeof(BlkNumType)), &dataBlock, sizeof(BlkNumType));
-      _myPartitionManager->writeDiskBlock(ledgerBlock, buff);
-      delete buff; delete zeroBuff;
+      try{_myPartitionManager->writeDiskBlock(ledgerBlock, buff);}
+      catch(arboreal_exception& e) { delete buff; delete zeroBuff; throw; }
+      delete[] buff; delete[] zeroBuff;
       return dataBlock;
       
     }
@@ -364,12 +381,14 @@ BlkNumType FileOpen::levelInc(size_t relativeBlock, BlkNumType ledgerBlock, shor
       if(relativeBlock % entriesPerBlock == 0)
       {
         level1Block = _myPartitionManager->getFreeDiskBlock();
-        _myPartitionManager->writeDiskBlock(level1Block, zeroBuff);
+        try{_myPartitionManager->writeDiskBlock(level1Block, zeroBuff);}
+        catch(arboreal_exception& e) { delete buff; delete zeroBuff; throw; }
         memcpy(buff + ((relativeBlock/entriesPerBlock) * sizeof(BlkNumType)), &level1Block, sizeof(BlkNumType));
-        _myPartitionManager->writeDiskBlock(ledgerBlock, buff);
+        try{_myPartitionManager->writeDiskBlock(ledgerBlock, buff);}
+        catch(arboreal_exception& e) { delete buff; delete zeroBuff; throw; }
       }
       memcpy(&level1Block, buff + ((relativeBlock/entriesPerBlock) * sizeof(BlkNumType)), sizeof(BlkNumType));
-      delete buff; delete zeroBuff;
+      delete[] buff; delete[] zeroBuff;
       return levelInc(relativeBlock % entriesPerBlock, level1Block, level - 1);
     }
     case 3:
@@ -378,21 +397,24 @@ BlkNumType FileOpen::levelInc(size_t relativeBlock, BlkNumType ledgerBlock, shor
       if(relativeBlock % (entriesPerBlock^2) == 0)
       {
         level2Block = _myPartitionManager->getFreeDiskBlock();
-        _myPartitionManager->writeDiskBlock(level2Block, zeroBuff);
+        try{_myPartitionManager->writeDiskBlock(level2Block, zeroBuff);}
+        catch(arboreal_exception& e) { delete buff; delete zeroBuff; throw; }
         
         memcpy(buff + ((relativeBlock/entriesPerBlock^2) * sizeof(BlkNumType)), &level2Block, sizeof(BlkNumType));
-        _myPartitionManager->writeDiskBlock(ledgerBlock, buff);
+        try{_myPartitionManager->writeDiskBlock(ledgerBlock, buff);}
+        catch(arboreal_exception& e) { delete buff; delete zeroBuff; throw; }
       }
       memcpy(&level2Block, buff + ((relativeBlock/entriesPerBlock) * sizeof(BlkNumType)), sizeof(BlkNumType));
-      delete buff; delete zeroBuff;
+      delete[] buff; delete[] zeroBuff;
       return levelInc(relativeBlock % (entriesPerBlock^2), level2Block, level - 1);
     }
     default:
     {
+      delete[] buff; delete[] zeroBuff;
       throw arboreal_logic_error("Invalid level", "FileOpen::levelInc");
     }
   }
-  delete buff;
+  delete[] buff; delete[] zeroBuff;
   return 0;
 }
 
@@ -446,6 +468,27 @@ FileSystem::FileSystem(DiskManager *dm, string fileSystemName)
 FileSystem::~FileSystem()
 {
   delete _myPartitionManager;
+  delete _RootTree;
+  for(auto file : _allFiles)
+  {
+    delete file.second;
+  }
+  
+  for(auto objIt = objsToDelete.begin(); objIt != objsToDelete.end(); objIt++)
+  {
+    delete *objIt;
+  }
+  objsToDelete.clear();
+  
+  for(auto fileIt = _fileOpenTable.begin(); fileIt != _fileOpenTable.end(); fileIt++)
+  {
+    if(*fileIt != 0 )
+    {
+      delete *fileIt; 
+      *fileIt = 0;
+    }
+  }
+  _fileOpenTable.clear();
 }
 
 vector<FileInfo*>* FileSystem::tagSearch(unordered_set<string>& tags)
@@ -548,16 +591,24 @@ void FileSystem::create_tag(string tagName)
   newblknum = _myPartitionManager->getFreeDiskBlock();
   
   /* initialize tree in main memory */
-  TagTree* newTree = new TagTree(tagName, newblknum, _myPartitionManager);
-  
-  /* add TagTree to root tree */
-  _RootTree->insert(tagName, newTree);
-  
-  /*Note Root Tree was modified*/
-  insert_modification(_RootTree);
-  
-  /*Write out newly created TagTree. it will only write out the TagTree superblock*/
-  newTree->write_out();
+  TagTree* newTag = new TagTree(tagName, newblknum, _myPartitionManager);
+  try
+  {
+    /* add TagTree to root tree */
+    _RootTree->insert(tagName, newTag);
+    
+    /*Note Root Tree was modified*/
+    insert_modification(_RootTree);
+    
+    /*Write out newly created TagTree. it will only write out the TagTree superblock*/
+    newTag->write_out();
+  }
+  catch(arboreal_exception& e)
+  {
+    delete newTag;
+    throw;
+  }
+
 }
 
 void FileSystem::delete_tag(string tagName)
@@ -582,6 +633,7 @@ void FileSystem::delete_tag(string tagName)
   /*Note Root Tree was modified*/
   insert_modification(_RootTree);
   
+  objsToDelete.push_back(tagTree);
 }
 
 void FileSystem::merge_tags(string tag1, string tag2)
@@ -834,21 +886,30 @@ FileInfo* FileSystem::create_file(string filename, unordered_set<string>& tags)
   FileInfo* newFile = new FileInfo(filename, newblknum, _myPartitionManager);
   /* If no tag was specified then add file to "default" tag tree
    * File remains in default tag tree until a non-default tag is associated with file*/
-  if(tags.size() == 0)
+  
+  try
   {
-    unordered_set<string> temp;
-    temp.insert("default");
+    if(tags.size() == 0)
+    {
+      unordered_set<string> temp;
+      temp.insert("default");
+      
+      tag_file(newFile, temp);
+    }
+    else
+    {
+      tag_file(newFile, tags);
+    }
     
-    tag_file(newFile, temp);
+    newFile->write_out();
+    _allFiles.insert(pair<string, FileInfo*>(filename, newFile));
   }
-  else
+  catch(arboreal_exception& e)
   {
-    tag_file(newFile, tags);
+    delete newFile;
+    throw;
   }
-  
-  newFile->write_out();
-  _allFiles.insert(pair<string, FileInfo*>(filename, newFile));
-  
+
   return newFile;
 }
 
@@ -878,6 +939,7 @@ void FileSystem::delete_file(FileInfo* file)
       break;
     }
   }
+  objsToDelete.push_back(file);
 }
 
 void FileSystem::delete_file(vector<string>& filePath)
@@ -956,12 +1018,14 @@ size_t FileSystem::read_file(unsigned int fileDesc, char* data, size_t len)
   
   if(open_file->getMode() != 'r' && open_file->getMode() != 'x')
   {
+    delete[] buff;
     throw file_error("File not opened with read permissions", "FileSystem::write_file");
   }
   
   /*If seek pointer is past the end of the file, throw error*/
   if(open_file->get_EOF())
   {
+    delete[] buff;
     throw file_error("Attempt to read past EOF", "FileSystem::read_file()");
   }
   
@@ -971,6 +1035,7 @@ size_t FileSystem::read_file(unsigned int fileDesc, char* data, size_t len)
   {
 //     throw arboreal_logic_error("A supposedly valid seek returned no valid index", "FileSystem::read_file()");
     open_file->set_EOF();
+    delete[] buff;
     return 0;
   }
   
@@ -987,18 +1052,21 @@ size_t FileSystem::read_file(unsigned int fileDesc, char* data, size_t len)
   
   if(len <= bytesToRead)
   {
-    _myPartitionManager->readDiskBlock(currentIndex.blknum, buff);
+    try{_myPartitionManager->readDiskBlock(currentIndex.blknum, buff);}
+    catch(arboreal_exception& e) { delete buff; throw; }
     memcpy(data, buff + currentIndex.offset, len);
     open_file->increment_seek(len);
     if(set_EOF)
     {
       open_file->set_EOF();
     }
+    delete[] buff;
     return len;
   }
   else
   {
-    _myPartitionManager->readDiskBlock(currentIndex.blknum, buff);
+    try{_myPartitionManager->readDiskBlock(currentIndex.blknum, buff);}
+    catch(arboreal_exception& e) { delete buff; throw; }
     memcpy(data, buff + currentIndex.offset, bytesToRead);
     open_file->increment_seek(bytesToRead);
   }
@@ -1015,7 +1083,8 @@ size_t FileSystem::read_file(unsigned int fileDesc, char* data, size_t len)
     }
     
     /*Read a full block*/
-    _myPartitionManager->readDiskBlock(currentIndex.blknum, buff);
+    try{_myPartitionManager->readDiskBlock(currentIndex.blknum, buff);}
+    catch(arboreal_exception& e) { delete buff; throw; }
     memcpy(data + dataOffset, buff + currentIndex.offset, _myPartitionManager->getBlockSize());
     
     open_file->increment_seek(_myPartitionManager->getBlockSize());
@@ -1032,7 +1101,8 @@ size_t FileSystem::read_file(unsigned int fileDesc, char* data, size_t len)
     }
     
     /*Read len bytes*/
-    _myPartitionManager->readDiskBlock(currentIndex.blknum, buff);
+    try{_myPartitionManager->readDiskBlock(currentIndex.blknum, buff);}
+    catch(arboreal_exception& e) { delete buff; throw; }
     memcpy(data + dataOffset, buff + currentIndex.offset, len);
     open_file->increment_seek(len);
     dataOffset+= len;
@@ -1042,7 +1112,7 @@ size_t FileSystem::read_file(unsigned int fileDesc, char* data, size_t len)
   {
     open_file->set_EOF();
   }
-  delete buff;
+  delete[] buff;
   return dataOffset;
 }
 
@@ -1062,12 +1132,14 @@ size_t FileSystem::write_file(unsigned int fileDesc, const char* data, size_t le
   
   if(open_file->getMode() != 'w' && open_file->getMode() != 'x')
   {
+    delete[] buff;
     throw file_error("File not opened with write permissions", "FileSystem::write_file");
   }
 
   /*If we are past the end of the File, go to the last byte to start writing.*/
   if(open_file->get_EOF())
   {
+    delete[] buff;
     throw file_error("Attempt to write past EOF", "FileSystem::write()");
   }
   
@@ -1080,20 +1152,24 @@ size_t FileSystem::write_file(unsigned int fileDesc, const char* data, size_t le
   }
   
   /*Fill up current Block, must preserve data already there*/
-  _myPartitionManager->readDiskBlock(currentIndex.blknum, buff);
+  try{_myPartitionManager->readDiskBlock(currentIndex.blknum, buff);}
+  catch(arboreal_exception& e) { delete buff; throw; }
   size_t bytesToWrite = _myPartitionManager->getBlockSize() - currentIndex.offset;
   
   if(len <= bytesToWrite)
   {
     memcpy(buff + currentIndex.offset, data, len);
-    _myPartitionManager->writeDiskBlock(currentIndex.blknum, buff);
+    try{_myPartitionManager->writeDiskBlock(currentIndex.blknum, buff);}
+    catch(arboreal_exception& e) { delete buff; throw; }
     open_file->increment_seek(len, true); open_file->getFile()->set_edit();
+    delete[] buff;
     return len;
   }
   else
   {
     memcpy(buff + currentIndex.offset, data, bytesToWrite);
-    _myPartitionManager->writeDiskBlock(currentIndex.blknum, buff);
+    try{_myPartitionManager->writeDiskBlock(currentIndex.blknum, buff);}
+    catch(arboreal_exception& e) { delete buff; throw; }
     open_file->increment_seek(bytesToWrite, true); open_file->getFile()->set_edit();
   }
 
@@ -1115,7 +1191,8 @@ size_t FileSystem::write_file(unsigned int fileDesc, const char* data, size_t le
     
     /*Write a full block of data*/
     memcpy(buff, data + dataOffset, _myPartitionManager->getBlockSize());
-    _myPartitionManager->writeDiskBlock(currentIndex.blknum, buff);
+    try{_myPartitionManager->writeDiskBlock(currentIndex.blknum, buff);}
+    catch(arboreal_exception& e) { delete buff; throw; }
     open_file->increment_seek(_myPartitionManager->getBlockSize(), true); open_file->getFile()->set_edit();
     len -= _myPartitionManager->getBlockSize(); dataOffset += _myPartitionManager->getBlockSize(); 
     
@@ -1133,12 +1210,13 @@ size_t FileSystem::write_file(unsigned int fileDesc, const char* data, size_t le
     
     memset(buff, 0, _myPartitionManager->getBlockSize());
     memcpy(buff + currentIndex.offset, data + dataOffset, len);
-    _myPartitionManager->writeDiskBlock(currentIndex.blknum, buff);
+    try{_myPartitionManager->writeDiskBlock(currentIndex.blknum, buff);}
+    catch(arboreal_exception& e) { delete buff; throw; }
     open_file->increment_seek(len, true); open_file->getFile()->set_edit();
     dataOffset += len; 
   }
   
-  delete buff;
+  delete[] buff;
   return dataOffset;
 }
 

@@ -16,7 +16,7 @@ Disk::Disk(BlkNumType numblocks, size_t blksz, char *fname)
 
 Disk::~Disk()
 {
-  delete diskFilename;
+  free(diskFilename);
 }
 
 void Disk::readDiskBlock(BlkNumType blknum, char *blkdata)

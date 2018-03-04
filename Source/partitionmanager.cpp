@@ -25,6 +25,7 @@ PartitionManager::PartitionManager(DiskManager *dm, string partitionName)
   if(blknum == 0)
   {
     /*No freelist, disk must be full*/
+    delete[] buff;
     throw disk_error("Partition is Full!", "PartitionManager::PartitionManager()");
   }
   
@@ -34,11 +35,13 @@ PartitionManager::PartitionManager(DiskManager *dm, string partitionName)
   if(blknum == 0)
   {
     /*No freelist, disk must be full*/
+    delete[] buff;
     throw disk_error("Partition Full", "PartitionManager::PartitionManager");
   }
   
   _freeBlockEnd = blknum;
   offset+= sizeof(BlkNumType);
+  delete[] buff;
 }
 
 PartitionManager::~PartitionManager()
@@ -80,8 +83,11 @@ BlkNumType PartitionManager::getFreeDiskBlock()
   
   if(ret == 0)
   {
+    delete[] buff;
     throw disk_error("Partition is Full!", "PartitionManager::getFreeDiskBlock()");
   }
+  
+  delete[] buff;
   return ret;
   
 }
@@ -120,6 +126,7 @@ void PartitionManager::returnDiskBlock(BlkNumType blknum)
   memcpy(buff + offset, &blknum, sizeof(BlkNumType));
   
   writeDiskBlock(0, buff);
+  delete[] buff;
 }
 
 

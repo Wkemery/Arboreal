@@ -568,6 +568,8 @@ int main(int argc, char** argv)
       fullPath.clear(); tags.clear();
       
       cout << "Untag_file: Warnings" << endl;
+      
+      
       try
       {
         fullPath.push_back("Tag1"); fullPath.push_back("Tag7"); fullPath.push_back("Tag9"); fullPath.push_back("File2");
@@ -597,7 +599,9 @@ int main(int argc, char** argv)
       
       fullPath.clear(); tags.clear();
       
-//       cout << "create_tag Error: " << endl;
+      
+      
+      cout << "create_tag Error: " << endl;
       try
       {
         fs1->create_tag("Tag8");
@@ -606,7 +610,7 @@ int main(int argc, char** argv)
       
       fullPath.clear(); tags.clear();
       
-//       cout << "delete_tag: Error" << endl;
+      cout << "delete_tag: Error" << endl;
       try
       {
         fs1->delete_tag("Tag1");
@@ -615,7 +619,7 @@ int main(int argc, char** argv)
       
       fullPath.clear(); tags.clear();
       
-//       cout << "delete_file Error:" << endl;
+      cout << "delete_file Error:" << endl;
       try
       {
         fullPath.push_back("NotATaG"); fullPath.push_back("File1");
@@ -809,7 +813,7 @@ int main(int argc, char** argv)
         bufferSize*= 2;
         bytes = 8000;
         symbol = '%';
-        delete buff; buff = 0;
+        delete[] buff; buff = 0;
         buff = new char[bufferSize];
         memset(buff, 0, bufferSize);
         memset(buff, symbol, bytes);
@@ -835,6 +839,7 @@ int main(int argc, char** argv)
         fs1->close_file(fd1);
         fs1->close_file(fd2);
         fs1->close_file(fd3);
+        delete[] buff;
         
       }
       catch(arboreal_exception& e){cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
@@ -887,7 +892,7 @@ int main(int argc, char** argv)
         symbol = '^';
         bufferSize = 512;
         bytes = 512;
-        delete buff;
+        delete[] buff;
         buff = new char[bufferSize];
         memset(buff, 0, bufferSize);
         memset(buff, symbol, bytes);
@@ -929,7 +934,7 @@ int main(int argc, char** argv)
         symbol = '$';
         bufferSize = 512;
         bytes = 512;
-        delete buff;
+        delete[] buff;
         buff = new char[bufferSize];
         memset(buff, 0, bufferSize);
         memset(buff, symbol, bytes);
@@ -964,9 +969,10 @@ int main(int argc, char** argv)
         cout << "Bytes Read return val: " << pret << " " << symbol << " symbols" << endl;
         
         cout << "\t" << count << " " << symbol << " symbols in buffer" << endl << delimiter << endl << endl;
-        
+        delete[] buff;
       }
       catch(arboreal_exception& e){cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
+      
       break;
     }
     case 12:
@@ -1017,7 +1023,7 @@ int main(int argc, char** argv)
         cout << "Bytes Read return val: " << pret << " " << symbol << " symbols" << endl;
         
         cout << "\t" << count << " " << symbol << " symbols in buffer" << endl << delimiter << endl << endl;
-        
+        delete buff;
       }
       catch(arboreal_exception& e){cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
       
@@ -1028,6 +1034,10 @@ int main(int argc, char** argv)
       cerr << "Driver Error! Behavior not defined for specified number" << endl;
     }
   }
+  
+  if(d != 0) delete d;
+  if(dm != 0) delete dm;
+  if(fs1 != 0) delete fs1;
   return 0;
   
 }
