@@ -74,16 +74,6 @@ void CLI::start()
 {
 
    if(dbug) std::cout << std::endl << std::endl;
-   std::cout << "Enter Host Name -or- Type 'local' To Access This Machine's File System: " << std::endl;
-   std::string hostname;
-   getline(std::cin,hostname);
-   if(hostname == "local")
-   {
-      char name[256];
-      gethostname(name,256);
-      hostname = name;
-      if(dbug) std::cout << "Hostname: " << hostname << std::endl;
-   }
    if(dbug) std::cout << "C: Command Line Interface Process Id: " << my_pid << std::endl;
    if(dbug) std::cout << "C: Command Line Interface Client Socket Path: " << client_sockpath << std::endl;
    if(dbug) std::cout << "C: Server Socket Path: " << server_sockpath << std::endl;
@@ -100,7 +90,10 @@ void CLI::start()
 
 
    if(dbug) std::cout << "C: Generating Argument Vector For Liason Process..." << std::endl;
-
+   std::string hostname;
+   char temp[MAX_COMMAND_SIZE];
+   memset(temp,'\0',MAX_COMMAND_SIZE);
+   hostname = gethostname(temp,MAX_COMMAND_SIZE);
    /* Create char** to send to Liason via main() argv param */
    std::vector<char*> argv;
    argv.push_back(const_cast<char*>(client_sockpath.c_str()));
@@ -165,20 +158,39 @@ void CLI::start()
       if(dbug) std::cout << "C: Server Connection Successfull" << std::endl;
 
       if(dbug) std::cout << "C: Building Handshake Command..." << std::endl;
-      char* cmnd = new char[MAX_COMAND_SIZE];
+      char* cmnd = new char[MAX_COMMAND_SIZE];
       int cmnd_id = 0;
-      memset(cmnd,'\0',MAX_COMAND_SIZE);
+      memset(cmnd,'\0',MAX_COMMAND_SIZE);
       memcpy(cmnd,&cmnd_id,sizeof(int));
       memcpy(cmnd + sizeof(int), "HANDSHAKE", sizeof("HANDSHAKE"));
+      memcpy(cmnd + sizeof("HANDSHAKE") + sizeof(int) + 2, const_cast<char*>(my_partition.c_str()), my_partition.length());
       if(dbug) std::cout << "C: Handshake Command Built Successfully" << std::endl;
 
       if(dbug) std::cout << "C: Sending Command To Server..." << std::endl;
       if(dbug) std::cout << "C: Sending To: " << client_sock << " @ " << client_sockpath << std::endl;
-      send_to_server(client_sock,client_sockpath,cmnd,MAX_COMAND_SIZE,FLAG);
+      send_to_server(client_sock,client_sockpath,cmnd,MAX_COMMAND_SIZE,FLAG);
       if(dbug) std::cout << "C: Command Successfully Sent" << std::endl;
 
       if(dbug) std::cout << "C: Awaiting Response From Server..." << std::endl;
-      char* data = receive_from_server(client_sock,client_sockpath,MAX_COMAND_SIZE,FLAG);
+      char* data = receive_from_server(client_sock,client_sockpath,MAX_COMMAND_SIZE,FLAG);
+      if(get_cmnd_id(data) == 999)
+      {
+         std::cerr << "C: Connection To File System Could Not Be Established; Exiting..." << std::endl;
+         if(dbug) std::cout << "C: Closing Client Socket Connection..." << std::endl;
+         if(close(client_sock) < 0) throw ERR(1,SOK_CLOSE_ERR,136);
+         if(dbug) std::cout << "C: Client Socket Closed Successfully" << std::endl;
+         if(dbug) std::cout << "C: Removing Client Socket..." << std::endl;
+         if(unlink(client_sockpath.c_str()) < 0) throw ERR(1,SOK_UNLNK_ERR,137);
+         if(dbug) std::cout << "C: Client Socket Removed Successfully" << std::endl;
+         if(dbug) std::cout << "C: Waiting For Child Process to Complete..." << std::endl;
+   
+         int status;
+         waitpid(pid,&status,0);
+         if(dbug) std::cout << "C: Child Process Completed Successfully" << std::endl;
+         if(dbug) std::cout << "C: Quitting Command Line Interface..." << std::endl;
+         exit(1);
+      }
+
       std::string dta = data;
       if(dbug) std::cout << "C: Data Received: " << dta << std::endl;
       if(dbug) std::cout << "C: Data Received From: " << client_sock << " @ " << client_sockpath << std::endl;
@@ -284,8 +296,8 @@ void CLI::run()
             if(input == "Y" || input == "y")
             {
                /* Send QUIT Command to Liaison Process */
-               char* quit = new char[MAX_COMAND_SIZE];
-               memset(quit,'\0',MAX_COMAND_SIZE);
+               char* quit = new char[MAX_COMMAND_SIZE];
+               memset(quit,'\0',MAX_COMMAND_SIZE);
                int val = 999;
                memcpy(quit,&val,sizeof(int));
                memcpy(quit + sizeof(int), "QUIT", sizeof("QUIT"));
@@ -316,8 +328,8 @@ void CLI::run()
          if(input == "end" && is_script == "-s")
          {
             /* Send QUIT Command to Liaison Process */
-            char* quit = new char[MAX_COMAND_SIZE];
-            memset(quit,'\0',MAX_COMAND_SIZE);
+            char* quit = new char[MAX_COMMAND_SIZE];
+            memset(quit,'\0',MAX_COMMAND_SIZE);
             int val = 999;
             memcpy(quit,&val,sizeof(int));
             memcpy(quit + sizeof(int), "QUIT", sizeof("QUIT"));
@@ -363,7 +375,7 @@ void CLI::send_cmnd(char* cmnd)
 
    if(dbug) std::cout << "C: Sending Command To Server..." << std::endl;
    if(dbug) std::cout << "C: Sending To: " << client_sock << " @ " << client_sockpath << std::endl;
-   send_to_server(client_sock,client_sockpath,cmnd,MAX_COMAND_SIZE,FLAG);
+   send_to_server(client_sock,client_sockpath,cmnd,MAX_COMMAND_SIZE,FLAG);
    if(dbug) std::cout << "C: Command Successfully Sent" << std::endl;
    return;
 }
@@ -373,7 +385,7 @@ void CLI::send_cmnd(char* cmnd)
 void CLI::await_response()
 {
    if(dbug) std::cout << "C: Awaiting Response From Server..." << std::endl;
-   char* data = receive_from_server(client_sock,client_sockpath,MAX_COMAND_SIZE,FLAG);
+   char* data = receive_from_server(client_sock,client_sockpath,MAX_COMMAND_SIZE,FLAG);
    std::string dta = data;
    if(dbug) std::cout << "C: Data Received: " << dta << std::endl;
    return;
@@ -390,11 +402,11 @@ void CLI::await_response()
 //[================================================================================================]
 char* CLI::build(int id, std::string input)
 {
-   char* command = new char[MAX_COMAND_SIZE];
+   char* command = new char[MAX_COMMAND_SIZE];
    int offset = 0;
 
    // Zero out the command buffer
-   memset(command,'\0',MAX_COMAND_SIZE);
+   memset(command,'\0',MAX_COMMAND_SIZE);
 
 
    switch(id)
@@ -409,16 +421,16 @@ char* CLI::build(int id, std::string input)
 
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
-         print_buffer(command,MAX_COMAND_SIZE);
-         check_buffer_partitioning(command,MAX_COMAND_SIZE);
+         print_buffer(command,MAX_COMMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(command,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMMAND_SIZE))
          {
-            fix_buffer(command,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMMAND_SIZE);
 
             // Debug Print
-            print_buffer(command,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMMAND_SIZE);
          }
          if(dbug) std::cout << "Size of built command: " << sizeof(command) << std::endl;
          return command;
@@ -435,16 +447,16 @@ char* CLI::build(int id, std::string input)
 
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
-         print_buffer(command,MAX_COMAND_SIZE);
-         check_buffer_partitioning(command,MAX_COMAND_SIZE);
+         print_buffer(command,MAX_COMMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(command,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMMAND_SIZE))
          {
-            fix_buffer(command,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMMAND_SIZE);
 
             // Debug Print
-            print_buffer(command,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMMAND_SIZE);
          }
          return command;
       }
@@ -460,16 +472,16 @@ char* CLI::build(int id, std::string input)
          
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
-         print_buffer(command,MAX_COMAND_SIZE);
-         check_buffer_partitioning(command,MAX_COMAND_SIZE);
+         print_buffer(command,MAX_COMMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(command,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMMAND_SIZE))
          {
-            fix_buffer(command,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMMAND_SIZE);
 
             // Debug Print
-            print_buffer(command,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMMAND_SIZE);
          }
          return command;
       }
@@ -486,16 +498,16 @@ char* CLI::build(int id, std::string input)
          
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
-         print_buffer(command,MAX_COMAND_SIZE);
-         check_buffer_partitioning(command,MAX_COMAND_SIZE);
+         print_buffer(command,MAX_COMMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(command,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMMAND_SIZE))
          {
-            fix_buffer(command,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMMAND_SIZE);
 
             // Debug Print
-            print_buffer(command,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMMAND_SIZE);
          }
          return command;
       }
@@ -511,16 +523,16 @@ char* CLI::build(int id, std::string input)
 
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
-         print_buffer(command,MAX_COMAND_SIZE);
-         check_buffer_partitioning(command,MAX_COMAND_SIZE);
+         print_buffer(command,MAX_COMMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(command,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMMAND_SIZE))
          {
-            fix_buffer(command,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMMAND_SIZE);
 
             // Debug Print
-            print_buffer(command,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMMAND_SIZE);
          }
          return command;
       }
@@ -536,16 +548,16 @@ char* CLI::build(int id, std::string input)
          
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
-         print_buffer(command,MAX_COMAND_SIZE);
-         check_buffer_partitioning(command,MAX_COMAND_SIZE);
+         print_buffer(command,MAX_COMMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(command,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMMAND_SIZE))
          {
-            fix_buffer(command,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMMAND_SIZE);
 
             // Debug Print
-            print_buffer(command,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMMAND_SIZE);
          }
          return command;
       }
@@ -561,16 +573,16 @@ char* CLI::build(int id, std::string input)
          
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
-         print_buffer(command,MAX_COMAND_SIZE);
-         check_buffer_partitioning(command,MAX_COMAND_SIZE);
+         print_buffer(command,MAX_COMMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(command,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMMAND_SIZE))
          {
-            fix_buffer(command,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMMAND_SIZE);
 
             // Debug Print
-            print_buffer(command,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMMAND_SIZE);
          }
          return command;
       }
@@ -586,16 +598,16 @@ char* CLI::build(int id, std::string input)
          
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
-         print_buffer(command,MAX_COMAND_SIZE);
-         check_buffer_partitioning(command,MAX_COMAND_SIZE);
+         print_buffer(command,MAX_COMMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(command,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMMAND_SIZE))
          {
-            fix_buffer(command,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMMAND_SIZE);
 
             // Debug Print
-            print_buffer(command,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMMAND_SIZE);
          }
          return command;
       }
@@ -611,16 +623,16 @@ char* CLI::build(int id, std::string input)
          
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
-         print_buffer(command,MAX_COMAND_SIZE);
-         check_buffer_partitioning(command,MAX_COMAND_SIZE);
+         print_buffer(command,MAX_COMMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(command,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMMAND_SIZE))
          {
-            fix_buffer(command,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMMAND_SIZE);
 
             // Debug Print
-            print_buffer(command,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMMAND_SIZE);
          }
          return command;
       }
@@ -636,16 +648,16 @@ char* CLI::build(int id, std::string input)
          
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
-         print_buffer(command,MAX_COMAND_SIZE);
-         check_buffer_partitioning(command,MAX_COMAND_SIZE);
+         print_buffer(command,MAX_COMMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(command,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMMAND_SIZE))
          {
-            fix_buffer(command,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMMAND_SIZE);
 
             // Debug Print
-            print_buffer(command,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMMAND_SIZE);
          }
          return command;
       }
@@ -661,16 +673,16 @@ char* CLI::build(int id, std::string input)
          
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
-         print_buffer(command,MAX_COMAND_SIZE);
-         check_buffer_partitioning(command,MAX_COMAND_SIZE);
+         print_buffer(command,MAX_COMMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(command,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMMAND_SIZE))
          {
-            fix_buffer(command,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMMAND_SIZE);
 
             // Debug Print
-            print_buffer(command,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMMAND_SIZE);
          }
          return command;
       }
@@ -686,16 +698,16 @@ char* CLI::build(int id, std::string input)
          
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
-         print_buffer(command,MAX_COMAND_SIZE);
-         check_buffer_partitioning(command,MAX_COMAND_SIZE);
+         print_buffer(command,MAX_COMMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(command,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMMAND_SIZE))
          {
-            fix_buffer(command,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMMAND_SIZE);
 
             // Debug Print
-            print_buffer(command,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMMAND_SIZE);
          }
          return command;
       }
@@ -711,16 +723,16 @@ char* CLI::build(int id, std::string input)
 
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
-         print_buffer(command,MAX_COMAND_SIZE);
-         check_buffer_partitioning(command,MAX_COMAND_SIZE);
+         print_buffer(command,MAX_COMMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(command,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMMAND_SIZE))
          {
-            fix_buffer(command,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMMAND_SIZE);
 
             // Debug Print
-            print_buffer(command,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMMAND_SIZE);
          }
          return command;
       }
@@ -736,16 +748,16 @@ char* CLI::build(int id, std::string input)
 
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
-         print_buffer(command,MAX_COMAND_SIZE);
-         check_buffer_partitioning(command,MAX_COMAND_SIZE);
+         print_buffer(command,MAX_COMMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(command,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMMAND_SIZE))
          {
-            fix_buffer(command,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMMAND_SIZE);
 
             // Debug Print
-            print_buffer(command,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMMAND_SIZE);
          }
          return command;
       }
@@ -761,16 +773,16 @@ char* CLI::build(int id, std::string input)
          
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
-         print_buffer(command,MAX_COMAND_SIZE);
-         check_buffer_partitioning(command,MAX_COMAND_SIZE);
+         print_buffer(command,MAX_COMMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(command,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMMAND_SIZE))
          {
-            fix_buffer(command,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMMAND_SIZE);
 
             // Debug Print
-            print_buffer(command,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMMAND_SIZE);
          }
          return command;
       }
@@ -786,16 +798,16 @@ char* CLI::build(int id, std::string input)
          
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
-         print_buffer(command,MAX_COMAND_SIZE);
-         check_buffer_partitioning(command,MAX_COMAND_SIZE);
+         print_buffer(command,MAX_COMMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(command,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMMAND_SIZE))
          {
-            fix_buffer(command,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMMAND_SIZE);
 
             // Debug Print
-            print_buffer(command,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMMAND_SIZE);
          }
          return command;
       }
@@ -811,16 +823,16 @@ char* CLI::build(int id, std::string input)
          
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
-         print_buffer(command,MAX_COMAND_SIZE);
-         check_buffer_partitioning(command,MAX_COMAND_SIZE);
+         print_buffer(command,MAX_COMMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(command,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMMAND_SIZE))
          {
-            fix_buffer(command,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMMAND_SIZE);
 
             // Debug Print
-            print_buffer(command,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMMAND_SIZE);
          }
          return command;
       }
@@ -836,16 +848,16 @@ char* CLI::build(int id, std::string input)
          
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
-         print_buffer(command,MAX_COMAND_SIZE);
-         check_buffer_partitioning(command,MAX_COMAND_SIZE);
+         print_buffer(command,MAX_COMMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(command,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMMAND_SIZE))
          {
-            fix_buffer(command,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMMAND_SIZE);
 
             // Debug Print
-            print_buffer(command,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMMAND_SIZE);
          }
          return command;
       }
@@ -861,16 +873,16 @@ char* CLI::build(int id, std::string input)
          
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
-         print_buffer(command,MAX_COMAND_SIZE);
-         check_buffer_partitioning(command,MAX_COMAND_SIZE);
+         print_buffer(command,MAX_COMMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(command,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMMAND_SIZE))
          {
-            fix_buffer(command,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMMAND_SIZE);
 
             // Debug Print
-            print_buffer(command,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMMAND_SIZE);
          }
          return command;
       }
@@ -886,16 +898,16 @@ char* CLI::build(int id, std::string input)
          
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
-         print_buffer(command,MAX_COMAND_SIZE);
-         check_buffer_partitioning(command,MAX_COMAND_SIZE);
+         print_buffer(command,MAX_COMMAND_SIZE);
+         check_buffer_partitioning(command,MAX_COMMAND_SIZE);
 
          // Check Buffer Integerity
-         if(!check_buffer(command,MAX_COMAND_SIZE))
+         if(!check_buffer(command,MAX_COMMAND_SIZE))
          {
-            fix_buffer(command,MAX_COMAND_SIZE);
+            fix_buffer(command,MAX_COMMAND_SIZE);
 
             // Debug Print
-            print_buffer(command,MAX_COMAND_SIZE);
+            print_buffer(command,MAX_COMMAND_SIZE);
          }
          return command;
       }

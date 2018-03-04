@@ -82,80 +82,7 @@ int main(int argc, char** argv)
     if(dbug) std::cout << "L: Daemon Socket Path: " << DMON_SOCK_PATH << std::endl;
     if(dbug) std::cout << "L: Daemon Port#: " << DMON_PORT << std::endl;
 
-
-    // Connect To Daemon
-    int liaison_fid, valread, timer, printer;
-    struct sockaddr_in liaison_addr;
-    struct sockaddr_in daemon_addr;
-
-    timer = 0;
-    printer = 0;
-    while((liaison_fid = socket(AF_INET,SOCK_STREAM,0)) < 0 && timer < TIMEOUT)
-    {
-        sleep(1);
-        if(printer % 3 == 0)
-        {
-            printf("\33[2K\r");
-            printf("\rL: Liaison Client Socket Creation Failed - %s - Retrying.", strerror(errno));
-            fflush(stdout); 
-        }
-        else if(printer % 3 == 1)
-        {
-            printf("\33[2K\r");
-            printf("\rL: Liaison Client Socket Creation Failed - %s - Retrying..", strerror(errno));
-            fflush(stdout); 
-        }
-        else if(printer % 3 == 2)
-        {
-            printf("\33[2K\r");
-            printf("\rL: Liaison Client Socket Creation Failed - %s - Retrying...", strerror(errno));
-            fflush(stdout); 
-        }
-        timer += 1;
-        printer += 1;
-    }
-    if(timer >= TIMEOUT)
-    {
-        printf("\nL: Liaison Socket Could Not Be Created; Exiting\n");
-        exit(1);
-    }
-    else{ timer = 0; }
-
-    memset(&daemon_addr, '\0', sizeof(daemon_addr));
-    daemon_addr.sin_family = AF_INET;
-    daemon_addr.sin_port = htons(DMON_PORT);
-
-    while((connect(liaison_fid,(struct sockaddr*)&daemon_addr,sizeof(daemon_addr))) < 0)
-    {
-        sleep(1);
-        if(printer % 3 == 0)
-        {
-            printf("\33[2K\r");
-            printf("\rL: Connection To File System Daemon Failed - %s - Retrying.",strerror(errno));
-            fflush(stdout);
-        }
-        else if(printer % 3 == 1)
-        {
-            printf("\33[2K\r");
-            printf("\rL: Connection To File System Daemon Failed - %s - Retrying..",strerror(errno));
-            fflush(stdout);
-        }
-        else if(printer % 3 == 2)
-        {
-            printf("\33[2K\r");
-            printf("\rL: Connection To File System Daemon Failed - %s - Retrying...",strerror(errno));
-            fflush(stdout);
-        }
-        printer += 1;
-        timer += 1;
-    }
-    if(timer >= TIMEOUT)
-    {
-        printf("\nL: Connection To File System Daemon Could Not Be Established; Exiting\n");
-        close(liaison_fid);
-        exit(1);
-    }
-  
+    // Connect to CLI
 
     key_t shm_key = atoi(argv[2]);
     int shm_id;
@@ -208,6 +135,110 @@ int main(int argc, char** argv)
     if(dbug) std::cout << "L: Client Peername Retrieved Successfully: " << client_sockaddr.sun_path << std::endl;
 
 
+
+     // Connect To Daemon
+    int liaison_fid, valread, timer, printer;
+    struct sockaddr_in liaison_addr;
+    struct sockaddr_in daemon_addr;
+  
+    timer = 0;
+    printer = 0;
+    while((liaison_fid = socket(AF_INET,SOCK_STREAM,0)) < 0 && timer < TIMEOUT)
+    {
+        sleep(1);
+        if(printer % 3 == 0)
+        {
+            printf("\33[2K\r");
+            printf("\rL: Liaison Client Socket Creation Failed - %s - Retrying.", strerror(errno));
+            fflush(stdout); 
+        }
+        else if(printer % 3 == 1)
+        {
+            printf("\33[2K\r");
+            printf("\rL: Liaison Client Socket Creation Failed - %s - Retrying..", strerror(errno));
+            fflush(stdout); 
+        }
+        else if(printer % 3 == 2)
+        {
+            printf("\33[2K\r");
+            printf("\rL: Liaison Client Socket Creation Failed - %s - Retrying...", strerror(errno));
+            fflush(stdout); 
+        }
+        timer += 1;
+        printer += 1;
+    }
+    if(timer >= TIMEOUT)
+    {
+        printf("\nL: Liaison Socket Could Not Be Created; Exiting\n");
+        if(dbug) std::cout << "L: Closing Connections..." << std::endl;
+        if(close(liaison_fid) < 0) throw ERR(2,SOK_CLOSE_ERR);
+        if(close(liaison_sock) < 0) throw ERR(2,SOK_CLOSE_ERR);
+        if(dbug) std::cout << "L: Server Socket Successfully Closed" << std::endl;
+        if(unlink(liaison_sockpath.c_str()) < 0) throw ERR(2,SOK_UNLNK_ERR);
+        if(dbug) std::cout << "L: Server Socket Successfully Removed" << std::endl;
+        if(dbug) std::cout << "L: Liaison Process Closing; Goodbye" << std::endl;
+        char* quit = new char[MAX_COMMAND_SIZE];
+        memset(quit,'\0',MAX_COMMAND_SIZE);
+        int val = 999;
+        memcpy(quit,&val,sizeof(int));
+        memcpy(quit + sizeof(int), "QUIT", sizeof("QUIT"));
+        send_response(client_sock,quit,MAX_COMMAND_SIZE,FLAG,liaison_sock,liaison_sockpath,client_sockpath);
+        exit(1);
+    }
+    else{ timer = 0; }
+
+    memset(&daemon_addr, '\0', sizeof(daemon_addr));
+    daemon_addr.sin_family = AF_INET;
+    daemon_addr.sin_port = htons(DMON_PORT);
+
+    while((connect(liaison_fid,(struct sockaddr*)&daemon_addr,sizeof(daemon_addr))) < 0 && timer < TIMEOUT)
+    {
+        sleep(1);
+        if(printer % 3 == 0)
+        {
+            printf("\33[2K\r");
+            printf("\rL: Connection To File System Daemon Failed - %s - Retrying.",strerror(errno));
+            fflush(stdout);
+        }
+        else if(printer % 3 == 1)
+        {
+            printf("\33[2K\r");
+            printf("\rL: Connection To File System Daemon Failed - %s - Retrying..",strerror(errno));
+            fflush(stdout);
+        }
+        else if(printer % 3 == 2)
+        {
+            printf("\33[2K\r");
+            printf("\rL: Connection To File System Daemon Failed - %s - Retrying...",strerror(errno));
+            fflush(stdout);
+        }
+        printer += 1;
+        timer += 1;
+    }
+    if(timer >= TIMEOUT)
+    {
+        printf("\nL: Connection To File System Daemon Could Not Be Established; Exiting\n");
+        if(dbug) std::cout << "L: Closing Connections..." << std::endl;
+        if(close(liaison_fid) < 0) throw ERR(2,SOK_CLOSE_ERR);
+        if(close(liaison_sock) < 0) throw ERR(2,SOK_CLOSE_ERR);
+        if(dbug) std::cout << "L: Server Socket Successfully Closed" << std::endl;
+        if(unlink(liaison_sockpath.c_str()) < 0) throw ERR(2,SOK_UNLNK_ERR);
+        if(dbug) std::cout << "L: Server Socket Successfully Removed" << std::endl;
+        if(dbug) std::cout << "L: Liaison Process Closing; Goodbye" << std::endl;
+        char* quit = new char[MAX_COMMAND_SIZE];
+        memset(quit,'\0',MAX_COMMAND_SIZE);
+        int val = 999;
+        memcpy(quit,&val,sizeof(int));
+        memcpy(quit + sizeof(int), "QUIT", sizeof("QUIT"));
+        send_response(client_sock,quit,MAX_COMMAND_SIZE,FLAG,liaison_sock,liaison_sockpath,client_sockpath);
+        exit(1);
+    }
+
+
+
+
+
+
     /* Begin communication */
     do
     {
@@ -225,8 +256,6 @@ int main(int argc, char** argv)
         //if(dbug) std::cout << "L: Sending Command to File System..." << std::endl;
         //
         //  TO DO:
-        //          Rebuild Commands For FS
-        //          Send To Daemon
         //          Await Response
         //          Send Response To CLI
         std::vector<std::string> cmnds;
