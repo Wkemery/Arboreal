@@ -63,7 +63,7 @@ class FileSystem {
   RootTree* _RootTree;
   map<TreeObject*, int> _modifiedObjects;
   unordered_multimap<string, FileInfo*> _allFiles;
-
+  vector<TreeObject*> objsToDelete;
 /******************************************************************************/
 
 public:

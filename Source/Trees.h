@@ -123,7 +123,9 @@ protected:
   TreeObject* _mod;
   TreeObject* _parent;
   Modification(TreeObject* obj, TreeObject* parent);
+  
 public:
+  virtual ~Modification();
   virtual void write_out(PartitionManager* pm) = 0;
 };
 
@@ -131,6 +133,7 @@ class Addition : public Modification
 {
 public:
   Addition(TreeObject* obj, TreeObject* parent);
+  ~Addition();
   void write_out (PartitionManager* pm);
 };
 
@@ -138,6 +141,7 @@ class Deletion : public Modification
 {
 public:
   Deletion(TreeObject* obj, TreeObject* parent);
+  ~Deletion();
   void write_out (PartitionManager* pm);
 };
 

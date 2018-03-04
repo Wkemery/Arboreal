@@ -9,8 +9,9 @@
 ###################################################################################################
 
 CXX=g++
-XXFLAGS = -ggdb -Wall -std=c++11 
-
+XXFLAGS= -ggdb -Wall -std=c++11 
+VALGRIND= valgrind --leak-check=yes --log-file=/home/wyatt/ValgrindLogs/%p.log
+VALOPS= --leak-check=full --show-leak-kinds=all
 CPPFILES=driver.cpp disk.cpp diskmanager.cpp partitionmanager.cpp filesystem.cpp Trees.cpp Arboreal_Exceptions.cpp
 OBJFILES=driver.o disk.o diskmanager.o partitionmanager.o filesystem.o Trees.o Arboreal_Exceptions.o
 HFILES=disk.h disk.cpp diskmanager.h partitionmanager.h filesystem.h Trees.h Arboreal_Exceptions.h types.h
@@ -64,11 +65,36 @@ reset:
 rest:
 	/bin/rm -f driver DISK1
 	make
+	make format
 	./format diskInfo.d
 	./driver 6
 	./driver 7
 	./driver 8
 
+mem_test: mem_prep mem_test_6_8 mem_test_9 mem_test_10 mem_test_11 mem_test_12
+	
+mem_prep:
+	/bin/rm -f driver DISK1
+	make
+	make format
+	./format diskInfo.d
+	
+mem_test_6_8:
+	$(VALGRIND) ./driver 6
+	$(VALGRIND) ./driver 7
+	$(VALGRIND) ./driver 8
+
+mem_test_9: rest
+	$(VALGRIND) ./driver 9
+
+mem_test_10: rest
+	$(VALGRIND) ./driver 10
+
+mem_test_11: rest
+	$(VALGRIND) ./driver 11
+
+mem_test_12: rest
+	$(VALGRIND) ./driver 12
 
 clean:
 	/bin/rm -f *.o driver cli format DISK1 *.pipe liason

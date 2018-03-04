@@ -53,10 +53,20 @@ DiskManager::DiskManager(Disk *d)
     _myPartitions.push_back(temp);
         
   }
+  delete[] buff;
 }
 
 DiskManager::~DiskManager()
-{}
+{
+  for( auto part : _myPartitions)
+  {
+    if(part != 0)
+    {
+      delete part;
+      part = 0;
+    }
+  }
+}
 
 void DiskManager::readDiskBlock(string partitionName, BlkNumType blknum, char *blkdata)
 {
