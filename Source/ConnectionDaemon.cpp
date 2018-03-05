@@ -43,21 +43,7 @@ void set_nonblocking(int daemon_sock, int is_on);
 void quit_fs(void);
 void sig_caught(int sig);
 
-/* For Error Handling */
-struct error
-{
-  error(std::string where, std::string what)
-  {
-    __what = what;
-    __where = where;
-  }
-  void print(void)
-  {
-    std::cerr << __where << __what << std::endl;
-  }
-  std::string __what;
-  std::string __where;
-};
+
 
 
 
