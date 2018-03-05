@@ -12,9 +12,9 @@ CXX=g++
 XXFLAGS= -ggdb -Wall -std=c++11 
 VALGRIND= valgrind --leak-check=yes --log-file=/home/wyatt/ValgrindLogs/%p.log
 VALOPS= --leak-check=full --show-leak-kinds=all
-CPPFILES=disk.cpp diskmanager.cpp partitionmanager.cpp filesystem.cpp Trees.cpp Arboreal_Exceptions.cpp
-OBJFILES=driver.o disk.o diskmanager.o partitionmanager.o filesystem.o Trees.o Arboreal_Exceptions.o
-HFILES=disk.h diskmanager.h partitionmanager.h filesystem.h Trees.h Arboreal_Exceptions.h types.h
+CPPFILES=disk.cpp diskmanager.cpp partitionmanager.cpp filesystem.cpp Trees.cpp Arboreal_Exceptions.cpp File.cpp
+OBJFILES=driver.o disk.o diskmanager.o partitionmanager.o filesystem.o Trees.o Arboreal_Exceptions.o File.o
+HFILES=disk.h diskmanager.h partitionmanager.h filesystem.h Trees.h Arboreal_Exceptions.h types.h File.h
 
 all: filesystem
 

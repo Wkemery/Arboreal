@@ -116,6 +116,11 @@ public:
    */
   size_t get_size();
   
+  /*!
+   * @returns the entire FileAttributes struct
+   */
+  FileAttributes get_file_attributes();
+  
   ///@}
   
 };
@@ -469,7 +474,15 @@ public:
   
   ///@}
   
-
+/**********************************************************************************************************************/
+  /** @name Static Functions 
+   */
+  ///@{   
+  
+  static char* serialize(FileInfo* file, size_t& size);
+  
+  ///@}
+  
 /**********************************************************************************************************************/
 
   /*Function Overrides*/
@@ -526,36 +539,6 @@ public:
 
 
 /**********************************************************************************************************************/
-class File
-{
-private:
-  string _name;
-  vector<string> _tags;
-  FileAttributes _attributes;
-  
-public:
-  File(string name, const vector<string>& tags, FileAttributes atttributes);
 
-/**********************************************************************************************************************/
-  /** @name Accessor Functions 
-   */
-  ///@{  
-  
-  string get_name();
-  vector<string>& get_tags();
-  FileAttributes get_attributes();
-  
-  ///@}
-  
-/**********************************************************************************************************************/
-  /** @name Static Functions 
-   */
-  ///@{   
-  
-  static char* serialize(FileInfo* file, PartitionManager* pm, size_t& size);
-  static File* de_serialize(char* serializedFile);
-  
-  ///@}
-}
 
 #endif

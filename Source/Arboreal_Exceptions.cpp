@@ -17,6 +17,9 @@ arboreal_exception::arboreal_exception(const string& what, const char* where)
 : std::runtime_error(what), _where(where)
 {}
 
+arboreal_exception::~arboreal_exception() throw() {}
+
+
 const char* arboreal_exception::where() const
 {
   return _where.c_str();

@@ -119,6 +119,7 @@ char* Attributes::get_permissions(){return _atts.permissions;}
 time_t Attributes::get_access(){return _atts.lastAccess;}
 time_t Attributes::get_edit(){return _atts.lastEdit;}
 size_t Attributes::get_size(){return _atts.size;}
+FileAttributes Attributes::get_file_attributes(){return _atts;}
 
 /******************************************************************************/
 
@@ -1185,42 +1186,61 @@ string FileInfo::mangle(unordered_set<string>& tags)
   return mangle(tagVec);
 }
 
-/******************************************************************************/
-
-static char* File::serialize(FileInfo* file, PartitionManager*, pm size_t& size)
+char* FileInfo::serialize(FileInfo* file, size_t& size)
 {
   /*Format:
    * size of name
-   * name \0
-   * number of tags \0
+   * name
+   * number of tags
    * tags \0 terminated
-   * size of file
+   * attributes
    */
   
   /*write out name, tags, attributes*/
+  
+  string filename = file->get_name();
+  
   size_t localSize = 0;
+  localSize+= sizeof(size_t) * 2;
+  localSize+= filename.size();
   
-  string name = file->get_name();
+  for(auto tagIt = file->begin(); tagIt != file->end(); ++tagIt)
+  {
+    localSize += tagIt->first.size() + 1;
+  }
   
-  memcpy(buff, name->size(), sizeof(size_t));
+  localSize+= sizeof(FileAttributes);
   
+  size_t offset = 0;
+  char* ret = new char[localSize];
+  memset(ret, 0, localSize);
   
+  size_t nameSize = filename.size();
+  memcpy(ret, &nameSize, sizeof(size_t));
+  offset+= sizeof(size_t);
   
+  memcpy(ret + offset, filename.c_str(), nameSize);
+  offset+= nameSize;
   
-  localSize+= sizeof(size_t);
+  size_t numTags = filename.size();
+  memcpy(ret + offset, &numTags, sizeof(size_t));
+  offset+= sizeof(size_t);
   
+  for(auto tagIt = file->begin(); tagIt != file->end(); ++tagIt)
+  {
+    string tagName = tagIt->first;
+    memcpy(ret + offset, tagName.c_str(), tagName.size());
+    offset+= tagName.size() + 1;
+  }
   
-  localSize+= sizeof(size_t);
+  FileAttributes attributes = file->get_attributes()->get_file_attributes();
+  memcpy(ret + offset, &attributes, sizeof(FileAttributes));
+  offset+= sizeof(FileAttributes);
   
-  
-  
-  localSize+= sizeof(size_t)
-  
-  
-  size = localSize;
+  size = offset;
+  return ret;
 }
 
-static File* File::de_serialize(char* serializedFile, size_t size)
-{
-  
-}
+
+/******************************************************************************/
+
