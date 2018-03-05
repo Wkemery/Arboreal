@@ -206,7 +206,7 @@ int main(int argc, char** argv)
         std::string where = "[ConnectionDaemon.cpp::main()]: ";
         std::string what = "select() Timed Out -- ";
         what += strerror(errno);
-        throw error(where,what);
+        throw arboreal_daemon_error(what,where);
         break;
       }
       if(dbug) printf("D: Call To select() Successful\n");
@@ -240,7 +240,7 @@ int main(int argc, char** argv)
                   std::string where = "[ConnectionDaemon.cpp::main()]: ";
                   std::string what = "accept() Failed -- ";
                   what += strerror(errno);
-                  throw error(where,what);
+                  throw arboreal_daemon_error(what,where);
                 }
                 break;
               }
@@ -267,7 +267,7 @@ int main(int argc, char** argv)
                   std::string where = "[ConnectionDaemon.cpp::main()]: ";
                   std::string what = "recv() Failed -- ";
                   what += strerror(errno);
-                  throw error(where,what);
+                  throw arboreal_daemon_error(what,where);
                 }
                 break;
               }
@@ -426,8 +426,7 @@ int create_sock(int timeout)
     std::string where = "[ConnectionDaemon.cpp::create_sock()]: ";
     std::string what = "Socket Creation Failed -- ";
     what += strerror(errno);
-    //throw arboreal_daemon_error(where,what);
-    throw error(where,what);
+    throw arboreal_daemon_error(what,where);
   }
   return daemon_sock;
 }
@@ -470,8 +469,7 @@ void set_socket_opt(int daemon_sock, int sock_opt, int timeout)
     std::string where = "[ConnectionDaemon.cpp::set_socket_opt()]: ";
     std::string what = "Set Socket Options Failed -- ";
     what += strerror(errno);
-    //throw arboreal_daemon_error(where,what);
-    throw error(where,what);
+    throw arboreal_daemon_error(where,what);
   }
   return;
 }
@@ -488,8 +486,7 @@ void set_nonblocking(int daemon_sock, int is_on)
     std::string where = "[ConnectionDaemon.cpp::set_nonblocking()]: ";
     std::string what = "Set Non-Blocking Failed -- ";
     what += strerror(errno);
-    // throw arboreal_daemon_error(where,what);
-    throw error(where,what);
+    throw arboreal_daemon_error(where,what);
   }
 }
 //--------------------------------------------------------------------------------------------
@@ -532,8 +529,7 @@ void bind_socket(int daemon_sock, struct sockaddr_in daemon_sockaddr, int timeou
     std::string where = "[ConnectionDaemon.cpp::bind_socket()]: ";
     std::string what = "Bind Socket Failed -- ";
     what += strerror(errno);
-    //throw arboreal_daemon_error(where,what);
-    throw error(where,what);
+    throw arboreal_daemon_error(where,what);
   }
   return;
 }
@@ -576,8 +572,7 @@ void listen_on_socket(int daemon_sock,int backlog,int timeout)
     std::string where = "[ConnectionDaemon.cpp::listen_on_socket()]: ";
     std::string what = "Listen On Socket Failed -- ";
     what += strerror(errno);
-    //throw arboreal_daemon_error(where,what);
-    throw error(where,what);
+    throw arboreal_daemon_error(where,what);
   }
   return;
 }

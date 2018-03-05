@@ -10,7 +10,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include "cli.h"
-std::string pipe_name = "";
 
 void clean(int signal)
 {
@@ -40,11 +39,10 @@ int main(int argc, char** argv)
         {
             CLI cli(argv);
         }
-        catch(ERR err)
+        catch(arboreal_cli_error err)
         {
-            std::cerr << err.what;
-            std::cerr << err.why;
-            std::cerr << err.where;
+            std::cerr << err.where();
+            std::cerr << err.what() << std::endl;;
             exit(1);
         }
     }
@@ -55,11 +53,10 @@ int main(int argc, char** argv)
         {
             CLI cli(argv,argv[2]);
         }
-        catch(ERR err)
+        catch(arboreal_cli_error err)
         {
-            std::cerr << err.what;
-            std::cerr << err.why;
-            std::cerr << err.where;
+            std::cerr << err.where();
+            std::cerr << err.what() << std::endl;;
             exit(1);
         }
     }
@@ -70,11 +67,10 @@ int main(int argc, char** argv)
         {
             CLI cli(argv,true);
         }
-        catch(ERR err)
+        catch(arboreal_cli_error err)
         {
-            std::cerr << err.what;
-            std::cerr << err.why;
-            std::cerr << err.where;
+            std::cerr << err.where();
+            std::cerr << err.what() << std::endl;;
             exit(1);
         }
     }
@@ -86,17 +82,16 @@ int main(int argc, char** argv)
         {
             CLI cli(argv,argv[2],true);
         }
-        catch(ERR err)
+        catch(arboreal_cli_error err)
         {
-            std::cerr << err.what;
-            std::cerr << err.why;
-            std::cerr << err.where;
+            std::cerr << err.where();
+            std::cerr << err.what() << std::endl;;
             exit(1);
         }
     }
     else
     {
-        std::cerr << "Invalid Arg Count - Must define a partition on which to initialize the command line interface\n";
+        std::cerr << "Invalid Arg Count - Must Define A Partition On Which To Initialize The Command Line Interface\n";
     }
     std::cout << "Command Line Interface Quit Successfully; Goodbye" << std::endl << std::endl;
     

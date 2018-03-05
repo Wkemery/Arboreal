@@ -122,12 +122,18 @@ void delete_shm(int shm_id, char* shm)
 {
     if(shmdt(shm) == -1)
     {
-        throw ERR(1,SHM_DET_ERR,129);
+        std::string where = "[cli_helper.hpp::delete_shm()]: ";
+        std::string what = "Shared Memory Detach Failed -- ";
+        what += strerror(errno);
+        throw arboreal_cli_error(what,where);
     }
 
     if(shmctl(shm_id, IPC_RMID, NULL) == -1)
     {
-        throw ERR(1,SHM_RMV_ERR,134);
+        std::string where = "[cli_helper.hpp::delete_shm()]: ";
+        std::string what = "Shared Memory Delete Failed -- ";
+        what += strerror(errno);
+        throw arboreal_cli_error(what,where);
     }
     return;
 }
@@ -145,13 +151,19 @@ char* create_shm_seg(key_t key, int& id)
     /* Create Shared Memory Segment for Blocking */
     if ((shm_id = shmget(key, SHMSZ, IPC_CREAT | PERMISSIONS)) < 0) 
     {
-       throw ERR(1,SHM_GET_ERR, 147);
+        std::string where = "[cli_helper.hpp::create_shm_seg()]: ";
+        std::string what = "Shared Memory Get Failed -- ";
+        what += strerror(errno);
+        throw arboreal_cli_error(what,where);
     }
 
     /* Attach the shared memory to this process so the CLI can access it */
     if ((shm = (char*)shmat(shm_id, NULL, 0)) == (char *) -1) 
     {
-       throw ERR(1,SHM_ATT_ERR,153);
+       std::string where = "[cli_helper.hpp::create_shm_seg()]: ";
+        std::string what = "Shared Memory Attach Failed -- ";
+        what += strerror(errno);
+        throw arboreal_cli_error(what,where);
     }
 
     /* Save the Shared Memory Segment Id */
@@ -329,7 +341,10 @@ int set_up_socket(std::string client_sockpath, struct sockaddr_un& client_sockad
     int client_sock = socket(AF_UNIX, SOCK_STREAM, 0);
     if(client_sock == -1)
     {
-        throw ERR(1,SOK_CRT_ERR,314);
+        std::string where = "[cli_helper.hpp::set_up_socket()]: ";
+        std::string what = "Client Socket Create Failed -- ";
+        what += strerror(errno);
+        throw arboreal_cli_error(what,where);
     }
 
     client_sockaddr.sun_family = AF_UNIX;   
@@ -340,9 +355,24 @@ int set_up_socket(std::string client_sockpath, struct sockaddr_un& client_sockad
 
     if(bind(client_sock, (struct sockaddr *) &client_sockaddr, len) < 0)
     {
-        if(close(client_sock) < 0) throw ERR(1,SOK_CLOSE_ERR,333);
-        if(unlink(client_sockpath.c_str()) < 0) throw ERR(1,SOK_UNLNK_ERR,334);
-        throw ERR(1,SOK_BND_ERR,332);
+        if(close(client_sock) < 0)
+        {
+            std::string where = "[cli_helper.hpp::set_up_socket()]: ";
+            std::string what = "Client Socket Close Failed -- ";
+            what += strerror(errno);
+            throw arboreal_cli_error(what,where);
+        }
+        if(unlink(client_sockpath.c_str()) < 0)
+        {
+            std::string where = "[cli_helper.hpp::set_up_socket()]: ";
+            std::string what = "Client Socket Unlink Failed -- ";
+            what += strerror(errno);
+            throw arboreal_cli_error(what,where);
+        }
+        std::string where = "[cli_helper.hpp::set_up_socket()]: ";
+        std::string what = "Client Socket Bind Failed -- ";
+        what += strerror(errno);
+        throw arboreal_cli_error(what,where);
     }
 
     return client_sock;
@@ -367,9 +397,24 @@ void connect_to_server(int client_sock, std::string client_sockpath,
 
     if(connect(client_sock, (struct sockaddr *) &server_sockaddr, len) < 0)
     {
-        if(close(client_sock) < 0) throw ERR(1,SOK_CLOSE_ERR,345);
-        if(unlink(client_sockpath.c_str()) < 0) throw ERR(1,SOK_UNLNK_ERR,346);
-        throw ERR(1,SOK_CNNCT_ERR,347);
+        if(close(client_sock) < 0)
+        {
+            std::string where = "[cli_helper.hpp::connect_to_server()]: ";
+            std::string what = "Client Socket Close Failed -- ";
+            what += strerror(errno);
+            throw arboreal_cli_error(what,where);
+        }
+        if(unlink(client_sockpath.c_str()) < 0)
+        {
+            std::string where = "[cli_helper.hpp::connect_to_server()]: ";
+            std::string what = "Client Socket Unlink Failed -- ";
+            what += strerror(errno);
+            throw arboreal_cli_error(what,where);
+        }
+        std::string where = "[cli_helper.hpp::connect_to_server()]: ";
+        std::string what = "Connect To Server Failed -- ";
+        what += strerror(errno);
+        throw arboreal_cli_error(what,where);
     }
     return;
 }
@@ -386,9 +431,24 @@ void send_to_server(int client_sock, std::string client_sockpath, char* cmnd, in
 {              
     if(send(client_sock, cmnd, size, flag) < 0) 
     {
-        if(close(client_sock) < 0) throw ERR(1,SOK_CLOSE_ERR,356);
-        if(unlink(client_sockpath.c_str()) < 0) throw ERR(1,SOK_UNLNK_ERR,357);
-        throw ERR(1,SOK_SEND_ERR,358);
+        if(close(client_sock) < 0)
+        {
+            std::string where = "[cli_helper.hpp::send_to_server()]: ";
+            std::string what = "Client Socket Close Failed -- ";
+            what += strerror(errno);
+            throw arboreal_cli_error(what,where);
+        }
+        if(unlink(client_sockpath.c_str()) < 0)
+        {
+            std::string where = "[cli_helper.hpp::send_to_server()]: ";
+            std::string what = "Client Socket Unlink Failed -- ";
+            what += strerror(errno);
+            throw arboreal_cli_error(what,where);
+        }
+        std::string where = "[cli_helper.hpp::send_to_server()]: ";
+        std::string what = "Send To Server Failed -- ";
+        what += strerror(errno);
+        throw arboreal_cli_error(what,where);
     }
 
     return;   
@@ -408,9 +468,24 @@ char* receive_from_server(int client_sock, std::string client_sockpath, int size
 
     if(recv(client_sock, data, size, flag) < 0) 
     {
-        if(close(client_sock) < 0) throw ERR(1,SOK_CLOSE_ERR,370);
-        if(unlink(client_sockpath.c_str()) < 0) throw ERR(1,SOK_UNLNK_ERR,371);
-        throw ERR(1,SOK_RECV_ERR,372);
+        if(close(client_sock) < 0)
+        {
+            std::string where = "[cli_helper.hpp::receive_from_server()]: ";
+            std::string what = "Client Socket Close Failed -- ";
+            what += strerror(errno);
+            throw arboreal_cli_error(what,where);
+        }
+        if(unlink(client_sockpath.c_str()) < 0)
+        {
+            std::string where = "[cli_helper.hpp::receive_from_server()]: ";
+            std::string what = "Client Socket Unlink Failed -- ";
+            what += strerror(errno);
+            throw arboreal_cli_error(what,where);
+        }
+        std::string where = "[cli_helper.hpp::receive_from_server()]: ";
+        std::string what = "Receive From Server Failed -- ";
+        what += strerror(errno);
+        throw arboreal_cli_error(what,where);
     }   
     return data;
 }

@@ -15,6 +15,7 @@
 #include "cli_helper.hpp"
 
 
+
 //[================================================================================================]
 // Constructor 1 (Basic Command Line Interaction)
 //[================================================================================================]
@@ -115,13 +116,16 @@ void CLI::start()
    if(pid == 0)
    {
       /* Child Process */
-      execv("liason",argv.data());
+      execv("liaison",argv.data());
    }
    else if(pid < 0)
    {
       /* Fork Failed */
       delete_shm(shm_id,shm);
-      throw ERR(1,FORK_FAILED,104);
+      std::string where = "[cli.cpp::start()]: ";
+      std::string what = "Fork Failed -- ";
+      what += strerror(errno);
+      throw arboreal_cli_error(what,where);
    }
    else
    {
@@ -177,10 +181,22 @@ void CLI::start()
       {
          std::cerr << "C: Connection To File System Could Not Be Established; Exiting..." << std::endl;
          if(dbug) std::cout << "C: Closing Client Socket Connection..." << std::endl;
-         if(close(client_sock) < 0) throw ERR(1,SOK_CLOSE_ERR,136);
+         if(close(client_sock) < 0)
+         {
+            std::string where = "[cli.cpp::start()]: ";
+            std::string what = "Client Socket Close Failed -- ";
+            what += strerror(errno);
+            throw arboreal_cli_error(what,where);
+         }
          if(dbug) std::cout << "C: Client Socket Closed Successfully" << std::endl;
          if(dbug) std::cout << "C: Removing Client Socket..." << std::endl;
-         if(unlink(client_sockpath.c_str()) < 0) throw ERR(1,SOK_UNLNK_ERR,137);
+         if(unlink(client_sockpath.c_str()) < 0)
+         {
+            std::string where = "[cli.cpp::start()]: ";
+            std::string what = "Client Socket Unlink Failed -- ";
+            what += strerror(errno);
+            throw arboreal_cli_error(what,where);
+         }
          if(dbug) std::cout << "C: Client Socket Removed Successfully" << std::endl;
          if(dbug) std::cout << "C: Waiting For Child Process to Complete..." << std::endl;
    
@@ -205,10 +221,22 @@ void CLI::start()
       run();
 
       if(dbug) std::cout << "C: Closing Client Socket Connection..." << std::endl;
-      if(close(client_sock) < 0) throw ERR(1,SOK_CLOSE_ERR,136);
+      if(close(client_sock) < 0)
+      {
+         std::string where = "[cli.cpp::start()]: ";
+         std::string what = "Client Socket Close Failed -- ";
+         what += strerror(errno);
+         throw arboreal_cli_error(what,where);
+      }
       if(dbug) std::cout << "C: Client Socket Closed Successfully" << std::endl;
       if(dbug) std::cout << "C: Removing Client Socket..." << std::endl;
-      if(unlink(client_sockpath.c_str()) < 0) throw ERR(1,SOK_UNLNK_ERR,137);
+      if(unlink(client_sockpath.c_str()) < 0)
+      {
+         std::string where = "[cli.cpp::start()]: ";
+         std::string what = "Client Socket Unlink Failed -- ";
+         what += strerror(errno);
+         throw arboreal_cli_error(what,where);
+      }
       if(dbug) std::cout << "C: Client Socket Removed Successfully" << std::endl;
       if(dbug) std::cout << "C: Waiting For Child Process to Complete..." << std::endl;
 

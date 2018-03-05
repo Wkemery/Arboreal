@@ -80,13 +80,19 @@ char* get_shm_seg(key_t key, int& id)
     /* Create Shared Memory Segment for Process Synchronization */
     if ((shm_id = shmget(key, SHMSZ, PERMISSIONS)) < 0) 
     {
-        throw ERR(2,SHM_GET_ERR,47);
+        std::string where = "[liason_helper.hpp::get_shm_seg()]: ";
+        std::string what = "Shared Memory Get Failed -- ";
+        what += strerror(errno);
+        throw arboreal_liaison_error(what,where);
     }
 
     /* Attach the shared memory to this process so the Liaison can access it */
     if ((shm = (char*)shmat(shm_id, NULL, 0)) == (char *) -1) 
     {
-        throw ERR(2,SHM_ATT_ERR,53);  
+        std::string where = "[liason_helper.hpp::get_shm_seg()]: ";
+        std::string what = "Shared Memory Attach Failed -- ";
+        what += strerror(errno);
+        throw arboreal_liaison_error(what,where);
     }
 
     id = shm_id;
@@ -107,7 +113,10 @@ void unat_shm(int shm_id, char* shm)
 {
     if(shmdt(shm) == -1)
     {
-        throw ERR(2,SHM_DET_ERR,66);
+        std::string where = "[liason_helper.hpp::unat_shm()]: ";
+        std::string what = "Shared Memory Unattach Failed -- ";
+        what += strerror(errno);
+        throw arboreal_liaison_error(what,where);
     }
 
 }
@@ -129,24 +138,43 @@ int set_up_socket(std::string server_sockpath, struct sockaddr_un& server_sockad
     int server_sock = socket(AF_UNIX, SOCK_STREAM, 0);
     if (server_sock < 0)
     {
-        throw ERR(2,SOK_CRT_ERR,78);
+        std::string where = "[liason_helper.hpp::set_up_socket()]: ";
+        std::string what = "Server Socket Create Failed -- ";
+        what += strerror(errno);
+        throw arboreal_liaison_error(what,where);
     }
 
     server_sockaddr.sun_family = AF_UNIX;   
     strcpy(server_sockaddr.sun_path, server_sockpath.c_str()); 
     socklen_t length = sizeof(server_sockaddr);
     
+    /* This should fail and so does NOT throw an exception */
+    /* If it does not fail that's fine too */
     unlink(server_sockpath.c_str());
 
     
     if(bind(server_sock, (struct sockaddr *) &server_sockaddr, length) < 0)
     {
         /* Close Connection */
-        if(close(server_sock) < 0) throw ERR(2,SOK_CLOSE_ERR,90);
-
+        if(close(server_sock) < 0)
+        {
+            std::string where = "[liason_helper.hpp::set_up_socket()]: ";
+            std::string what = "Server Socket Close Failed -- ";
+            what += strerror(errno);
+            throw arboreal_liaison_error(what,where);
+        }
         /* Delete socket */
-        if(unlink(server_sockpath.c_str()) < 0) throw ERR(2,SOK_UNLNK_ERR,91);
-        throw ERR(2,SOK_BND_ERR,92);
+        if(unlink(server_sockpath.c_str()) < 0)
+        {
+            std::string where = "[liason_helper.hpp::set_up_socket()]: ";
+            std::string what = "Server Socket Unlink Failed -- ";
+            what += strerror(errno);
+            throw arboreal_liaison_error(what,where);
+        }
+        std::string where = "[liason_helper.hpp::set_up_socket()]: ";
+        std::string what = "Server Socket Bind Failed -- ";
+        what += strerror(errno);
+        throw arboreal_liaison_error(what,where);
     }
 
     return server_sock;
@@ -164,11 +192,26 @@ void listen_for_client(int server_sock, std::string server_sockpath)
     if(listen(server_sock, BACKLOG) < 0)
     { 
         /* Close Connection */
-        if(close(server_sock) < 0) throw ERR(2,SOK_CLOSE_ERR,102);
+        if(close(server_sock) < 0)
+        {
+            std::string where = "[liason_helper.hpp::listen_for_client()]: ";
+            std::string what = "Server Socket Close Failed -- ";
+            what += strerror(errno);
+            throw arboreal_liaison_error(what,where);
+        }
 
         /* Delete socket */
-        if(unlink(server_sockpath.c_str()) < 0) throw ERR(2,SOK_UNLNK_ERR,103);
-        throw ERR(2,SOK_LSTN_ERR,104);
+        if(unlink(server_sockpath.c_str()) < 0)
+        {
+            std::string where = "[liason_helper.hpp::listen_for_client()]: ";
+            std::string what = "Server Socket Unlink Failed -- ";
+            what += strerror(errno);
+            throw arboreal_liaison_error(what,where);
+        }
+        std::string where = "[liason_helper.hpp::listen_for_client()]: ";
+        std::string what = "Server Socket Listen Failed -- ";
+        what += strerror(errno);
+        throw arboreal_liaison_error(what,where);
     }
 
     return;
@@ -193,12 +236,33 @@ int accept_client(int server_sock, struct sockaddr_un& client_sockaddr, socklen_
     if(client_sock < 0)
     {
         /* Close Connection */
-        if(close(server_sock) < 0) throw ERR(2,SOK_CLOSE_ERR,111);
-        if(close(client_sock) < 0) throw ERR(2,SOK_CLOSE_ERR,112);
+        if(close(server_sock) < 0)
+        {
+            std::string where = "[liason_helper.hpp::accept_client()]: ";
+            std::string what = "Server Socket Close Failed -- ";
+            what += strerror(errno);
+            throw arboreal_liaison_error(what,where);
+        }
+        if(close(client_sock) < 0)
+        {
+            std::string where = "[liason_helper.hpp::accept_client()]: ";
+            std::string what = "Client Socket Close Failed -- ";
+            what += strerror(errno);
+            throw arboreal_liaison_error(what,where);
+        }
 
         /* Delete socket */
-        if(unlink(server_sockpath.c_str()) < 0) throw ERR(2,SOK_UNLNK_ERR,113);
-        throw ERR(2,SOK_ACPT_ERR,116);
+        if(unlink(server_sockpath.c_str()) < 0)
+        {
+            std::string where = "[liason_helper.hpp::accept_client()]: ";
+            std::string what = "Server Socket Unlink Failed -- ";
+            what += strerror(errno);
+            throw arboreal_liaison_error(what,where);
+        }
+        std::string where = "[liason_helper.hpp::accept_client()]: ";
+        std::string what = "Accept Client Connection Failed -- ";
+        what += strerror(errno);
+        throw arboreal_liaison_error(what,where);
     }
 
     return client_sock;
@@ -223,12 +287,33 @@ void get_peername(int client_sock, struct sockaddr_un& client_sockaddr, int serv
     if(getpeername(client_sock, (struct sockaddr *) &client_sockaddr, &length) < 0)
     {
         /* Close Connection */
-        if(close(server_sock) < 0) throw ERR(2,SOK_CLOSE_ERR,128);
-        if(close(client_sock) < 0) throw ERR(2,SOK_CLOSE_ERR,129);
+        if(close(server_sock) < 0)
+        {
+            std::string where = "[liason_helper.hpp::get_peername()]: ";
+            std::string what = "Server Socket Close Failed -- ";
+            what += strerror(errno);
+            throw arboreal_liaison_error(what,where);
+        }
+        if(close(client_sock) < 0)
+        {
+            std::string where = "[liason_helper.hpp::get_peername()]: ";
+            std::string what = "Client Socket Close Failed -- ";
+            what += strerror(errno);
+            throw arboreal_liaison_error(what,where);
+        }
 
         /* Delete socket */
-        if(unlink(server_sockpath.c_str()) < 0) throw ERR(2,SOK_UNLNK_ERR,130);
-        throw ERR(2,SOK_GTPR_ERR,131);
+        if(unlink(server_sockpath.c_str()) < 0)
+        {
+            std::string where = "[liason_helper.hpp::get_peername()]: ";
+            std::string what = "Server Socket Unlink Failed -- ";
+            what += strerror(errno);
+            throw arboreal_liaison_error(what,where);
+        }
+        std::string where = "[liason_helper.hpp::get_peername()]: ";
+        std::string what = "Get Peername Failed -- ";
+        what += strerror(errno);
+        throw arboreal_liaison_error(what,where);
     }
 
     return;
@@ -255,13 +340,40 @@ char* recv_msg(int client_sock, int size, int flag,
     if(bytes_rec < 0)
     {
         /* Close Connection */
-        if(close(server_sock) < 0) throw ERR(2,SOK_CLOSE_ERR,145);
-        if(close(client_sock) < 0) throw ERR(2,SOK_CLOSE_ERR,146);
+        if(close(server_sock) < 0)
+        {
+            std::string where = "[liason_helper.hpp::recv_msg()]: ";
+            std::string what = "Server Socket Close Failed -- ";
+            what += strerror(errno);
+            throw arboreal_liaison_error(what,where);
+        }
+        if(close(client_sock) < 0)
+        {
+            std::string where = "[liason_helper.hpp::recv_msg()]: ";
+            std::string what = "Client Socket Close Failed -- ";
+            what += strerror(errno);
+            throw arboreal_liaison_error(what,where);
+        }
 
         /* Delete socket */
-        if(unlink(server_sockpath.c_str()) < 0) throw ERR(2,SOK_UNLNK_ERR,147);
-        if(unlink(client_sockpath.c_str()) < 0) throw ERR(2,SOK_UNLNK_ERR,148);
-        throw ERR(2,SOK_RECV_ERR,149);
+        if(unlink(server_sockpath.c_str()) < 0)
+        {
+            std::string where = "[liason_helper.hpp::recv_msg()]: ";
+            std::string what = "Server Socket Unlink Failed -- ";
+            what += strerror(errno);
+            throw arboreal_liaison_error(what,where);
+        }
+        if(unlink(client_sockpath.c_str()) < 0)
+        {
+            std::string where = "[liason_helper.hpp::recv_msg()]: ";
+            std::string what = "Client Socket Unlink Failed -- ";
+            what += strerror(errno);
+            throw arboreal_liaison_error(what,where);
+        }
+        std::string where = "[liason_helper.hpp::recv_msg()]: ";
+        std::string what = "Receive Message From Client Failed -- ";
+        what += strerror(errno);
+        throw arboreal_liaison_error(what,where);
     }
 
     return msg;
@@ -284,13 +396,40 @@ void send_response(int client_sock, char* data, int size, int flag,
     if(send(client_sock, data, size, flag) < 0) 
     {
         /* Close Connection */
-        if(close(server_sock) < 0) throw ERR(2,SOK_CLOSE_ERR,164);
-        if(close(client_sock) < 0) throw ERR(2,SOK_CLOSE_ERR,165);
+        if(close(server_sock) < 0)
+        {
+            std::string where = "[liason_helper.hpp::send_response()]: ";
+            std::string what = "Server Socket Close Failed -- ";
+            what += strerror(errno);
+            throw arboreal_liaison_error(what,where);
+        }
+        if(close(client_sock) < 0)
+        {
+            std::string where = "[liason_helper.hpp::send_response()]: ";
+            std::string what = "Client Socket Close Failed -- ";
+            what += strerror(errno);
+            throw arboreal_liaison_error(what,where);
+        }
 
         /* Delete socket */
-        if(unlink(server_sockpath.c_str()) < 0) throw ERR(2,SOK_UNLNK_ERR,166);
-        if(unlink(client_sockpath.c_str()) < 0) throw ERR(2,SOK_UNLNK_ERR,167);
-        throw ERR(2,SOK_SEND_ERR,168);
+        if(unlink(server_sockpath.c_str()) < 0)
+        {
+            std::string where = "[liason_helper.hpp::send_response()]: ";
+            std::string what = "Server Socket Unlink Failed -- ";
+            what += strerror(errno);
+            throw arboreal_liaison_error(what,where);
+        }
+        if(unlink(client_sockpath.c_str()) < 0)
+        {
+            std::string where = "[liason_helper.hpp::send_response()]: ";
+            std::string what = "Client Socket Unlink Failed -- ";
+            what += strerror(errno);
+            throw arboreal_liaison_error(what,where);
+        }
+        std::string where = "[liason_helper.hpp::send_response()]: ";
+        std::string what = "Send Response To Client Failed -- ";
+        what += strerror(errno);
+        throw arboreal_liaison_error(what,where);
     }   
 }
 //[================================================================================================]
