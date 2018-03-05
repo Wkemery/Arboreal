@@ -469,8 +469,9 @@ public:
   
   ///@}
   
+
 /**********************************************************************************************************************/
-  
+
   /*Function Overrides*/
   void write_out();
   void read_in(unordered_multimap<string, FileInfo*>* allFiles, RootTree* rootTree);
@@ -522,5 +523,39 @@ public:
   void del();
   
 };
+
+
+/**********************************************************************************************************************/
+class File
+{
+private:
+  string _name;
+  vector<string> _tags;
+  FileAttributes _attributes;
+  
+public:
+  File(string name, const vector<string>& tags, FileAttributes atttributes);
+
+/**********************************************************************************************************************/
+  /** @name Accessor Functions 
+   */
+  ///@{  
+  
+  string get_name();
+  vector<string>& get_tags();
+  FileAttributes get_attributes();
+  
+  ///@}
+  
+/**********************************************************************************************************************/
+  /** @name Static Functions 
+   */
+  ///@{   
+  
+  static char* serialize(FileInfo* file, PartitionManager* pm, size_t& size);
+  static File* de_serialize(char* serializedFile);
+  
+  ///@}
+}
 
 #endif

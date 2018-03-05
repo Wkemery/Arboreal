@@ -1136,6 +1136,8 @@ void FileInfo::set_edit(){_myAttributes->set_edit();}
 void FileInfo::set_permissions(char* perms){_myAttributes->set_permissions(perms);}
 
 
+
+
 string FileInfo::mangle()
 {
   string ret = _name;
@@ -1185,4 +1187,40 @@ string FileInfo::mangle(unordered_set<string>& tags)
 
 /******************************************************************************/
 
+static char* File::serialize(FileInfo* file, PartitionManager*, pm size_t& size)
+{
+  /*Format:
+   * size of name
+   * name \0
+   * number of tags \0
+   * tags \0 terminated
+   * size of file
+   */
+  
+  /*write out name, tags, attributes*/
+  size_t localSize = 0;
+  
+  string name = file->get_name();
+  
+  memcpy(buff, name->size(), sizeof(size_t));
+  
+  
+  
+  
+  localSize+= sizeof(size_t);
+  
+  
+  localSize+= sizeof(size_t);
+  
+  
+  
+  localSize+= sizeof(size_t)
+  
+  
+  size = localSize;
+}
 
+static File* File::de_serialize(char* serializedFile, size_t size)
+{
+  
+}
