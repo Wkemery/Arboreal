@@ -13,6 +13,8 @@
 #ifndef LIAISON_H
 #define LIAISON_H
 
+#define NEW_PLUS "n+"
+
 
 //[================================================================================================]
 // Convert the first X characters in a 'Command Buffer' to an integer value
@@ -32,6 +34,7 @@ int get_cmnd_id(char* cmnd)
     return *id;
 }
 //[================================================================================================]
+//[================================================================================================]
 // Print a command buffer
 // 
 // @ cmnd: The command buffer
@@ -46,6 +49,18 @@ void print_cmnd(char* cmnd, int size)
     }
     std::cout << "\n";
 }
+//[================================================================================================]
+//[================================================================================================]
+template <typename T> 
+void print_vector(std::vector<T> vec)
+{
+    std::cout << "Vector: " << std::endl;
+    for(unsigned int i = 0; i < vec.size(); i++)
+    {
+        std::cout << vec[i] << std::endl;
+    }
+}
+//[================================================================================================]
 //[================================================================================================]
 // Request and attach to, a shared memory segment with a specific key.
 // The shared memory segment will be used to synchronize the command line interface
@@ -80,6 +95,7 @@ char* get_shm_seg(key_t key, int& id)
     return shm;
 }
 //[================================================================================================]
+//[================================================================================================]
 // Un-attach the shared memory segment from this process. 
 // (Process will not be able to access the shared memory segment until it is reattached)
 // (Additionally a shared memory segment can only be removed once nothing is attached to it)
@@ -95,6 +111,7 @@ void unat_shm(int shm_id, char* shm)
     }
 
 }
+//[================================================================================================]
 //[================================================================================================]
 // Set up a server socket to receive incoming connections
 // 
@@ -135,6 +152,7 @@ int set_up_socket(std::string server_sockpath, struct sockaddr_un& server_sockad
     return server_sock;
 }
 //[================================================================================================]
+//[================================================================================================]
 // Mark the server socket as open for buisness (i.e. capable of accepting connections)
 // The Server can queue up X number of connection requests were X = BACKLOG
 // 
@@ -155,6 +173,7 @@ void listen_for_client(int server_sock, std::string server_sockpath)
 
     return;
 }
+//[================================================================================================]
 //[================================================================================================]
 // Accept a connection request, returns the client socket's identifier
 // 
@@ -185,6 +204,7 @@ int accept_client(int server_sock, struct sockaddr_un& client_sockaddr, socklen_
     return client_sock;
 }
 //[================================================================================================]
+//[================================================================================================]
 // Retrieve a accepted client's information for use in send/receive functionality
 // 
 // @ client_sock: The client socket's identifier
@@ -213,6 +233,7 @@ void get_peername(int client_sock, struct sockaddr_un& client_sockaddr, int serv
 
     return;
 }
+//[================================================================================================]
 //[================================================================================================]
 // Receive a message from an accepted socket. (Note that the client/server pathnames and the server
 // socket id are only used when an exception is thrown in order to correctly close the socket)
@@ -246,6 +267,7 @@ char* recv_msg(int client_sock, int size, int flag,
     return msg;
 }
 //[================================================================================================]
+//[================================================================================================]
 // Send a response to an accepted socket (Note that the client/server pathnames and the server
 // socket id are only used when an exception is thrown in order to correctly close the socket)
 // 
@@ -272,7 +294,63 @@ void send_response(int client_sock, char* data, int size, int flag,
     }   
 }
 //[================================================================================================]
+std::vector<std::string> build_vector(char* cmnd, int id, int size)
+{
+    std::vector<std::string> commands;
+    for(unsigned int i = sizeof(int); i < MAX_COMMAND_SIZE; i+=size)
+    {
+        if(cmnd[i] == '\0') break;
+        std::string command(cmnd + i, size);
+        command.insert(0,(std::to_string(id) + "-"));
+        int offset = (sizeof(int) + size * 2 + 1) - command.length();
+        command.insert(end(command),offset,'\0');
+        commands.push_back(command);
+        // std::cout << "Command: " << command << std::endl;
+        // std::cout << "Command Size: " << command.length() << std::endl;
+    }
+    // std::cout << "Commands: " << std::endl;
+    // for(unsigned int i = 0; i < commands.size(); i++)
+    // {
+    //     std::cout << commands[i] << std::endl;
+    // }
+    return commands;
+}
+//[================================================================================================]
+std::vector<std::string> decompose(char* cmnd, int id, int size)
+{   
 
+    switch(id)
+    {
+        case(4): return build_vector(cmnd,id,size);
+        case(5): return build_vector(cmnd,id,size);
+        case(6): return build_vector(cmnd,id,size);
+        case(7): return build_vector(cmnd,id,size);
+        case(8): return build_vector(cmnd,id,size);
+        //case(9)
+        //case(10)
+        case(11): return build_vector(cmnd,id,size);
+        case(12): return build_vector(cmnd,id,size);
+        case(13): return build_vector(cmnd,id,size);
+        //case(14)
+        case(15): return build_vector(cmnd,id,size);
+        //case(16)
+        //case(17)
+        case(18): return build_vector(cmnd,id,size);
+        //case(19)
+        //case(20)
+        //case(21)
+        //case(22)
+        //case(23)
+        default:
+        {
+            std::cerr << "Invalid Command ID" << std::endl;
+            std::vector<std::string> empty;
+            return empty;
+        }
+
+    }
+}
+//[================================================================================================]
 
 
 #endif

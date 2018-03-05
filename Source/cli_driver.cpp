@@ -12,9 +12,26 @@
 #include "cli.h"
 std::string pipe_name = "";
 
+void clean(int signal)
+{
+    std::cout << "SIGNAL: " << signal << std::endl;
+    system("rm *socket");
+    exit(0);
+}
+
+void bad_clean(int signal)
+{
+    system("rm *socket");
+    exit(1);
+}
+
 int main(int argc, char** argv)
 {
-    std::cout << argc << std::endl;
+    signal(SIGABRT,bad_clean);
+    signal(SIGTERM,clean);
+    signal(SIGINT,clean);
+    signal(SIGQUIT,clean);
+
     std::string flag;
     if(argc == 3) flag = argv[2];
     if(argc == 2)
@@ -48,6 +65,7 @@ int main(int argc, char** argv)
     }
     else if(argc == 3 && flag == "-d")
     {
+        std::cout << "Debugging Has Been Turned ON\n\n";
         try
         {
             CLI cli(argv,true);
@@ -62,7 +80,8 @@ int main(int argc, char** argv)
     }
     else if(argc == 4)
     {
-        std::cout << "Reading From Text File....\n\n";
+        std::cout << "Reading From Text File....\n";
+        std::cout << "Debugging Has Been Turned ON\n\n";
         try
         {
             CLI cli(argv,argv[2],true);

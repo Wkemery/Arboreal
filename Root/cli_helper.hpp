@@ -403,8 +403,8 @@ void send_to_server(int client_sock, std::string client_sockpath, char* cmnd, in
 //[================================================================================================]
 char* receive_from_server(int client_sock, std::string client_sockpath, int size, int flag)
 {
-    char* data = new char[MAX_COMAND_SIZE];
-    memset(data, '\0', MAX_COMAND_SIZE);
+    char* data = new char[MAX_COMMAND_SIZE];
+    memset(data, '\0', MAX_COMMAND_SIZE);
 
     if(recv(client_sock, data, size, flag) < 0) 
     {
@@ -496,7 +496,7 @@ void write_to_cmnd(char* cmnd, std::string input, int offset, int version, int m
             }
         }
         std::cout << "Command: ";
-        print_buffer(cmnd, MAX_COMAND_SIZE);
+        print_buffer(cmnd, MAX_COMMAND_SIZE);
     }
 //[================================================================================================]
 

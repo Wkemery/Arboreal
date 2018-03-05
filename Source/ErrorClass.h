@@ -32,13 +32,16 @@
 #define SOK_GTPR_ERR 14
 #define FORK_FAILED 15 
 
+#define BAD_SYMMETRY 16
+#define BAD_HOSTNAME 17
+
 struct ERR
 {
     std::string where;
     std::string what;
     std::string why;
 
-    ERR(int ver, int val, int lnum)
+    ERR(int ver, int val, int lnum=0)
     {
         std::string errmsg = strerror(errno);
 
@@ -203,6 +206,90 @@ struct ERR
                 what = "[LIAISON|WHAT]: SERVER SOCKET GET PEER NAME FAILED - E# = " + std::to_string(errno) + "\n";
                 why = "[LIAISON|WHY]:   " + errmsg + "\n";
                 where = "[LIAISON|WHERE]: liason_helper.hpp @ Line #" + std::to_string(lnum) + "\n";
+            }
+            else if(val == BAD_SYMMETRY)
+            {
+                what = "[LIAISON|WHAT]: FILE AND TAG AMOUNTS DO NOT MATCH\n";
+                why = "[LIAISON|WHY]: CLI attempted to execute a 'new file' command with more two or more tags per file \
+                        -or- two or more files per tag (e.g. new -f [file.txt] -t [tag1,tag2])\n";
+                where = "[LIAISON|WHERE]: liason_helper.hpp @ Line #" + std::to_string(lnum) + "\n";
+            }
+            else if(val == BAD_HOSTNAME)
+            {
+                what = "[LIAISON|WHAT]: HOST DOES NOT EXIST\n";
+                why = "";
+                where = "";
+            }
+        }
+        else if(ver == 3)
+        {
+            
+            if(val == SOK_CRT_ERR)
+            {
+                what = "[DAEMON|WHAT]: SERVER SOCKET CREATE FAILED - E# = " + std::to_string(errno) + "\n";
+                why = "[DAEMON|WHY]:   " + errmsg + "\n";
+                where = "[DAEMON|WHERE]: ConnectionDaemon.cpp @ Line #" + std::to_string(lnum) + "\n";
+            }
+            else if(val == SOK_BND_ERR)
+            {
+                what = "[DAEMON|WHAT]: SERVER SOCKET BIND FAILED - E# = " + std::to_string(errno) + "\n";
+                why = "[DAEMON|WHY]:   " + errmsg + "\n";
+                where = "[DAEMON|WHERE]: ConnectionDaemon.cpp @ Line #" + std::to_string(lnum) + "\n";
+            }
+            else if(val == SOK_CLOSE_ERR)
+            {
+                what = "[DAEMON|WHAT]: SERVER SOCKET CLOSE FAILED - E# = " + std::to_string(errno) + "\n";
+                why = "[DAEMON|WHY]:   " + errmsg + "\n";
+                where = "[DAEMON|WHERE]: ConnectionDaemon.cpp @ Line #" + std::to_string(lnum) + "\n";
+            }
+            else if(val == SOK_UNLNK_ERR)
+            {
+                what = "[DAEMON|WHAT]: SERVER SOCKET UNLINK FAILED - E# = " + std::to_string(errno) + "\n";
+                why = "[DAEMON|WHY]:   " + errmsg + "\n";
+                where = "[DAEMON|WHERE]: ConnectionDaemon.cpp @ Line #" + std::to_string(lnum) + "\n";
+            }
+            else if(val == SOK_CNNCT_ERR)
+            {
+                what = "[DAEMON|WHAT]: SERVER SOCKET CONNECT FAILED - E# = " + std::to_string(errno) + "\n";
+                why = "[DAEMON|WHY]:   " + errmsg + "\n";
+                where = "[DAEMON|WHERE]: ConnectionDaemon.cpp @ Line #" + std::to_string(lnum) + "\n";
+            }
+            else if(val == SOK_SEND_ERR)
+            {
+                what = "[DAEMON|WHAT]: SERVER SOCKET SEND FAILED - E# = " + std::to_string(errno) + "\n";
+                why = "[DAEMON|WHY]:   " + errmsg + "\n";
+                where = "[DAEMON|WHERE]: ConnectionDaemon.cpp @ Line #" + std::to_string(lnum) + "\n";
+            }
+            else if(val == SOK_RECV_ERR)
+            {
+                what = "[DAEMON|WHAT]: SERVER SOCKET RECEIVE FAILED - E# = " + std::to_string(errno) + "\n";
+                why = "[DAEMON|WHY]:   " + errmsg + "\n";
+                where = "[DAEMON|WHERE]: ConnectionDaemon.cpp @ Line #" + std::to_string(lnum) + "\n";
+            }
+            else if(val == SOK_LSTN_ERR)
+            {
+                what = "[DAEMON|WHAT]: SERVER SOCKET LISTEN FAILED - E# = " + std::to_string(errno) + "\n";
+                why = "[DAEMON|WHY]:   " + errmsg + "\n";
+                where = "[DAEMON|WHERE]: ConnectionDaemon.cpp @ Line #" + std::to_string(lnum) + "\n";
+            }
+            else if(val == SOK_ACPT_ERR)
+            {
+                what = "[DAEMON|WHAT]: SERVER SOCKET ACCEPT FAILED - E# = " + std::to_string(errno) + "\n";
+                why = "[DAEMON|WHY]:   " + errmsg + "\n";
+                where = "[DAEMON|WHERE]: ConnectionDaemon.cpp @ Line #" + std::to_string(lnum) + "\n";
+            }
+            else if(val == SOK_GTPR_ERR)
+            {
+                what = "[DAEMON|WHAT]: SERVER SOCKET GET PEER NAME FAILED - E# = " + std::to_string(errno) + "\n";
+                why = "[DAEMON|WHY]:   " + errmsg + "\n";
+                where = "[DAEMON|WHERE]: ConnectionDaemon.cpp @ Line #" + std::to_string(lnum) + "\n";
+            }
+            else if(val == BAD_SYMMETRY)
+            {
+                what = "[DAEMON|WHAT]: FILE AND TAG AMOUNTS DO NOT MATCH\n";
+                why = "[DAEMON|WHY]: CLI attempted to execute a 'new file' command with more two or more tags per file \
+                        -or- two or more files per tag (e.g. new -f [file.txt] -t [tag1,tag2])\n";
+                where = "[DAEMON|WHERE]: ConnectionDaemon.cpp @ Line #" + std::to_string(lnum) + "\n";
             }
         }
         else

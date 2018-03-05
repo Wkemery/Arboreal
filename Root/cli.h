@@ -26,7 +26,7 @@
              
 
 #define MAX_HISTORY_SIZE 10                 /* Maximum number of previously entered commands recorded */
-#define MAX_COMAND_SIZE 2048                /* Maximum size a command can be */
+#define MAX_COMMAND_SIZE 2048               /* Maximum size a command can be */
 #define SHMSZ 1                             /* Size of Shared Memory Segment */
 #define PERMISSIONS 0666                    /* Socket Permissions */
 #define FLAG 0                              /* Socket Send/Recv Flag */
@@ -68,7 +68,7 @@ private:
     std::string server_sockpath;
 
     int max_string_size;
-    char* my_partition;
+    std::string my_partition;
 
     int client_sock;
     struct sockaddr_un server_sockaddr;

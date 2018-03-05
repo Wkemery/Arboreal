@@ -282,6 +282,8 @@ int main(int argc, char** argv)
               int bytes_received = rval;
               if(dbug) printf("\nBytes Received: %d\n",bytes_received);
               if(dbug) printf("Command Received: %s\n\n",buffer);
+
+              // call arboreal functions and return data
   
             }while(TRUE);
   
