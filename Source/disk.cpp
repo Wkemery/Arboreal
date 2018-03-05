@@ -4,7 +4,9 @@
 #include <cstring>
 #include "disk.h"
 
-using namespace std;
+using std::ofstream;
+using std::ifstream;
+using std::ios;
 
 Disk::Disk(BlkNumType numblocks, size_t blksz, char *fname)
 {

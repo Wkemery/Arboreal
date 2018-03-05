@@ -12,7 +12,16 @@
 #include <unordered_map>
 #include<vector>
 #include<string>
-using namespace std;
+using std::cerr;
+using std::string;
+using std::string;
+using std::unordered_map;
+using std::vector;
+using std::unordered_set;
+using std::endl;
+using std::cout;
+using std::pair;
+
 bool EncryptionFlag = false;
 
 FileOpen::FileOpen(FileInfo* file, char mode, PartitionManager* pm): _file(file), _mode(mode), _myPartitionManager(pm)

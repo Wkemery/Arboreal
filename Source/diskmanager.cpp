@@ -4,7 +4,8 @@
 #include <string.h>
 #include <cstdlib>
 #include <stdio.h>
-using namespace std;
+
+using std::string;
 
 bool operator==(const DiskPartition* lhs, const DiskPartition& rhs)
 {

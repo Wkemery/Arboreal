@@ -12,7 +12,13 @@
 #include<iostream>
 #include<algorithm>
 #include<unordered_set>
-using namespace std;
+using std::unordered_set;
+using std::vector;
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::string;
+using std::pair;
 
 #define DEFAULTOWNER 1
 #define DEFAULTPERMISSIONS 0

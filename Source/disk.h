@@ -1,10 +1,10 @@
 
-#include<unordered_map>
+// #include<unordered_map>
 #include "types.h"
 
 #ifndef DISK_H
 #define DISK_H
-using namespace std; 
+
 
 class Disk {
   public:

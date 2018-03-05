@@ -9,9 +9,12 @@
 #include <unordered_set>
 #include"partitionmanager.h"
 #include<queue>
-#include<map>
 #include<algorithm>
-using namespace std;
+using std::queue;
+using std::unordered_map;
+using std::unordered_set;
+using std::unordered_multimap;
+using std::string;
 
 #ifndef TREES_H
 #define TREES_H

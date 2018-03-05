@@ -2,9 +2,10 @@
 #include "types.h"
 #include<vector>
 
+using std::vector;
 #ifndef DISKMANAGER_H
 #define DISKMANAGER_H
-using namespace std;
+;
 
 struct DiskPartition
 {

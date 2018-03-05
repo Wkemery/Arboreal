@@ -16,6 +16,11 @@
 #include<map>
 #include<string>
 
+using std::unordered_map;
+using std::string;
+using std::vector;
+using std::map;
+
 #ifndef FILESYSTEM_H
 #define FILESYSTEM_H
 
@@ -97,7 +102,6 @@ public:
   Attributes* get_attributes(vector<string>& filePath);
   void set_permissions(vector<string>& filePath, char* perms);
 
-  
   
   FileInfo* path_to_file(vector<string>& path);
   

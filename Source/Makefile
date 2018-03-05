@@ -12,13 +12,16 @@ CXX=g++
 XXFLAGS= -ggdb -Wall -std=c++11 
 VALGRIND= valgrind --leak-check=yes --log-file=/home/wyatt/ValgrindLogs/%p.log
 VALOPS= --leak-check=full --show-leak-kinds=all
-CPPFILES=driver.cpp disk.cpp diskmanager.cpp partitionmanager.cpp filesystem.cpp Trees.cpp Arboreal_Exceptions.cpp
+CPPFILES=disk.cpp diskmanager.cpp partitionmanager.cpp filesystem.cpp Trees.cpp Arboreal_Exceptions.cpp
 OBJFILES=driver.o disk.o diskmanager.o partitionmanager.o filesystem.o Trees.o Arboreal_Exceptions.o
-HFILES=disk.h disk.cpp diskmanager.h partitionmanager.h filesystem.h Trees.h Arboreal_Exceptions.h types.h
+HFILES=disk.h diskmanager.h partitionmanager.h filesystem.h Trees.h Arboreal_Exceptions.h types.h
 
-all: driver
+all: filesystem
 
-driver: $(OBJFILES) $(HFILES)
+filesystem: $(HFILES) $(CPPFILES) ConnectionDaemon.cpp cli liason
+	$(CXX) $(XXFLAGS) -o daemon $(CPPFILES)
+
+driver: $(OBJFILES)
 	$(CXX) $(XXFLAGS) -o driver $(OBJFILES)
 
 format: format.cpp

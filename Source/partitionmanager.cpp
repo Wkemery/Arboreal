@@ -1,7 +1,10 @@
 #include "partitionmanager.h"
 #include <iostream>
 #include <string.h>
-using namespace std;
+
+using std::cerr;
+using std::string;
+using std::endl;
 
 
 
