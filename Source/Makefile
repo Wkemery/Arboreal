@@ -9,29 +9,30 @@
 ###################################################################################################
 
 CXX=g++
-XXFLAGS= -ggdb -Wall -std=c++11 
+XXFLAGS= -ggdb -Wall -std=c++11 -pthread
 VALGRIND= valgrind --leak-check=yes --log-file=/home/wyatt/ValgrindLogs/%p.log
 VALOPS= --leak-check=full --show-leak-kinds=all
-CPPFILES=disk.cpp diskmanager.cpp partitionmanager.cpp filesystem.cpp Trees.cpp Arboreal_Exceptions.cpp File.cpp
-OBJFILES=driver.o disk.o diskmanager.o partitionmanager.o filesystem.o Trees.o Arboreal_Exceptions.o File.o
+CPPFILES=disk.cpp diskmanager.cpp partitionmanager.cpp filesystem.cpp Trees.cpp Arboreal_Exceptions.cpp File.cpp\
+         ConnectionDaemon.cpp
+OBJFILES=disk.o diskmanager.o partitionmanager.o filesystem.o Trees.o Arboreal_Exceptions.o File.o
 HFILES=disk.h diskmanager.h partitionmanager.h filesystem.h Trees.h Arboreal_Exceptions.h types.h File.h
 
 all: filesystem
 
-filesystem: $(HFILES) $(CPPFILES) ConnectionDaemon.cpp cli liason
+filesystem: $(OBJFILES)  cli liason
 	$(CXX) $(XXFLAGS) -o daemon $(CPPFILES)
 
 driver: $(OBJFILES)
-	$(CXX) $(XXFLAGS) -o driver $(OBJFILES)
+	$(CXX) $(XXFLAGS) -o driver driver.cpp $(OBJFILES)
 
 format: format.cpp
 	$(CXX) $(XXFLAGS) -o format format.cpp
 
-cli: clean cli_driver.cpp cli.h
-	$(CXX) $(XXFLAGS) cli.cpp cli_driver.cpp -o cli
+cli: clean cli_driver.cpp cli.h Arboreal_Exceptions.h
+	$(CXX) $(XXFLAGS) cli.cpp cli_driver.cpp -o cli Arboreal_Exceptions.cpp
 
-liason: clean liason.cpp
-	$(CXX) $(XXFLAGS) liason.cpp -o liason
+liason: clean liason.cpp Arboreal_Exceptions.h
+	$(CXX) $(XXFLAGS) liason.cpp -o liason Arboreal_Exceptions.cpp
 
 driver.o: driver.cpp
 	$(CXX) $(XXFLAGS) -c driver.cpp
@@ -100,4 +101,4 @@ mem_test_12: rest
 	$(VALGRIND) ./driver 12
 
 clean:
-	/bin/rm -f *.o driver cli format DISK1 *.pipe liason
+	/bin/rm -f *.o driver cli format daemon DISK1 *.pipe liason

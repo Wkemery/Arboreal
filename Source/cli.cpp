@@ -1,19 +1,20 @@
-//////////////////////////////////////////////////////////////////////////////////////////////////// 
+////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // cli.cpp
 // Comand Line Interface Class Definitions
 // Primary Author: Adrian Barberis
 // For "Arboreal" Senior Design Project
-// 
+//
 //  Mon. | Feb. 5th | 2018 | 8:30 AM
-// 
+//
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 #include "cli.h"
 #include "cmnd_validation.h"
 #include "cli_helper.hpp"
-
+#include <sys/types.h>
+#include <sys/wait.h>
 
 
 //[================================================================================================]
@@ -200,7 +201,7 @@ void CLI::start()
          }
          if(dbug) std::cout << "C: Client Socket Removed Successfully" << std::endl;
          if(dbug) std::cout << "C: Waiting For Child Process to Complete..." << std::endl;
-   
+
          int status;
          waitpid(pid,&status,0);
          if(dbug) std::cout << "C: Child Process Completed Successfully" << std::endl;
@@ -258,10 +259,10 @@ void CLI::run()
    std::string input;
    // last 10 inputs
    std::vector<std::string> history;
-                           
+
    bool from_history = false; // unimportant at the moment
    bool print_prompt = false; // Reprint prompt after bad command (but only after a bad command)
-   
+
    // Print the welcome header
    print_header();
 
@@ -290,25 +291,25 @@ void CLI::run()
       }
       else
       {
-         /* 
+         /*
           * Put back the character used to check for ENTER pressed
-          * If this is not done will result in the first character 
+          * If this is not done will result in the first character
           * of the input being thrown away
           *
           * The conditional below is currently meaningless
           * The idea was to provide a history that one could scroll through
           * similar to how the regular command line operates
-          * however this is NOT implemented yet 
+          * however this is NOT implemented yet
           * Note that the code IN the conditional IS IMPORTANT
           * (I've just set things up for later edits)
           */
-         if(!from_history) 
+         if(!from_history)
          {
             std::cin.putback(c);
 
             // Get the command
             getline(std::cin,input);
-   
+
             // Add command to history
             history.push_back(input);
             if(is_script == "-s"){std::cout << "Arboreal >> " << input << std::endl;}
@@ -396,7 +397,7 @@ void CLI::run()
 }
 //[================================================================================================]
 // Send Command To Liaison Process
-// 
+//
 // @ cmnd: Command to be sent
 //[================================================================================================]
 void CLI::send_cmnd(char* cmnd)
@@ -424,7 +425,7 @@ void CLI::await_response()
 /* The majority of the logic here is offloaded to a helper function in 'helper_functions.hpp'
  * This was done in order to avoid code duplication
  * There is still some code duplication in that each section starts the same and ends the same
- * However some commands require different build versions so this duplication is 
+ * However some commands require different build versions so this duplication is
  * somewhat unavoidable.  Perhaps later on it may be worth looking into reducing it further
  * However I think that all of this code is very readable and pretty simple so it's not pressing
  */
@@ -465,7 +466,7 @@ char* CLI::build(int id, std::string input)
          return command;
       }
 //[================================================================================================]
-      
+
       case(5): // find -t {tagName,...} }--> Find file with all tags
       {
          // Add the command Id to the command,
@@ -490,7 +491,7 @@ char* CLI::build(int id, std::string input)
          return command;
       }
 //[================================================================================================]
-      
+
       case(6): // find -f [filename.ext,...] }--> Find files by name
       {
          // Add the command Id to the command,
@@ -498,7 +499,7 @@ char* CLI::build(int id, std::string input)
          memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
          write_to_cmnd(command,input,offset,INCLUSIVE,max_string_size);
-         
+
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
          print_buffer(command,MAX_COMMAND_SIZE);
@@ -515,7 +516,7 @@ char* CLI::build(int id, std::string input)
          return command;
       }
 //[================================================================================================]
-      
+
       case(7): // new -t [tagName,...] }--> Create tags
       {
          // Add the command Id to the command,
@@ -524,7 +525,7 @@ char* CLI::build(int id, std::string input)
          offset += sizeof(int);
          write_to_cmnd(command,input,offset,INCLUSIVE,max_string_size);
 
-         
+
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
          print_buffer(command,MAX_COMMAND_SIZE);
@@ -541,7 +542,7 @@ char* CLI::build(int id, std::string input)
          return command;
       }
 //[================================================================================================]
-      
+
       case(8): // new -f [filename.ext,...] }--> Create files
       {
          // Add the command Id to the command,
@@ -574,7 +575,7 @@ char* CLI::build(int id, std::string input)
          memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
          write_to_cmnd(command,input,offset,NEW_AND_TAG,max_string_size);
-         
+
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
          print_buffer(command,MAX_COMMAND_SIZE);
@@ -599,7 +600,7 @@ char* CLI::build(int id, std::string input)
          memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
          write_to_cmnd(command,input,offset,NEW_AND_TAG_EXC,max_string_size);
-         
+
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
          print_buffer(command,MAX_COMMAND_SIZE);
@@ -624,7 +625,7 @@ char* CLI::build(int id, std::string input)
          memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
          write_to_cmnd(command,input,offset,INCLUSIVE,max_string_size);
-         
+
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
          print_buffer(command,MAX_COMMAND_SIZE);
@@ -642,14 +643,14 @@ char* CLI::build(int id, std::string input)
       }
 //[================================================================================================]
 
-      case(12): // delete -f [filename.ext,...] }--> Delete files  
+      case(12): // delete -f [filename.ext,...] }--> Delete files
       {
          // Add the command Id to the command,
          // then update offset and convert the command
          memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
          write_to_cmnd(command,input,offset,INCLUSIVE,max_string_size);
-         
+
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
          print_buffer(command,MAX_COMMAND_SIZE);
@@ -667,14 +668,14 @@ char* CLI::build(int id, std::string input)
       }
 //[================================================================================================]
 
-      case(13): // fdelete -t [tagName,...] }--> Force delete tags 
+      case(13): // fdelete -t [tagName,...] }--> Force delete tags
       {
          // Add the command Id to the command,
          // then update offset and convert the command
          memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
          write_to_cmnd(command,input,offset,INCLUSIVE,max_string_size);
-         
+
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
          print_buffer(command,MAX_COMMAND_SIZE);
@@ -699,7 +700,7 @@ char* CLI::build(int id, std::string input)
          memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
          write_to_cmnd(command,input,offset,OPEN,max_string_size);
-         
+
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
          print_buffer(command,MAX_COMMAND_SIZE);
@@ -717,14 +718,14 @@ char* CLI::build(int id, std::string input)
       }
 //[================================================================================================]
 
-      case(15): // close [filename.ext,...] }--> Close file(s)  
+      case(15): // close [filename.ext,...] }--> Close file(s)
       {
          // Add the command Id to the command,
          // then update offset and convert the command
          memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
          write_to_cmnd(command,input,offset,INCLUSIVE,max_string_size);
-         
+
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
          print_buffer(command,MAX_COMMAND_SIZE);
@@ -799,7 +800,7 @@ char* CLI::build(int id, std::string input)
          memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
          write_to_cmnd(command,input,offset,INCLUSIVE,max_string_size);
-         
+
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
          print_buffer(command,MAX_COMMAND_SIZE);
@@ -824,7 +825,7 @@ char* CLI::build(int id, std::string input)
          memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
          write_to_cmnd(command,input,offset,MERGE_1,max_string_size);
-         
+
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
          print_buffer(command,MAX_COMMAND_SIZE);
@@ -849,7 +850,7 @@ char* CLI::build(int id, std::string input)
          memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
          write_to_cmnd(command,input,offset,MERGE_2,max_string_size);
-         
+
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
          print_buffer(command,MAX_COMMAND_SIZE);
@@ -874,7 +875,7 @@ char* CLI::build(int id, std::string input)
          memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
          write_to_cmnd(command,input,offset,TAG_1,max_string_size);
-         
+
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
          print_buffer(command,MAX_COMMAND_SIZE);
@@ -899,7 +900,7 @@ char* CLI::build(int id, std::string input)
          memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
          write_to_cmnd(command,input,offset,TAG_2,max_string_size);
-         
+
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
          print_buffer(command,MAX_COMMAND_SIZE);
@@ -924,7 +925,7 @@ char* CLI::build(int id, std::string input)
          memcpy(command,&id,sizeof(int));
          offset += sizeof(int);
          write_to_cmnd(command,input,offset,TAG_3,max_string_size);
-         
+
          // Some Debug Printing
          std::cout << "Value: " << get_cmnd_id(command) << std::endl;
          print_buffer(command,MAX_COMMAND_SIZE);
@@ -946,17 +947,3 @@ char* CLI::build(int id, std::string input)
    return command;
 }
 //[================================================================================================]
-
-
-
-
-
-
-
-
-
-
-
-
-
-

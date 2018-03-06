@@ -9,6 +9,9 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
+#include "types.h"
+
+
 #ifndef CLI_H
 #define CLI_H
 
@@ -22,8 +25,8 @@
 #include <sys/un.h>                         /* Unix Domain Socket Stuff */
 #include <sys/ipc.h>                        /* Inter Process Communication Stds. */
 #include <sys/shm.h>                        /* Shared Memory Handling */
-#include "Arboreal_Exceptions.h"            /* Exception Handling */  
-             
+#include "Arboreal_Exceptions.h"            /* Exception Handling */
+
 
 #define MAX_HISTORY_SIZE 10                 /* Maximum number of previously entered commands recorded */
 #define MAX_COMMAND_SIZE 2048               /* Maximum size a command can be */
@@ -77,7 +80,3 @@ private:
 };
 
 #endif
-
-
-
-

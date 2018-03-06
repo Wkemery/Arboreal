@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////
 //
-// ConnectionDaemon.cpp 
-// 
+// ConnectionDaemon.cpp
+//
 // Handles Command Requests From CLI And Executes The Appropriate File System Functions
 // Then Returns The Requested Data Back To The CLI
-// 
+//
 // Author:    Adrian Barberis
 // For:       Arboreal Project
 // Dated:     March | 3rd | 2018
@@ -23,15 +23,19 @@
 #include <netinet/in.h>                     /* Internet TCP Socket Stuff */
 #include <netdb.h>                          /* More Internet Socket Stuff */
 #include <sys/ioctl.h>                      /* Set Sockets To Non-Blocking */
+#include <signal.h>
+
 #include "filesystem.h"
-         
+#include "types.h"
+
 #define BACKLOG 10                  /* Number of Connection Requests that the Server Can Queue */
 #define FLAG 0                      /* Flag for recv() */
 #define TIMEOUT 10
-#define TRUE 1                      
+#define TRUE 1
 #define FALSE 0
 #define PORT 70777
 
+bool DEBUG = false;
 
 
 /* Declarations */
@@ -93,7 +97,7 @@ int main(int argc, char** argv)
     std::vector<int> active_connections;
 
 
-    
+
   //---------------- BEGIN SOCKET SETUP ------------------------------------------------------
   //
   //
@@ -111,27 +115,27 @@ int main(int argc, char** argv)
     if(dbug) printf("D: Zeroing Socket Address and Buffer\n");
     memset(buffer,'\0',max_command_size);
     memset(&daemon_sockaddr, 0, sizeof(daemon_sockaddr));
-  
+
     if(dbug) printf("D: Creating Daemon Socket...\n");
     daemon_sock = create_sock(TIMEOUT);
     my_fid = daemon_sock;
     if(dbug) printf("D: Daemon Socket ID: %d\n",daemon_sock);
     if(dbug) printf("D: Setting Socket Options In Order To Reuse Socket Later...\n");
     set_socket_opt(daemon_sock,sock_opt,TIMEOUT);
-  
+
     daemon_sockaddr.sin_family = AF_INET;
     daemon_sockaddr.sin_addr.s_addr = INADDR_ANY;
     daemon_sockaddr.sin_port = htons(PORT);
 
     if(dbug) printf("D: Setting Socket To Non-Blocking Mode...\n");
     set_nonblocking(daemon_sock,on);
-  
+
     if(dbug) printf("D: Binding Socket %d To Port %d\n",daemon_sock,PORT);
     bind_socket(daemon_sock,daemon_sockaddr,TIMEOUT);
 
     if(dbug) printf("D: Listening On Socket %d With a Backlog of %d\n",daemon_sock,BACKLOG);
     listen_on_socket(daemon_sock,BACKLOG,TIMEOUT);
-  
+
     if(dbug) printf("D: Initializing Master File Descriptor Array...\n");
     FD_ZERO(&master_set);
     max_fid = daemon_sock;
@@ -154,8 +158,8 @@ int main(int argc, char** argv)
   //
   //
   //------------------------------------------------------------------------------------------
-  
-  
+
+
 
 
   //---------------- BEGIN COMMUNICATIONS ----------------------------------------------------
@@ -168,8 +172,8 @@ int main(int argc, char** argv)
       /* Copy master file descriptor set to working set */
       if(dbug) printf("D: Copying Master File Descriptor Set To Working Set...\n");
       memcpy(&working_set, &master_set, sizeof(master_set));
-  
-      
+
+
     //---------------- ATTEMPT SELECT() ------------------------------------------------------
     //
     //
@@ -195,7 +199,7 @@ int main(int argc, char** argv)
     //
     //
     //----------------------------------------------------------------------------------------
-    
+
 
 
     //---------------- BEGIN ACCEPTING AND RECEIVING LOOP ------------------------------------
@@ -229,7 +233,7 @@ int main(int argc, char** argv)
               if(dbug) printf("D: New Incoming Connection - %d - Detected, Adding To Master Set\n",client_sock);
               FD_SET(client_sock,&master_set);
               if(client_sock > max_fid) max_fid = client_sock;
-  
+
             }while(client_sock != -1);
           }
           else
@@ -237,7 +241,7 @@ int main(int argc, char** argv)
             printf("D: Client Descriptor - %d - Is Readable\n",i);
             if(dbug) printf("D: Beginning Receive Loop...\n");
             close_conn = FALSE;
-  
+
             do
             {
               rval = recv(i, buffer, max_command_size, FLAG);
@@ -253,22 +257,22 @@ int main(int argc, char** argv)
                 }
                 break;
               }
-  
+
               if(rval == 0)
               {
                 printf("D: Client Closed Connection; Breaking From Receive Loop\n");
                 close_conn = TRUE;
                 break;
               }
-  
+
               int bytes_received = rval;
               if(dbug) printf("\nBytes Received: %d\n",bytes_received);
               if(dbug) printf("Command Received: %s\n\n",buffer);
 
               // call arboreal functions and return data
-  
+
             }while(TRUE);
-  
+
             if(close_conn)
             {
               if(dbug) printf("D: Removing Closed Connection - %d - From Master File Descriptor Set\n",i);
@@ -285,7 +289,7 @@ int main(int argc, char** argv)
     //
     //
     //---------------- END ACCEPT/RECEIVE LOOP -----------------------------------------------
-  
+
 
 
 
@@ -382,23 +386,23 @@ int create_sock(int timeout)
   {
     sleep(1);
     timer += 1;
-    if(printer % 3 == 0) 
+    if(printer % 3 == 0)
     {
       printf("\33[2K\r");
       printf("\rD: Socket Create Failed - %s - Retrying.", strerror(errno));
-      fflush(stdout); 
+      fflush(stdout);
     }
-    else if(printer % 3 == 1) 
+    else if(printer % 3 == 1)
     {
       printf("\33[2K\r");
       printf("\rD: Socket Create Failed - %s - Retrying..", strerror(errno));
-      fflush(stdout); 
+      fflush(stdout);
     }
-    else if(printer % 3 == 2) 
+    else if(printer % 3 == 2)
     {
       printf("\33[2K\r");
       printf("\rD: Socket Create Failed - %s - Retrying...", strerror(errno));
-      fflush(stdout); 
+      fflush(stdout);
     }
     else if(printer >= 120) printer = 0;
     printer += 1;
@@ -428,19 +432,19 @@ void set_socket_opt(int daemon_sock, int sock_opt, int timeout)
     {
       printf("\33[2K\r");
       printf("\rD: Set Socket Options Failed - %s - Retrying.", strerror(errno));
-      fflush(stdout); 
+      fflush(stdout);
     }
     else if(printer % 3 == 1)
     {
       printf("\33[2K\r");
       printf("\rD: Set Socket Options Failed - %s - Retrying..", strerror(errno));
-      fflush(stdout); 
+      fflush(stdout);
     }
     else if(printer % 3 == 2)
     {
       printf("\33[2K\r");
       printf("\rD: Set Socket Options Failed - %s - Retrying...", strerror(errno));
-      fflush(stdout); 
+      fflush(stdout);
     }
     else if(printer >= 120) printer = 0;
     printer += 1;
@@ -488,19 +492,19 @@ void bind_socket(int daemon_sock, struct sockaddr_in daemon_sockaddr, int timeou
     {
       printf("\33[2K\r");
       printf("\rD: Socket Bind To Port# %d Failed - %s - Retrying", PORT, strerror(errno));
-      fflush(stdout); 
+      fflush(stdout);
     }
     else if(printer % 3 == 1)
     {
       printf("\33[2K\r");
       printf("\rD: Socket Bind To Port# %d Failed - %s - Retrying...", PORT, strerror(errno));
-      fflush(stdout); 
+      fflush(stdout);
     }
     else if(printer % 3 == 2)
     {
       printf("\33[2K\r");
       printf("\rD: Socket Bind To Port# %d Failed - %s - Retrying...", PORT, strerror(errno));
-      fflush(stdout); 
+      fflush(stdout);
     }
     else if(printer >= 120) printer = 0;
     printer += 1;
@@ -531,19 +535,19 @@ void listen_on_socket(int daemon_sock,int backlog,int timeout)
     {
       printf("\33[2K\r");
       printf("\rD: Socket Listen Failed - %s - Retrying.", strerror(errno));
-      fflush(stdout); 
+      fflush(stdout);
     }
     else if(printer % 3 == 1)
     {
       printf("\33[2K\r");
       printf("\rD: Socket Listen Failed - %s - Retrying..", strerror(errno));
-      fflush(stdout); 
+      fflush(stdout);
     }
     else if(printer % 3 == 2)
     {
       printf("\33[2K\r");
       printf("\rD: Socket Listen Failed - %s - Retrying...", strerror(errno));
-      fflush(stdout); 
+      fflush(stdout);
     }
     else if(printer > 120) printer = 0;
     printer += 1;
@@ -559,13 +563,3 @@ void listen_on_socket(int daemon_sock,int backlog,int timeout)
   return;
 }
 //--------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-

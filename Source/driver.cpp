@@ -21,7 +21,6 @@ bool DEBUG = false;
 
 int main(int argc, char** argv)
 {
-  
   //   cout << dm->getPartitionSize("PartitionA") << endl;
   
   //   dp[0].partitionName = 'A';

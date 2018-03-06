@@ -4,7 +4,7 @@
 //  Liason process for communication between GUI,CLI,Filesystem
 //  Primary Author: Adrian Barberis
 //  For "Arboreal" Senior Design Project
-//  
+//
 //  Mon. | Feb. 5th | 2018 | 8:30 AM
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -23,7 +23,8 @@
 #include <chrono>                   /* System Time */
 #include <ctime>                    /* Time Utilities */
 #include <netinet/in.h>
-#include <netdb.h> 
+#include <netdb.h>
+#include <signal.h>
 #include "Arboreal_Exceptions.h"    /* Exception Handling */
 
 
@@ -91,20 +92,20 @@ int main(int argc, char** argv)
 
     try
     {
-    
+
         // Connect to CLI
-    
+
         key_t shm_key = atoi(argv[2]);
         int shm_id;
         if(dbug) std::cout << "L: Shared Memory Key: " << shm_key << std::endl;
         if(dbug) std::cout << "-----------------------------------------------------------------" << std::endl;
-    
+
         if(dbug) std::cout << "L: Accessing Shared Memory For Interprocess Synchronization..." << std::endl;
         char* shm = get_shm_seg(shm_key,shm_id);
         if(dbug) std::cout << "L: Shared Memory Found; Attachment Successfull" << std::endl;
-    
+
         if(dbug) std::cout << "L: Initializing Server and Client Socket Addresses..." << std::endl;
-    
+
         /* Zero the structure buffers */
         memset(&liaison_sockaddr, 0, sizeof(struct sockaddr_un));
         memset(&client_sockaddr, 0, sizeof(struct sockaddr_un));
@@ -113,17 +114,17 @@ int main(int argc, char** argv)
         liaison_sock = set_up_socket(liaison_sockpath,liaison_sockaddr);
         if(dbug) std::cout << "L: Server Socket Set Up Successfull" << std::endl;
         if(dbug) std::cout << "L: Signaling Client" << std::endl;
-    
+
         /* Signal CLI that it is ok to continue */
         shm[0] = 1;
-    
+
         if(dbug) std::cout << "L: Listening On Server Socket..." << std::endl;
         listen_for_client(liaison_sock,liaison_sockpath);
         if(dbug) std::cout << "L: Accepting Client Connections..." << std::endl;
         if(dbug) std::cout << "-----------------------------------------------------------------" << std::endl << std::endl;
-    
+
         length = sizeof(liaison_sockaddr);
-    
+
         /* Wait until CLI is ready, if this is not done you will get a
          * "Connection Refused Error" every once in a while */
         while(shm[0] == 1)
@@ -131,20 +132,20 @@ int main(int argc, char** argv)
             client_sock = accept_client(liaison_sock,client_sockaddr,length,liaison_sockpath);
         }
         if(dbug) std::cout << "L: Client Connection Accepted" << std::endl;
-    
-    
+
+
         if(dbug) std::cout << "L: Unattatching Shared Memory Segment..." << std::endl;
         unat_shm(shm_id,shm);
         if(dbug) std::cout << "L: Shared Memory Succesfully Unattatched" << std::endl;
-    
+
         if(dbug) std::cout << "L: Retrieving Client Peername..." << std::endl;
         get_peername(client_sock,client_sockaddr,liaison_sock,liaison_sockpath);
         if(dbug) std::cout << "L: Client Peername Retrieved Successfully: " << client_sockaddr.sun_path << std::endl;
-    
-    
-    
+
+
+
          // Connect To Daemon
-    
+
         timer = 0;
         printer = 0;
         while((liaison_fid = socket(AF_INET,SOCK_STREAM,0)) < 0 && timer < TIMEOUT)
@@ -154,19 +155,19 @@ int main(int argc, char** argv)
             {
                 printf("\33[2K\r");
                 printf("\rL: Liaison Client Socket Creation Failed - %s - Retrying.", strerror(errno));
-                fflush(stdout); 
+                fflush(stdout);
             }
             else if(printer % 3 == 1)
             {
                 printf("\33[2K\r");
                 printf("\rL: Liaison Client Socket Creation Failed - %s - Retrying..", strerror(errno));
-                fflush(stdout); 
+                fflush(stdout);
             }
             else if(printer % 3 == 2)
             {
                 printf("\33[2K\r");
                 printf("\rL: Liaison Client Socket Creation Failed - %s - Retrying...", strerror(errno));
-                fflush(stdout); 
+                fflush(stdout);
             }
             timer += 1;
             printer += 1;
@@ -208,11 +209,11 @@ int main(int argc, char** argv)
             exit(1);
         }
         else{ timer = 0; }
-    
+
         memset(&daemon_addr, '\0', sizeof(daemon_addr));
         daemon_addr.sin_family = AF_INET;
         daemon_addr.sin_port = htons(DMON_PORT);
-    
+
         while((connect(liaison_fid,(struct sockaddr*)&daemon_addr,sizeof(daemon_addr))) < 0 && timer < TIMEOUT)
         {
             sleep(1);
@@ -273,16 +274,16 @@ int main(int argc, char** argv)
             send_response(client_sock,quit,MAX_COMMAND_SIZE,FLAG,liaison_sock,liaison_sockpath,client_sockpath);
             exit(1);
         }
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
         /* Begin communication */
         do
         {
-        
+
             if(dbug) std::cout << "L: Awaiting Command From Client..." << std::endl;
             char* msg = recv_msg(client_sock,MAX_COMMAND_SIZE,FLAG,liaison_sock,liaison_sockpath,client_sockpath);
             if(dbug) std::cout << "L: Client Command Received Successfully" << std::endl;
@@ -291,8 +292,8 @@ int main(int argc, char** argv)
             if(dbug) print_cmnd(msg,MAX_COMMAND_SIZE);
             int command_id = get_cmnd_id(msg);
             if(command_id == 999) break;
-        
-        
+
+
             //if(dbug) std::cout << "L: Sending Command to File System..." << std::endl;
             //
             //  TO DO:
@@ -305,29 +306,29 @@ int main(int argc, char** argv)
                 std::cout << cmnds[i].c_str() << std::endl;
                 send(liaison_fid,cmnds[i].c_str(),cmnds[i].length(),0);
             }
-            
+
             if(dbug) std::cout << "L: Building Response..." << std::endl;
             auto end = std::chrono::system_clock::now();
             std::time_t end_time = std::chrono::system_clock::to_time_t(end);
             std::string data = "Command Received @ ";
             data += std::ctime(&end_time);
             memset(msg,'\0', MAX_COMMAND_SIZE);
-            memcpy(msg,data.c_str(),data.length()); 
+            memcpy(msg,data.c_str(),data.length());
             if(dbug) std::cout << "L: Response Built Successfully" << std::endl;
-    
+
             if(dbug) std::cout << "L: Sending Response to Client..." << std::endl;
             send_response(client_sock,msg,MAX_COMMAND_SIZE,FLAG,liaison_sock,liaison_sockpath,client_sockpath);
             if(dbug) std::cout << "L: Response Successfully Sent" << std::endl;
             if(dbug) std::cout << "L: Response Sent To: " << client_sock << " @ " << client_sockpath << std::endl;
-    
+
         }while(true);
-    
+
         std::string close_connection = "close";
         int offset = (sizeof(int) + max_string_size * 2 + 1) - close_connection.length();
         close_connection.insert(end(close_connection),offset,'\0');
         send(liaison_fid,close_connection.c_str(),close_connection.length(),0);
-    
-    
+
+
         if(dbug) std::cout << "L: Closing Connections..." << std::endl;
         if(close(liaison_fid) < 0)
         {
@@ -369,7 +370,7 @@ int main(int argc, char** argv)
         memcpy(quit,&val,sizeof(int));
         memcpy(quit + sizeof(int), "QUIT", sizeof("QUIT"));
         send_response(client_sock,quit,MAX_COMMAND_SIZE,FLAG,liaison_sock,liaison_sockpath,client_sockpath);
-    
+
         if(dbug) std::cout << "L: Closing Connections..." << std::endl;
         if(close(liaison_fid) < 0)
         {
@@ -399,7 +400,3 @@ int main(int argc, char** argv)
     }
     return 0;
 }
-
-
-
-

@@ -4,12 +4,12 @@
 //  Helper Functions for CLI
 //  Primary Author: Adrian Barberis
 //  For "Arboreal" Senior Design Project
-//  
+//
 //  Mon. | Feb. 5th | 2018 | 8:30 AM
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+#include "types.h"
 #ifndef HELPER_FUNC
 #define HELPER_FUNC
 
@@ -29,14 +29,14 @@
 
 
 //[================================================================================================]
-/* 
+/*
  *  Print a list of legal commands
- *  
+ *
  *  Eventually I would like to change this to a more 'man pages' style output
  *  And make the 'help' command display only "Commonly Used" commands
  *  A lot of these commands have some quirks which are important to let the user know about
  *  But printing them all in a single print is not a very good idea (ergo the man pages)
- *  
+ *
  */
 //[================================================================================================]
 void print_help()
@@ -61,7 +61,7 @@ void print_help()
     std::cout << "|                                                                                   |\n";
     std::cout << "|  8) { 'new' '-f' '[filename.ext,...]' }--> Create files                           |\n";
     std::cout << "|                                                                                   |\n";
-    std::cout << "|  9) { 'new' '-f' '[filename.ext,...]' '-t' '[tagName,...] }--> Create&Tag files   |\n";            
+    std::cout << "|  9) { 'new' '-f' '[filename.ext,...]' '-t' '[tagName,...] }--> Create&Tag files   |\n";
     std::cout << "|                                                                                   |\n";
     std::cout << "|  10) { 'new' '-f' '[filename.ext,...]' '-t' '{tagName,...}' }--> Create&Tag files |\n";
     std::cout << "|                                                                                   |\n";
@@ -94,10 +94,10 @@ void print_help()
     std::cout << "+-----------------------------------------------------------------------------------+\n";
     std::cout << "Arboreal >> ";
     return;
-} 
+}
 //[================================================================================================]
 // Print a Welcome Header
-// 
+//
 // You may ask,  "Is this actually necessarry?"
 // I respond, "Yes, Yes it is."
 //[================================================================================================]
@@ -114,7 +114,7 @@ void print_header()
 }
 //[================================================================================================]
 // Delete a Shared Memory Fragment
-// 
+//
 // @ shm_id: The Shared Memory Fragment's identifier
 // @ shm:    The pointer to the Shared Memory
 //[================================================================================================]
@@ -139,7 +139,7 @@ void delete_shm(int shm_id, char* shm)
 }
 //[================================================================================================]
 // Create and attach a Shared Memory Segment
-// 
+//
 // @ key: The Key required to access the Shared Memory Segment
 // @ id:  Address of an integer variable that will store the created segments identification number
 //[================================================================================================]
@@ -149,7 +149,7 @@ char* create_shm_seg(key_t key, int& id)
     char*  shm;
 
     /* Create Shared Memory Segment for Blocking */
-    if ((shm_id = shmget(key, SHMSZ, IPC_CREAT | PERMISSIONS)) < 0) 
+    if ((shm_id = shmget(key, SHMSZ, IPC_CREAT | PERMISSIONS)) < 0)
     {
         std::string where = "[cli_helper.hpp::create_shm_seg()]: ";
         std::string what = "Shared Memory Get Failed -- ";
@@ -158,7 +158,7 @@ char* create_shm_seg(key_t key, int& id)
     }
 
     /* Attach the shared memory to this process so the CLI can access it */
-    if ((shm = (char*)shmat(shm_id, NULL, 0)) == (char *) -1) 
+    if ((shm = (char*)shmat(shm_id, NULL, 0)) == (char *) -1)
     {
        std::string where = "[cli_helper.hpp::create_shm_seg()]: ";
         std::string what = "Shared Memory Attach Failed -- ";
@@ -176,10 +176,10 @@ char* create_shm_seg(key_t key, int& id)
 // Prints the contents of a buffer (Made to order for 'Command Buffers' but can be edited if need be)
 // NOTE: The first four characters (or rather whatever happens to be the size of an integer)
 //       are skipped since they need to be read all together to mean anything (avoids garbage output)
-// 
+//
 // @ buff: The buffer to be printed
 // @ size: The size of the buffer to be printed
-//[================================================================================================]       
+//[================================================================================================]
 void print_buffer(char* buff, int size)
 {
     std::cout << "Buffer Contents: ";
@@ -191,7 +191,7 @@ void print_buffer(char* buff, int size)
     return;
 }
 //[================================================================================================]
-/* 
+/*
  * Checks the data within a buffer (Made to order for 'Command Buffers' but can be edited if need be)
  * This is a security feature (hopefully)
  * The only data allowed in a command buffer is aplhanumeric including "_" and the '\0' character
@@ -202,10 +202,10 @@ void print_buffer(char* buff, int size)
  *       Where X is the size of an integer.  This is especially important here
  *       otherwise the 'Command Id' data will be flagged as bad and will be overwritten
  *       with null characters ('\0')
- *       
+ *
  * @ buff: The buffer to be printed
  * @ size: The size of the buffer to be printed
- * 
+ *
  */
 //[================================================================================================]
 bool check_buffer(char* buff, int size)
@@ -223,7 +223,7 @@ bool check_buffer(char* buff, int size)
     return true;
 }
 //[================================================================================================]
-/* 
+/*
  * This is more of a debug function.
  * It can be used to test the "write_to_cmnd()" operations in order to make sure that they
  * are writing data in chunks of size = to "max_string_size" (even for data that is only 2 char long)
@@ -233,7 +233,7 @@ bool check_buffer(char* buff, int size)
  *
  * @ buff: The buffer to be printed
  * @ size: The size of the buffer to be printed
- *       
+ *
  */
 //[================================================================================================]
 void check_buffer_partitioning(char* buffer,int size)
@@ -275,14 +275,14 @@ void check_buffer_partitioning(char* buffer,int size)
 //[================================================================================================]
 // Fixes a buffer flagged as bad by check_buffer()
 // It does this by overwriting all offending data with the '\0' character
-// 
+//
 // NOTE: As in the case of print_buffer() the first X characters are ignored
 //       Where X is the size of an integer
 //
 // @ buff: The buffer to be printed
 // @ size: The size of the buffer to be printed
-// 
-//[================================================================================================]      
+//
+//[================================================================================================]
 void fix_buffer(char* buff,int size)
 {
     int  non_null = 0;
@@ -312,7 +312,7 @@ void fix_buffer(char* buff,int size)
 //[================================================================================================]
 // Convert the first X characters in a 'Command Buffer' to an integer value
 // X is the size of an integer and return it
-// 
+//
 // @ cmnd: A Command Buffer (Buffer with the first n slots representing an integer)
 //[================================================================================================]
 int get_cmnd_id(char* cmnd)
@@ -329,11 +329,11 @@ int get_cmnd_id(char* cmnd)
 //[================================================================================================]
 // Create and set-up a socket used for communication with Liaison process
 // Returns the client socket's identification number
-// 
+//
 // @ client_sockpath: Client Socket's pathname
-// @ client_sockaddr: A reference to a standard structure whose components I will not describe here 
-//                    and can be viewed in a Unix manual.  Suffice it to say, it stores the socket 
-//                    type and the socket path.  (Note that the "type" of the struct is sockaddr_un 
+// @ client_sockaddr: A reference to a standard structure whose components I will not describe here
+//                    and can be viewed in a Unix manual.  Suffice it to say, it stores the socket
+//                    type and the socket path.  (Note that the "type" of the struct is sockaddr_un
 //                    signifing that this is a unix domain socket)
 //[================================================================================================]
 int set_up_socket(std::string client_sockpath, struct sockaddr_un& client_sockaddr)
@@ -347,8 +347,8 @@ int set_up_socket(std::string client_sockpath, struct sockaddr_un& client_sockad
         throw arboreal_cli_error(what,where);
     }
 
-    client_sockaddr.sun_family = AF_UNIX;   
-    strcpy(client_sockaddr.sun_path, client_sockpath.c_str()); 
+    client_sockaddr.sun_family = AF_UNIX;
+    strcpy(client_sockaddr.sun_path, client_sockpath.c_str());
     socklen_t len = sizeof(client_sockaddr);
 
     unlink(client_sockpath.c_str());
@@ -379,17 +379,17 @@ int set_up_socket(std::string client_sockpath, struct sockaddr_un& client_sockad
 }
 //[================================================================================================]
 // Attempt a connection to the Liaison process
-// 
+//
 // @ client_sock: Client socket identifiaction number
 // @ client_sockpath: Client socket pathname
 // @ server_sockpath: Server socket pathname
-// @ server_sockaddr: A reference to a standard structure whose components I will not describe here 
-//                    and can be viewed in a Unix manual.  Suffice it to say, it stores the socket 
-//                    type and the socket path.  (Note that the "type" of the struct is sockaddr_un 
+// @ server_sockaddr: A reference to a standard structure whose components I will not describe here
+//                    and can be viewed in a Unix manual.  Suffice it to say, it stores the socket
+//                    type and the socket path.  (Note that the "type" of the struct is sockaddr_un
 //                    signifing that this is a unix domain socket)
 // @ len:             Size of server_sockaddr in bytes (from sizeof() )
 //[================================================================================================]
-void connect_to_server(int client_sock, std::string client_sockpath, 
+void connect_to_server(int client_sock, std::string client_sockpath,
     std::string server_sockpath, struct sockaddr_un& server_sockaddr, socklen_t len)
 {
     server_sockaddr.sun_family = AF_UNIX;
@@ -420,7 +420,7 @@ void connect_to_server(int client_sock, std::string client_sockpath,
 }
 //[================================================================================================]
 // Send a command to the Liaison process
-// 
+//
 // @ client_sock:     Client socket identification number
 // @ client_sockpath: Client socket pathname
 // @ cmnd:            Command to be sent
@@ -428,8 +428,8 @@ void connect_to_server(int client_sock, std::string client_sockpath,
 // @ flag:            Flag for 'send()' call (see 'man send')
 //[================================================================================================]
 void send_to_server(int client_sock, std::string client_sockpath, char* cmnd, int size, int flag)
-{              
-    if(send(client_sock, cmnd, size, flag) < 0) 
+{
+    if(send(client_sock, cmnd, size, flag) < 0)
     {
         if(close(client_sock) < 0)
         {
@@ -451,11 +451,11 @@ void send_to_server(int client_sock, std::string client_sockpath, char* cmnd, in
         throw arboreal_cli_error(what,where);
     }
 
-    return;   
+    return;
 }
 //[================================================================================================]
 // Receive data from server, returns a pointer to the data
-// 
+//
 // @ client_sock:     Client socket identification number
 // @ client_sockpath: Client socket pathname
 // @ size:            Size of command to be recieved
@@ -466,7 +466,7 @@ char* receive_from_server(int client_sock, std::string client_sockpath, int size
     char* data = new char[MAX_COMMAND_SIZE];
     memset(data, '\0', MAX_COMMAND_SIZE);
 
-    if(recv(client_sock, data, size, flag) < 0) 
+    if(recv(client_sock, data, size, flag) < 0)
     {
         if(close(client_sock) < 0)
         {
@@ -486,12 +486,12 @@ char* receive_from_server(int client_sock, std::string client_sockpath, int size
         std::string what = "Receive From Server Failed -- ";
         what += strerror(errno);
         throw arboreal_cli_error(what,where);
-    }   
+    }
     return data;
 }
 //[================================================================================================]
 // Used by CLI::build()
-// 
+//
 // Main logic used to write Liason redable commands to the 'Command Buffer'
 // A lot of the commands are built with similar syntax (this is on purpose)
 // Thus it made sense to avoid duplication and use a helper function
@@ -512,7 +512,7 @@ void write_to_cmnd(char* cmnd, std::string input, int offset, int version, int m
         for(unsigned int i = 5; i < input.length(); i++)
         {
             if(input[i] == ' ') continue;
-            else if(input[i] != '/') 
+            else if(input[i] != '/')
             {
                 temp[temp_index] = input[i];
                 temp_index += 1;
@@ -620,7 +620,7 @@ void write_to_cmnd(char* cmnd, std::string input, int offset, int version, int m
 
     else if(version == NEW_AND_TAG)
     {
-        // For the 'new' commands that ALSO tag we must deal with two seperate lists/sets 
+        // For the 'new' commands that ALSO tag we must deal with two seperate lists/sets
         for(unsigned int i = 0; i < input.length(); i++)
         {
             if(ignore) // skip the command name, flag, and first bracket
@@ -679,8 +679,8 @@ void write_to_cmnd(char* cmnd, std::string input, int offset, int version, int m
     {
         // Same as the above except the multiple tags listed make part of a set
         // rather than a list ('{}' rather than '[]')
-        // 
-        
+        //
+
         // Boolean variables to control when to execute which particular logic
         bool bracket = true;
         bool brace = false;
@@ -706,11 +706,11 @@ void write_to_cmnd(char* cmnd, std::string input, int offset, int version, int m
             else if(input[i] == '-')
             {
                 // Save flag (to cmnd buffer) for later use as delimiter
-                // 
+                //
                 ignore = true; // ignore spaces after flag
                 bracket = false; // done with brackets
                 brace = true; // need to do braces next
-                              // 
+                              //
                 temp[temp_index] = input[i];
                 temp[temp_index+1] = input[i+1];
                 temp_index = 0;
@@ -762,7 +762,7 @@ void write_to_cmnd(char* cmnd, std::string input, int offset, int version, int m
         for(unsigned int i = 0; i < input.length(); i++)
         {
             // ignore the begin part i.e. the "merge" std::string of ther command
-            if(i < 6){continue;} 
+            if(i < 6){continue;}
             else
             {
                 if(input[i] == '-')
@@ -919,7 +919,7 @@ void write_to_cmnd(char* cmnd, std::string input, int offset, int version, int m
 
     else if(version == TAG_2)
     {
-        // Tag a file with multiple tags 
+        // Tag a file with multiple tags
         bool ignore = true;
         bool list = false;
 
@@ -1006,7 +1006,7 @@ void write_to_cmnd(char* cmnd, std::string input, int offset, int version, int m
     else if(version == TAG_3)
     {
         // tag multiple files with a single tag
-        
+
         bool ignore = true;
         bool list = false;
         bool arrow = false;
@@ -1037,10 +1037,10 @@ void write_to_cmnd(char* cmnd, std::string input, int offset, int version, int m
                     memset(temp,'\0',max_string_size);
                     temp_index = 0;
                     offset += max_string_size;
-                    list = false; // done with list 
+                    list = false; // done with list
                     arrow = true; // start writing flag
                 }
-                else 
+                else
                 {
                     // Write out list element
                     memcpy(cmnd + offset,temp,max_string_size);
@@ -1144,7 +1144,7 @@ bool check_name_size(std::string input, int cmnd_id, int max_string_size)
                 // Reset the count if finished with a filename or finished with the whole list
                 if(input[i] == ',' || (input[i] == ']' && !tags))
                 {
-                    count = 0; 
+                    count = 0;
                     continue;
                 }
 
@@ -1152,7 +1152,7 @@ bool check_name_size(std::string input, int cmnd_id, int max_string_size)
                 if(input[i] == '[')
                 {
                     count = 0;
-                    tags = true; 
+                    tags = true;
                     continue;
                 }
 
@@ -1188,7 +1188,7 @@ bool check_name_size(std::string input, int cmnd_id, int max_string_size)
             bool ready = false;
 
             // Only need to check new tagnames (last list)
-            // Since we skip the first list's '[' (we start at i = 12) 
+            // Since we skip the first list's '[' (we start at i = 12)
             //  we can use the last list's '[' as our delimiter to know when we start counting
             for(unsigned int i = 12; i < input.length(); i++)
             {
@@ -1235,7 +1235,7 @@ bool check_name_size(std::string input, int cmnd_id, int max_string_size)
         }
         case(20): // merge tag(s) into 1 (maybe new) tag
         {
-            // These are nice cause we can just skip to the arrow ('->') 
+            // These are nice cause we can just skip to the arrow ('->')
             //  and subtract remaining input length from our current index
             for(unsigned int i = 0; i < input.length(); i++)
             {
@@ -1314,4 +1314,3 @@ bool check_name_size(std::string input, int cmnd_id, int max_string_size)
 
 
 #endif
-

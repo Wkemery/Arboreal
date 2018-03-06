@@ -10,7 +10,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include "cli.h"
-
+#include <signal.h>
+#include "types.h"
 void clean(int signal)
 {
     std::cout << "SIGNAL: " << signal << std::endl;
@@ -94,6 +95,6 @@ int main(int argc, char** argv)
         std::cerr << "Invalid Arg Count - Must Define A Partition On Which To Initialize The Command Line Interface\n";
     }
     std::cout << "Command Line Interface Quit Successfully; Goodbye" << std::endl << std::endl;
-    
+
     return 0;
 }
