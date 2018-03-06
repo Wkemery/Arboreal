@@ -19,6 +19,7 @@ public:
   arboreal_exception(const char* what, const string& where);
   arboreal_exception(const string& what, const string& where);
   arboreal_exception(const string& what, const char* where);
+  ~arboreal_exception() throw();
   
   virtual const char* where() const;
 };
@@ -33,6 +34,7 @@ public:
   arboreal_runtime_error(const char* what, const string& where);
   arboreal_runtime_error(const string& what, const string& where);
   arboreal_runtime_error(const string& what, const char* where);
+  ~arboreal_runtime_error() throw();
 };
 
 class arboreal_cli_error : public arboreal_exception

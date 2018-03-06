@@ -10,6 +10,7 @@
 #include "diskmanager.h"
 #include "partitionmanager.h"
 #include "filesystem.h"
+#include "File.h"
 #include "Trees.h"
 #include <string>
 #include <string.h>
