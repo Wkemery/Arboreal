@@ -46,10 +46,6 @@ void sig_caught(int sig);
 
 
 
-
-
-
-
 /***************** BEGIN MAIN *******************/
 
 fd_set master_set;
@@ -184,7 +180,7 @@ int main(int argc, char** argv)
         std::string where = "[ConnectionDaemon.cpp::main()]: ";
         std::string what = "select() Failed -- ";
         what += strerror(errno);
-        throw error(where,what);
+        throw arboreal_daemon_error(where,what);
         break;
       }
       else if(rval == 0)
@@ -302,9 +298,9 @@ int main(int argc, char** argv)
 
 
   } // END try{}
-  catch(error& e)
+  catch(arboreal_daemon_error e)
   {
-    e.print();
+    std::cerr << e.where() << std::endl << e.what() << std::endl;
     printf("D: Closing All Open Connections and Exiting...\n");
     for (int i=0; i <= max_fid; ++i)
     {

@@ -101,6 +101,7 @@ void CLI::start()
    argv.push_back(const_cast<char*>(server_sockpath.c_str()));
    argv.push_back(const_cast<char*>(my_pid.c_str()));
    argv.push_back(const_cast<char*>(hostname.c_str()));
+   argv.push_back(const_cast<char*>(my_partition.c_str()));
    if(dbug) argv.push_back(const_cast<char*>("-d"));
    argv.push_back(NULL);
    if(dbug) std::cout << "C: Argument Vector Generated Successfully" << std::endl;

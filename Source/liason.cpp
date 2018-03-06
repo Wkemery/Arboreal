@@ -74,7 +74,9 @@ int main(int argc, char** argv)
     std::string client_sockpath = argv[0];
     std::string liaison_sockpath = argv[1];
     std::string hostname = argv[3];
+    std::string partition = argv[4];
     if(dbug) std::cout << "L: Filesystem Hostname: " << hostname << std::endl;
+    if(dbug) std::cout << "L: Partition Name: " << partition << std::endl;
     if(dbug) std::cout << "L: Client Socket Path: " << client_sockpath << std::endl;
     if(dbug) std::cout << "L: Liaison Socket Path: " << liaison_sockpath << std::endl;
     if(dbug) std::cout << "L: Daemon Port#: " << DMON_PORT << std::endl;
@@ -356,7 +358,7 @@ int main(int argc, char** argv)
     } // End try{}
     catch(arboreal_liaison_error e)
     {
-        std::cerr << e.where() << e.what() << std::endl;
+        std::cerr << e.where() << std::endl << e.what() << std::endl;
         std::string close_connection = "close";
         int offset = (sizeof(int) + max_string_size * 2 + 1) - close_connection.length();
         close_connection.insert(end(close_connection),offset,'\0');

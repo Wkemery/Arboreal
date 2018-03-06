@@ -41,7 +41,7 @@ int main(int argc, char** argv)
         }
         catch(arboreal_cli_error err)
         {
-            std::cerr << err.where();
+            std::cerr << err.where() <<std::endl;
             std::cerr << err.what() << std::endl;;
             exit(1);
         }
@@ -55,7 +55,7 @@ int main(int argc, char** argv)
         }
         catch(arboreal_cli_error err)
         {
-            std::cerr << err.where();
+            std::cerr << err.where() <<std::endl;
             std::cerr << err.what() << std::endl;;
             exit(1);
         }
@@ -69,7 +69,7 @@ int main(int argc, char** argv)
         }
         catch(arboreal_cli_error err)
         {
-            std::cerr << err.where();
+            std::cerr << err.where() <<std::endl;
             std::cerr << err.what() << std::endl;;
             exit(1);
         }
@@ -84,7 +84,7 @@ int main(int argc, char** argv)
         }
         catch(arboreal_cli_error err)
         {
-            std::cerr << err.where();
+            std::cerr << err.where() <<std::endl;
             std::cerr << err.what() << std::endl;;
             exit(1);
         }

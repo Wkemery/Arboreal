@@ -35,6 +35,34 @@ public:
   arboreal_runtime_error(const string& what, const char* where);
 };
 
+class arboreal_cli_error : public arboreal_exception
+{
+public:
+  arboreal_cli_error(const string& where, const string& what);
+  arboreal_cli_error(const char* what, const char* where);
+  arboreal_cli_error(const char* what, const string& where);
+  arboreal_cli_error(const string& what, const char* where);
+};
+
+class arboreal_liaison_error : public arboreal_exception
+{
+public:
+  arboreal_liaison_error(const string& where, const string& what);
+  arboreal_liaison_error(const char* what, const char* where);
+  arboreal_liaison_error(const char* what, const string& where);
+  arboreal_liaison_error(const string& what, const char* where);
+};
+
+class arboreal_daemon_error : public arboreal_exception
+{
+public:
+  arboreal_daemon_error(const string& where, const string& what);
+  arboreal_daemon_error(const char* what, const char* where);
+  arboreal_daemon_error(const char* what, const string& where);
+  arboreal_daemon_error(const string& what, const char* where);
+};
+
+
 class disk_error : public arboreal_runtime_error
 {
 public:
