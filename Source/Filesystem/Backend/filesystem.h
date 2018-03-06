@@ -4,11 +4,11 @@
  */
 
 #include "disk.h"
-#include "types.h"
+#include "../types.h"
 #include "diskmanager.h"
 #include "partitionmanager.h"
-#include "types.h"
-#include "Arboreal_Exceptions.h"
+#include "../types.h"
+#include "../Arboreal_Exceptions.h"
 
 #include "Trees.h"
 #include <vector>

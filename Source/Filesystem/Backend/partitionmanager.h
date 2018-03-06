@@ -1,6 +1,6 @@
 #include "disk.h"
 #include "diskmanager.h"
-#include "types.h"
+#include "../types.h"
 #ifndef PARTMANAGER_H
 #define PARTMANAGER_H
 class PartitionManager {

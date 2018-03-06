@@ -1,5 +1,5 @@
 #include "disk.h"
-#include "types.h"
+#include "../types.h"
 #include<vector>
 
 using std::vector;

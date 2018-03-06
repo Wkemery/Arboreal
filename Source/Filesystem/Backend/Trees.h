@@ -3,7 +3,7 @@
  * November 2017
  */
 
-#include "types.h"
+#include "../types.h"
 #include<unordered_map>
 #include<string>
 #include <unordered_set>

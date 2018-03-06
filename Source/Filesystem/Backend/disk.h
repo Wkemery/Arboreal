@@ -1,6 +1,6 @@
 
 // #include<unordered_map>
-#include "types.h"
+#include "../types.h"
 
 #ifndef DISK_H
 #define DISK_H
