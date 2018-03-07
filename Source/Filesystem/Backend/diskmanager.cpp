@@ -41,6 +41,7 @@ DiskManager::DiskManager(Disk *d)
     *  partition start pos - BlkNumType
     *  filenameSize limit - int
     */
+  
   int numPartitions = 0;
   memcpy(&numPartitions, buff, sizeof(int));
   offset+= sizeof(int);

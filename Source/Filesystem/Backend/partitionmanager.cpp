@@ -10,7 +10,7 @@ using std::endl;
 
 PartitionManager::PartitionManager(DiskManager *dm, string partitionName)
 {
-  myDM = dm;
+  _myDM = dm;
   _partitionName = partitionName;
   _partitionSize = dm->findPart(partitionName)->partitionSize;
   _partitionBlkStart = dm->findPart(partitionName)->partitionBlkStart;
@@ -135,17 +135,17 @@ void PartitionManager::returnDiskBlock(BlkNumType blknum)
 
 void PartitionManager::readDiskBlock(BlkNumType blknum, char *blkdata)
 {
-  myDM->readDiskBlock(_partitionName, blknum, blkdata);
+  _myDM->readDiskBlock(_partitionName, blknum, blkdata);
 }
 
 void PartitionManager::writeDiskBlock(BlkNumType blknum, char *blkdata)
 {
-  myDM->writeDiskBlock(_partitionName, blknum, blkdata);
+  _myDM->writeDiskBlock(_partitionName, blknum, blkdata);
 }
 
 size_t PartitionManager::getBlockSize()
 {
-  return myDM->getBlockSize();
+  return _myDM->getBlockSize();
 }
 
 int PartitionManager::get_file_name_size()
