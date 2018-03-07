@@ -1,6 +1,17 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//  diskManager.cpp
+//  DiskManager Source File
+//  Primary Author: Wyatt Emery
+//  For "Arboreal" Senior Design Project
+//
+//  Spring 2018
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "diskmanager.h"
 #include <iostream>
-#include<algorithm>
+#include <algorithm>
 #include <string.h>
 #include <cstdlib>
 #include <stdio.h>
@@ -14,12 +25,12 @@ bool operator==(const DiskPartition* lhs, const DiskPartition& rhs)
 
 DiskManager::DiskManager(Disk *d)
 {
-  myDisk = d;
+  _myDisk = d;
   int offset = 0;
   char* buff = new char[getBlockSize()];
   memset(buff, 0, getBlockSize());
   /* Read superblock from disk*/
-  myDisk->readDiskBlock(0, buff);
+  _myDisk->readDiskBlock(0, buff);
 
   /*successfully read superblock, read in partition info*/
   /*Layout -
@@ -79,7 +90,7 @@ void DiskManager::readDiskBlock(string partitionName, BlkNumType blknum, char *b
   BlkNumType absBlockNum = index + blknum;
   
   /* read block data from block using disk read command*/
-  myDisk->readDiskBlock(absBlockNum, blkdata);
+  _myDisk->readDiskBlock(absBlockNum, blkdata);
 }
 
 void DiskManager::writeDiskBlock(string partitionName, BlkNumType blknum, char *blkdata)
@@ -92,7 +103,7 @@ void DiskManager::writeDiskBlock(string partitionName, BlkNumType blknum, char *
   BlkNumType absBlockNum = index + blknum;
   
   /* write blkdata to block number using disk write command*/
-  myDisk->writeDiskBlock(absBlockNum, blkdata); 
+  _myDisk->writeDiskBlock(absBlockNum, blkdata); 
 }
 
 BlkNumType DiskManager::getPartitionSize(string partitionName)
@@ -114,4 +125,4 @@ DiskPartition* DiskManager::findPart(string partitionName)
 }
 
 size_t DiskManager::getBlockSize()
-{return myDisk->getBlockSize();}
+{return _myDisk->getBlockSize();}

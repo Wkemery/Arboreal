@@ -1,3 +1,15 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//  diskManager.h
+//  DiskManager Header File
+//  Primary Author: Wyatt Emery
+//  For "Arboreal" Senior Design Project
+//
+//  Spring 2018
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 #include "disk.h"
 #include "../types.h"
 #include<vector>
@@ -18,21 +30,67 @@ struct DiskPartition
 
 bool operator==(const DiskPartition* lhs, const DiskPartition& rhs);
 
-
 class DiskManager {
 private:
-  Disk *myDisk;
+  Disk *_myDisk;
   vector<DiskPartition*> _myPartitions;
   
-  public:
-    DiskManager(Disk *d);
-    ~DiskManager();
-    void readDiskBlock(string partitionName, BlkNumType blknum, char *blkdata);
-    void writeDiskBlock(string partitionName, BlkNumType blknum, char *blkdata);
-    size_t getBlockSize();
-    BlkNumType getPartitionSize(string partitionName);
-    DiskPartition* findPart(string partitionName);
+public:
+  /*!
+   * @param d Pointer to the Disk this will manage
+   */
+  DiskManager(Disk *d);
+  ~DiskManager();
+  
+  /** @name Accessor Functions
+   */
+  ///@{ 
+  
+  /*!
+   * Reads a block from the Disk. 
+   * @param partitionName the name of the partition to write the block to
+   * @param blknum the blocknumber to be read
+   * @param blkdata the buffer to put the read data. must be large enough to contain an entire block of data
+   * @sa PartitionManger::readDiskBlock() ParitionManager::readDiskBlock()
+   */
+  void readDiskBlock(string partitionName, BlkNumType blknum, char *blkdata);
+  
+  /*!
+   * @returns the blocksize of the Disk
+   */
+  size_t getBlockSize();
+  
+  /*!
+   * @param partitionName the name of the partition
+   * @returns the size of a partition in blocks
+   */
+  BlkNumType getPartitionSize(string partitionName);
+  
+  /*!
+    * @param partitionName the name of the partition
+    * @returns the size of a partition in blocks
+    */
+  DiskPartition* findPart(string partitionName);
     
+  ///@}
+  
+  /** @name Modifier Functions
+    */
+  ///@{ 
+  
+  
+  /*!
+    * Writes a block to the Disk. 
+    * @param partitionName the name of the partition to write the block to
+    * @param blknum the blocknumber to be written
+    * @param blkdata the buffer to write the data from. It Will write an entire block size of data.
+    * @sa PartitionManger::writeDiskBlock() ParitionManager::writeDiskBlock()
+    */
+  void writeDiskBlock(string partitionName, BlkNumType blknum, char *blkdata);
+  
+  
+  ///@}
+  
 };
 
 #endif
