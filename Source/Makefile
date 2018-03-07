@@ -22,9 +22,9 @@ FS_H=$(FS_PATH)/Arboreal_Exceptions.h $(FS_PATH)/File.h $(FS_PATH)/types.h
 FS_CPP=$(FS_PATH)/Arboreal_Exceptions.cpp $(FS_PATH)/File.cpp
 BACKEND_PATH=Filesystem/Backend
 BACKEND_H=$(BACKEND_PATH)/disk.h $(BACKEND_PATH)/diskmanager.h $(BACKEND_PATH)/filesystem.h \
-					$(BACKEND_PATH)/partitionmanager.h $(BACKEND_PATH)/Trees.h
+  $(BACKEND_PATH)/partitionmanager.h $(BACKEND_PATH)/Trees.h
 BACKEND_CPP=$(BACKEND_PATH)/disk.cpp $(BACKEND_PATH)/diskmanager.cpp $(BACKEND_PATH)/filesystem.cpp \
-						$(BACKEND_PATH)/partitionmanager.cpp $(BACKEND_PATH)/Trees.cpp
+  $(BACKEND_PATH)/partitionmanager.cpp $(BACKEND_PATH)/Trees.cpp
 
 CLI_PATH=CLI/
 CLI_H=$(CLI_PATH)/cli.h $(FS_PATH)/Arboreal_Exceptions.h

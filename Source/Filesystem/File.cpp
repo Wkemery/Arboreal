@@ -49,5 +49,6 @@ File* File::read_buff(char* serializedFile)
   memcpy(&attributes, serializedFile + offset, sizeof(FileAttributes));
   
   File* ret = new File(filename, tags, attributes);
+  return ret;
 }
   

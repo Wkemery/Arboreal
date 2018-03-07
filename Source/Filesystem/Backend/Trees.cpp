@@ -496,7 +496,7 @@ void RootTree::read_in(unordered_multimap<string, FileInfo*>* allFiles, RootTree
       memcpy(&blknum, buff + currentIndex.offset + _myPartitionManager->get_file_name_size() , sizeof(BlkNumType));
       if(blknum == 0)
       {
-        delete buff;
+        delete[] buff;
         throw arboreal_logic_error("blocknumber for a tag tree is zero as read from disk in the root tree", 
                                    "RootTree::read_in");
       }
@@ -835,7 +835,6 @@ void FileInfo::write_out()
       BlkNumType blknum = it->second->get_block_number();
       memcpy(contBlockData + offset, &blknum, sizeof(BlkNumType));
       offset+= sizeof(BlkNumType);
-      it++;
     }
     
     /*Write out the contBlock of tags*/
@@ -1135,9 +1134,6 @@ void FileInfo::update_file_size(size_t bytes)
 void FileInfo::set_access(){_myAttributes->set_access();}
 void FileInfo::set_edit(){_myAttributes->set_edit();}
 void FileInfo::set_permissions(char* perms){_myAttributes->set_permissions(perms);}
-
-
-
 
 string FileInfo::mangle()
 {
