@@ -1,12 +1,12 @@
-/*filesystem.h
+/*FileSystem.h
  * Arboreal
  * October, 12, 2017
  */
 
-#include "disk.h"
+#include "Disk.h"
 #include "../types.h"
-#include "diskmanager.h"
-#include "partitionmanager.h"
+#include "DiskManager.h"
+#include "PartitionManager.h"
 #include "../types.h"
 #include "../Arboreal_Exceptions.h"
 

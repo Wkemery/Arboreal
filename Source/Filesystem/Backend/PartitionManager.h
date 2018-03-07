@@ -1,5 +1,5 @@
-#include "disk.h"
-#include "diskmanager.h"
+#include "Disk.h"
+#include "DiskManager.h"
 #include "../types.h"
 #ifndef PARTMANAGER_H
 #define PARTMANAGER_H

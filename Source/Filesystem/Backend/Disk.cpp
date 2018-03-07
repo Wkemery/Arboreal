@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-//  disk.cpp
+//  Disk.cpp
 //  Disk Source File
 //  Primary Author: Wyatt Emery
 //  For "Arboreal" Senior Design Project
@@ -14,7 +14,7 @@
 #include <fstream>
 #include <cstdlib>
 #include <cstring>
-#include "disk.h"
+#include "Disk.h"
 
 using std::ofstream;
 using std::ifstream;

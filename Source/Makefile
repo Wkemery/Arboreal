@@ -13,18 +13,18 @@ XXFLAGS= -ggdb -Wall -std=c++11 -pthread
 
 
 OBJFILES=disk.o diskmanager.o partitionmanager.o filesystem.o Trees.o Arboreal_Exceptions.o File.o
-HFILES=disk.h diskmanager.h partitionmanager.h filesystem.h Trees.h Arboreal_Exceptions.h types.h File.h
-CPPFILES=disk.cpp diskmanager.cpp partitionmanager.cpp filesystem.cpp Trees.cpp Arboreal_Exceptions.cpp File.cpp\
+HFILES=Disk.h DiskManager.h PartitionManager.h FileSystem.h Trees.h Arboreal_Exceptions.h types.h File.h
+CPPFILES=Disk.cpp DiskManager.cpp PartitionManager.cpp FileSystem.cpp Trees.cpp Arboreal_Exceptions.cpp File.cpp\
          ConnectionDaemon.cpp
 
 FS_PATH=Filesystem
 FS_H=$(FS_PATH)/Arboreal_Exceptions.h $(FS_PATH)/File.h $(FS_PATH)/types.h
 FS_CPP=$(FS_PATH)/Arboreal_Exceptions.cpp $(FS_PATH)/File.cpp
 BACKEND_PATH=Filesystem/Backend
-BACKEND_H=$(BACKEND_PATH)/disk.h $(BACKEND_PATH)/diskmanager.h $(BACKEND_PATH)/filesystem.h \
-  $(BACKEND_PATH)/partitionmanager.h $(BACKEND_PATH)/Trees.h
-BACKEND_CPP=$(BACKEND_PATH)/disk.cpp $(BACKEND_PATH)/diskmanager.cpp $(BACKEND_PATH)/filesystem.cpp \
-  $(BACKEND_PATH)/partitionmanager.cpp $(BACKEND_PATH)/Trees.cpp
+BACKEND_H=$(BACKEND_PATH)/Disk.h $(BACKEND_PATH)/DiskManager.h $(BACKEND_PATH)/FileSystem.h \
+  $(BACKEND_PATH)/PartitionManager.h $(BACKEND_PATH)/Trees.h
+BACKEND_CPP=$(BACKEND_PATH)/Disk.cpp $(BACKEND_PATH)/DiskManager.cpp $(BACKEND_PATH)/FileSystem.cpp \
+  $(BACKEND_PATH)/PartitionManager.cpp $(BACKEND_PATH)/Trees.cpp
 
 CLI_PATH=CLI/
 CLI_H=$(CLI_PATH)/cli.h $(FS_PATH)/Arboreal_Exceptions.h
@@ -59,17 +59,17 @@ format: format.cpp
 driver.o: driver.cpp
 	$(CXX) $(XXFLAGS) -c driver.cpp
 
-disk.o: disk.cpp
-	$(CXX) $(XXFLAGS) -c disk.cpp
+disk.o: Disk.cpp
+	$(CXX) $(XXFLAGS) -c Disk.cpp
 
-diskmanager.o: diskmanager.cpp
-	$(CXX) $(XXFLAGS) -c diskmanager.cpp
+diskmanager.o: DiskManager.cpp
+	$(CXX) $(XXFLAGS) -c DiskManager.cpp
 
-partitionmanager.o: partitionmanager.cpp
-	$(CXX) $(XXFLAGS) -c partitionmanager.cpp
+partitionmanager.o: PartitionManager.cpp
+	$(CXX) $(XXFLAGS) -c PartitionManager.cpp
 
-filesystem.o: filesystem.cpp
-	$(CXX) $(XXFLAGS) -c filesystem.cpp
+filesystem.o: FileSystem.cpp
+	$(CXX) $(XXFLAGS) -c FileSystem.cpp
 
 Trees.o: Trees.cpp
 	$(CXX) $(XXFLAGS) -c Trees.cpp

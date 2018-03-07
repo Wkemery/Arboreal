@@ -1,4 +1,4 @@
-#include "partitionmanager.h"
+#include "PartitionManager.h"
 #include <iostream>
 #include <string.h>
 

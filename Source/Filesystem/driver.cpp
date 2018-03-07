@@ -6,10 +6,10 @@
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
-#include "Backend/disk.h"
-#include "Backend/diskmanager.h"
-#include "Backend/partitionmanager.h"
-#include "Backend/filesystem.h"
+#include "Backend/Disk.h"
+#include "Backend/DiskManager.h"
+#include "Backend/PartitionManager.h"
+#include "Backend/FileSystem.h"
 #include "File.h"
 #include "Backend/Trees.h"
 #include <string>

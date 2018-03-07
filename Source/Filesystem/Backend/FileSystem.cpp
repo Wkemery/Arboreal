@@ -1,9 +1,9 @@
-/*filesystem.cpp
+/*FileSystem.cpp
  * Arboreal
  * October, 12, 2017
  */
 
-#include "filesystem.h"
+#include "FileSystem.h"
 #include <time.h>
 #include <cstdlib>
 #include <iostream>

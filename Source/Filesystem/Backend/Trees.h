@@ -7,7 +7,7 @@
 #include<unordered_map>
 #include<string>
 #include <unordered_set>
-#include"partitionmanager.h"
+#include"PartitionManager.h"
 #include<queue>
 #include<algorithm>
 using std::queue;
