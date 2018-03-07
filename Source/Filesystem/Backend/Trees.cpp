@@ -1043,7 +1043,7 @@ void FileInfo::add_indirect_block(BlkNumType blknum, short level)
     }
     default:
     {
-      throw arboreal_logic_error("Invalid level " + level, "FileInfo::add_indirect_block");
+      throw arboreal_logic_error("Invalid level " + std::to_string(level), "FileInfo::add_indirect_block");
       
     }
   }
