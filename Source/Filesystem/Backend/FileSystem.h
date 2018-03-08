@@ -1,3 +1,15 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//  FileSystem.h
+//  FileSystem Header File
+//  Primary Author: Wyatt Emery
+//  For "Arboreal" Senior Design Project
+//
+//  Spring 2018
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 /*FileSystem.h
  * Arboreal
  * October, 12, 2017
@@ -13,8 +25,8 @@
 #include "Trees.h"
 #include <vector>
 #include <unordered_map>
-#include<map>
-#include<string>
+#include <map>
+#include <string>
 
 using std::unordered_map;
 using std::string;

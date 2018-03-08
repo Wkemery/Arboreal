@@ -12,7 +12,7 @@
 
 #include "Disk.h"
 #include "../types.h"
-#include<vector>
+#include <vector>
 
 using std::vector;
 #ifndef DISKMANAGER_H

@@ -1,7 +1,13 @@
-/*FileSystem.cpp
- * Arboreal
- * October, 12, 2017
- */
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//  FileSystem.cpp
+//  FileSystem Source File
+//  Primary Author: Wyatt Emery
+//  For "Arboreal" Senior Design Project
+//
+//  Spring 2018
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include "FileSystem.h"
 #include <time.h>
@@ -10,8 +16,8 @@
 #include <string.h>
 #include <algorithm>
 #include <unordered_map>
-#include<vector>
-#include<string>
+#include <vector>
+#include <string>
 using std::cerr;
 using std::string;
 using std::string;

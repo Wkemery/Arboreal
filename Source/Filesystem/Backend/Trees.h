@@ -1,15 +1,21 @@
-/*Trees.h
- * Arboreal
- * November 2017
- */
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//  Trees.h
+//  TreeObject Header File
+//  Primary Author: Wyatt Emery
+//  For "Arboreal" Senior Design Project
+//
+//  Spring 2018
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include "../types.h"
-#include<unordered_map>
-#include<string>
+#include <unordered_map>
+#include <string>
 #include <unordered_set>
-#include"PartitionManager.h"
-#include<queue>
-#include<algorithm>
+#include "PartitionManager.h"
+#include <queue>
+#include <algorithm>
 using std::queue;
 using std::unordered_map;
 using std::unordered_set;

@@ -1,8 +1,20 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//  File.cpp
+//  File Source File
+//  Primary Author: Wyatt Emery
+//  For "Arboreal" Senior Design Project
+//
+//  Spring 2018
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "File.h"
-#include<string>
-#include<string.h>
-using std::string;
+#include <string>
+#include <string.h>
 #include <vector>
+
+using std::string;
 using std::vector;
 
 File::File(string name, const vector<string>& tags, FileAttributes attributes): _name(name), _attributes(attributes)

@@ -1,17 +1,22 @@
-/*Trees.cpp
- * Arboreal
- * November 2017
- */
-
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//  Trees.cpp
+//  TreeObject Source File
+//  Primary Author: Wyatt Emery
+//  For "Arboreal" Senior Design Project
+//
+//  Spring 2018
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include "Trees.h"
 #include <time.h>
-#include<string>
-#include<string.h>
-#include<unordered_map>
-#include<iostream>
-#include<algorithm>
-#include<unordered_set>
+#include <string>
+#include <string.h>
+#include <unordered_map>
+#include <iostream>
+#include <algorithm>
+#include <unordered_set>
 using std::unordered_set;
 using std::vector;
 using std::cout;
