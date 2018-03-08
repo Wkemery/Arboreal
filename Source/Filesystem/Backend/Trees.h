@@ -486,6 +486,7 @@ public:
  * Will serialize a FileInfo object such that it can be read in as a File object
  * @param file the FileInfo object to be serialized
  * @returns The serialized object in string form
+ * @sa File::read_buff()
  */
   static string* serialize(FileInfo* file);
   
@@ -534,6 +535,9 @@ public:
 class RootTree : public TreeObject
 {
 public:
+  /*!
+   * @param pm the PartitionManager to be associated with the RootTree
+   */
   RootTree(PartitionManager* pm);
   
   ~RootTree();

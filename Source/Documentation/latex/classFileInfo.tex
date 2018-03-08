@@ -62,13 +62,10 @@ void \mbox{\hyperlink{classFileInfo_a377208012195dba0b24723837f6db39f}{set\+\_\+
 \begin{DoxyCompactList}\small\item\em sets the permisssions for this file \end{DoxyCompactList}\end{DoxyCompactItemize}
 \end{Indent}
 \subsection*{Static Public Member Functions}
-\begin{Indent}\textbf{ Static Functions}\par
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classFileInfo_a21307da38fc08eb6bed27e7210c2de2a}\label{classFileInfo_a21307da38fc08eb6bed27e7210c2de2a}} 
-static char $\ast$ {\bfseries serialize} (\mbox{\hyperlink{classFileInfo}{File\+Info}} $\ast$file, size\+\_\+t \&\mbox{\hyperlink{classTreeObject_a2a3dffe29aba8965c7977312c3721b50}{size}})
+static string $\ast$ \mbox{\hyperlink{classFileInfo_a64fc62c3e376dfd61088932d8b793589}{serialize}} (\mbox{\hyperlink{classFileInfo}{File\+Info}} $\ast$file)
 \end{DoxyCompactItemize}
-\end{Indent}
 \subsection*{Additional Inherited Members}
 
 
@@ -336,6 +333,23 @@ Will read in all object data from disk
 
 Implements \mbox{\hyperlink{classTreeObject_a722eb00e6782626281afc8eff92840a4}{Tree\+Object}}.
 
+\mbox{\Hypertarget{classFileInfo_a64fc62c3e376dfd61088932d8b793589}\label{classFileInfo_a64fc62c3e376dfd61088932d8b793589}} 
+\index{File\+Info@{File\+Info}!serialize@{serialize}}
+\index{serialize@{serialize}!File\+Info@{File\+Info}}
+\subsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily string $\ast$ File\+Info\+::serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classFileInfo}{File\+Info}} $\ast$}]{file }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Will serialize a \mbox{\hyperlink{classFileInfo}{File\+Info}} object such that it can be read in as a \mbox{\hyperlink{classFile}{File}} object 
+\begin{DoxyParams}{Parameters}
+{\em file} & the \mbox{\hyperlink{classFileInfo}{File\+Info}} object to be serialized \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The serialized object in string form 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\mbox{\hyperlink{classFile_abd409818fbd7f3a2319f2b27a62c8ccd}{File\+::read\+\_\+buff()}} 
+\end{DoxySeeAlso}
 \mbox{\Hypertarget{classFileInfo_aacaeadeeb41726f8cbea0b7cb1ff6a22}\label{classFileInfo_aacaeadeeb41726f8cbea0b7cb1ff6a22}} 
 \index{File\+Info@{File\+Info}!set\+\_\+access@{set\+\_\+access}}
 \index{set\+\_\+access@{set\+\_\+access}!File\+Info@{File\+Info}}

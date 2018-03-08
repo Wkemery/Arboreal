@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['file',['File',['../classFile.html#af29e498f601951f4ccf06f2fc3fb1f73',1,'File']]],
-  ['fileinfo',['FileInfo',['../classFileInfo.html#a3586bb4f50c4a0f63ff4ea0a1e56ce9c',1,'FileInfo']]],
-  ['find',['find',['../classTreeObject.html#a6a7477c29a06a9896df549f83611252f',1,'TreeObject']]],
-  ['findpart',['findPart',['../classDiskManager.html#a08375c254bc09c8351a4f96cb669f1ab',1,'DiskManager']]]
+  ['end',['end',['../classTreeObject.html#a2544e2976f3b75cd1f0230f5f908059c',1,'TreeObject']]],
+  ['erase',['erase',['../classTreeObject.html#a453b5df2a9ef7c6faad259900d574ee2',1,'TreeObject::erase()'],['../classFileInfo.html#ae058242283d3317eaf2b79428e6137f6',1,'FileInfo::erase()']]]
 ];

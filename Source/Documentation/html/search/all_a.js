@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['partitionmanager',['PartitionManager',['../classPartitionManager.html',1,'PartitionManager'],['../classPartitionManager.html#aa875b0b19b7ab9f32b02d2c9be383b75',1,'PartitionManager::PartitionManager()']]]
+  ['open_5ffile',['open_file',['../classFileSystem.html#a661ae7deb6fb32cdd7d631dfadb8c983',1,'FileSystem']]]
 ];

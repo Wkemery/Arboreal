@@ -462,12 +462,12 @@ void FileOpen::refresh()
 
 /***********************************************************************/
 
-FileSystem::FileSystem(DiskManager *dm, string fileSystemName)
+FileSystem::FileSystem(DiskManager *dm, string partitionName)
 {
-  _FSName = fileSystemName;
+  _FSName = partitionName;
   
   /* set partition manager for my partition */
-  _myPartitionManager = new PartitionManager(dm, fileSystemName);
+  _myPartitionManager = new PartitionManager(dm, partitionName);
   
   /*Read in the root tree*/
   _RootTree = new RootTree(_myPartitionManager);

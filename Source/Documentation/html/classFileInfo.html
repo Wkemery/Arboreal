@@ -63,6 +63,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="classFileInfo-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">FileInfo Class Reference</div>  </div>
@@ -164,10 +165,8 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr><td colspan="2"><div class="groupHeader">Static Functions</div></td></tr>
-<tr class="memitem:a21307da38fc08eb6bed27e7210c2de2a"><td class="memItemLeft" align="right" valign="top"><a id="a21307da38fc08eb6bed27e7210c2de2a"></a>
-static char *&#160;</td><td class="memItemRight" valign="bottom"><b>serialize</b> (<a class="el" href="classFileInfo.html">FileInfo</a> *file, size_t &amp;<a class="el" href="classTreeObject.html#a2a3dffe29aba8965c7977312c3721b50">size</a>)</td></tr>
-<tr class="separator:a21307da38fc08eb6bed27e7210c2de2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64fc62c3e376dfd61088932d8b793589"><td class="memItemLeft" align="right" valign="top">static string *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFileInfo.html#a64fc62c3e376dfd61088932d8b793589">serialize</a> (<a class="el" href="classFileInfo.html">FileInfo</a> *file)</td></tr>
+<tr class="separator:a64fc62c3e376dfd61088932d8b793589"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -737,6 +736,40 @@ BlkNumType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href
 </dl>
 
 <p>Implements <a class="el" href="classTreeObject.html#a722eb00e6782626281afc8eff92840a4">TreeObject</a>.</p>
+
+</div>
+</div>
+<a id="a64fc62c3e376dfd61088932d8b793589"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a64fc62c3e376dfd61088932d8b793589">&#9670;&nbsp;</a></span>serialize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string * FileInfo::serialize </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classFileInfo.html">FileInfo</a> *&#160;</td>
+          <td class="paramname"><em>file</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p class="">Will serialize a <a class="el" href="classFileInfo.html">FileInfo</a> object such that it can be read in as a <a class="el" href="classFile.html">File</a> object </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">file</td><td>the <a class="el" href="classFileInfo.html">FileInfo</a> object to be serialized </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The serialized object in string form </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classFile.html#abd409818fbd7f3a2319f2b27a62c8ccd">File::read_buff()</a> </dd></dl>
 
 </div>
 </div>

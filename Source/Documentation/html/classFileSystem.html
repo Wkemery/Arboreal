@@ -71,97 +71,980 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a3c9bf0d395385ca84319dcfaf9d005f4"><td class="memItemLeft" align="right" valign="top"><a id="a3c9bf0d395385ca84319dcfaf9d005f4"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>FileSystem</b> (<a class="el" href="classDiskManager.html">DiskManager</a> *dm, string fileSystemName)</td></tr>
-<tr class="separator:a3c9bf0d395385ca84319dcfaf9d005f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa5afeedec00348c8d1ab922dac9b086"><td class="memItemLeft" align="right" valign="top"><a id="afa5afeedec00348c8d1ab922dac9b086"></a>
-vector&lt; <a class="el" href="classFileInfo.html">FileInfo</a> * &gt; *&#160;</td><td class="memItemRight" valign="bottom"><b>tagSearch</b> (unordered_set&lt; string &gt; &amp;tags)</td></tr>
-<tr class="separator:afa5afeedec00348c8d1ab922dac9b086"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa02d1a13bb71582a2a4268d32cba5b6"><td class="memItemLeft" align="right" valign="top"><a id="aaa02d1a13bb71582a2a4268d32cba5b6"></a>
-vector&lt; <a class="el" href="classFileInfo.html">FileInfo</a> * &gt; *&#160;</td><td class="memItemRight" valign="bottom"><b>fileSearch</b> (string name)</td></tr>
-<tr class="separator:aaa02d1a13bb71582a2a4268d32cba5b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a678d743f3dc5b86c0b0c568795ec6a29"><td class="memItemLeft" align="right" valign="top"><a id="a678d743f3dc5b86c0b0c568795ec6a29"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>create_tag</b> (string tagName)</td></tr>
-<tr class="separator:a678d743f3dc5b86c0b0c568795ec6a29"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7c1842bbdfc9bb43c848b21886dac602"><td class="memItemLeft" align="right" valign="top"><a id="a7c1842bbdfc9bb43c848b21886dac602"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>delete_tag</b> (string tagName)</td></tr>
-<tr class="separator:a7c1842bbdfc9bb43c848b21886dac602"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a639cbe0f8e5be5793cc20594c493a2c8"><td class="memItemLeft" align="right" valign="top"><a id="a639cbe0f8e5be5793cc20594c493a2c8"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>merge_tags</b> (string tag1, string tag2)</td></tr>
-<tr class="separator:a639cbe0f8e5be5793cc20594c493a2c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a33649a9100b30978db80654ece6504f4"><td class="memItemLeft" align="right" valign="top"><a id="a33649a9100b30978db80654ece6504f4"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>tag_file</b> (<a class="el" href="classFileInfo.html">FileInfo</a> *file, unordered_set&lt; string &gt; tagsToAdd)</td></tr>
-<tr class="separator:a33649a9100b30978db80654ece6504f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac41a4071cfd0f4470f606e24c04740b7"><td class="memItemLeft" align="right" valign="top"><a id="ac41a4071cfd0f4470f606e24c04740b7"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>untag_file</b> (<a class="el" href="classFileInfo.html">FileInfo</a> *file, unordered_set&lt; string &gt; tagsToRemove, bool deleting=false)</td></tr>
-<tr class="separator:ac41a4071cfd0f4470f606e24c04740b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7d761ee2fa4d0c2965b5d3c7a75e7fdc"><td class="memItemLeft" align="right" valign="top"><a id="a7d761ee2fa4d0c2965b5d3c7a75e7fdc"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>tag_file</b> (vector&lt; string &gt; &amp;filePath, unordered_set&lt; string &gt; tags)</td></tr>
-<tr class="separator:a7d761ee2fa4d0c2965b5d3c7a75e7fdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0389071e782ad9972fbf599179d44c3e"><td class="memItemLeft" align="right" valign="top"><a id="a0389071e782ad9972fbf599179d44c3e"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>untag_file</b> (vector&lt; string &gt; &amp;filePath, unordered_set&lt; string &gt; tags)</td></tr>
-<tr class="separator:a0389071e782ad9972fbf599179d44c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaaecc65bbba05c3ede2e6246915e35d1"><td class="memItemLeft" align="right" valign="top"><a id="aaaecc65bbba05c3ede2e6246915e35d1"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>rename_tag</b> (string originalTagName, string newTagName)</td></tr>
-<tr class="separator:aaaecc65bbba05c3ede2e6246915e35d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2725ca065d28de5650e8368270743614"><td class="memItemLeft" align="right" valign="top"><a id="a2725ca065d28de5650e8368270743614"></a>
-<a class="el" href="classFileInfo.html">FileInfo</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>create_file</b> (string filename, unordered_set&lt; string &gt; &amp;tags)</td></tr>
-<tr class="separator:a2725ca065d28de5650e8368270743614"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2718456ead4a9e7244c33d4a86cb844c"><td class="memItemLeft" align="right" valign="top"><a id="a2718456ead4a9e7244c33d4a86cb844c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>delete_file</b> (<a class="el" href="classFileInfo.html">FileInfo</a> *file)</td></tr>
-<tr class="separator:a2718456ead4a9e7244c33d4a86cb844c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5620f645c0e25ade03f14ae81432654c"><td class="memItemLeft" align="right" valign="top"><a id="a5620f645c0e25ade03f14ae81432654c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>delete_file</b> (vector&lt; string &gt; &amp;filePath)</td></tr>
-<tr class="separator:a5620f645c0e25ade03f14ae81432654c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a02953b33b71137de70b8c8e48c59ff77"><td class="memItemLeft" align="right" valign="top"><a id="a02953b33b71137de70b8c8e48c59ff77"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>write_changes</b> ()</td></tr>
+<tr class="memitem:a1466c6d1e9636cecd44f0dd68ef710b5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFileSystem.html#a1466c6d1e9636cecd44f0dd68ef710b5">FileSystem</a> (<a class="el" href="classDiskManager.html">DiskManager</a> *dm, string partitionName)</td></tr>
+<tr class="separator:a1466c6d1e9636cecd44f0dd68ef710b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a02953b33b71137de70b8c8e48c59ff77"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFileSystem.html#a02953b33b71137de70b8c8e48c59ff77">write_changes</a> ()</td></tr>
 <tr class="separator:a02953b33b71137de70b8c8e48c59ff77"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a466ab4fcc5f4aeba5131c8700e006d4c"><td class="memItemLeft" align="right" valign="top"><a id="a466ab4fcc5f4aeba5131c8700e006d4c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>rename_file</b> (vector&lt; string &gt; &amp;originalFilePath, string newFileName)</td></tr>
-<tr class="separator:a466ab4fcc5f4aeba5131c8700e006d4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a661ae7deb6fb32cdd7d631dfadb8c983"><td class="memItemLeft" align="right" valign="top"><a id="a661ae7deb6fb32cdd7d631dfadb8c983"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>open_file</b> (vector&lt; string &gt; &amp;filePath, char mode)</td></tr>
-<tr class="separator:a661ae7deb6fb32cdd7d631dfadb8c983"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac4e7222e78b352ed442f2cfd99d46a98"><td class="memItemLeft" align="right" valign="top"><a id="ac4e7222e78b352ed442f2cfd99d46a98"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>close_file</b> (unsigned int fileDesc)</td></tr>
-<tr class="separator:ac4e7222e78b352ed442f2cfd99d46a98"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa8bf729b0bad79a4c2fda24c2d1def7f"><td class="memItemLeft" align="right" valign="top"><a id="aa8bf729b0bad79a4c2fda24c2d1def7f"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><b>read_file</b> (unsigned int fileDesc, char *data, size_t len)</td></tr>
-<tr class="separator:aa8bf729b0bad79a4c2fda24c2d1def7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad8658ccba0a17c3e9b22d05aeb498c99"><td class="memItemLeft" align="right" valign="top"><a id="ad8658ccba0a17c3e9b22d05aeb498c99"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><b>write_file</b> (unsigned int fileDesc, const char *data, size_t len)</td></tr>
-<tr class="separator:ad8658ccba0a17c3e9b22d05aeb498c99"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3362c6b1cabc3497ac41542e94837e4a"><td class="memItemLeft" align="right" valign="top"><a id="a3362c6b1cabc3497ac41542e94837e4a"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><b>append_file</b> (unsigned int fileDesc, const char *data, size_t len)</td></tr>
-<tr class="separator:a3362c6b1cabc3497ac41542e94837e4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af2d28b0d03e0595b686be6bc0e3e22b5"><td class="memItemLeft" align="right" valign="top"><a id="af2d28b0d03e0595b686be6bc0e3e22b5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>seek_file_absolute</b> (unsigned int fileDesc, size_t offset)</td></tr>
-<tr class="separator:af2d28b0d03e0595b686be6bc0e3e22b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aee77ad983da8db9fe2de0c13b91fe977"><td class="memItemLeft" align="right" valign="top"><a id="aee77ad983da8db9fe2de0c13b91fe977"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>seek_file_relative</b> (unsigned int fileDesc, long int offset)</td></tr>
-<tr class="separator:aee77ad983da8db9fe2de0c13b91fe977"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a32588895aea79931d4a09deb89ec2659"><td class="memItemLeft" align="right" valign="top"><a id="a32588895aea79931d4a09deb89ec2659"></a>
-<a class="el" href="classAttributes.html">Attributes</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>get_attributes</b> (vector&lt; string &gt; &amp;filePath)</td></tr>
-<tr class="separator:a32588895aea79931d4a09deb89ec2659"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abfa7e15fdbeaaaabfa3a542625c90b83"><td class="memItemLeft" align="right" valign="top"><a id="abfa7e15fdbeaaaabfa3a542625c90b83"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>set_permissions</b> (vector&lt; string &gt; &amp;filePath, char *perms)</td></tr>
-<tr class="separator:abfa7e15fdbeaaaabfa3a542625c90b83"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6c6e95f60417b02601b72e951e7108f8"><td class="memItemLeft" align="right" valign="top"><a id="a6c6e95f60417b02601b72e951e7108f8"></a>
-<a class="el" href="classFileInfo.html">FileInfo</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>path_to_file</b> (vector&lt; string &gt; &amp;path)</td></tr>
+<tr class="memitem:a6c6e95f60417b02601b72e951e7108f8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classFileInfo.html">FileInfo</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFileSystem.html#a6c6e95f60417b02601b72e951e7108f8">path_to_file</a> (vector&lt; string &gt; &amp;path)</td></tr>
 <tr class="separator:a6c6e95f60417b02601b72e951e7108f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0444400c1e30b7981123ba6991798c86"><td class="memItemLeft" align="right" valign="top"><a id="a0444400c1e30b7981123ba6991798c86"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>get_file_name_size</b> ()</td></tr>
+<tr class="memitem:a0444400c1e30b7981123ba6991798c86"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFileSystem.html#a0444400c1e30b7981123ba6991798c86">get_file_name_size</a> ()</td></tr>
 <tr class="separator:a0444400c1e30b7981123ba6991798c86"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ec00d561e8d7510358618b249cc60d1"><td class="memItemLeft" align="right" valign="top"><a id="a8ec00d561e8d7510358618b249cc60d1"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>print_root</b> ()</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Tag Operations</div></td></tr>
+<tr class="memitem:afa5afeedec00348c8d1ab922dac9b086"><td class="memItemLeft" align="right" valign="top">vector&lt; <a class="el" href="classFileInfo.html">FileInfo</a> * &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFileSystem.html#afa5afeedec00348c8d1ab922dac9b086">tagSearch</a> (unordered_set&lt; string &gt; &amp;tags)</td></tr>
+<tr class="separator:afa5afeedec00348c8d1ab922dac9b086"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a678d743f3dc5b86c0b0c568795ec6a29"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFileSystem.html#a678d743f3dc5b86c0b0c568795ec6a29">create_tag</a> (string tagName)</td></tr>
+<tr class="separator:a678d743f3dc5b86c0b0c568795ec6a29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c1842bbdfc9bb43c848b21886dac602"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFileSystem.html#a7c1842bbdfc9bb43c848b21886dac602">delete_tag</a> (string tagName)</td></tr>
+<tr class="separator:a7c1842bbdfc9bb43c848b21886dac602"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a639cbe0f8e5be5793cc20594c493a2c8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFileSystem.html#a639cbe0f8e5be5793cc20594c493a2c8">merge_tags</a> (string tag1, string tag2)</td></tr>
+<tr class="separator:a639cbe0f8e5be5793cc20594c493a2c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33649a9100b30978db80654ece6504f4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFileSystem.html#a33649a9100b30978db80654ece6504f4">tag_file</a> (<a class="el" href="classFileInfo.html">FileInfo</a> *file, unordered_set&lt; string &gt; tagsToAdd)</td></tr>
+<tr class="separator:a33649a9100b30978db80654ece6504f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d761ee2fa4d0c2965b5d3c7a75e7fdc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFileSystem.html#a7d761ee2fa4d0c2965b5d3c7a75e7fdc">tag_file</a> (vector&lt; string &gt; &amp;filePath, unordered_set&lt; string &gt; tags)</td></tr>
+<tr class="separator:a7d761ee2fa4d0c2965b5d3c7a75e7fdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac41a4071cfd0f4470f606e24c04740b7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFileSystem.html#ac41a4071cfd0f4470f606e24c04740b7">untag_file</a> (<a class="el" href="classFileInfo.html">FileInfo</a> *file, unordered_set&lt; string &gt; tagsToRemove, bool deleting=false)</td></tr>
+<tr class="separator:ac41a4071cfd0f4470f606e24c04740b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0389071e782ad9972fbf599179d44c3e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFileSystem.html#a0389071e782ad9972fbf599179d44c3e">untag_file</a> (vector&lt; string &gt; &amp;filePath, unordered_set&lt; string &gt; tags)</td></tr>
+<tr class="separator:a0389071e782ad9972fbf599179d44c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaaecc65bbba05c3ede2e6246915e35d1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFileSystem.html#aaaecc65bbba05c3ede2e6246915e35d1">rename_tag</a> (string originalTagName, string newTagName)</td></tr>
+<tr class="separator:aaaecc65bbba05c3ede2e6246915e35d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">File Operations</div></td></tr>
+<tr class="memitem:aaa02d1a13bb71582a2a4268d32cba5b6"><td class="memItemLeft" align="right" valign="top">vector&lt; <a class="el" href="classFileInfo.html">FileInfo</a> * &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFileSystem.html#aaa02d1a13bb71582a2a4268d32cba5b6">fileSearch</a> (string name)</td></tr>
+<tr class="separator:aaa02d1a13bb71582a2a4268d32cba5b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2725ca065d28de5650e8368270743614"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classFileInfo.html">FileInfo</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFileSystem.html#a2725ca065d28de5650e8368270743614">create_file</a> (string filename, unordered_set&lt; string &gt; &amp;tags)</td></tr>
+<tr class="separator:a2725ca065d28de5650e8368270743614"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a661ae7deb6fb32cdd7d631dfadb8c983"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFileSystem.html#a661ae7deb6fb32cdd7d631dfadb8c983">open_file</a> (vector&lt; string &gt; &amp;filePath, char mode)</td></tr>
+<tr class="separator:a661ae7deb6fb32cdd7d631dfadb8c983"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4e7222e78b352ed442f2cfd99d46a98"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFileSystem.html#ac4e7222e78b352ed442f2cfd99d46a98">close_file</a> (unsigned int fileDesc)</td></tr>
+<tr class="separator:ac4e7222e78b352ed442f2cfd99d46a98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8bf729b0bad79a4c2fda24c2d1def7f"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFileSystem.html#aa8bf729b0bad79a4c2fda24c2d1def7f">read_file</a> (unsigned int fileDesc, char *data, size_t len)</td></tr>
+<tr class="separator:aa8bf729b0bad79a4c2fda24c2d1def7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8658ccba0a17c3e9b22d05aeb498c99"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFileSystem.html#ad8658ccba0a17c3e9b22d05aeb498c99">write_file</a> (unsigned int fileDesc, const char *data, size_t len)</td></tr>
+<tr class="separator:ad8658ccba0a17c3e9b22d05aeb498c99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3362c6b1cabc3497ac41542e94837e4a"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFileSystem.html#a3362c6b1cabc3497ac41542e94837e4a">append_file</a> (unsigned int fileDesc, const char *data, size_t len)</td></tr>
+<tr class="separator:a3362c6b1cabc3497ac41542e94837e4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2d28b0d03e0595b686be6bc0e3e22b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFileSystem.html#af2d28b0d03e0595b686be6bc0e3e22b5">seek_file_absolute</a> (unsigned int fileDesc, size_t offset)</td></tr>
+<tr class="separator:af2d28b0d03e0595b686be6bc0e3e22b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee77ad983da8db9fe2de0c13b91fe977"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFileSystem.html#aee77ad983da8db9fe2de0c13b91fe977">seek_file_relative</a> (unsigned int fileDesc, long int offset)</td></tr>
+<tr class="separator:aee77ad983da8db9fe2de0c13b91fe977"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a466ab4fcc5f4aeba5131c8700e006d4c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFileSystem.html#a466ab4fcc5f4aeba5131c8700e006d4c">rename_file</a> (vector&lt; string &gt; &amp;originalFilePath, string newFileName)</td></tr>
+<tr class="separator:a466ab4fcc5f4aeba5131c8700e006d4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32588895aea79931d4a09deb89ec2659"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAttributes.html">Attributes</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFileSystem.html#a32588895aea79931d4a09deb89ec2659">get_attributes</a> (vector&lt; string &gt; &amp;filePath)</td></tr>
+<tr class="separator:a32588895aea79931d4a09deb89ec2659"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abfa7e15fdbeaaaabfa3a542625c90b83"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFileSystem.html#abfa7e15fdbeaaaabfa3a542625c90b83">set_permissions</a> (vector&lt; string &gt; &amp;filePath, char *perms)</td></tr>
+<tr class="separator:abfa7e15fdbeaaaabfa3a542625c90b83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2718456ead4a9e7244c33d4a86cb844c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFileSystem.html#a2718456ead4a9e7244c33d4a86cb844c">delete_file</a> (<a class="el" href="classFileInfo.html">FileInfo</a> *file)</td></tr>
+<tr class="separator:a2718456ead4a9e7244c33d4a86cb844c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5620f645c0e25ade03f14ae81432654c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFileSystem.html#a5620f645c0e25ade03f14ae81432654c">delete_file</a> (vector&lt; string &gt; &amp;filePath)</td></tr>
+<tr class="separator:a5620f645c0e25ade03f14ae81432654c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Debug Functions</div></td></tr>
+<tr class="memitem:a8ec00d561e8d7510358618b249cc60d1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFileSystem.html#a8ec00d561e8d7510358618b249cc60d1">print_root</a> ()</td></tr>
 <tr class="separator:a8ec00d561e8d7510358618b249cc60d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab76af13f044c3ca52e8503a9695685bd"><td class="memItemLeft" align="right" valign="top"><a id="ab76af13f044c3ca52e8503a9695685bd"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>print_tags</b> ()</td></tr>
+<tr class="memitem:ab76af13f044c3ca52e8503a9695685bd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFileSystem.html#ab76af13f044c3ca52e8503a9695685bd">print_tags</a> ()</td></tr>
 <tr class="separator:ab76af13f044c3ca52e8503a9695685bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d51e4c73c71d91d94ae91355f36bdb1"><td class="memItemLeft" align="right" valign="top"><a id="a8d51e4c73c71d91d94ae91355f36bdb1"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>print_files</b> ()</td></tr>
+<tr class="memitem:a8d51e4c73c71d91d94ae91355f36bdb1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFileSystem.html#a8d51e4c73c71d91d94ae91355f36bdb1">print_files</a> ()</td></tr>
 <tr class="separator:a8d51e4c73c71d91d94ae91355f36bdb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a1466c6d1e9636cecd44f0dd68ef710b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1466c6d1e9636cecd44f0dd68ef710b5">&#9670;&nbsp;</a></span>FileSystem()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">FileSystem::FileSystem </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classDiskManager.html">DiskManager</a> *&#160;</td>
+          <td class="paramname"><em>dm</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>partitionName</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dm</td><td>the <a class="el" href="classDisk.html">Disk</a> manager for the disk that this Filesystem will be accessing </td></tr>
+    <tr><td class="paramname">partitionName</td><td>the name of the partition that this <a class="el" href="classFileSystem.html">FileSystem</a> will be associated with </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a3362c6b1cabc3497ac41542e94837e4a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3362c6b1cabc3497ac41542e94837e4a">&#9670;&nbsp;</a></span>append_file()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t FileSystem::append_file </td>
+          <td>(</td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>fileDesc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">Will Append a number of bytes to an open file. The file must have been opened with write permissions. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fileDesc</td><td>the file descriptor returned from open_file </td></tr>
+    <tr><td class="paramname">data</td><td>a buffer to be read from to write to the file. must be at least of len size </td></tr>
+    <tr><td class="paramname">len</td><td>the number of bytes to write from data. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ac4e7222e78b352ed442f2cfd99d46a98"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4e7222e78b352ed442f2cfd99d46a98">&#9670;&nbsp;</a></span>close_file()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FileSystem::close_file </td>
+          <td>(</td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>fileDesc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">Will close a file. the <a class="el" href="classFile.html">File</a> must have been opened. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fileDesc</td><td>the file descriptor returned from open_file </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a2725ca065d28de5650e8368270743614"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2725ca065d28de5650e8368270743614">&#9670;&nbsp;</a></span>create_file()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classFileInfo.html">FileInfo</a> * FileSystem::create_file </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>filename</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unordered_set&lt; string &gt; &amp;&#160;</td>
+          <td class="paramname"><em>tags</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">Will create a new file with the specified name and tags. The new file must not already exist. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename</td><td>the name of the new file </td></tr>
+    <tr><td class="paramname">tags</td><td>the tag set to tag the file with. If empty, will be tagged with default. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a <a class="el" href="classFileInfo.html">FileInfo</a> to the created file, in case the calling code needs it </dd></dl>
+
+</div>
+</div>
+<a id="a678d743f3dc5b86c0b0c568795ec6a29"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a678d743f3dc5b86c0b0c568795ec6a29">&#9670;&nbsp;</a></span>create_tag()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FileSystem::create_tag </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>tagName</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">Will create a new tag if that tag name does not already exist </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tagName</td><td>the name of the Tag to create </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a2718456ead4a9e7244c33d4a86cb844c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2718456ead4a9e7244c33d4a86cb844c">&#9670;&nbsp;</a></span>delete_file() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FileSystem::delete_file </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classFileInfo.html">FileInfo</a> *&#160;</td>
+          <td class="paramname"><em>file</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">Delete a particular file. The file must exist. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">file</td><td>the <a class="el" href="classFileInfo.html">FileInfo</a> object to be deleted. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classFileSystem.html#a5620f645c0e25ade03f14ae81432654c">delete_file(vector&lt;string&gt;&amp;)</a> </dd></dl>
+
+</div>
+</div>
+<a id="a5620f645c0e25ade03f14ae81432654c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5620f645c0e25ade03f14ae81432654c">&#9670;&nbsp;</a></span>delete_file() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FileSystem::delete_file </td>
+          <td>(</td>
+          <td class="paramtype">vector&lt; string &gt; &amp;&#160;</td>
+          <td class="paramname"><em>filePath</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">Delete a particular file. The file must exist. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filePath</td><td>the full path to the file to you wish to delete </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classFileSystem.html#a2718456ead4a9e7244c33d4a86cb844c">delete_file(FileInfo*)</a> </dd></dl>
+
+</div>
+</div>
+<a id="a7c1842bbdfc9bb43c848b21886dac602"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7c1842bbdfc9bb43c848b21886dac602">&#9670;&nbsp;</a></span>delete_tag()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FileSystem::delete_tag </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>tagName</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">Will delete the specified tag only if it has no files associated with it(it is empty) and it does in fact exist. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tagName</td><td>the name of the tag to be deleted </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aaa02d1a13bb71582a2a4268d32cba5b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa02d1a13bb71582a2a4268d32cba5b6">&#9670;&nbsp;</a></span>fileSearch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">vector&lt; <a class="el" href="classFileInfo.html">FileInfo</a> * &gt; * FileSystem::fileSearch </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">Will search for a specified file name. Searches the entire <a class="el" href="classFileSystem.html">FileSystem</a> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>the name of the file to search for. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a pointer to a vector of <a class="el" href="classFileInfo.html">FileInfo</a> objects that have the specified name. This should be freed by the calling code </dd></dl>
+
+</div>
+</div>
+<a id="a32588895aea79931d4a09deb89ec2659"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a32588895aea79931d4a09deb89ec2659">&#9670;&nbsp;</a></span>get_attributes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAttributes.html">Attributes</a> * FileSystem::get_attributes </td>
+          <td>(</td>
+          <td class="paramtype">vector&lt; string &gt; &amp;&#160;</td>
+          <td class="paramname"><em>filePath</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">Will search for a file and return its <a class="el" href="classAttributes.html">Attributes</a> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filePath</td><td>the full path to the file to you wish to get the <a class="el" href="classAttributes.html">Attributes</a> of </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the <a class="el" href="classAttributes.html">Attributes</a> object associated with a particular file. </dd></dl>
+
+</div>
+</div>
+<a id="a0444400c1e30b7981123ba6991798c86"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0444400c1e30b7981123ba6991798c86">&#9670;&nbsp;</a></span>get_file_name_size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int FileSystem::get_file_name_size </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>the Maximum file name size for the partition associated with this <a class="el" href="classFileSystem.html">FileSystem</a> object </dd></dl>
+
+</div>
+</div>
+<a id="a639cbe0f8e5be5793cc20594c493a2c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a639cbe0f8e5be5793cc20594c493a2c8">&#9670;&nbsp;</a></span>merge_tags()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FileSystem::merge_tags </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>tag1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>tag2</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">TODO: description and Function </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tag1</td><td></td></tr>
+    <tr><td class="paramname">tag</td><td>2 </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a661ae7deb6fb32cdd7d631dfadb8c983"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a661ae7deb6fb32cdd7d631dfadb8c983">&#9670;&nbsp;</a></span>open_file()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int FileSystem::open_file </td>
+          <td>(</td>
+          <td class="paramtype">vector&lt; string &gt; &amp;&#160;</td>
+          <td class="paramname"><em>filePath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char&#160;</td>
+          <td class="paramname"><em>mode</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">Will open a file. The file must exist. There is a cap on the Maximum number of open files. You can open the same file as many times as you want. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filePath</td><td>the full path including the file name as the last entry </td></tr>
+    <tr><td class="paramname">mode</td><td>the mode to open the file with. r, w, or x. x is read and write ability. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a file descriptor that can later be used to reference the opened file </dd></dl>
+
+</div>
+</div>
+<a id="a6c6e95f60417b02601b72e951e7108f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c6e95f60417b02601b72e951e7108f8">&#9670;&nbsp;</a></span>path_to_file()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classFileInfo.html">FileInfo</a> * FileSystem::path_to_file </td>
+          <td>(</td>
+          <td class="paramtype">vector&lt; string &gt; &amp;&#160;</td>
+          <td class="paramname"><em>path</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">Will find a <a class="el" href="classFileInfo.html">FileInfo</a> object if it exists, given the full path </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>The full path to the file. The filename must be the last entry in the vector. an file name with no path is considered to be in the default path </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the found <a class="el" href="classFileInfo.html">FileInfo</a> object </dd></dl>
+
+</div>
+</div>
+<a id="a8d51e4c73c71d91d94ae91355f36bdb1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d51e4c73c71d91d94ae91355f36bdb1">&#9670;&nbsp;</a></span>print_files()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FileSystem::print_files </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">Print out all files and their blocknumbers </p>
+
+</div>
+</div>
+<a id="a8ec00d561e8d7510358618b249cc60d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8ec00d561e8d7510358618b249cc60d1">&#9670;&nbsp;</a></span>print_root()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FileSystem::print_root </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">Print out the root Tree </p>
+
+</div>
+</div>
+<a id="ab76af13f044c3ca52e8503a9695685bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab76af13f044c3ca52e8503a9695685bd">&#9670;&nbsp;</a></span>print_tags()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FileSystem::print_tags </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">Print out all the tag trees and their contents </p>
+
+</div>
+</div>
+<a id="aa8bf729b0bad79a4c2fda24c2d1def7f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa8bf729b0bad79a4c2fda24c2d1def7f">&#9670;&nbsp;</a></span>read_file()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t FileSystem::read_file </td>
+          <td>(</td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>fileDesc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">Will read a number of bytes from an open file. The file must have been opened with read permissions. If you read past the end of the file, EOF will be tripped and you cannot continue reading. will return all the data up to that point </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fileDesc</td><td>the file descriptor returned from open_file </td></tr>
+    <tr><td class="paramname">data</td><td>a buffer to store the read data must be at least len size </td></tr>
+    <tr><td class="paramname">len</td><td>the number of bytes to read. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a466ab4fcc5f4aeba5131c8700e006d4c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a466ab4fcc5f4aeba5131c8700e006d4c">&#9670;&nbsp;</a></span>rename_file()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FileSystem::rename_file </td>
+          <td>(</td>
+          <td class="paramtype">vector&lt; string &gt; &amp;&#160;</td>
+          <td class="paramname"><em>originalFilePath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>newFileName</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">Will rename a file. The new file must not already exist in the emulated directory </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">originalFilePath</td><td>the full path to the file to be renamed </td></tr>
+    <tr><td class="paramname">newFileName</td><td>the name that the file will be renamed to. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aaaecc65bbba05c3ede2e6246915e35d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaaecc65bbba05c3ede2e6246915e35d1">&#9670;&nbsp;</a></span>rename_tag()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FileSystem::rename_tag </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>originalTagName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>newTagName</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">Will rename the tag. The tag must exist. The new tag name must already exist. This is a slow operation. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">originalTagName</td><td>the name of the tag to be renamed </td></tr>
+    <tr><td class="paramname">newTagName</td><td>the new tag name for that tag </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="af2d28b0d03e0595b686be6bc0e3e22b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2d28b0d03e0595b686be6bc0e3e22b5">&#9670;&nbsp;</a></span>seek_file_absolute()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FileSystem::seek_file_absolute </td>
+          <td>(</td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>fileDesc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>offset</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">Seek to an absolute position in the file. Will trip EOF if the offset is larger than the file size. The posistion in the file is indexed at 1. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fileDesc</td><td>the file descriptor returned from open_file </td></tr>
+    <tr><td class="paramname">offset</td><td>the absolute position in the file to seek to. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aee77ad983da8db9fe2de0c13b91fe977"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee77ad983da8db9fe2de0c13b91fe977">&#9670;&nbsp;</a></span>seek_file_relative()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FileSystem::seek_file_relative </td>
+          <td>(</td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>fileDesc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">long int&#160;</td>
+          <td class="paramname"><em>offset</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">Seek to a relative position in the file. Will trip EOF if you try to seek too far in a direction. The posistion in the file is indexed at 1. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fileDesc</td><td>the file descriptor returned from open_file </td></tr>
+    <tr><td class="paramname">offset</td><td>the relative position in the file to seek to. may be a negative number. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="abfa7e15fdbeaaaabfa3a542625c90b83"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abfa7e15fdbeaaaabfa3a542625c90b83">&#9670;&nbsp;</a></span>set_permissions()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FileSystem::set_permissions </td>
+          <td>(</td>
+          <td class="paramtype">vector&lt; string &gt; &amp;&#160;</td>
+          <td class="paramname"><em>filePath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>perms</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">Set the permissions for a file. The format is defined in <a class="el" href="classFileInfo.html">FileInfo</a>. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filePath</td><td>the full path to the file to you wish to get the <a class="el" href="classAttributes.html">Attributes</a> of </td></tr>
+    <tr><td class="paramname">perms</td><td>the permissions following the correct format to set to this file </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classFileInfo.html#a377208012195dba0b24723837f6db39f" title="sets the permisssions for this file ">FileInfo::set_permissions()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a33649a9100b30978db80654ece6504f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33649a9100b30978db80654ece6504f4">&#9670;&nbsp;</a></span>tag_file() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FileSystem::tag_file </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classFileInfo.html">FileInfo</a> *&#160;</td>
+          <td class="paramname"><em>file</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unordered_set&lt; string &gt;&#160;</td>
+          <td class="paramname"><em>tagsToAdd</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">Will tag a file with the specified tags. If some or all of the tags do not exist, a warning is printed and the operation continues. The file must exist. The file that would be created by adding tags must not already exist. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">file</td><td>the FileInfo* that will be tagged with the specified tags </td></tr>
+    <tr><td class="paramname">tagsToAdd</td><td>the tags that will be added to the file's tag set </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classFileSystem.html#a7d761ee2fa4d0c2965b5d3c7a75e7fdc">tag_file(vector&lt;string&gt;&amp;, unordered_set&lt;string&gt;)</a> </dd></dl>
+
+</div>
+</div>
+<a id="a7d761ee2fa4d0c2965b5d3c7a75e7fdc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d761ee2fa4d0c2965b5d3c7a75e7fdc">&#9670;&nbsp;</a></span>tag_file() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FileSystem::tag_file </td>
+          <td>(</td>
+          <td class="paramtype">vector&lt; string &gt; &amp;&#160;</td>
+          <td class="paramname"><em>filePath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unordered_set&lt; string &gt;&#160;</td>
+          <td class="paramname"><em>tags</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">An alternate way to tag a file using a file path instead.Will tag a file with the specified tags. If some or all of the tags do not exist, a warning is printed and the operation continues. The file must exist. The file that would be created by adding tags must not already exist. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filePath</td><td>the FileInfo* that will be tagged with the specified tags </td></tr>
+    <tr><td class="paramname">tagsToAdd</td><td>the tags that will be added to the file's tag set </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classFileSystem.html#a33649a9100b30978db80654ece6504f4">tag_file(FileInfo*, unordered_set&lt;string&gt;)</a> </dd></dl>
+
+</div>
+</div>
+<a id="afa5afeedec00348c8d1ab922dac9b086"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa5afeedec00348c8d1ab922dac9b086">&#9670;&nbsp;</a></span>tagSearch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">vector&lt; <a class="el" href="classFileInfo.html">FileInfo</a> * &gt; * FileSystem::tagSearch </td>
+          <td>(</td>
+          <td class="paramtype">unordered_set&lt; string &gt; &amp;&#160;</td>
+          <td class="paramname"><em>tags</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">Search for files by tags. The tag search is an "and" operation, meaning the files returned will have at least all the specified tags. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tags</td><td>the tags that the files will be tagged with in the return vector </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a pointer to a vector of the <a class="el" href="classFileInfo.html">FileInfo</a> objects which then can be serialized. The returned vector should be freed by the calling code </dd></dl>
+
+</div>
+</div>
+<a id="ac41a4071cfd0f4470f606e24c04740b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac41a4071cfd0f4470f606e24c04740b7">&#9670;&nbsp;</a></span>untag_file() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FileSystem::untag_file </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classFileInfo.html">FileInfo</a> *&#160;</td>
+          <td class="paramname"><em>file</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unordered_set&lt; string &gt;&#160;</td>
+          <td class="paramname"><em>tagsToRemove</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>deleting</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">Will remove tags associated with the specified file. The tags must exist. The file must exist. The file that would be created by removing tags must not already exist. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">file</td><td>the FileInfo* that will be untagged with the specified tags </td></tr>
+    <tr><td class="paramname">tagsToRemove</td><td>the tags that will be removed from the file's tag set </td></tr>
+    <tr><td class="paramname">deleting</td><td>this is a tag only used by the <a class="el" href="classFileSystem.html">FileSystem</a> itself for deleting a file </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classFileSystem.html#a33649a9100b30978db80654ece6504f4">tag_file(FileInfo*, unordered_set&lt;string&gt;)</a> </dd></dl>
+
+</div>
+</div>
+<a id="a0389071e782ad9972fbf599179d44c3e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0389071e782ad9972fbf599179d44c3e">&#9670;&nbsp;</a></span>untag_file() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FileSystem::untag_file </td>
+          <td>(</td>
+          <td class="paramtype">vector&lt; string &gt; &amp;&#160;</td>
+          <td class="paramname"><em>filePath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unordered_set&lt; string &gt;&#160;</td>
+          <td class="paramname"><em>tags</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">Will remove tags associated with the specified file. The tags must exist. The file must exist. The file that would be created by removing tags must not already exist. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">file</td><td>the FileInfo* that will be untagged with the specified tags </td></tr>
+    <tr><td class="paramname">tagsToRemove</td><td>the tags that will be removed from the file's tag set </td></tr>
+    <tr><td class="paramname">deleting</td><td>this is a tag only used by the <a class="el" href="classFileSystem.html">FileSystem</a> itself for deleting a file </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classFileSystem.html#a33649a9100b30978db80654ece6504f4">tag_file(FileInfo*, unordered_set&lt;string&gt;)</a> </dd></dl>
+
+</div>
+</div>
+<a id="a02953b33b71137de70b8c8e48c59ff77"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a02953b33b71137de70b8c8e48c59ff77">&#9670;&nbsp;</a></span>write_changes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FileSystem::write_changes </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">Since the <a class="el" href="classFileSystem.html">FileSystem</a> is journaling. The changes to tag trees and the Root tree are only written out when this is called. <a class="el" href="classFile.html">File</a> Operations are not journaled. </p>
+
+</div>
+</div>
+<a id="ad8658ccba0a17c3e9b22d05aeb498c99"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad8658ccba0a17c3e9b22d05aeb498c99">&#9670;&nbsp;</a></span>write_file()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t FileSystem::write_file </td>
+          <td>(</td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>fileDesc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">Will write a number of bytes to an open file. The file must have been opened with write permissions. You can write past the EOF with no problems. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fileDesc</td><td>the file descriptor returned from open_file </td></tr>
+    <tr><td class="paramname">data</td><td>a buffer to be read from to write to the file. must be at least of len size </td></tr>
+    <tr><td class="paramname">len</td><td>the number of bytes to write from data. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>Filesystem/Backend/<a class="el" href="FileSystem_8h_source.html">FileSystem.h</a></li>
 <li>Filesystem/Backend/FileSystem.cpp</li>
