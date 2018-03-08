@@ -3,39 +3,98 @@
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classDisk_a373ad35b28630c9b3c9c93c61a76b5bd}\label{classDisk_a373ad35b28630c9b3c9c93c61a76b5bd}} 
-{\bfseries Disk} (Blk\+Num\+Type numblocks, size\+\_\+t blksz, char $\ast$fname)
-\item 
-\mbox{\Hypertarget{classDisk_a2598cdd9013bdbb1213afa878c567daa}\label{classDisk_a2598cdd9013bdbb1213afa878c567daa}} 
-void {\bfseries read\+Disk\+Block} (Blk\+Num\+Type blknum, char $\ast$blkdata)
-\item 
-\mbox{\Hypertarget{classDisk_a5d335138f56e6b87c8ebc4b6473183e7}\label{classDisk_a5d335138f56e6b87c8ebc4b6473183e7}} 
-void {\bfseries write\+Disk\+Block} (Blk\+Num\+Type blknum, char $\ast$blkdata)
-\item 
-\mbox{\Hypertarget{classDisk_a1c149b57524fe4e7ae7c8643309e0501}\label{classDisk_a1c149b57524fe4e7ae7c8643309e0501}} 
-size\+\_\+t {\bfseries get\+Block\+Size} ()
-\item 
-\mbox{\Hypertarget{classDisk_a3c61119ce5707dd4ab039201590a7c22}\label{classDisk_a3c61119ce5707dd4ab039201590a7c22}} 
-int {\bfseries get\+Block\+Count} ()
+\mbox{\hyperlink{classDisk_a5be49d1002da046d1890df1b088900e4}{Disk}} (Blk\+Num\+Type numblocks, size\+\_\+t block\+Size, char $\ast$location)
 \end{DoxyCompactItemize}
-\subsection*{Public Attributes}
+\begin{Indent}\textbf{ Modifier Functions}\par
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classDisk_a22a41d8d4018d75d02631242c9cb6033}\label{classDisk_a22a41d8d4018d75d02631242c9cb6033}} 
-Blk\+Num\+Type {\bfseries disk\+Size}
-\item 
-\mbox{\Hypertarget{classDisk_a24a6b49356fb31072eac0d6bc379bf59}\label{classDisk_a24a6b49356fb31072eac0d6bc379bf59}} 
-size\+\_\+t {\bfseries blk\+Size}
-\item 
-\mbox{\Hypertarget{classDisk_a1267cb656ec862beb0781e45e26e1a4b}\label{classDisk_a1267cb656ec862beb0781e45e26e1a4b}} 
-Blk\+Num\+Type {\bfseries blk\+Count}
-\item 
-\mbox{\Hypertarget{classDisk_a1cdd421815b740f1fbe4587279436b6d}\label{classDisk_a1cdd421815b740f1fbe4587279436b6d}} 
-char $\ast$ {\bfseries disk\+Filename}
+void \mbox{\hyperlink{classDisk_a5d335138f56e6b87c8ebc4b6473183e7}{write\+Disk\+Block}} (Blk\+Num\+Type blknum, char $\ast$blkdata)
 \end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Accessor Functions}\par
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classDisk_a2598cdd9013bdbb1213afa878c567daa}{read\+Disk\+Block}} (Blk\+Num\+Type blknum, char $\ast$blkdata)
+\item 
+size\+\_\+t \mbox{\hyperlink{classDisk_a1c149b57524fe4e7ae7c8643309e0501}{get\+Block\+Size}} ()
+\item 
+int \mbox{\hyperlink{classDisk_a3c61119ce5707dd4ab039201590a7c22}{get\+Block\+Count}} ()
+\end{DoxyCompactItemize}
+\end{Indent}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classDisk_a5be49d1002da046d1890df1b088900e4}\label{classDisk_a5be49d1002da046d1890df1b088900e4}} 
+\index{Disk@{Disk}!Disk@{Disk}}
+\index{Disk@{Disk}!Disk@{Disk}}
+\subsubsection{\texorpdfstring{Disk()}{Disk()}}
+{\footnotesize\ttfamily Disk\+::\+Disk (\begin{DoxyParamCaption}\item[{Blk\+Num\+Type}]{numblocks,  }\item[{size\+\_\+t}]{block\+Size,  }\item[{char $\ast$}]{location }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em numblocks} & the number of blocks on the \mbox{\hyperlink{classDisk}{Disk}} \\
+\hline
+{\em blocksize} & the block size for \mbox{\hyperlink{classDisk}{Disk}} blocks \\
+\hline
+{\em location} & the location of the \mbox{\hyperlink{classDisk}{Disk}} \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classDisk_a3c61119ce5707dd4ab039201590a7c22}\label{classDisk_a3c61119ce5707dd4ab039201590a7c22}} 
+\index{Disk@{Disk}!get\+Block\+Count@{get\+Block\+Count}}
+\index{get\+Block\+Count@{get\+Block\+Count}!Disk@{Disk}}
+\subsubsection{\texorpdfstring{get\+Block\+Count()}{getBlockCount()}}
+{\footnotesize\ttfamily int Disk\+::get\+Block\+Count (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+the number of blocks on the entire \mbox{\hyperlink{classDisk}{Disk}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classDisk_a1c149b57524fe4e7ae7c8643309e0501}\label{classDisk_a1c149b57524fe4e7ae7c8643309e0501}} 
+\index{Disk@{Disk}!get\+Block\+Size@{get\+Block\+Size}}
+\index{get\+Block\+Size@{get\+Block\+Size}!Disk@{Disk}}
+\subsubsection{\texorpdfstring{get\+Block\+Size()}{getBlockSize()}}
+{\footnotesize\ttfamily size\+\_\+t Disk\+::get\+Block\+Size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+the blocksize of the \mbox{\hyperlink{classDisk}{Disk}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classDisk_a2598cdd9013bdbb1213afa878c567daa}\label{classDisk_a2598cdd9013bdbb1213afa878c567daa}} 
+\index{Disk@{Disk}!read\+Disk\+Block@{read\+Disk\+Block}}
+\index{read\+Disk\+Block@{read\+Disk\+Block}!Disk@{Disk}}
+\subsubsection{\texorpdfstring{read\+Disk\+Block()}{readDiskBlock()}}
+{\footnotesize\ttfamily void Disk\+::read\+Disk\+Block (\begin{DoxyParamCaption}\item[{Blk\+Num\+Type}]{blknum,  }\item[{char $\ast$}]{blkdata }\end{DoxyParamCaption})}
+
+Reads a block from the \mbox{\hyperlink{classDisk}{Disk}}. 
+\begin{DoxyParams}{Parameters}
+{\em blknum} & the blocknumber to be read \\
+\hline
+{\em blkdata} & the buffer to put the read data. must be large enough to contain an entire block of data \\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+Partition\+Manger\+::read\+Disk\+Block() Parition\+Manager\+::read\+Disk\+Block() 
+\end{DoxySeeAlso}
+\mbox{\Hypertarget{classDisk_a5d335138f56e6b87c8ebc4b6473183e7}\label{classDisk_a5d335138f56e6b87c8ebc4b6473183e7}} 
+\index{Disk@{Disk}!write\+Disk\+Block@{write\+Disk\+Block}}
+\index{write\+Disk\+Block@{write\+Disk\+Block}!Disk@{Disk}}
+\subsubsection{\texorpdfstring{write\+Disk\+Block()}{writeDiskBlock()}}
+{\footnotesize\ttfamily void Disk\+::write\+Disk\+Block (\begin{DoxyParamCaption}\item[{Blk\+Num\+Type}]{blknum,  }\item[{char $\ast$}]{blkdata }\end{DoxyParamCaption})}
+
+Writes a block to the \mbox{\hyperlink{classDisk}{Disk}}. 
+\begin{DoxyParams}{Parameters}
+{\em blknum} & the blocknumber to be written \\
+\hline
+{\em blkdata} & the buffer to write the data from. It Will write an entire block size of data. \\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+Partition\+Manger\+::write\+Disk\+Block() Parition\+Manager\+::write\+Disk\+Block() 
+\end{DoxySeeAlso}
 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-disk.\+h\item 
-disk.\+cpp\end{DoxyCompactItemize}
+Filesystem/\+Backend/Disk.\+h\item 
+Filesystem/\+Backend/Disk.\+cpp\end{DoxyCompactItemize}

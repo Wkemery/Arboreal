@@ -63,7 +63,6 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classDisk-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Disk Class Reference</div>  </div>
@@ -72,40 +71,174 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a373ad35b28630c9b3c9c93c61a76b5bd"><td class="memItemLeft" align="right" valign="top"><a id="a373ad35b28630c9b3c9c93c61a76b5bd"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Disk</b> (BlkNumType numblocks, size_t blksz, char *fname)</td></tr>
-<tr class="separator:a373ad35b28630c9b3c9c93c61a76b5bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2598cdd9013bdbb1213afa878c567daa"><td class="memItemLeft" align="right" valign="top"><a id="a2598cdd9013bdbb1213afa878c567daa"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>readDiskBlock</b> (BlkNumType blknum, char *blkdata)</td></tr>
-<tr class="separator:a2598cdd9013bdbb1213afa878c567daa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d335138f56e6b87c8ebc4b6473183e7"><td class="memItemLeft" align="right" valign="top"><a id="a5d335138f56e6b87c8ebc4b6473183e7"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>writeDiskBlock</b> (BlkNumType blknum, char *blkdata)</td></tr>
+<tr class="memitem:a5be49d1002da046d1890df1b088900e4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDisk.html#a5be49d1002da046d1890df1b088900e4">Disk</a> (BlkNumType numblocks, size_t blockSize, char *location)</td></tr>
+<tr class="separator:a5be49d1002da046d1890df1b088900e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Modifier Functions</div></td></tr>
+<tr class="memitem:a5d335138f56e6b87c8ebc4b6473183e7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDisk.html#a5d335138f56e6b87c8ebc4b6473183e7">writeDiskBlock</a> (BlkNumType blknum, char *blkdata)</td></tr>
 <tr class="separator:a5d335138f56e6b87c8ebc4b6473183e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1c149b57524fe4e7ae7c8643309e0501"><td class="memItemLeft" align="right" valign="top"><a id="a1c149b57524fe4e7ae7c8643309e0501"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><b>getBlockSize</b> ()</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Accessor Functions</div></td></tr>
+<tr class="memitem:a2598cdd9013bdbb1213afa878c567daa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDisk.html#a2598cdd9013bdbb1213afa878c567daa">readDiskBlock</a> (BlkNumType blknum, char *blkdata)</td></tr>
+<tr class="separator:a2598cdd9013bdbb1213afa878c567daa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c149b57524fe4e7ae7c8643309e0501"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDisk.html#a1c149b57524fe4e7ae7c8643309e0501">getBlockSize</a> ()</td></tr>
 <tr class="separator:a1c149b57524fe4e7ae7c8643309e0501"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c61119ce5707dd4ab039201590a7c22"><td class="memItemLeft" align="right" valign="top"><a id="a3c61119ce5707dd4ab039201590a7c22"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>getBlockCount</b> ()</td></tr>
+<tr class="memitem:a3c61119ce5707dd4ab039201590a7c22"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDisk.html#a3c61119ce5707dd4ab039201590a7c22">getBlockCount</a> ()</td></tr>
 <tr class="separator:a3c61119ce5707dd4ab039201590a7c22"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:a22a41d8d4018d75d02631242c9cb6033"><td class="memItemLeft" align="right" valign="top"><a id="a22a41d8d4018d75d02631242c9cb6033"></a>
-BlkNumType&#160;</td><td class="memItemRight" valign="bottom"><b>diskSize</b></td></tr>
-<tr class="separator:a22a41d8d4018d75d02631242c9cb6033"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a24a6b49356fb31072eac0d6bc379bf59"><td class="memItemLeft" align="right" valign="top"><a id="a24a6b49356fb31072eac0d6bc379bf59"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><b>blkSize</b></td></tr>
-<tr class="separator:a24a6b49356fb31072eac0d6bc379bf59"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1267cb656ec862beb0781e45e26e1a4b"><td class="memItemLeft" align="right" valign="top"><a id="a1267cb656ec862beb0781e45e26e1a4b"></a>
-BlkNumType&#160;</td><td class="memItemRight" valign="bottom"><b>blkCount</b></td></tr>
-<tr class="separator:a1267cb656ec862beb0781e45e26e1a4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1cdd421815b740f1fbe4587279436b6d"><td class="memItemLeft" align="right" valign="top"><a id="a1cdd421815b740f1fbe4587279436b6d"></a>
-char *&#160;</td><td class="memItemRight" valign="bottom"><b>diskFilename</b></td></tr>
-<tr class="separator:a1cdd421815b740f1fbe4587279436b6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a5be49d1002da046d1890df1b088900e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5be49d1002da046d1890df1b088900e4">&#9670;&nbsp;</a></span>Disk()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Disk::Disk </td>
+          <td>(</td>
+          <td class="paramtype">BlkNumType&#160;</td>
+          <td class="paramname"><em>numblocks</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>blockSize</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>location</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">numblocks</td><td>the number of blocks on the <a class="el" href="classDisk.html">Disk</a> </td></tr>
+    <tr><td class="paramname">blocksize</td><td>the block size for <a class="el" href="classDisk.html">Disk</a> blocks </td></tr>
+    <tr><td class="paramname">location</td><td>the location of the <a class="el" href="classDisk.html">Disk</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a3c61119ce5707dd4ab039201590a7c22"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c61119ce5707dd4ab039201590a7c22">&#9670;&nbsp;</a></span>getBlockCount()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Disk::getBlockCount </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>the number of blocks on the entire <a class="el" href="classDisk.html">Disk</a> </dd></dl>
+
+</div>
+</div>
+<a id="a1c149b57524fe4e7ae7c8643309e0501"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c149b57524fe4e7ae7c8643309e0501">&#9670;&nbsp;</a></span>getBlockSize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t Disk::getBlockSize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>the blocksize of the <a class="el" href="classDisk.html">Disk</a> </dd></dl>
+
+</div>
+</div>
+<a id="a2598cdd9013bdbb1213afa878c567daa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2598cdd9013bdbb1213afa878c567daa">&#9670;&nbsp;</a></span>readDiskBlock()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Disk::readDiskBlock </td>
+          <td>(</td>
+          <td class="paramtype">BlkNumType&#160;</td>
+          <td class="paramname"><em>blknum</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>blkdata</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">Reads a block from the <a class="el" href="classDisk.html">Disk</a>. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">blknum</td><td>the blocknumber to be read </td></tr>
+    <tr><td class="paramname">blkdata</td><td>the buffer to put the read data. must be large enough to contain an entire block of data </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd>PartitionManger::readDiskBlock() ParitionManager::readDiskBlock() </dd></dl>
+
+</div>
+</div>
+<a id="a5d335138f56e6b87c8ebc4b6473183e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5d335138f56e6b87c8ebc4b6473183e7">&#9670;&nbsp;</a></span>writeDiskBlock()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Disk::writeDiskBlock </td>
+          <td>(</td>
+          <td class="paramtype">BlkNumType&#160;</td>
+          <td class="paramname"><em>blknum</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>blkdata</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">Writes a block to the <a class="el" href="classDisk.html">Disk</a>. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">blknum</td><td>the blocknumber to be written </td></tr>
+    <tr><td class="paramname">blkdata</td><td>the buffer to write the data from. It Will write an entire block size of data. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd>PartitionManger::writeDiskBlock() ParitionManager::writeDiskBlock() </dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li><a class="el" href="disk_8h_source.html">disk.h</a></li>
-<li>disk.cpp</li>
+<li>Filesystem/Backend/<a class="el" href="Disk_8h_source.html">Disk.h</a></li>
+<li>Filesystem/Backend/Disk.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

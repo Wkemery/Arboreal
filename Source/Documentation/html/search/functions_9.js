@@ -1,11 +1,7 @@
 var searchData=
 [
-  ['set_5flast_5fentry',['set_last_entry',['../classTreeObject.html#a2ec94bc9d2647275049ddf2a70b8510e',1,'TreeObject']]],
-  ['set_5fname',['set_name',['../classTreeObject.html#a8ae7e42502b4652102e0b3c4c4e1671b',1,'TreeObject']]],
-  ['setaccess',['setAccess',['../classAttributes.html#ae4861b7312f8619a6b2988b9456c4604',1,'Attributes::setAccess()'],['../classFileInfo.html#aba223845c8a1e7091626e6d241e5f069',1,'FileInfo::setAccess()']]],
-  ['setcreationtime',['setCreationTime',['../classAttributes.html#a4caf96b812e181975045a172fe0dc438',1,'Attributes']]],
-  ['setedit',['setEdit',['../classAttributes.html#aa091d2dba315a124ea4a14308f2553c6',1,'Attributes::setEdit()'],['../classFileInfo.html#a911b6fe0c76dbeb57613f447106b4d6a',1,'FileInfo::setEdit()']]],
-  ['setowner',['setOwner',['../classAttributes.html#a56ab60c4bad40e1a47e096526f3ce57a',1,'Attributes']]],
-  ['setpermissions',['setPermissions',['../classAttributes.html#a15a4348203635ff53a6cd8c2d52c68e3',1,'Attributes::setPermissions()'],['../classFileInfo.html#ab2b69861ecef1b8e0f465906c8eaa7a7',1,'FileInfo::setPermissions()']]],
-  ['size',['size',['../classTreeObject.html#a2a3dffe29aba8965c7977312c3721b50',1,'TreeObject']]]
+  ['read_5fbuff',['read_buff',['../classFile.html#abd409818fbd7f3a2319f2b27a62c8ccd',1,'File']]],
+  ['read_5fin',['read_in',['../classAttributes.html#ac33fbd6871ef707878690be92b9fc7ec',1,'Attributes::read_in()'],['../classTreeObject.html#a722eb00e6782626281afc8eff92840a4',1,'TreeObject::read_in()'],['../classFileInfo.html#a2bf60d4be97347f3d7a15cf839afca7d',1,'FileInfo::read_in()'],['../classTagTree.html#af86ee6713fa03c3909e04608512b8b62',1,'TagTree::read_in()'],['../classRootTree.html#a658eed78be67e890de2283af960dc532',1,'RootTree::read_in()']]],
+  ['readdiskblock',['readDiskBlock',['../classDisk.html#a2598cdd9013bdbb1213afa878c567daa',1,'Disk::readDiskBlock()'],['../classDiskManager.html#afda24be04fb85711236a4d5905a5ad1c',1,'DiskManager::readDiskBlock()'],['../classPartitionManager.html#a7aca34c24770b7b9290c489475655ada',1,'PartitionManager::readDiskBlock()']]],
+  ['returndiskblock',['returnDiskBlock',['../classPartitionManager.html#a3ce9b50aa5e7d9063919fc55d125246b',1,'PartitionManager']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['modification',['Modification',['../classModification.html',1,'']]]
+  ['partitionmanager',['PartitionManager',['../classPartitionManager.html',1,'']]]
 ];

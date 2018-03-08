@@ -57,9 +57,7 @@ public:
   ///@}
   
   /**********************************************************************************************************************/
-  /** @name Static Functions 
-   */
-  ///@{   
+
   
   /*!
    * Will take a char* buffer and create a File object from it. The buffer must have been serialized in the correct format
@@ -69,7 +67,6 @@ public:
    */
   static File* read_buff(char* serializedFile);
   
-  ///@}
 };
 
 #endif

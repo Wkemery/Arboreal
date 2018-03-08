@@ -1187,7 +1187,7 @@ string FileInfo::mangle(unordered_set<string>& tags)
   return mangle(tagVec);
 }
 
-char* FileInfo::serialize(FileInfo* file, size_t& size)
+string* FileInfo::serialize(FileInfo* file)
 {
   /*Format:
    * size of name
@@ -1238,8 +1238,9 @@ char* FileInfo::serialize(FileInfo* file, size_t& size)
   memcpy(ret + offset, &attributes, sizeof(FileAttributes));
   offset+= sizeof(FileAttributes);
   
-  size = offset;
-  return ret;
+  string* stringRet = new string(ret, offset);
+  delete[] ret;
+  return stringRet;
 }
 
 

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['updatefilesize',['updateFileSize',['../classFileInfo.html#ae0389f01dbb6b4d365d1d062a9f5b146',1,'FileInfo']]],
-  ['updatesize',['updateSize',['../classAttributes.html#a6ed2adf53cd6131c2b22a2782cd0bdcf',1,'Attributes']]]
+  ['tagtree',['TagTree',['../classTagTree.html#a80b23fa47a18727a248c3db1e8b2ed83',1,'TagTree']]],
+  ['treeobject',['TreeObject',['../classTreeObject.html#a1ef90156e6b45ddef28c59a89cd1097d',1,'TreeObject']]]
 ];

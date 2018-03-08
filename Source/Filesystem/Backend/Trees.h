@@ -481,13 +481,15 @@ public:
   ///@}
   
 /**********************************************************************************************************************/
-  /** @name Static Functions 
-   */
-  ///@{   
+ 
+/*!
+ * Will serialize a FileInfo object such that it can be read in as a File object
+ * @param file the FileInfo object to be serialized
+ * @returns The serialized object in string form
+ */
+  static string* serialize(FileInfo* file);
   
-  static char* serialize(FileInfo* file, size_t& size);
-  
-  ///@}
+
   
 /**********************************************************************************************************************/
 

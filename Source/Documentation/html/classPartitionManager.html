@@ -71,37 +71,231 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aa875b0b19b7ab9f32b02d2c9be383b75"><td class="memItemLeft" align="right" valign="top"><a id="aa875b0b19b7ab9f32b02d2c9be383b75"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>PartitionManager</b> (<a class="el" href="classDiskManager.html">DiskManager</a> *dm, string partitionName)</td></tr>
+<tr class="memitem:aa875b0b19b7ab9f32b02d2c9be383b75"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPartitionManager.html#aa875b0b19b7ab9f32b02d2c9be383b75">PartitionManager</a> (<a class="el" href="classDiskManager.html">DiskManager</a> *dm, string partitionName)</td></tr>
 <tr class="separator:aa875b0b19b7ab9f32b02d2c9be383b75"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7aca34c24770b7b9290c489475655ada"><td class="memItemLeft" align="right" valign="top"><a id="a7aca34c24770b7b9290c489475655ada"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>readDiskBlock</b> (BlkNumType blknum, char *blkdata)</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Accessor Functions</div></td></tr>
+<tr class="memitem:a7aca34c24770b7b9290c489475655ada"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPartitionManager.html#a7aca34c24770b7b9290c489475655ada">readDiskBlock</a> (BlkNumType blknum, char *blkdata)</td></tr>
 <tr class="separator:a7aca34c24770b7b9290c489475655ada"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a114d5d4f8d90b6e9207b09d99e246bed"><td class="memItemLeft" align="right" valign="top"><a id="a114d5d4f8d90b6e9207b09d99e246bed"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>writeDiskBlock</b> (BlkNumType blknum, char *blkdata)</td></tr>
-<tr class="separator:a114d5d4f8d90b6e9207b09d99e246bed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa1026e17e77f154d7034fafd188bda02"><td class="memItemLeft" align="right" valign="top"><a id="aa1026e17e77f154d7034fafd188bda02"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><b>getBlockSize</b> ()</td></tr>
+<tr class="memitem:aa1026e17e77f154d7034fafd188bda02"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPartitionManager.html#aa1026e17e77f154d7034fafd188bda02">getBlockSize</a> ()</td></tr>
 <tr class="separator:aa1026e17e77f154d7034fafd188bda02"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a682ce5963a31cf7009455cb1c229b26a"><td class="memItemLeft" align="right" valign="top"><a id="a682ce5963a31cf7009455cb1c229b26a"></a>
-BlkNumType&#160;</td><td class="memItemRight" valign="bottom"><b>getFreeDiskBlock</b> ()</td></tr>
-<tr class="separator:a682ce5963a31cf7009455cb1c229b26a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ce9b50aa5e7d9063919fc55d125246b"><td class="memItemLeft" align="right" valign="top"><a id="a3ce9b50aa5e7d9063919fc55d125246b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>returnDiskBlock</b> (BlkNumType blknum)</td></tr>
-<tr class="separator:a3ce9b50aa5e7d9063919fc55d125246b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7c756dba2665e5a7b62b2ccb261f1158"><td class="memItemLeft" align="right" valign="top"><a id="a7c756dba2665e5a7b62b2ccb261f1158"></a>
-string&#160;</td><td class="memItemRight" valign="bottom"><b>getPartitionName</b> ()</td></tr>
+<tr class="memitem:a7c756dba2665e5a7b62b2ccb261f1158"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPartitionManager.html#a7c756dba2665e5a7b62b2ccb261f1158">getPartitionName</a> ()</td></tr>
 <tr class="separator:a7c756dba2665e5a7b62b2ccb261f1158"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5bd37532cafac27e5b77fe1b58322412"><td class="memItemLeft" align="right" valign="top"><a id="a5bd37532cafac27e5b77fe1b58322412"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>getFileNameSize</b> ()</td></tr>
-<tr class="separator:a5bd37532cafac27e5b77fe1b58322412"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8f19809bbfe06885d476fa0ac4632243"><td class="memItemLeft" align="right" valign="top"><a id="a8f19809bbfe06885d476fa0ac4632243"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="classPartitionManager.html">PartitionManager</a> &amp;rhs)</td></tr>
-<tr class="separator:a8f19809bbfe06885d476fa0ac4632243"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b047c1c63c2f9a9e04805471c04ccf0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPartitionManager.html#a3b047c1c63c2f9a9e04805471c04ccf0">get_file_name_size</a> ()</td></tr>
+<tr class="separator:a3b047c1c63c2f9a9e04805471c04ccf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Modifier Functions</div></td></tr>
+<tr class="memitem:a114d5d4f8d90b6e9207b09d99e246bed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPartitionManager.html#a114d5d4f8d90b6e9207b09d99e246bed">writeDiskBlock</a> (BlkNumType blknum, char *blkdata)</td></tr>
+<tr class="separator:a114d5d4f8d90b6e9207b09d99e246bed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a682ce5963a31cf7009455cb1c229b26a"><td class="memItemLeft" align="right" valign="top">BlkNumType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPartitionManager.html#a682ce5963a31cf7009455cb1c229b26a">getFreeDiskBlock</a> ()</td></tr>
+<tr class="separator:a682ce5963a31cf7009455cb1c229b26a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ce9b50aa5e7d9063919fc55d125246b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPartitionManager.html#a3ce9b50aa5e7d9063919fc55d125246b">returnDiskBlock</a> (BlkNumType blknum)</td></tr>
+<tr class="separator:a3ce9b50aa5e7d9063919fc55d125246b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="aa875b0b19b7ab9f32b02d2c9be383b75"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa875b0b19b7ab9f32b02d2c9be383b75">&#9670;&nbsp;</a></span>PartitionManager()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">PartitionManager::PartitionManager </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classDiskManager.html">DiskManager</a> *&#160;</td>
+          <td class="paramname"><em>dm</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>partitionName</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dm</td><td>the <a class="el" href="classDiskManager.html">DiskManager</a> associated with this object </td></tr>
+    <tr><td class="paramname">partitionName</td><td>the name of the partition that this will be managing </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a3b047c1c63c2f9a9e04805471c04ccf0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b047c1c63c2f9a9e04805471c04ccf0">&#9670;&nbsp;</a></span>get_file_name_size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int PartitionManager::get_file_name_size </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>The maximum file name size for this partition in bytes </dd></dl>
+
+</div>
+</div>
+<a id="aa1026e17e77f154d7034fafd188bda02"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1026e17e77f154d7034fafd188bda02">&#9670;&nbsp;</a></span>getBlockSize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t PartitionManager::getBlockSize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>the blocksize of the <a class="el" href="classDisk.html">Disk</a> </dd></dl>
+
+</div>
+</div>
+<a id="a682ce5963a31cf7009455cb1c229b26a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a682ce5963a31cf7009455cb1c229b26a">&#9670;&nbsp;</a></span>getFreeDiskBlock()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">BlkNumType PartitionManager::getFreeDiskBlock </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">Allocates a block on disk if there is a free one. The <a class="el" href="classDisk.html">Disk</a> free list is updated accordingly </p><dl class="section return"><dt>Returns</dt><dd>the block number of the newly allocated block </dd></dl>
+
+</div>
+</div>
+<a id="a7c756dba2665e5a7b62b2ccb261f1158"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7c756dba2665e5a7b62b2ccb261f1158">&#9670;&nbsp;</a></span>getPartitionName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string PartitionManager::getPartitionName </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>The name of the partition this <a class="el" href="classPartitionManager.html">PartitionManager</a> is associated with </dd></dl>
+
+</div>
+</div>
+<a id="a7aca34c24770b7b9290c489475655ada"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7aca34c24770b7b9290c489475655ada">&#9670;&nbsp;</a></span>readDiskBlock()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void PartitionManager::readDiskBlock </td>
+          <td>(</td>
+          <td class="paramtype">BlkNumType&#160;</td>
+          <td class="paramname"><em>blknum</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>blkdata</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">Reads a block from the <a class="el" href="classDisk.html">Disk</a>. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">blknum</td><td>the blocknumber to be read </td></tr>
+    <tr><td class="paramname">blkdata</td><td>the buffer to put the read data. must be large enough to contain an entire block of data </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a3ce9b50aa5e7d9063919fc55d125246b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ce9b50aa5e7d9063919fc55d125246b">&#9670;&nbsp;</a></span>returnDiskBlock()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void PartitionManager::returnDiskBlock </td>
+          <td>(</td>
+          <td class="paramtype">BlkNumType&#160;</td>
+          <td class="paramname"><em>blknum</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">returns a block to the <a class="el" href="classDisk.html">Disk</a> free list and zeros it out before writing. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">blknum</td><td>the blocknumber of the block to be freed </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a114d5d4f8d90b6e9207b09d99e246bed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a114d5d4f8d90b6e9207b09d99e246bed">&#9670;&nbsp;</a></span>writeDiskBlock()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void PartitionManager::writeDiskBlock </td>
+          <td>(</td>
+          <td class="paramtype">BlkNumType&#160;</td>
+          <td class="paramname"><em>blknum</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>blkdata</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p class="">Writes a block to the <a class="el" href="classDisk.html">Disk</a>. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">blknum</td><td>the blocknumber to be written </td></tr>
+    <tr><td class="paramname">blkdata</td><td>the buffer to write the data from. It Will write an entire block size of data. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li><a class="el" href="partitionmanager_8h_source.html">partitionmanager.h</a></li>
-<li>partitionmanager.cpp</li>
+<li>Filesystem/Backend/<a class="el" href="PartitionManager_8h_source.html">PartitionManager.h</a></li>
+<li>Filesystem/Backend/PartitionManager.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
