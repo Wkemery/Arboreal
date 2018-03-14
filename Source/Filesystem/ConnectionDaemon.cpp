@@ -87,7 +87,7 @@ int main(int argc, char** argv)
 
   try
   {
-    d = new Disk(501, 512, const_cast<char *>("DISK1"));
+    d = new Disk(500, 512, const_cast<char *>("DISK1"));
     dm = new DiskManager(d);
   }
   catch(arboreal_exception& e)
@@ -334,13 +334,10 @@ int main(int argc, char** argv)
 
 
               }
-              // call arboreal functions and return data
-              //Attempt file system object creation
-              //if bad: send response on socket then close connection and continue
-              //else:
-              //Store the FS OBJ associated with this FD
-              //Get max string size and calculate max command size
-              //Store max cmnd size associated with this FD
+              else
+              {
+                //execute commands
+              }
 
             }while(TRUE);
 
@@ -670,4 +667,15 @@ std::string get_partition(char* cmnd)
     index += 1;
   }
   return temp;
+}
+
+std::vector<char*> execute(std::vector<std::string> commands)
+{
+  switch(atoi(commands[0].c_str()))
+  {
+    case(4):
+    {
+
+    }
+  }
 }

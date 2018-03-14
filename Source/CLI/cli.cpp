@@ -372,14 +372,6 @@ void CLI::run()
          {
             // Test if the command is valid
             int rtrn = check_command(input);
-            if(!check_name_size(input,rtrn,_max_string_size))
-            {
-               std::cerr << "One or more tag or file names is too long!" << std::endl;
-               std::cerr << "Maximum name size is: " << _max_string_size << std::endl;
-               print_prompt = true;
-               continue;
-            }
-
             if(rtrn != 0)
             {
                if(rtrn == 21)

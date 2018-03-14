@@ -39,7 +39,7 @@ VALOPS= --leak-check=full --show-leak-kinds=all
 RUNFORMAT= ./format
 RUNDAEMON= ./daemon
 
-all: clean daemon commandline liason driver format runformat rundaemon
+all: clean daemon commandline liason driver format runformat
 
 daemon: $(BACKEND_H) $(BACKEND_CPP) $(FS_H) $(FS_CPP)
 	$(CXX) $(XXFLAGS) -o daemon $(FS_PATH)/ConnectionDaemon.cpp $(BACKEND_CPP) $(FS_CPP)

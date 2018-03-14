@@ -21,7 +21,18 @@ std::vector<std::string> Parser::parse(int type)
           std::vector<std::string> temp = lunion(_string.substr(1,_string.length()));
           for(uint i = 0; i < temp.size(); i++)
           {
-              parsed.push_back(temp[i]);
+            parsed.push_back(temp[i]);
+          }
+          if(type == 7)
+          {
+            std::vector<std::string> v = get_cwd_tags();
+            for(uint i = 1; i < parsed.size(); i++)
+            {
+              for(uint j = 0; j < v.size(); j++)
+              {
+                parsed[i] += ("-" + v[j]);
+              }
+            }
           }
       }
       else if(_string[index] == '{')
@@ -29,7 +40,7 @@ std::vector<std::string> Parser::parse(int type)
           std::vector<std::string> temp = lintersect(_string.substr(1,_string.length()));
           for(uint i = 0; i < temp.size(); i++)
           {
-              parsed.push_back(temp[i]);
+            parsed.push_back(temp[i]);
           }
       }
       return parsed;
@@ -61,7 +72,7 @@ std::vector<std::string> Parser::parse(int type)
         std::vector<std::string> temp_vec = lunion(_string.substr(index,_string.length()));
         for(uint i = 0; i < temp_vec.size(); i++)
         {
-          parsed.push_back(temp_vec[i]);
+          parsed[1] += ("-" + temp_vec[i]);
         }
         return parsed;
       }
@@ -215,6 +226,10 @@ std::vector<std::string> Parser::lunion(std::string string)
         else if(string[index] != ',' && string[index] != '[')
         {
             temp += string[index];
+            if(temp.length() > _max_name_size)
+            {
+              throw ParseError("[Error]: File or Tag Name Size Exceeds Maximum Allowed Size","[Parser.cpp::lunion()]: ");
+            }
             index += 1;
         }
         else
@@ -266,7 +281,7 @@ std::vector<std::string> Parser::lintersect(std::string string)
             {
                 for(uint i = 0; i < vec.size(); i++)
                 {
-                    split.push_back(temp + vec[i]);
+                  split.push_back(temp + vec[i]);
                 }
             }
             temp = "";
@@ -276,6 +291,10 @@ std::vector<std::string> Parser::lintersect(std::string string)
         else
         {
             if(string[index] != '{') temp += string[index];
+            if(temp.length() > _max_name_size)
+            {
+              throw ParseError("[Error]: File or Tag Name Size Exceeds Maximum Allowed Size","[Parser.cpp::lunion()]: ");
+            }
             index += 1;
         }
     }
@@ -380,10 +399,26 @@ void Parser::parse_merge(std::vector<std::string>& parsed)
   parsed.push_back(temp1 + "-" + temp2);
 }
 //======================================================================================================================
-Parser::Parser(char* buffer, char* cwd){ _string = buffer; _cwd = cwd;}
-Parser::Parser(std::string string, std::string cwd){ _string = string; _cwd = cwd;}
-Parser::Parser(){}
 Parser::~Parser(){}
+Parser::Parser(){}
+Parser::Parser(char* buffer, char* cwd, int max_name_size)
+{
+  _string = buffer; 
+  _cwd = cwd;
+  _max_name_size = max_name_size;
+}
+Parser::Parser(const char* buffer, const char* cwd, int max_name_size)
+{
+  _string = buffer; 
+  _cwd = cwd;
+  _max_name_size = max_name_size;
+}
+Parser::Parser(std::string string, std::string cwd, int max_name_size)
+{
+  _string = string; 
+  _cwd = cwd;
+  _max_name_size = max_name_size;
+}
 void Parser::reset(const char* string_lit, const char* cwd)
 {
    _string = string_lit;
@@ -398,5 +433,9 @@ void Parser::reset(char* buffer, char* cwd)
 {
   _string = buffer;
   if(cwd != NULL){ _cwd = cwd; }
+}
+void Parser::set_cwd(std::string cwd)
+{
+  _cwd = cwd;
 }
 //======================================================================================================================
