@@ -372,6 +372,7 @@ int main(int argc, char** argv)
           continue;
         }
         print_vector(vec);
+        std::string data = "\n";
         for(unsigned int i = 0; i < vec.size(); i++)
         {
           std::string command = pad_string(vec[i],(MAX_COMMAND_SIZE - vec[i].length()),'\0');
@@ -380,8 +381,14 @@ int main(int argc, char** argv)
           char response[MAX_COMMAND_SIZE];
           memset(response,'\0',MAX_COMMAND_SIZE);
           rval = recv(liaison_fid,response,MAX_COMMAND_SIZE,FLAG);
-          send_response(client_sock,response,MAX_COMMAND_SIZE,FLAG,liaison_sock,liaison_sockpath,client_sockpath);
+          data += response;
+          data += "\n";
+          memset(response,'\0',MAX_COMMAND_SIZE);
         }
+
+        data = pad_string(data, MAX_COMMAND_SIZE - data.length(), '\0');
+        send_response(client_sock,const_cast<char*>(data.c_str()),MAX_COMMAND_SIZE,FLAG,
+                      liaison_sock,liaison_sockpath,client_sockpath);
       }
 
       // if(dbug) std::cout << "L: Building Response..." << std::endl;

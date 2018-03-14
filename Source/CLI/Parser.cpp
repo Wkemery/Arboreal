@@ -168,6 +168,11 @@ std::vector<std::string> Parser::parse(int type)
 
         return parsed;
       }
+      default:
+      {
+        parsed.push_back("Invlaid Command Type\n");
+        return parsed;
+      }
 
     }
 
@@ -414,6 +419,7 @@ std::vector<std::string> Parser::split_on_commas(std::string s)
     else
     {
       rval.push_back(temp);
+      temp = "";
       index += 1;
     }
   }

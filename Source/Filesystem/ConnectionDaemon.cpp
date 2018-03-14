@@ -368,6 +368,7 @@ int main(int argc, char** argv)
                     rval = send(i, failure.c_str(), MAX_COMMAND_SIZE, FLAG);
                   }
                   std::vector<std::string> data = execute(current_command_id, buffer,i);
+                  printf("Data Size: %lu\n",data.size());
                   for(unsigned int j = 0; j < data.size(); j++)
                   {
                     std::string temp = pad_string(data[j],(MAX_COMMAND_SIZE - data[j].length()), '\0');
@@ -430,7 +431,7 @@ int main(int argc, char** argv)
   {
     if (FD_ISSET(i, &master_set)) close(i);
   }
-  for(auto it = begin(part_fs_map); it != end(part_fs_map); it++)
+  for(auto it = begin(part_fs_map); it != end(part_fs_map); ++it)
   {
     delete it->second;
   }
@@ -457,10 +458,14 @@ int main(int argc, char** argv)
 ///
 void sig_caught(int sig)
 {
-  printf("\nD: Received - %s\n", strsignal(sig));
+  printf("\nD: [Fatal Error] Daemon Received Signal - %s\n", strsignal(sig));
   for (int i=0; i <= max_fid; ++i)
   {
     if (FD_ISSET(i, &master_set)) close(i);
+  }
+  for(auto it = begin(part_fs_map); it != end(part_fs_map); ++it)
+  {
+    delete it->second;
   }
   exit(-1);
 }
@@ -480,7 +485,7 @@ void quit_fs(void)
   {
     if (FD_ISSET(i, &master_set)) close(i);
   }
-  for(auto it = begin(part_fs_map); it != end(part_fs_map); it++)
+  for(auto it = begin(part_fs_map); it != end(part_fs_map); ++it)
   {
     delete it->second;
   }
@@ -733,36 +738,68 @@ std::string pad_string(std::string string, int size, char value)
 
 std::vector<std::string> execute(int id, char* command, int fd)
 {
-  std::string exec = command;
   std::vector<std::string> data;
   switch(id)
   {
     case(4):
     {
       std::unordered_set<std::string> tags = get_set(command);
-
+      std::vector<FileInfo*>* rval;
       try
       {
-        printf("FD Map Size: %lu\n",fd_fs_map.size());
-        printf("Set Size: %lu\n",tags.size());
-        printf("FD: %d\n",fd);
-        std::cout << "FInfo Pointer: " << fd_fs_map[fd] << std::endl;
-
-        std::vector<FileInfo*>* rval = fd_fs_map[fd]->tagSearch(tags);
-        printf("Made it\n");
+        rval = fd_fs_map[fd]->tagSearch(tags);
         data = serialize_fileinfo(rval);
+        if(data.size() == 0)
+        {
+          data.push_back("Tag Exists But Has No Associated Files");
+        }
       }
       catch(arboreal_exception& e)
       {
-        std::cerr << e.where() << e.what() << std::endl;
+        // And Search on tags that do not exist results in segfault
+        std::cerr << e.where() << " -- " << e.what() << std::endl;
+        std::string failure;
+        if(tags.size() == 1)
+        {
+          auto it = begin(tags);
+          failure = "The Requested Tag [";
+          failure += (*it + "] Does Not Exist");
+        }
+        else
+        {
+          failure = "Some Or All Of The Requested Tags Do Not Exist";
+        }
+        data.push_back(failure);
         return data;
       }
 
+      delete rval;
       return data;
     }
     case(5):
     {
 
+    }
+    case(6):
+    {
+      std::string tag = command;
+      try
+      {
+        fd_fs_map[fd]->create_tag(tag);
+        std::string success = "New Tag [";
+        success += (tag + "] Created");
+        data.push_back(success);
+        fd_fs_map[fd]->write_changes();
+      }
+      catch(arboreal_exception& e)
+      {
+        std::cerr << e.where() << " -- " << e.what() << std::endl;
+        std::string failure = "Creation of Requested Tag [";
+        failure += (tag + "] Failed");
+        data.push_back(failure);
+        return data;
+      }
+      return data;
     }
   }
 }
@@ -779,6 +816,7 @@ std::unordered_set<std::string> get_set(char* command)
     printf("Split: [%d]: %s\n",i,temp[i].c_str());
     tags.emplace(temp[i]);
   }
+  return tags;
 }
 
 std::vector<std::string> serialize_fileinfo(std::vector<FileInfo*>* fileinfo)
