@@ -11,7 +11,7 @@
 //////////////////////////////////////////////////////////
 
 #include <string>                           /* Strings */
-#include <iostream>                         /* cout */
+#include <iostream>                         /* Input & Output */
 #include <vector>                           /* Vectors */
 #include <thread>                           /* Threading */
 #include <errno.h>                          /* errno Definitions */
@@ -24,6 +24,7 @@
 #include <netdb.h>                          /* More Internet Socket Stuff */
 #include <sys/ioctl.h>                      /* Set Sockets To Non-Blocking */
 #include <signal.h>
+#include <algorithm>
 
 #include "Backend/FileSystem.h"
 #include "types.h"
@@ -34,6 +35,7 @@
 #define TRUE 1
 #define FALSE 0
 #define PORT 70777
+#define MAX_COMMAND_SIZE 2048
 
 bool DEBUG = false;
 
@@ -46,6 +48,8 @@ void listen_on_socket(int daemon_sock,int backlog,int timeout);
 void set_nonblocking(int daemon_sock, int is_on);
 void quit_fs(void);
 void sig_caught(int sig);
+int get_cmnd_id(char* cmnd);
+std::string get_partition(char* cmnd);
 
 
 
@@ -55,6 +59,12 @@ void sig_caught(int sig);
 fd_set master_set;
 int my_fid = 999;
 int max_fid = 0;
+
+std::map<int, FileSystem*> fd_fs_map;
+std::map<std::string,FileSystem*> part_fs_map;
+
+Disk* d = 0;
+DiskManager* dm = 0;
 
 int main(int argc, char** argv)
 {
@@ -74,9 +84,17 @@ int main(int argc, char** argv)
 //
 //
   if(dbug) printf("D: Beginning File System...\n");
-  if(dbug) printf("D: Getting Max String Size...\n");
-  unsigned int max_string_size = 64; // Will be set by a call to FS
-  if(dbug) printf("D: Max String Size: %d\n", max_string_size);
+
+  try
+  {
+    d = new Disk(501, 512, const_cast<char *>("DISK1"));
+    dm = new DiskManager(d);
+  }
+  catch(arboreal_exception& e)
+  {
+    std::cerr << "[Error]: " << e.what() << " in " << e.where() << std::endl;
+    exit(1);
+  }
 //
 //
 //
@@ -92,8 +110,7 @@ int main(int argc, char** argv)
 //
   try
   {
-    unsigned int max_command_size = (sizeof(int) + max_string_size * 2 + 1);
-    if(dbug) printf("D: Max Command Size: %d\n",max_command_size);
+    if(dbug) printf("D: Max Command Size: %d\n",MAX_COMMAND_SIZE);
     std::vector<int> active_connections;
 
 
@@ -110,10 +127,10 @@ int main(int argc, char** argv)
     int desc_ready, client_sock = 0;
     int END_SERVER = FALSE;
     int daemon_addrlen = daemon_addrlen = sizeof(daemon_sockaddr);
-    char buffer[max_command_size];
+    char buffer[MAX_COMMAND_SIZE];
 
     if(dbug) printf("D: Zeroing Socket Address and Buffer\n");
-    memset(buffer,'\0',max_command_size);
+    memset(buffer,'\0',MAX_COMMAND_SIZE);
     memset(&daemon_sockaddr, 0, sizeof(daemon_sockaddr));
 
     if(dbug) printf("D: Creating Daemon Socket...\n");
@@ -238,13 +255,14 @@ int main(int argc, char** argv)
           }
           else
           {
-            printf("D: Client Descriptor - %d - Is Readable\n",i);
+            if(dbug) printf("D: Client Descriptor - %d - Is Readable\n",i);
             if(dbug) printf("D: Beginning Receive Loop...\n");
             close_conn = FALSE;
 
             do
             {
-              rval = recv(i, buffer, max_command_size, FLAG);
+              memset(buffer,'\0',MAX_COMMAND_SIZE);
+              rval = recv(i, buffer, MAX_COMMAND_SIZE, FLAG);
               if(rval < 0)
               {
                 if(errno != EWOULDBLOCK)
@@ -260,7 +278,7 @@ int main(int argc, char** argv)
 
               if(rval == 0)
               {
-                printf("D: Client Closed Connection; Breaking From Receive Loop\n");
+                if(dbug) printf("D: Client Closed Connection; Breaking From Receive Loop\n");
                 close_conn = TRUE;
                 break;
               }
@@ -269,7 +287,60 @@ int main(int argc, char** argv)
               if(dbug) printf("\nBytes Received: %d\n",bytes_received);
               if(dbug) printf("Command Received: %s\n\n",buffer);
 
+              if(get_cmnd_id(buffer) == 0)
+              {
+                std::string part = get_partition(buffer);
+                printf("D: Requested Partition: %s\n",part.c_str());
+                try
+                {
+                  auto it = part_fs_map.find(part);
+                  if(it == end(part_fs_map))
+                  {
+                    fd_fs_map.insert(std::pair<int,FileSystem*>(i,new FileSystem(dm,part)));
+                    part_fs_map.insert(std::pair<std::string,FileSystem*>(part,fd_fs_map[i]));
+                  }
+                  else
+                  {
+                    fd_fs_map.insert(std::pair<int,FileSystem*>(i,part_fs_map[part]));
+                  }
+                }
+                catch(arboreal_exception& e)
+                {
+                  std::cerr << "D: [Error]: " << e.where() << "--" << e.what() << std::endl;
+                  std::cerr << "D: Closing File Descriptor [" << i << "]" << std::endl;
+                  char failed[MAX_COMMAND_SIZE];
+                  int failure = 9999;
+                  memset(failed,0,MAX_COMMAND_SIZE);
+                  memcpy(failed,&failure,sizeof(int));
+                  rval = send(i,failed,MAX_COMMAND_SIZE,FLAG);
+                  close_conn = TRUE;
+                  break;
+                }
+
+                if(dbug) printf("D: Handshake Accepted; Sending Maximum String Size\n");
+                char str_size[MAX_COMMAND_SIZE];
+                memset(str_size,0,MAX_COMMAND_SIZE);
+                int temp = fd_fs_map[i]->get_file_name_size();
+                memcpy(str_size,&temp,sizeof(int));
+
+                rval = send(i, str_size, sizeof(int), FLAG);
+                if(rval < 0)
+                {
+                  close_conn = TRUE;
+                  std::cerr << "D: [ConnectionDaemon::main()] - Send To Client Failed" << std::endl;
+                  std::cerr << "D: Closing Client Connection" << std::endl;
+                  break;
+                }
+
+
+              }
               // call arboreal functions and return data
+              //Attempt file system object creation
+              //if bad: send response on socket then close connection and continue
+              //else:
+              //Store the FS OBJ associated with this FD
+              //Get max string size and calculate max command size
+              //Store max cmnd size associated with this FD
 
             }while(TRUE);
 
@@ -304,7 +375,7 @@ int main(int argc, char** argv)
   } // END try{}
   catch(arboreal_daemon_error e)
   {
-    std::cerr << e.where() << std::endl << e.what() << std::endl;
+    std::cerr << e.where() << e.what() << std::endl;
     printf("D: Closing All Open Connections and Exiting...\n");
     for (int i=0; i <= max_fid; ++i)
     {
@@ -370,6 +441,10 @@ void quit_fs(void)
   for (int i=0; i <= max_fid; ++i)
   {
     if (FD_ISSET(i, &master_set)) close(i);
+  }
+  for(auto it = begin(fd_fs_map); it != end(fd_fs_map); it++)
+  {
+    delete it->second;
   }
   return;
 }
@@ -563,3 +638,36 @@ void listen_on_socket(int daemon_sock,int backlog,int timeout)
   return;
 }
 //--------------------------------------------------------------------------------------------
+
+//[================================================================================================]
+// Convert the first X characters in a 'Command Buffer' to an integer value
+// X is the size of an integer
+//
+// @ cmnd : The command buffer
+//[================================================================================================]
+int get_cmnd_id(char* cmnd)
+{
+    char temp[sizeof(int)];
+    for(unsigned int i = 0; i < sizeof(int); i++)
+    {
+        temp[i] = cmnd[i];
+    }
+
+    int* id = (int*)temp;
+    return *id;
+}
+//--------------------------------------------------------------------------------------------
+
+std::string get_partition(char* cmnd)
+{
+  std::string temp = "";
+  int index = (int)sizeof(int);
+  while(cmnd[index] != '-'){index += 1;}
+  index += 1;
+  while(cmnd[index] != '\0')
+  {
+    temp += cmnd[index];
+    index += 1;
+  }
+  return temp;
+}

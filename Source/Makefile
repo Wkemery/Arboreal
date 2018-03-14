@@ -30,13 +30,16 @@ CLI_PATH=CLI/
 CLI_H=$(CLI_PATH)/cli.h $(FS_PATH)/Arboreal_Exceptions.h
 CLI_CPP=$(CLI_PATH)/cli.cpp $(CLI_PATH)/cli_driver.cpp $(FS_PATH)/Arboreal_Exceptions.cpp
 
-LIASON_CPP=$(CLI_PATH)/liason.cpp $(FS_PATH)/Arboreal_Exceptions.cpp
-LIASON_H=$(FS_PATH)/Arboreal_Exceptions.h
+LIASON_CPP=$(CLI_PATH)/liason.cpp $(CLI_PATH)/Parser.cpp $(FS_PATH)/Arboreal_Exceptions.cpp
+LIASON_H=$(FS_PATH)/Arboreal_Exceptions.h $(CLI_PATH)/Parser.h
 
 VALGRIND= valgrind --leak-check=yes --log-file=/home/wyatt/ValgrindLogs/%p.log
 VALOPS= --leak-check=full --show-leak-kinds=all
 
-all: daemon cli liason driver format
+RUNFORMAT= ./format
+RUNDAEMON= ./daemon
+
+all: clean daemon commandline liason driver format runformat rundaemon
 
 daemon: $(BACKEND_H) $(BACKEND_CPP) $(FS_H) $(FS_CPP)
 	$(CXX) $(XXFLAGS) -o daemon $(FS_PATH)/ConnectionDaemon.cpp $(BACKEND_CPP) $(FS_CPP)
@@ -44,11 +47,11 @@ daemon: $(BACKEND_H) $(BACKEND_CPP) $(FS_H) $(FS_CPP)
 driver: $(BACKEND_H) $(BACKEND_CPP) $(FS_H) $(FS_CPP)
 	$(CXX) $(XXFLAGS) -o driver $(FS_PATH)/driver.cpp $(BACKEND_CPP) $(FS_CPP)
 
-cli: $(CLI_CPP) $(CLI_H)
-	$(CXX) $(XXFLAGS) -o cli $(CLI_CPP)
+commandline: $(CLI_CPP) $(CLI_H)
+	$(CXX) $(XXFLAGS) -o commandline $(CLI_CPP)
 
 liason: $(LIASON_H) $(LIASON_CPP)
-	$(CXX) $(XXFLAGS) -o liason $(LIASON_CPP)
+	$(CXX) $(XXFLAGS) -o liaison $(LIASON_CPP)
 
 format: format.cpp
 	$(CXX) $(XXFLAGS) -o format format.cpp
@@ -122,5 +125,11 @@ mem_test_11: rest
 mem_test_12: rest
 	$(VALGRIND) ./driver 12
 
-clean:
-	/bin/rm -f *.o driver cli format daemon DISK1 *.pipe liason
+runformat: $(RUNFORMAT) 
+	$(RUNFORMAT) diskInfo.d
+
+rundaemon: $(RUNDAEMON)
+	$(RUNDAEMON) -d
+
+.PHONY clean:
+	/bin/rm -f *.o driver commandline format daemon DISK1 *.pipe liaison

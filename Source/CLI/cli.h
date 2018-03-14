@@ -16,15 +16,15 @@
 #define CLI_H
 
 
-#include <string>                           /* Strings */
-#include <iostream>                         /* cout */
-#include <vector>                           /* Vectors */
-#include <errno.h>                          /* errno Definitions */
-#include <unistd.h>                         /* Unix Std. Stuff */
-#include <sys/socket.h>                     /* Socket Handling */
-#include <sys/un.h>                         /* Unix Domain Socket Stuff */
-#include <sys/ipc.h>                        /* Inter Process Communication Stds. */
-#include <sys/shm.h>                        /* Shared Memory Handling */
+#include <string>                                         /* Strings */
+#include <iostream>                                       /* cout */
+#include <vector>                                         /* Vectors */
+#include <errno.h>                                        /* errno Definitions */
+#include <unistd.h>                                       /* Unix Std. Stuff */
+#include <sys/socket.h>                                   /* Socket Handling */
+#include <sys/un.h>                                       /* Unix Domain Socket Stuff */
+#include <sys/ipc.h>                                      /* Inter Process Communication Stds. */
+#include <sys/shm.h>                                      /* Shared Memory Handling */
 #include "../Filesystem/Arboreal_Exceptions.h"            /* Exception Handling */
 
 
@@ -65,18 +65,19 @@ public:
 private:
 
     /* This is a string because it is an argument passed to main ( -s ) */
-    std::string is_script;
-    std::string my_pid;
-    std::string client_sockpath;
-    std::string server_sockpath;
+    std::string _is_script;
+    std::string _my_pid;
+    std::string _client_sockpath;
+    std::string _server_sockpath;
 
-    int max_string_size;
-    std::string my_partition;
+    int _max_string_size;
+    std::string _my_partition;
+    std::string _cwd = "/"; //current working directory
 
-    int client_sock;
-    struct sockaddr_un server_sockaddr;
-    struct sockaddr_un client_sockaddr;
-    bool dbug = false;
+    int _client_sock;
+    struct sockaddr_un _server_sockaddr;
+    struct sockaddr_un _client_sockaddr;
+    bool _dbug = false;
 };
 
 #endif
