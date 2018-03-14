@@ -61,7 +61,7 @@ int main(int argc, char** argv)
   int offset = 0;
   memcpy(buff, &numParts, sizeof(int));
 //   cout << numParts << endl;
-  memcpy(&numParts, buff, sizeof(int));
+//   memcpy(&numParts, buff, sizeof(int));
 //   cout << numParts << endl;
   offset+= sizeof(int);
   for(int i = 0; i < numParts; i++)

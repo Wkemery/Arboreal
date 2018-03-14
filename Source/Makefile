@@ -41,10 +41,10 @@ RUN_DAEMON= ./daemon
 
 all: clean commandline liason format daemon runformat
 
-daemon: $(BACKEND_H) $(BACKEND_CPP) $(FS_H) $(FS_CPP) $(CLI_PATH)/Parser.h
+daemon: $(BACKEND_H) $(BACKEND_CPP) $(FS_H) $(FS_CPP) $(CLI_PATH)/Parser.h $(FS_PATH)/ConnectionDaemon.cpp
 	$(CXX) $(XXFLAGS) -o daemon $(FS_PATH)/ConnectionDaemon.cpp $(CLI_PATH)/Parser.cpp $(BACKEND_CPP) $(FS_CPP)
 
-driver: $(BACKEND_H) $(BACKEND_CPP) $(FS_H) $(FS_CPP)
+driver: $(BACKEND_H) $(BACKEND_CPP) $(FS_H) $(FS_CPP) $(FS_PATH)/driver.cpp
 	$(CXX) $(XXFLAGS) -o driver $(FS_PATH)/driver.cpp $(BACKEND_CPP) $(FS_CPP)
 
 commandline: $(CLI_CPP) $(CLI_H)
