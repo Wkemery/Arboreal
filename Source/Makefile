@@ -132,4 +132,4 @@ rundaemon: $(RUNDAEMON)
 	$(RUNDAEMON) -d
 
 .PHONY clean:
-	/bin/rm -f *.o driver commandline format daemon DISK1 *.pipe liaison
+	/bin/rm -rf *.o driver commandline format daemon DISK1 *.dSYM liaison
