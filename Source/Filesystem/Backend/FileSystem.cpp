@@ -518,6 +518,11 @@ vector<FileInfo*>* FileSystem::tagSearch(unordered_set<string>& tags)
     /*find the tag in root tree*/
     TreeObject* tagTree = _RootTree->find(*(tags.begin()));
     
+    if(tagTree == 0)
+    {
+        throw tag_error("Tag " + *(tags.begin()) + " Does not exist", "FileSystem::tagSearch()");
+    }
+    
     /*List files in tag tree pointed to by root tree*/
     
     for(auto fileIt = tagTree->begin(); fileIt != tagTree->end(); fileIt++)//Complexity: number of files in answer

@@ -52,7 +52,7 @@ int main(int argc, char** argv)
 
   try
   {
-    d = new Disk(501, 512, const_cast<char *>("DISK1"));
+    d = new Disk(1000, 4096, const_cast<char *>("DISK1"));
     dm = new DiskManager(d);
     fs1 = new FileSystem(dm, "PartitionA");
   }
@@ -1028,6 +1028,12 @@ int main(int argc, char** argv)
       catch(arboreal_exception& e){cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
 
       break;
+    }
+    case 13:
+    {
+        unordered_set<string> tags;
+        tags.insert("Tag0");
+        vector<FileInfo*>* ret = fs1->tagSearch(tags);
     }
     default:
     {

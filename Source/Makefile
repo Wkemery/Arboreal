@@ -38,10 +38,10 @@ VALOPS= --leak-check=full --show-leak-kinds=all
 
 all: daemon cli liason driver format
 
-daemon: $(BACKEND_H) $(BACKEND_CPP) $(FS_H) $(FS_CPP)
+daemon: $(BACKEND_H) $(BACKEND_CPP) $(FS_H) $(FS_CPP) $(FS_PATH)/ConnectionDaemon.cpp
 	$(CXX) $(XXFLAGS) -o daemon $(FS_PATH)/ConnectionDaemon.cpp $(BACKEND_CPP) $(FS_CPP)
 
-driver: $(BACKEND_H) $(BACKEND_CPP) $(FS_H) $(FS_CPP)
+driver: $(BACKEND_H) $(BACKEND_CPP) $(FS_H) $(FS_CPP) $(FS_PATH)/driver.cpp
 	$(CXX) $(XXFLAGS) -o driver $(FS_PATH)/driver.cpp $(BACKEND_CPP) $(FS_CPP)
 
 cli: $(CLI_CPP) $(CLI_H)
