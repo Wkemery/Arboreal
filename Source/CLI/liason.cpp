@@ -372,31 +372,45 @@ int main(int argc, char** argv)
           send_response(client_sock,failed,MAX_COMMAND_SIZE,FLAG,liaison_sock,liaison_sockpath,client_sockpath);
           continue;
         }
-
         print_vector(vec);
+        for(unsigned int i = 0; i < vec.size(); i++)
+        {
+          std::string command = pad_string(vec[i],(MAX_COMMAND_SIZE - vec[i].length()),'\0');
+          send(liaison_fid,command.c_str(),MAX_COMMAND_SIZE,FLAG);
+        }
 
+        char response[MAX_COMMAND_SIZE];
+        memset(response,'\0',MAX_COMMAND_SIZE);
+        int rval = recv(liaison_fid,response,MAX_COMMAND_SIZE,FLAG);
+        std::cout << "L: Response: " << response << std::endl;
+        char success[MAX_COMMAND_SIZE];
+        memset(success,'\0',MAX_COMMAND_SIZE);
+        memcpy(success,"Command Succeded",sizeof("Command Succeded"));
+        send_response(client_sock,success,MAX_COMMAND_SIZE,FLAG,liaison_sock,liaison_sockpath,client_sockpath);
       }
 
 
-      if(dbug) std::cout << "L: Building Response..." << std::endl;
-      auto end = std::chrono::system_clock::now();
-      std::time_t end_time = std::chrono::system_clock::to_time_t(end);
-      std::string data = "Command Received @ ";
-      data += std::ctime(&end_time);
-      memset(msg,'\0', MAX_COMMAND_SIZE);
-      memcpy(msg,data.c_str(),data.length());
-      if(dbug) std::cout << "L: Response Built Successfully" << std::endl;
+      // if(dbug) std::cout << "L: Building Response..." << std::endl;
+      // auto end = std::chrono::system_clock::now();
+      // std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+      // std::string data = "Command Received @ ";
+      // data += std::ctime(&end_time);
+      // memset(msg,'\0', MAX_COMMAND_SIZE);
+      // memcpy(msg,data.c_str(),data.length());
+      // if(dbug) std::cout << "L: Response Built Successfully" << std::endl;
 
-      if(dbug) std::cout << "L: Sending Response to Client..." << std::endl;
-      send_response(client_sock,msg,MAX_COMMAND_SIZE,FLAG,liaison_sock,liaison_sockpath,client_sockpath);
-      if(dbug) std::cout << "L: Response Successfully Sent" << std::endl;
-      if(dbug) std::cout << "L: Response Sent To: " << client_sock << " @ " << client_sockpath << std::endl;
+      // if(dbug) std::cout << "L: Sending Response to Client..." << std::endl;
+      // send_response(client_sock,msg,MAX_COMMAND_SIZE,FLAG,liaison_sock,liaison_sockpath,client_sockpath);
+      // if(dbug) std::cout << "L: Response Successfully Sent" << std::endl;
+      // if(dbug) std::cout << "L: Response Sent To: " << client_sock << " @ " << client_sockpath << std::endl;
 
     }while(true);
 
     char close_conn[MAX_COMMAND_SIZE];
+    int closing = 999;
     memset(close_conn,'\0',MAX_COMMAND_SIZE);
-    memcpy(close_conn,"close",sizeof("close"));
+    memcpy(close_conn, &closing, sizeof(int));
+    memcpy(close_conn + sizeof(int),"close",sizeof("close"));
     send(liaison_fid,close_conn,MAX_COMMAND_SIZE,0);
 
 
@@ -432,10 +446,15 @@ int main(int argc, char** argv)
   catch(arboreal_liaison_error e)
   {
     std::cerr << e.where() << e.what() << std::endl;
+
     char close_conn[MAX_COMMAND_SIZE];
+    int closing = 999;
     memset(close_conn,'\0',MAX_COMMAND_SIZE);
-    memcpy(close_conn,"close",sizeof("close"));
+    memcpy(close_conn, &closing, sizeof(int));
+    memcpy(close_conn + sizeof(int),"close",sizeof("close"));
     send(liaison_fid,close_conn,MAX_COMMAND_SIZE,0);
+
+    
     char* quit = new char[MAX_COMMAND_SIZE];
     memset(quit,'\0',MAX_COMMAND_SIZE);
     int val = 999;

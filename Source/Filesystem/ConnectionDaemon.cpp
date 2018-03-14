@@ -50,6 +50,9 @@ void quit_fs(void);
 void sig_caught(int sig);
 int get_cmnd_id(char* cmnd);
 std::string get_partition(char* cmnd);
+bool is_number(const char* str);
+std::string execute(int id, char* command);
+std::string pad_string(std::string string, int size, char value);
 
 
 
@@ -261,6 +264,7 @@ int main(int argc, char** argv)
 
             do
             {
+              int current_command_id;
               memset(buffer,'\0',MAX_COMMAND_SIZE);
               rval = recv(i, buffer, MAX_COMMAND_SIZE, FLAG);
               if(rval < 0)
@@ -287,7 +291,13 @@ int main(int argc, char** argv)
               if(dbug) printf("\nBytes Received: %d\n",bytes_received);
               if(dbug) printf("Command Received: %s\n\n",buffer);
 
-              if(get_cmnd_id(buffer) == 0)
+              if(get_cmnd_id(buffer) == 999)
+              {
+                if(dbug) printf("D: Client Closed Connection; Breaking From Receive Loop\n");
+                close_conn = TRUE;
+                break;
+              }
+              else if(get_cmnd_id(buffer) == 0)
               {
                 std::string part = get_partition(buffer);
                 printf("D: Requested Partition: %s\n",part.c_str());
@@ -336,7 +346,18 @@ int main(int argc, char** argv)
               }
               else
               {
-                //execute commands
+                if(is_number(buffer))
+                {
+                  char* end;
+                  current_command_id = (int)strtol(buffer, &end, 10);
+                  if(dbug) printf("D: Current Command ID Set To: %d\n", current_command_id);
+                }
+                else
+                {
+                  std::string temp = execute(current_command_id, buffer);
+                  std::string data = pad_string(temp,(MAX_COMMAND_SIZE - temp.length()), '\0');
+                  rval = send(i, data.c_str(), MAX_COMMAND_SIZE, FLAG);
+                }
               }
 
             }while(TRUE);
@@ -669,13 +690,23 @@ std::string get_partition(char* cmnd)
   return temp;
 }
 
-std::vector<char*> execute(std::vector<std::string> commands)
+std::string execute(int id, char* command)
 {
-  switch(atoi(commands[0].c_str()))
-  {
-    case(4):
-    {
+  return "success";
+}
 
-    }
+bool is_number(const char* str)
+{
+  char* ptr;
+  strtol(str, &ptr, 10);
+  return *ptr == '\0';
+}
+std::string pad_string(std::string string, int size, char value)
+{
+    std::string padded = string;
+  for(unsigned int i = 0; i < size; i++)
+  {
+    padded += value;
   }
+  return padded;
 }
