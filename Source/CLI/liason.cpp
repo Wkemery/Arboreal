@@ -291,7 +291,7 @@ int main(int argc, char** argv)
     do
     {
 
-      if(dbug) std::cout << "L: Awaiting Command From Client..." << std::endl;
+      //if(dbug) std::cout << "L: Awaiting Command From Client..." << std::endl;
       char* msg = recv_msg(client_sock,MAX_COMMAND_SIZE,FLAG,liaison_sock,liaison_sockpath,client_sockpath);
       if(dbug) std::cout << "L: Client Command Received Successfully" << std::endl;
       if(dbug) std::cout << "L: Command Received From: " << client_sock << " @ " << client_sockpath << std::endl;
@@ -310,7 +310,7 @@ int main(int argc, char** argv)
         parser->set_cwd(cwd);
         char success[MAX_COMMAND_SIZE];
         memset(success,'\0',MAX_COMMAND_SIZE);
-        memcpy(success,"Command Succeded",sizeof("Command Succeded"));
+        memcpy(success,"success",sizeof("success"));
         send_response(client_sock,success,MAX_COMMAND_SIZE,FLAG,liaison_sock,liaison_sockpath,client_sockpath);
         continue;
       }
@@ -363,32 +363,26 @@ int main(int argc, char** argv)
         catch(ParseError& e)
         {
           std::cerr << "\n\n" << e.where() << e.what() << std::endl << std::endl;
-          std::cout << "L: One Of Your Tag/Filenames Is Too Long; Command Ignored" << std::endl;
-          std::cout << "L: Maximum Tag/Filename Size For This Partition (" << partition << ") Is: "
-          << max_string_size << std::endl;
-          char failed[MAX_COMMAND_SIZE];
-          memset(failed,'\0',MAX_COMMAND_SIZE);
-          memcpy(failed,"Command Failed",sizeof("Command Failed"));
-          send_response(client_sock,failed,MAX_COMMAND_SIZE,FLAG,liaison_sock,liaison_sockpath,client_sockpath);
+          std::string s = "One Of Your Tag/Filenames Is Too Long; Command Ignored\n";
+          s += "Maximum Tag/Filename Size For This Partition (" + partition + ") Is: ";
+          s += std::to_string(max_string_size);
+          s += "\n";
+          s = pad_string(s, MAX_COMMAND_SIZE - s.length(), '\0');
+          send_response(client_sock,const_cast<char*>(s.c_str()),MAX_COMMAND_SIZE,FLAG,liaison_sock,liaison_sockpath,client_sockpath);
           continue;
         }
         print_vector(vec);
         for(unsigned int i = 0; i < vec.size(); i++)
         {
           std::string command = pad_string(vec[i],(MAX_COMMAND_SIZE - vec[i].length()),'\0');
-          send(liaison_fid,command.c_str(),MAX_COMMAND_SIZE,FLAG);
+          int rval = send(liaison_fid,command.c_str(),MAX_COMMAND_SIZE,FLAG);
+
+          char response[MAX_COMMAND_SIZE];
+          memset(response,'\0',MAX_COMMAND_SIZE);
+          rval = recv(liaison_fid,response,MAX_COMMAND_SIZE,FLAG);
+          send_response(client_sock,response,MAX_COMMAND_SIZE,FLAG,liaison_sock,liaison_sockpath,client_sockpath);
         }
-
-        char response[MAX_COMMAND_SIZE];
-        memset(response,'\0',MAX_COMMAND_SIZE);
-        int rval = recv(liaison_fid,response,MAX_COMMAND_SIZE,FLAG);
-        std::cout << "L: Response: " << response << std::endl;
-        char success[MAX_COMMAND_SIZE];
-        memset(success,'\0',MAX_COMMAND_SIZE);
-        memcpy(success,"Command Succeded",sizeof("Command Succeded"));
-        send_response(client_sock,success,MAX_COMMAND_SIZE,FLAG,liaison_sock,liaison_sockpath,client_sockpath);
       }
-
 
       // if(dbug) std::cout << "L: Building Response..." << std::endl;
       // auto end = std::chrono::system_clock::now();
@@ -405,6 +399,8 @@ int main(int argc, char** argv)
       // if(dbug) std::cout << "L: Response Sent To: " << client_sock << " @ " << client_sockpath << std::endl;
 
     }while(true);
+
+
 
     char close_conn[MAX_COMMAND_SIZE];
     int closing = 999;
@@ -454,7 +450,7 @@ int main(int argc, char** argv)
     memcpy(close_conn + sizeof(int),"close",sizeof("close"));
     send(liaison_fid,close_conn,MAX_COMMAND_SIZE,0);
 
-    
+
     char* quit = new char[MAX_COMMAND_SIZE];
     memset(quit,'\0',MAX_COMMAND_SIZE);
     int val = 999;

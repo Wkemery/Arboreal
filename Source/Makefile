@@ -26,7 +26,7 @@ BACKEND_H=$(BACKEND_PATH)/Disk.h $(BACKEND_PATH)/DiskManager.h $(BACKEND_PATH)/F
 BACKEND_CPP=$(BACKEND_PATH)/Disk.cpp $(BACKEND_PATH)/DiskManager.cpp $(BACKEND_PATH)/FileSystem.cpp \
   $(BACKEND_PATH)/PartitionManager.cpp $(BACKEND_PATH)/Trees.cpp
 
-CLI_PATH=CLI/
+CLI_PATH=CLI
 CLI_H=$(CLI_PATH)/cli.h $(FS_PATH)/Arboreal_Exceptions.h
 CLI_CPP=$(CLI_PATH)/cli.cpp $(CLI_PATH)/cli_driver.cpp $(FS_PATH)/Arboreal_Exceptions.cpp
 
@@ -36,13 +36,13 @@ LIASON_H=$(FS_PATH)/Arboreal_Exceptions.h $(CLI_PATH)/Parser.h
 VALGRIND= valgrind --leak-check=yes --log-file=/home/wyatt/ValgrindLogs/%p.log
 VALOPS= --leak-check=full --show-leak-kinds=all
 
-RUNFORMAT= ./format
-RUNDAEMON= ./daemon
+RUN_FORMAT= ./format
+RUN_DAEMON= ./daemon
 
-all: clean daemon commandline liason driver format runformat
+all: clean commandline liason format daemon runformat
 
-daemon: $(BACKEND_H) $(BACKEND_CPP) $(FS_H) $(FS_CPP)
-	$(CXX) $(XXFLAGS) -o daemon $(FS_PATH)/ConnectionDaemon.cpp $(BACKEND_CPP) $(FS_CPP)
+daemon: $(BACKEND_H) $(BACKEND_CPP) $(FS_H) $(FS_CPP) $(CLI_PATH)/Parser.h
+	$(CXX) $(XXFLAGS) -o daemon $(FS_PATH)/ConnectionDaemon.cpp $(CLI_PATH)/Parser.cpp $(BACKEND_CPP) $(FS_CPP)
 
 driver: $(BACKEND_H) $(BACKEND_CPP) $(FS_H) $(FS_CPP)
 	$(CXX) $(XXFLAGS) -o driver $(FS_PATH)/driver.cpp $(BACKEND_CPP) $(FS_CPP)
@@ -125,11 +125,11 @@ mem_test_11: rest
 mem_test_12: rest
 	$(VALGRIND) ./driver 12
 
-runformat: $(RUNFORMAT) 
-	$(RUNFORMAT) diskInfo.d
+runformat: $(RUN_FORMAT) 
+	$(RUN_FORMAT) diskInfo.d
 
-rundaemon: $(RUNDAEMON)
-	$(RUNDAEMON) -d
+rundaemon: $(RUN_DAEMON)
+	$(RUN_DAEMON) -d
 
 .PHONY clean:
 	/bin/rm -rf *.o driver commandline format daemon DISK1 *.dSYM liaison

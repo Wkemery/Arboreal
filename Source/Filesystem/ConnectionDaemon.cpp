@@ -28,6 +28,7 @@
 
 #include "Backend/FileSystem.h"
 #include "types.h"
+#include "../CLI/Parser.h"
 
 #define BACKLOG 10                  /* Number of Connection Requests that the Server Can Queue */
 #define FLAG 0                      /* Flag for recv() */
@@ -51,8 +52,10 @@ void sig_caught(int sig);
 int get_cmnd_id(char* cmnd);
 std::string get_partition(char* cmnd);
 bool is_number(const char* str);
-std::string execute(int id, char* command);
+std::vector<std::string> execute(int id, char* command, int i);
 std::string pad_string(std::string string, int size, char value);
+std::unordered_set<std::string> get_set(char* command);
+std::vector<std::string> serialize_fileinfo(std::vector<FileInfo*>* fileinfo);
 
 
 
@@ -62,6 +65,7 @@ std::string pad_string(std::string string, int size, char value);
 fd_set master_set;
 int my_fid = 999;
 int max_fid = 0;
+int current_command_id = 0;
 
 std::map<int, FileSystem*> fd_fs_map;
 std::map<std::string,FileSystem*> part_fs_map;
@@ -264,7 +268,6 @@ int main(int argc, char** argv)
 
             do
             {
-              int current_command_id;
               memset(buffer,'\0',MAX_COMMAND_SIZE);
               rval = recv(i, buffer, MAX_COMMAND_SIZE, FLAG);
               if(rval < 0)
@@ -349,14 +352,27 @@ int main(int argc, char** argv)
                 if(is_number(buffer))
                 {
                   char* end;
-                  current_command_id = (int)strtol(buffer, &end, 10);
+                  int recv_command = (int)strtol(buffer, &end, 10);
+                  current_command_id = recv_command;
                   if(dbug) printf("D: Current Command ID Set To: %d\n", current_command_id);
+                  std::string response = "Command Accepted";
+                  response = pad_string(response,MAX_COMMAND_SIZE - response.length(), '\0');
+                  rval = send(i,response.c_str(),MAX_COMMAND_SIZE,FLAG);
                 }
                 else
                 {
-                  std::string temp = execute(current_command_id, buffer);
-                  std::string data = pad_string(temp,(MAX_COMMAND_SIZE - temp.length()), '\0');
-                  rval = send(i, data.c_str(), MAX_COMMAND_SIZE, FLAG);
+                  if(current_command_id == 0)
+                  {
+                    std::string failure = "failure -- Invalid Command ID";
+                    failure = pad_string(failure, MAX_COMMAND_SIZE - failure.length(), '\0');
+                    rval = send(i, failure.c_str(), MAX_COMMAND_SIZE, FLAG);
+                  }
+                  std::vector<std::string> data = execute(current_command_id, buffer,i);
+                  for(unsigned int j = 0; j < data.size(); j++)
+                  {
+                    std::string temp = pad_string(data[j],(MAX_COMMAND_SIZE - data[j].length()), '\0');
+                    rval = send(i, temp.c_str(), MAX_COMMAND_SIZE, FLAG);
+                  }
                 }
               }
 
@@ -414,6 +430,10 @@ int main(int argc, char** argv)
   {
     if (FD_ISSET(i, &master_set)) close(i);
   }
+  for(auto it = begin(part_fs_map); it != end(part_fs_map); it++)
+  {
+    delete it->second;
+  }
   printf("D: Goodbye\n");
   return 0;
 }
@@ -460,7 +480,7 @@ void quit_fs(void)
   {
     if (FD_ISSET(i, &master_set)) close(i);
   }
-  for(auto it = begin(fd_fs_map); it != end(fd_fs_map); it++)
+  for(auto it = begin(part_fs_map); it != end(part_fs_map); it++)
   {
     delete it->second;
   }
@@ -690,17 +710,13 @@ std::string get_partition(char* cmnd)
   return temp;
 }
 
-std::string execute(int id, char* command)
-{
-  return "success";
-}
-
 bool is_number(const char* str)
 {
   char* ptr;
   strtol(str, &ptr, 10);
   return *ptr == '\0';
 }
+
 std::string pad_string(std::string string, int size, char value)
 {
     std::string padded = string;
@@ -710,3 +726,96 @@ std::string pad_string(std::string string, int size, char value)
   }
   return padded;
 }
+
+
+
+
+
+std::vector<std::string> execute(int id, char* command, int fd)
+{
+  std::string exec = command;
+  std::vector<std::string> data;
+  switch(id)
+  {
+    case(4):
+    {
+      std::unordered_set<std::string> tags = get_set(command);
+
+      try
+      {
+        printf("FD Map Size: %lu\n",fd_fs_map.size());
+        printf("Set Size: %lu\n",tags.size());
+        printf("FD: %d\n",fd);
+        std::cout << "FInfo Pointer: " << fd_fs_map[fd] << std::endl;
+
+        std::vector<FileInfo*>* rval = fd_fs_map[fd]->tagSearch(tags);
+        printf("Made it\n");
+        data = serialize_fileinfo(rval);
+      }
+      catch(arboreal_exception& e)
+      {
+        std::cerr << e.where() << e.what() << std::endl;
+        return data;
+      }
+
+      return data;
+    }
+    case(5):
+    {
+
+    }
+  }
+}
+
+
+std::unordered_set<std::string> get_set(char* command)
+{
+  std::string exec = command;
+  std::vector<std::string> temp = Parser::split_on_commas(exec);
+  std::unordered_set<std::string> tags;
+  
+  for(unsigned int i = 0; i < temp.size(); i++)
+  {
+    printf("Split: [%d]: %s\n",i,temp[i].c_str());
+    tags.emplace(temp[i]);
+  }
+}
+
+std::vector<std::string> serialize_fileinfo(std::vector<FileInfo*>* fileinfo)
+{
+  std::vector<std::string> data;
+  if(fileinfo != 0)
+  {
+    for(unsigned int i = 0; i < fileinfo->size(); i++)
+    {
+      if(fileinfo->at(i) != 0)
+      {
+        data.push_back(*FileInfo::serialize(fileinfo->at(i)));
+        printf("Serialized Info: %s\n",data[i].c_str());
+      }
+      else{continue;}
+    }
+  }
+  else
+  {
+    throw arboreal_daemon_error("Bad Vector Pointer","[ConnectionDaemon.cpp::execute()]");
+    return data;
+  }
+
+  return data;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

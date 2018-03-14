@@ -386,7 +386,7 @@ void CLI::run()
                   memcpy(new_cwd + sizeof(int),_cwd.c_str(),_cwd.length());
                   send_cmnd(new_cwd);
                   await_response();
-                  if(_is_script != "-s"){std::cout << "Arboreal >> ";}
+                  if(_is_script != "-s"){std::cout << "\nArboreal >> ";}
                   continue;
                }
                send_cmnd(build(rtrn,input));

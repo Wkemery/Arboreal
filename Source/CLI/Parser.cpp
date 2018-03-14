@@ -399,6 +399,29 @@ void Parser::parse_merge(std::vector<std::string>& parsed)
   parsed.push_back(temp1 + "-" + temp2);
 }
 //======================================================================================================================
+std::vector<std::string> Parser::split_on_commas(std::string s)
+{
+  std::vector<std::string> rval;
+  std::string temp;
+  int index = 0;
+  while(index < s.length())
+  {
+    if(s[index] != ',')
+    {
+      temp += s[index];
+      index += 1;
+    }
+    else
+    {
+      rval.push_back(temp);
+      index += 1;
+    }
+  }
+  rval.push_back(temp);
+  return rval;
+}
+//======================================================================================================================
+
 Parser::~Parser(){}
 Parser::Parser(){}
 Parser::Parser(char* buffer, char* cwd, int max_name_size)
