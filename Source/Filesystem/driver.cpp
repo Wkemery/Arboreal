@@ -179,7 +179,7 @@ int main(int argc, char** argv)
     {
       vector<FileInfo*>* foundFiles;
       cout << "Searching for myfile1:" << endl;
-      try{foundFiles = fs1->fileSearch("myfile1");}
+      try{foundFiles = fs1->file_search("myfile1");}
       catch(arboreal_exception& e)
       {cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
       cout << "found " << foundFiles->size() << " files" << endl;
@@ -187,7 +187,7 @@ int main(int argc, char** argv)
 
 
       cout << "Searching for myfile2:" << endl;
-      try{foundFiles = fs1->fileSearch("myfile2");}
+      try{foundFiles = fs1->file_search("myfile2");}
       catch(arboreal_exception& e)
       {cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
       cout << "found " << foundFiles->size() << " files" << endl;
@@ -317,12 +317,12 @@ int main(int argc, char** argv)
 
       /*Find those 5 files*/
       vector<FileInfo*>* foundFiles;
-      try{foundFiles = fs1->tagSearch(tags);}
+      try{foundFiles = fs1->tag_search(tags);}
       catch(arboreal_exception& e)
       {cerr << "Error! " << e.what() << " in " << e.where()<< endl;}
       if(foundFiles->size() != 5)
       {
-        cerr << "TagSearch error. ONly " << foundFiles->size() << " files found" << endl;
+        cerr << "tag_search error. ONly " << foundFiles->size() << " files found" << endl;
       }
 
       /*Create 5 files tagged with 1,3,5*/
@@ -1033,7 +1033,7 @@ int main(int argc, char** argv)
     {
         unordered_set<string> tags;
         tags.insert("Tag0");
-        vector<FileInfo*>* ret = fs1->tagSearch(tags);
+        vector<FileInfo*>* ret = fs1->tag_search(tags);
     }
     default:
     {
