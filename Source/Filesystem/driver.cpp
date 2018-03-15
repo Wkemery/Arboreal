@@ -12,6 +12,7 @@
 #include "Backend/FileSystem.h"
 #include "File.h"
 #include "Backend/Trees.h"
+#include "File.h"
 #include <string>
 #include <string.h>
 #include<unordered_set>
@@ -1034,6 +1035,9 @@ int main(int argc, char** argv)
         unordered_set<string> tags;
         tags.insert("Tag0");
         vector<FileInfo*>* ret = fs1->tag_search(tags);
+        string* serializedFile = FileInfo::serialize(ret->at(0));
+        
+        File* file = File::read_buff(serializedFile->c_str());
     }
     default:
     {

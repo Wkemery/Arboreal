@@ -65,7 +65,7 @@ public:
    * @returns a File* to the created File
    * @sa FileInfo::serialize()
    */
-  static File* read_buff(char* serializedFile);
+  static File* read_buff(const char* serializedFile);
   
 };
 

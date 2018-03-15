@@ -32,7 +32,7 @@ FileAttributes File::get_attributes(){return _attributes;}
 
 
 
-File* File::read_buff(char* serializedFile)
+File* File::read_buff(const char* serializedFile)
 {
   size_t offset = 0;
   
@@ -42,7 +42,7 @@ File* File::read_buff(char* serializedFile)
   
   string filename;
   filename.assign(serializedFile + offset, filenameSize);
-  offset += filenameSize;
+  offset += filenameSize + 1;
   
   size_t numTags;
   memcpy(&numTags, serializedFile + offset, sizeof(size_t));
