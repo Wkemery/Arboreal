@@ -1221,9 +1221,9 @@ string* FileInfo::serialize(FileInfo* file)
   offset+= sizeof(size_t);
   
   memcpy(ret + offset, filename.c_str(), nameSize);
-  offset+= nameSize;
+  offset+= nameSize + 1;
   
-  size_t numTags = filename.size();
+  size_t numTags = file->size();
   memcpy(ret + offset, &numTags, sizeof(size_t));
   offset+= sizeof(size_t);
   
