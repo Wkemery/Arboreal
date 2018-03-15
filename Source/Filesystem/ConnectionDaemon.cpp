@@ -29,6 +29,7 @@
 #include "Backend/FileSystem.h"
 #include "types.h"
 #include "../CLI/Parser.h"
+#include "File.h"
 
 #define BACKLOG 10                  /* Number of Connection Requests that the Server Can Queue */
 #define FLAG 0                      /* Flag for recv() */
@@ -36,7 +37,7 @@
 #define TRUE 1
 #define FALSE 0
 #define PORT 70777
-#define MAX_COMMAND_SIZE 2048
+#define MAX_COMMAND_SIZE 4096
 
 bool DEBUG = false;
 
@@ -54,8 +55,9 @@ std::string get_partition(char* cmnd);
 bool is_number(const char* str);
 std::vector<std::string> execute(int id, char* command, int i);
 std::string pad_string(std::string string, int size, char value);
-std::unordered_set<std::string> get_set(char* command);
+std::unordered_set<std::string> get_set(char* command, char delim);
 std::vector<std::string> serialize_fileinfo(std::vector<FileInfo*>* fileinfo);
+std::string get_file_info(File* file);
 
 
 
@@ -743,7 +745,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
   {
     case(4): // find tag
     {
-      std::unordered_set<std::string> tags = get_set(command);
+      std::unordered_set<std::string> tags = get_set(command,',');
       std::vector<FileInfo*>* rval;
       try
       {
@@ -808,16 +810,18 @@ std::vector<std::string> execute(int id, char* command, int fd)
         std::string success = "New Tag [";
         success += (tag + "] Created");
         data.push_back(success);
-        fd_fs_map[fd]->write_changes();
       }
       catch(arboreal_exception& e)
       {
         std::cerr << e.where() << " -- " << e.what() << std::endl;
         std::string failure = "Creation of Requested Tag [";
-        failure += (tag + "] Failed");
+        failure += (tag + "] Failed\n");
+        failure += "Potential Causes Include: A Full Disk, Internal Logic Error\n";
+
         data.push_back(failure);
         return data;
       }
+      fd_fs_map[fd]->write_changes();
       return data;
     }
     case(7): //create file
@@ -830,20 +834,22 @@ std::vector<std::string> execute(int id, char* command, int fd)
       while(command[index] != '-'){filename += command[index]; index += 1;}
       printf("Filename: %s\n",filename.c_str());
       memcpy(tag,(command + filename.length() + 1), MAX_COMMAND_SIZE - (filename.length() + 1));
-      tags = get_set(tag);
+      tags = get_set(tag,'-');
 
       try
       {
         FileInfo* finfo = fd_fs_map[fd]->create_file(filename,tags);
         if(finfo != 0)
         {
-          std::string serialized = *FileInfo::serialize(finfo);
-          data.push_back(serialized);
+          File* info = File::read_buff(const_cast<char*>(FileInfo::serialize(finfo)->c_str()));
+          data.push_back(get_file_info(info));
         }
         else
         {
           std::string failure = "Creation of Requested File [";
-          failure += (filename + "] Failed");
+          failure += (filename + "] Failed\n");
+          failure += "Potential Causes Include: A Full Disk, One Or More Of The Specified Tags Do Not Exist, Internal Logic Error\n";
+
           data.push_back(failure);
         }
       }
@@ -851,30 +857,70 @@ std::vector<std::string> execute(int id, char* command, int fd)
       {
         std::cerr << e.where() << " -- " << e.what() << std::endl;
         std::string failure = "Creation of Requested File [";
-        failure += (filename + "] Failed");
+        failure += (filename + "] Failed\n");
+        failure += "Potential Causes Include: A Full Disk, One Or More Of The Specified Tags Do Not Exist, Internal Logic Error\n";
         data.push_back(failure);
         return data;
       }
+      fd_fs_map[fd]->write_changes();
       return data;
     }
     case(8):
     {
-      
+      std::unordered_set<std::string> tags;
+      std::string filename;
+      char tag[MAX_COMMAND_SIZE];
+      memset(tag,'\0',MAX_COMMAND_SIZE);
+      int index = 0;
+      while(command[index] != '-'){filename += command[index]; index += 1;}
+      printf("Filename: %s\n",filename.c_str());
+      memcpy(tag,(command + filename.length() + 1), MAX_COMMAND_SIZE - (filename.length() + 1));
+      tags = get_set(tag,'-');
+
+      try
+      {
+        FileInfo* finfo = fd_fs_map[fd]->create_file(filename,tags);
+        if(finfo != 0)
+        {
+          File* info = File::read_buff(const_cast<char*>(FileInfo::serialize(finfo)->c_str()));
+          data.push_back(get_file_info(info));
+        }
+        else
+        {
+          std::string failure = "Creation of Requested File [";
+          failure += (filename + "] Failed\n");
+          failure += "Potential Causes Include: A Full Disk, One Or More Of The Specified Tags Do Not Exist, Internal Logic Error\n";
+
+          data.push_back(failure);
+        }
+      }
+      catch(arboreal_exception& e)
+      {
+        std::cerr << e.where() << " -- " << e.what() << std::endl;
+        std::string failure = "Creation of Requested File [";
+        failure += (filename + "] Failed\n");
+        failure += "Potential Causes Include: A Full Disk, One Or More Of The Specified Tags Do Not Exist, Internal Logic Error\n";
+
+        data.push_back(failure);
+        return data;
+      }
+      fd_fs_map[fd]->write_changes();
+      return data;
     }
   }
 }
 
 
-std::unordered_set<std::string> get_set(char* command)
+std::unordered_set<std::string> get_set(char* command, char delim)
 {
   std::string exec = command;
-  std::vector<std::string> temp = Parser::split_on_delim(exec,',');
+  std::vector<std::string> temp = Parser::split_on_delim(exec,delim);
   std::unordered_set<std::string> tags;
   
   for(unsigned int i = 0; i < temp.size(); i++)
   {
     printf("Split: [%d]: %s\n",i,temp[i].c_str());
-    tags.emplace(temp[i]);
+    if(temp[i] != ""){tags.emplace(temp[i]);}
   }
   return tags;
 }
@@ -888,8 +934,8 @@ std::vector<std::string> serialize_fileinfo(std::vector<FileInfo*>* fileinfo)
     {
       if(fileinfo->at(i) != 0)
       {
-        data.push_back(*FileInfo::serialize(fileinfo->at(i)));
-        printf("Serialized Info: %s\n",data[i].c_str());
+        File* info = File::read_buff(const_cast<char*>(FileInfo::serialize(fileinfo->at(i))->c_str()));
+        data.push_back(get_file_info(info));
       }
       else{continue;}
     }
@@ -903,6 +949,56 @@ std::vector<std::string> serialize_fileinfo(std::vector<FileInfo*>* fileinfo)
   return data;
 }
 
+
+std::string get_file_info(File* file)
+{
+  std::string file_info = ("[ " + file->get_name() + " | ");
+  std::vector<std::string> tags = file->get_tags();
+  for(unsigned int i = 0; i < tags.size(); i++)
+  {
+    if(file_info.length() + 5 == MAX_COMMAND_SIZE)
+    {
+      file_info += " ...]";
+      return file_info;
+    }
+    if(i + 1 != tags.size()){file_info += (tags[i] + ",");}
+    else{file_info += tags[i];}
+  }
+
+  file_info += " |...]";
+
+  // if(file_info.length() < MAX_COMMAND_SIZE)
+  // {
+  //   file_info += " | ";
+
+  //   FileAttributes attr = file->get_attributes();
+  //   file_info += ("Created @ " + std::to_string(attr.creationTime));
+  
+  //   file_info += " | ";
+  //   file_info += ("Last Edit @ " + std::to_string(attr.lastEdit));
+  
+  //   file_info += " | ";
+  //   file_info += "[ ";
+  //   for(unsigned int i = 0; i < 12; i++)
+  //   {
+  //     if(file_info.length() + 5 == MAX_COMMAND_SIZE)
+  //     {
+  //       file_info += " ...]";
+  //       return file_info;
+  //     }
+  //     if(i + 1 == 12){file_info += attr.permissions[i];}
+  //     else{file_info += attr.permissions[i]; file_info += ',';}
+  //   }
+
+  //   if(file_info.length() < MAX_COMMAND_SIZE)
+  //   {
+  //     file_info += std::to_string(attr.owner);
+  //   }
+
+  // }
+
+  return file_info;
+}
 
 
 

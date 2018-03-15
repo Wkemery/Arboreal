@@ -30,7 +30,7 @@
 
 
 #define PERMISSIONS 0666
-#define MAX_COMMAND_SIZE 2048                     /* Maximum Size a FS Command Buffer Can Be */
+#define MAX_COMMAND_SIZE 4096                     /* Maximum Size a FS Command Buffer Can Be */
 #define SHMSZ 1                                   /* The Size of a Shared Memory Segment */
 #define BACKLOG 10                                /* Number of Connection Requests that the Server Can Queue */
 #define FLAG 0                                    /* Flag for Send/Recv. Operations */
