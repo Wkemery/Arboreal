@@ -689,6 +689,11 @@ void FileSystem::tag_file(FileInfo* file, unordered_set<string> tags)
   
   for(string tag : tags)
   {
+    /*Disallow tagging with default*/
+    if(tag == "default")
+    {
+      throw tag_error("Cannot tag a file with the default tag", "FileSystem::tag_file");
+    }
     /*Remove tags that do not exist*/
     tagTree = _RootTree->find(tag);
     if(tagTree == 0)
