@@ -549,6 +549,11 @@ vector<FileInfo*>* FileSystem::tagSearch(unordered_set<string>& tags)
       }
     }
     
+    if(searchTrees.size() == 0)
+    {
+        return ret;
+    }
+    
     TreeObject* smallest = searchTrees[0];
     for(size_t i = 1; i < searchTrees.size(); i++)//Complexity: number of tags specified
     {
