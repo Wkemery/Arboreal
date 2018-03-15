@@ -117,7 +117,7 @@ public:
    * @returns a pointer to a vector of the FileInfo objects which then can be serialized. The returned vector should
    * be freed by the calling code
    */
-  vector<FileInfo*>* tagSearch(unordered_set<string>& tags);
+  vector<FileInfo*>* tag_search(unordered_set<string>& tags);
   
   /*!
    * Will create a new tag if that tag name does not already exist
@@ -199,7 +199,7 @@ public:
    * @returns a pointer to a vector of FileInfo objects that have the specified name. This should be freed by the 
    * calling code
    */
-  vector<FileInfo*>* fileSearch(string name);
+  vector<FileInfo*>* file_search(string name);
   
   /*!
    * Will create a new file with the specified name and tags. The new file must not already exist.

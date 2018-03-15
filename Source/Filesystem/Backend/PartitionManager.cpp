@@ -64,7 +64,6 @@ PartitionManager::~PartitionManager()
 
 BlkNumType PartitionManager::getFreeDiskBlock()
 {
-  //TODO: what if freeblock start and end are the same? well then this must be the last free block
   char* buff = new char[getBlockSize()];
   BlkNumType ret = _freeBlockStart;
   readDiskBlock(_freeBlockStart, buff);

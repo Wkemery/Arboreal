@@ -506,12 +506,12 @@ FileSystem::~FileSystem()
   _fileOpenTable.clear();
 }
 
-vector<FileInfo*>* FileSystem::tagSearch(unordered_set<string>& tags)
+vector<FileInfo*>* FileSystem::tag_search(unordered_set<string>& tags)
 {
   vector<FileInfo*>* ret = new vector<FileInfo*>;
   if(tags.size() == 0)
   {
-    throw tag_error("No tags specified to search for", "FileSystem::tagSearch");
+    throw tag_error("No tags specified to search for", "FileSystem::tag_search");
   }
   else if(tags.size() == 1)
   {
@@ -520,7 +520,7 @@ vector<FileInfo*>* FileSystem::tagSearch(unordered_set<string>& tags)
     
     if(tagTree == 0)
     {
-        throw tag_error("Tag " + *(tags.begin()) + " Does not exist", "FileSystem::tagSearch()");
+        throw tag_error("Tag " + *(tags.begin()) + " Does not exist", "FileSystem::tag_search()");
     }
     
     /*List files in tag tree pointed to by root tree*/
@@ -541,7 +541,7 @@ vector<FileInfo*>* FileSystem::tagSearch(unordered_set<string>& tags)
       TreeObject* tagTree = _RootTree->find(tag);
       if(tagTree == 0)
       {
-        if(DEBUG) cerr << tag + " excluded from search : Tag Does not exist" << endl;
+        throw tag_error("Tag " + tag + " Does not exist", "FileSystem::tag_search()");
       }
       else
       {
@@ -594,7 +594,7 @@ vector<FileInfo*>* FileSystem::tagSearch(unordered_set<string>& tags)
   return ret;
 }
 
-vector<FileInfo*>* FileSystem::fileSearch(string name)
+vector<FileInfo*>* FileSystem::file_search(string name)
 {
   /*We're going to use the _allFiles variable to find the files*/
   
@@ -736,8 +736,6 @@ void FileSystem::tag_file(FileInfo* file, unordered_set<string> tags)
     return;
   }
   
-
-  
   /*For every tag in newTags*/
   for(string tag : wholeTagSet)
   {
@@ -816,7 +814,13 @@ void FileSystem::untag_file(FileInfo* file, unordered_set<string> tags, bool del
   {
     if(!deleting)
     {
-      /*TODO: Search default tree for file*/
+      TreeObject* defaultTree = _RootTree->find("default");
+      if(defaultTree == 0)
+      {
+        throw arboreal_logic_error("Default Tree not Found!", "FileSystem::untag_file()");
+      }
+      
+      fileCheck = defaultTree->find(file->mangle());
     }
   }
   else
@@ -831,7 +835,7 @@ void FileSystem::untag_file(FileInfo* file, unordered_set<string> tags, bool del
 
   if(fileCheck != 0)
   {
-    throw file_error(file->get_name() + " with the specified tags already exists", "FileSystem::tag_file");
+    throw file_error(file->get_name() + " with the specified tags already exists", "FileSystem::untag_file");
   }
   
   for(string tag : tagsToRemove)
