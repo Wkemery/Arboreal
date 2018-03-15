@@ -693,7 +693,7 @@ void FileSystem::tag_file(FileInfo* file, unordered_set<string> tags)
     tagTree = _RootTree->find(tag);
     if(tagTree == 0)
     {
-      if(DEBUG) cerr << tag << " Does Not Exist: Not added to file tag set" << endl;
+      throw tag_error (" Does Not Exist: Not added to file tag set", "FileSystem::tag_file");
       tagsToAdd.erase(tag);
     }
     else
@@ -732,7 +732,7 @@ void FileSystem::tag_file(FileInfo* file, unordered_set<string> tags)
   
   if(wholeTagSet.size() == 0)
   {
-    if(DEBUG) cerr << "File was not tagged with anything new" << endl;
+    throw tag_error("File was not tagged with anything new", "FileSystem::tag_file");
     return;
   }
   
@@ -793,7 +793,7 @@ void FileSystem::untag_file(FileInfo* file, unordered_set<string> tags, bool del
     tagTree = _RootTree->find(tag);
     if(tagTree == 0)
     {
-      if(DEBUG) cerr << tag << " Does Not Exist: Tag cannot be removed" << endl;
+      throw tag_error (" Does Not Exist: Tag cannot be removed", "FileSystem::untag_file()");
       tagsToRemove.erase(tag);
     }
     else if(currentTagSet.find(tag) == currentTagSet.end())
@@ -828,21 +828,21 @@ void FileSystem::untag_file(FileInfo* file, unordered_set<string> tags, bool del
     tagTree = _RootTree->find(*(potentialTagSet.begin()));
     if(tagTree == 0)
     {
-      throw arboreal_logic_error(*potentialTagSet.begin() + " does not exist", "FileSystem::untag_file");
+      throw arboreal_logic_error(*potentialTagSet.begin() + " does not exist", "FileSystem::untag_file()");
     }
     fileCheck =  tagTree->find(file->mangle(potentialTagSet));
   }
 
   if(fileCheck != 0)
   {
-    throw file_error(file->get_name() + " with the specified tags already exists", "FileSystem::untag_file");
+    throw file_error(file->get_name() + " with the specified tags already exists", "FileSystem::untag_file()");
   }
   
   for(string tag : tagsToRemove)
   {
     if(tag == "default")
     {
-      if(DEBUG) cerr << tag + " cannot be removed from " << file->get_name() << endl;
+      throw (tag + " cannot be removed from " + file->get_name(), "FileSystem::untag_file()");
     }
     
     /*find tagTree*/
