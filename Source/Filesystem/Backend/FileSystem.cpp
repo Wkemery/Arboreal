@@ -679,9 +679,9 @@ void FileSystem::tag_file(FileInfo* file, unordered_set<string> tags)
 {
   /*Validate the tagging of this file first*/
   unordered_set<string> tagsToAdd = tags;
+  if(file == 0) {throw file_error ("File Does not Exist", "FileSystem::tag_file");}
   
   if(tagsToAdd.size() == 0) {throw tag_error("No tags specified","FileSystem::tag_file");}
-  if(file == 0) {throw file_error ("File Does not Exist", "FileSystem::tag_file");}
   
   unordered_set<string> wholeTagSet = file->get_tags();
   
@@ -925,10 +925,16 @@ FileInfo* FileSystem::create_file(string filename, unordered_set<string>& tags)
   {
     if(tags.size() == 0)
     {
-      unordered_set<string> temp;
-      temp.insert("default");
+      TreeObject* defaultTree = _RootTree->find("default");
+      if(defaultTree == 0)
+      {
+        throw arboreal_logic_error("Default Tree not Found!", "FileSystem::untag_file()");
+      }
       
-      tag_file(newFile, temp);
+      newFile->insert("default", defaultTree);
+      vector<string> tagSet; tagSet.push_back("default");
+      defaultTree->insert(newFile->mangle(tagSet), newFile);
+      insert_modification(defaultTree);
     }
     else
     {
