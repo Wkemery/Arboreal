@@ -747,7 +747,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
       std::vector<FileInfo*>* rval;
       try
       {
-        rval = fd_fs_map[fd]->tagSearch(tags);
+        rval = fd_fs_map[fd]->tag_search(tags);
         data = serialize_fileinfo(rval);
         if(data.size() == 0)
         {
@@ -782,7 +782,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
       std::vector<FileInfo*>* rval;
       try
       {
-        rval = fd_fs_map[fd]->fileSearch(file);
+        rval = fd_fs_map[fd]->file_search(file);
         data = serialize_fileinfo(rval);
       }
       catch(arboreal_exception& e)
