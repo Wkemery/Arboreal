@@ -825,11 +825,11 @@ std::vector<std::string> execute(int id, char* command, int fd)
       std::unordered_set<std::string> tags;
       std::string filename;
       char tag[MAX_COMMAND_SIZE];
-      memset(tags,'\0',MAX_COMMAND_SIZE);
+      memset(tag,'\0',MAX_COMMAND_SIZE);
       int index = 0;
       while(command[index] != '-'){filename += command[index]; index += 1;}
       printf("Filename: %s\n",filename.c_str());
-      memcpy(tag,(command + file.length() + 1), MAX_COMMAND_SIZE - (file.length() + 1));
+      memcpy(tag,(command + filename.length() + 1), MAX_COMMAND_SIZE - (filename.length() + 1));
       tags = get_set(tag);
 
       try
@@ -837,7 +837,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
         FileInfo* finfo = fd_fs_map[fd]->create_file(filename,tags);
         if(finfo != 0)
         {
-          std::string serialized = FileInfo::serialize(finfo);
+          std::string serialized = *FileInfo::serialize(finfo);
           data.push_back(serialized);
         }
         else
