@@ -41,9 +41,9 @@ private:
   BlkNumType levelInc(size_t RelativeBlock, BlkNumType LedgerBlock, short level);
 public:  
   FileOpen(FileInfo* file, char mode, PartitionManager* pm);
-  FileInfo* getFile();
-  size_t getSeek();
-  char getMode();
+  FileInfo* get_file();
+  size_t get_seek();
+  char get_mode();
   void increment_seek(size_t bytes, bool write = false);
   void decrement_seek(size_t bytes);
   

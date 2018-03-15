@@ -40,9 +40,9 @@ FileOpen::FileOpen(FileInfo* file, char mode, PartitionManager* pm): _file(file)
   }
 }
 
-FileInfo* FileOpen::getFile(){return _file;}
-size_t FileOpen::getSeek(){return _seek;}
-char FileOpen::getMode(){return _mode;}
+FileInfo* FileOpen::get_file(){return _file;}
+size_t FileOpen::get_seek(){return _seek;}
+char FileOpen::get_mode(){return _mode;}
 bool FileOpen::get_EOF(){return _EOF;}
 void FileOpen::go_past_last_byte()
 {
@@ -52,18 +52,17 @@ void FileOpen::go_past_last_byte()
 
 void FileOpen::increment_seek(size_t bytes, bool write)
 {
-  
-  if(bytes > ((_file->get_file_size() + 1) - _seek))
+  if(bytes == 0)return;
+  if(bytes > ((_file->get_file_size() + 1) - _seek) || (_seek == 0))
   {
     if(write)
     {
-      size_t newSize = 0;
-      if(_seek > _file->get_file_size()) newSize = bytes + _seek - 1;
-      else newSize = bytes + _seek;
       if(_seek == 0)
       {
         _seek++;
       }
+      size_t newSize =bytes + _seek - 1;
+      
       _seek += bytes;
       if(_file->get_file_size() < newSize)
       {
@@ -1054,7 +1053,7 @@ size_t FileSystem::read_file(unsigned int fileDesc, char* data, size_t len)
   size_t dataOffset = 0;
   char* buff = new char[_myPartitionManager->getBlockSize()];
   
-  if(open_file->getMode() != 'r' && open_file->getMode() != 'x')
+  if(open_file->get_mode() != 'r' && open_file->get_mode() != 'x')
   {
     delete[] buff;
     throw file_error("File not opened with read permissions", "FileSystem::write_file");
@@ -1078,9 +1077,9 @@ size_t FileSystem::read_file(unsigned int fileDesc, char* data, size_t len)
   }
   
   /*Set len so we don't actually read past the end of valid data*/
-  if(len > (open_file->getFile()->get_file_size() - (open_file->getSeek() - 1)))
+  if(len > (open_file->get_file()->get_file_size() - (open_file->get_seek() - 1)))
   {
-    len = open_file->getFile()->get_file_size() - open_file->getSeek(); 
+    len = open_file->get_file()->get_file_size() - open_file->get_seek(); 
     set_EOF = true;
   }
   
@@ -1168,7 +1167,7 @@ size_t FileSystem::write_file(unsigned int fileDesc, const char* data, size_t le
   size_t dataOffset = 0;
   char* buff = new char[_myPartitionManager->getBlockSize()];
   
-  if(open_file->getMode() != 'w' && open_file->getMode() != 'x')
+  if(open_file->get_mode() != 'w' && open_file->get_mode() != 'x')
   {
     delete[] buff;
     throw file_error("File not opened with write permissions", "FileSystem::write_file");
@@ -1199,7 +1198,7 @@ size_t FileSystem::write_file(unsigned int fileDesc, const char* data, size_t le
     memcpy(buff + currentIndex.offset, data, len);
     try{_myPartitionManager->writeDiskBlock(currentIndex.blknum, buff);}
     catch(arboreal_exception& e) { delete[] buff; throw; }
-    open_file->increment_seek(len, true); open_file->getFile()->set_edit();
+    open_file->increment_seek(len, true); open_file->get_file()->set_edit();
     delete[] buff;
     return len;
   }
@@ -1208,7 +1207,7 @@ size_t FileSystem::write_file(unsigned int fileDesc, const char* data, size_t le
     memcpy(buff + currentIndex.offset, data, bytesToWrite);
     try{_myPartitionManager->writeDiskBlock(currentIndex.blknum, buff);}
     catch(arboreal_exception& e) { delete[] buff; throw; }
-    open_file->increment_seek(bytesToWrite, true); open_file->getFile()->set_edit();
+    open_file->increment_seek(bytesToWrite, true); open_file->get_file()->set_edit();
   }
 
   len-= bytesToWrite;
@@ -1231,7 +1230,7 @@ size_t FileSystem::write_file(unsigned int fileDesc, const char* data, size_t le
     memcpy(buff, data + dataOffset, _myPartitionManager->getBlockSize());
     try{_myPartitionManager->writeDiskBlock(currentIndex.blknum, buff);}
     catch(arboreal_exception& e) { delete[] buff; throw; }
-    open_file->increment_seek(_myPartitionManager->getBlockSize(), true); open_file->getFile()->set_edit();
+    open_file->increment_seek(_myPartitionManager->getBlockSize(), true); open_file->get_file()->set_edit();
     len -= _myPartitionManager->getBlockSize(); dataOffset += _myPartitionManager->getBlockSize(); 
     
   }
@@ -1250,7 +1249,7 @@ size_t FileSystem::write_file(unsigned int fileDesc, const char* data, size_t le
     memcpy(buff + currentIndex.offset, data + dataOffset, len);
     try{_myPartitionManager->writeDiskBlock(currentIndex.blknum, buff);}
     catch(arboreal_exception& e) { delete[] buff; throw; }
-    open_file->increment_seek(len, true); open_file->getFile()->set_edit();
+    open_file->increment_seek(len, true); open_file->get_file()->set_edit();
     dataOffset += len; 
   }
   
