@@ -1,6 +1,6 @@
 
 
-#include "parser.h"
+#include "Parser.h"
 
 int main()
 {
@@ -32,7 +32,7 @@ int main()
     std::string test20 = "tag [file.txt,file1.txt,file2.txt] -> tag99";
     std::string cwd_test = "/t1/t2/t3/t4/t5";
 
-    Parser p(test1);
+    Parser p(test1,"/",64);
     std::vector<std::string> vec = p.parse(4);
 
     std::cout << "\nTest 4\n";
@@ -247,7 +247,7 @@ int main()
         std::cout << "Item: " << vec[i] << std::endl;
     }
 
-    vec = p.get_cwd_tags(cwd_test);
+    vec = p.get_cwd_tags();
     std::cout << "\nTest CWD\n";
     for(uint i = 0; i < vec.size(); i++)
     {

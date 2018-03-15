@@ -316,8 +316,8 @@ void send_to_server(int client_sock, std::string client_sockpath, char* cmnd, in
 //[================================================================================================]
 char* receive_from_server(int client_sock, std::string client_sockpath, int size, int flag)
 {
-    char* data = new char[MAX_COMMAND_SIZE];
-    memset(data, '\0', MAX_COMMAND_SIZE);
+    char* data = new char[size];
+    memset(data, '\0', size);
 
     if(recv(client_sock, data, size, flag) < 0)
     {
@@ -341,6 +341,36 @@ char* receive_from_server(int client_sock, std::string client_sockpath, int size
         throw arboreal_cli_error(what,where);
     }
     return data;
+}
+
+std::string receive_from_server(int client_sock, std::string client_sockpath)
+{
+    char data[MAX_COMMAND_SIZE];
+    memset(data, '\0', MAX_COMMAND_SIZE);
+
+    if(recv(client_sock, data, MAX_COMMAND_SIZE, 0) < 0)
+    {
+        if(close(client_sock) < 0)
+        {
+            std::string where = "[cli_helper.hpp::receive_from_server()]: ";
+            std::string what = "Client Socket Close Failed -- ";
+            what += strerror(errno);
+            throw arboreal_cli_error(what,where);
+        }
+        if(unlink(client_sockpath.c_str()) < 0)
+        {
+            std::string where = "[cli_helper.hpp::receive_from_server()]: ";
+            std::string what = "Client Socket Unlink Failed -- ";
+            what += strerror(errno);
+            throw arboreal_cli_error(what,where);
+        }
+        std::string where = "[cli_helper.hpp::receive_from_server()]: ";
+        std::string what = "Receive From Server Failed -- ";
+        what += strerror(errno);
+        throw arboreal_cli_error(what,where);
+    }
+    std::string rval = data;
+    return rval;
 }
 //[================================================================================================]
 #endif

@@ -29,7 +29,7 @@
 
 
 #define MAX_HISTORY_SIZE 10                 /* Maximum number of previously entered commands recorded */
-#define MAX_COMMAND_SIZE 2048               /* Maximum size a command can be */
+#define MAX_COMMAND_SIZE 4096               /* Maximum size a command can be */
 #define SHMSZ 1                             /* Size of Shared Memory Segment */
 #define PERMISSIONS 0666                    /* Socket Permissions */
 #define FLAG 0                              /* Socket Send/Recv Flag */

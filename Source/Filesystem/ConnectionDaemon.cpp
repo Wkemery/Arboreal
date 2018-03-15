@@ -29,6 +29,7 @@
 #include "Backend/FileSystem.h"
 #include "types.h"
 #include "../CLI/Parser.h"
+#include "File.h"
 
 #define BACKLOG 10                  /* Number of Connection Requests that the Server Can Queue */
 #define FLAG 0                      /* Flag for recv() */
@@ -36,7 +37,7 @@
 #define TRUE 1
 #define FALSE 0
 #define PORT 70777
-#define MAX_COMMAND_SIZE 2048
+#define MAX_COMMAND_SIZE 4096
 
 bool DEBUG = false;
 
@@ -54,8 +55,9 @@ std::string get_partition(char* cmnd);
 bool is_number(const char* str);
 std::vector<std::string> execute(int id, char* command, int i);
 std::string pad_string(std::string string, int size, char value);
-std::unordered_set<std::string> get_set(char* command);
+std::unordered_set<std::string> get_set(char* command, char delim);
 std::vector<std::string> serialize_fileinfo(std::vector<FileInfo*>* fileinfo);
+std::string get_file_info(File* file);
 
 
 
@@ -368,10 +370,17 @@ int main(int argc, char** argv)
                     rval = send(i, failure.c_str(), MAX_COMMAND_SIZE, FLAG);
                   }
                   std::vector<std::string> data = execute(current_command_id, buffer,i);
+                  printf("Data Size: %lu\n",data.size());
                   for(unsigned int j = 0; j < data.size(); j++)
                   {
                     std::string temp = pad_string(data[j],(MAX_COMMAND_SIZE - data[j].length()), '\0');
                     rval = send(i, temp.c_str(), MAX_COMMAND_SIZE, FLAG);
+                  }
+                  if(current_command_id == 5 || current_command_id == 4)
+                  {
+                    std::string done = "DONE";
+                    done = pad_string(done, MAX_COMMAND_SIZE - done.length(), '\0');
+                    rval = send(i, done.c_str(), MAX_COMMAND_SIZE, FLAG);
                   }
                 }
               }
@@ -430,7 +439,7 @@ int main(int argc, char** argv)
   {
     if (FD_ISSET(i, &master_set)) close(i);
   }
-  for(auto it = begin(part_fs_map); it != end(part_fs_map); it++)
+  for(auto it = begin(part_fs_map); it != end(part_fs_map); ++it)
   {
     delete it->second;
   }
@@ -457,10 +466,14 @@ int main(int argc, char** argv)
 ///
 void sig_caught(int sig)
 {
-  printf("\nD: Received - %s\n", strsignal(sig));
+  printf("\nD: [Fatal Error] Daemon Received Signal - %s\n", strsignal(sig));
   for (int i=0; i <= max_fid; ++i)
   {
     if (FD_ISSET(i, &master_set)) close(i);
+  }
+  for(auto it = begin(part_fs_map); it != end(part_fs_map); ++it)
+  {
+    delete it->second;
   }
   exit(-1);
 }
@@ -480,7 +493,7 @@ void quit_fs(void)
   {
     if (FD_ISSET(i, &master_set)) close(i);
   }
-  for(auto it = begin(part_fs_map); it != end(part_fs_map); it++)
+  for(auto it = begin(part_fs_map); it != end(part_fs_map); ++it)
   {
     delete it->second;
   }
@@ -733,52 +746,193 @@ std::string pad_string(std::string string, int size, char value)
 
 std::vector<std::string> execute(int id, char* command, int fd)
 {
-  std::string exec = command;
   std::vector<std::string> data;
   switch(id)
   {
-    case(4):
+    case(4): // find tag
     {
-      std::unordered_set<std::string> tags = get_set(command);
-
+      std::unordered_set<std::string> tags = get_set(command,',');
+      std::vector<FileInfo*>* rval;
       try
       {
-        printf("FD Map Size: %lu\n",fd_fs_map.size());
-        printf("Set Size: %lu\n",tags.size());
-        printf("FD: %d\n",fd);
-        std::cout << "FInfo Pointer: " << fd_fs_map[fd] << std::endl;
+        rval = fd_fs_map[fd]->tag_search(tags);
+        data = serialize_fileinfo(rval);
+        if(data.size() == 0)
+        {
+          data.push_back("Tag Exists But Has No Associated Files");
+        }
+      }
+      catch(arboreal_exception& e)
+      {
+        // And Search on tags that do not exist results in segfault
+        std::cerr << e.where() << " -- " << e.what() << std::endl;
+        std::string failure;
+        if(tags.size() == 1)
+        {
+          auto it = begin(tags);
+          failure = "The Requested Tag [";
+          failure += (*it + "] Does Not Exist");
+        }
+        else
+        {
+          failure = "Some Or All Of The Requested Tags Do Not Exist";
+        }
+        data.push_back(failure);
+        return data;
+      }
 
-        std::vector<FileInfo*>* rval = fd_fs_map[fd]->tagSearch(tags);
-        printf("Made it\n");
+      delete rval;
+      return data;
+    }
+    case(5): //find file
+    { 
+      std::string file = command;
+      std::vector<FileInfo*>* rval;
+      try
+      {
+        rval = fd_fs_map[fd]->file_search(file);
         data = serialize_fileinfo(rval);
       }
       catch(arboreal_exception& e)
       {
+        // And Search on tags that do not exist results in segfault
         std::cerr << e.where() << e.what() << std::endl;
+        std::string failure;
+        failure = "The Requested File [";
+        failure += (file + "] Does Not Exist");
+        data.push_back(failure);
         return data;
       }
 
+      delete rval;
       return data;
     }
-    case(5):
+    case(6): // Create Tag
     {
+      std::string tag = command;
+      try
+      {
+        fd_fs_map[fd]->create_tag(tag);
+        std::string success = "New Tag [";
+        success += (tag + "] Created");
+        data.push_back(success);
+      }
+      catch(arboreal_exception& e)
+      {
+        std::cerr << e.where() << " -- " << e.what() << std::endl;
+        std::string failure = "Creation of Requested Tag [";
+        failure += (tag + "] Failed\n");
+        failure += "Potential Causes Include: A Full Disk, Tag Already Exists, Internal Logic Error\n";
 
+        data.push_back(failure);
+        return data;
+      }
+      fd_fs_map[fd]->write_changes();
+      return data;
+    }
+    case(7): //create file
+    {
+      std::unordered_set<std::string> tags;
+      std::string filename;
+      char tag[MAX_COMMAND_SIZE];
+      memset(tag,'\0',MAX_COMMAND_SIZE);
+      int index = 0;
+      while(command[index] != '-'){filename += command[index]; index += 1;}
+      printf("Filename: %s\n",filename.c_str());
+      memcpy(tag,(command + filename.length() + 1), MAX_COMMAND_SIZE - (filename.length() + 1));
+      tags = get_set(tag,'-');
+
+      try
+      {
+        FileInfo* finfo = fd_fs_map[fd]->create_file(filename,tags);
+        if(finfo != 0)
+        {
+          File* info = File::read_buff(const_cast<char*>(FileInfo::serialize(finfo)->c_str()));
+          data.push_back(get_file_info(info));
+        }
+        else
+        {
+          std::string failure = "Creation of Requested File [";
+          failure += (filename + "] Failed\n");
+          failure += "Potential Causes Include: A Full Disk, One Or More Of The Specified Tags Do Not Exist, \
+          File Already Exists, Internal Logic Error\n";
+
+          data.push_back(failure);
+        }
+      }
+      catch(arboreal_exception& e)
+      {
+        std::cerr << e.where() << " -- " << e.what() << std::endl;
+        std::string failure = "Creation of Requested File [";
+        failure += (filename + "] Failed\n");
+        failure += "Potential Causes Include: A Full Disk, One Or More Of The Specified Tags Do Not Exist, \
+          File Already Exists, Internal Logic Error\n";
+        data.push_back(failure);
+        return data;
+      }
+      fd_fs_map[fd]->write_changes();
+      return data;
+    }
+    case(8):
+    {
+      std::unordered_set<std::string> tags;
+      std::string filename;
+      char tag[MAX_COMMAND_SIZE];
+      memset(tag,'\0',MAX_COMMAND_SIZE);
+      int index = 0;
+      while(command[index] != '-'){filename += command[index]; index += 1;}
+      printf("Filename: %s\n",filename.c_str());
+      memcpy(tag,(command + filename.length() + 1), MAX_COMMAND_SIZE - (filename.length() + 1));
+      tags = get_set(tag,'-');
+
+      try
+      {
+        FileInfo* finfo = fd_fs_map[fd]->create_file(filename,tags);
+        if(finfo != 0)
+        {
+          File* info = File::read_buff(const_cast<char*>(FileInfo::serialize(finfo)->c_str()));
+          data.push_back(get_file_info(info));
+        }
+        else
+        {
+          std::string failure = "Creation of Requested File [";
+          failure += (filename + "] Failed\n");
+          failure += "Potential Causes Include: A Full Disk, One Or More Of The Specified Tags Do Not Exist, \
+          File Already Exists, Internal Logic Error\n";
+
+          data.push_back(failure);
+        }
+      }
+      catch(arboreal_exception& e)
+      {
+        std::cerr << e.where() << " -- " << e.what() << std::endl;
+        std::string failure = "Creation of Requested File [";
+        failure += (filename + "] Failed\n");
+        failure += "Potential Causes Include: A Full Disk, One Or More Of The Specified Tags Do Not Exist, \
+        File Already Exists, Internal Logic Error\n";
+
+        data.push_back(failure);
+        return data;
+      }
+      fd_fs_map[fd]->write_changes();
+      return data;
     }
   }
 }
 
 
-std::unordered_set<std::string> get_set(char* command)
+std::unordered_set<std::string> get_set(char* command, char delim)
 {
   std::string exec = command;
-  std::vector<std::string> temp = Parser::split_on_commas(exec);
+  std::vector<std::string> temp = Parser::split_on_delim(exec,delim);
   std::unordered_set<std::string> tags;
   
   for(unsigned int i = 0; i < temp.size(); i++)
   {
     printf("Split: [%d]: %s\n",i,temp[i].c_str());
-    tags.emplace(temp[i]);
+    if(temp[i] != ""){tags.emplace(temp[i]);}
   }
+  return tags;
 }
 
 std::vector<std::string> serialize_fileinfo(std::vector<FileInfo*>* fileinfo)
@@ -790,8 +944,8 @@ std::vector<std::string> serialize_fileinfo(std::vector<FileInfo*>* fileinfo)
     {
       if(fileinfo->at(i) != 0)
       {
-        data.push_back(*FileInfo::serialize(fileinfo->at(i)));
-        printf("Serialized Info: %s\n",data[i].c_str());
+        File* info = File::read_buff(const_cast<char*>(FileInfo::serialize(fileinfo->at(i))->c_str()));
+        data.push_back(get_file_info(info));
       }
       else{continue;}
     }
@@ -805,6 +959,53 @@ std::vector<std::string> serialize_fileinfo(std::vector<FileInfo*>* fileinfo)
   return data;
 }
 
+
+std::string get_file_info(File* file)
+{
+  std::string file_info = ("[ " + file->get_name() + " | ");
+  std::vector<std::string> tags = file->get_tags();
+  for(unsigned int i = 0; i < tags.size(); i++)
+  {
+    if(file_info.length() + 5 == MAX_COMMAND_SIZE)
+    {
+      file_info += " ...]";
+      return file_info;
+    }
+    if(i + 1 != tags.size()){file_info += (tags[i] + ",");}
+    else{file_info += tags[i];}
+  }
+
+  //file_info += " |...]";
+
+  if(file_info.length() < MAX_COMMAND_SIZE)
+  {
+    file_info += " | ";
+
+    FileAttributes attr = file->get_attributes();
+
+    std::tm * ptm = std::localtime(&attr.creationTime);
+    char buffer[32];
+    memset(buffer,'\0',32);
+    // Format: Mo, 15.06.2009 20:20:00
+    std::strftime(buffer, 32, "%a, %d.%m.%Y %H:%M:%S", ptm); 
+
+    file_info += "Created @ ";
+    file_info += buffer;
+  
+    file_info += " | ";
+
+    memset(buffer,'\0',32);
+    ptm = std::localtime(&attr.lastEdit);
+    // Format: Mo, 15.06.2009 20:20:00
+    std::strftime(buffer, 32, "%a, %d.%m.%Y %H:%M:%S", ptm); 
+    file_info += "Last Edit @ ";
+    file_info += buffer;
+  
+    file_info += " ...]";
+  }
+
+  return file_info;
+}
 
 
 

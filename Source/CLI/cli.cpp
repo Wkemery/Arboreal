@@ -424,9 +424,22 @@ void CLI::send_cmnd(char* cmnd)
 void CLI::await_response()
 {
    if(_dbug) std::cout << "C: Awaiting Response From Server..." << std::endl;
-   char* data = receive_from_server(_client_sock,_client_sockpath,MAX_COMMAND_SIZE,FLAG);
-   std::string dta = data;
-   if(_dbug) std::cout << "C: Data Received: " << dta << std::endl;
+   std::string data = receive_from_server(_client_sock,_client_sockpath);
+   if(data == "WAIT")
+   {
+      char* temp = receive_from_server(_client_sock,_client_sockpath, MAX_COMMAND_SIZE, FLAG);
+      int read_size = get_cmnd_id(temp);
+      delete[] temp;
+
+      char* data = receive_from_server(_client_sock,_client_sockpath, read_size, FLAG);
+      std::string to_print = data;
+      std::cout << to_print << std::endl;
+      delete[] data;
+   }
+   else
+   {
+      std::cout << data << std::endl;
+   }
    return;
 }
 //[================================================================================================]

@@ -30,7 +30,7 @@
 
 
 #define PERMISSIONS 0666
-#define MAX_COMMAND_SIZE 2048                     /* Maximum Size a FS Command Buffer Can Be */
+#define MAX_COMMAND_SIZE 4096                     /* Maximum Size a FS Command Buffer Can Be */
 #define SHMSZ 1                                   /* The Size of a Shared Memory Segment */
 #define BACKLOG 10                                /* Number of Connection Requests that the Server Can Queue */
 #define FLAG 0                                    /* Flag for Send/Recv. Operations */
@@ -69,8 +69,8 @@ int main(int argc, char** argv)
 
   int max_string_size; // Will be set via handshake
   /* Turn on debug printing */
-  bool dbug = true;
-  if(argc == 5) dbug = true;
+  bool dbug = false;
+  if(argc == 7) dbug = true;
 
   if(dbug) std::cout << "L: Beginning Liaison Process..." << std::endl;
   std::string client_sockpath = argv[0];
@@ -308,10 +308,8 @@ int main(int argc, char** argv)
         cwd = temp;
         if(dbug) printf("L: Working Directory Switched To: %s\n",cwd.c_str());
         parser->set_cwd(cwd);
-        char success[MAX_COMMAND_SIZE];
-        memset(success,'\0',MAX_COMMAND_SIZE);
-        memcpy(success,"success",sizeof("success"));
-        send_response(client_sock,success,MAX_COMMAND_SIZE,FLAG,liaison_sock,liaison_sockpath,client_sockpath);
+        std::string success = "Working Directory Switched To: [ " + cwd + " ]";
+        send_response(client_sock,success.c_str(),MAX_COMMAND_SIZE,FLAG,liaison_sock,liaison_sockpath,client_sockpath);
         continue;
       }
       else if(command_id == 0)
@@ -368,19 +366,73 @@ int main(int argc, char** argv)
           s += std::to_string(max_string_size);
           s += "\n";
           s = pad_string(s, MAX_COMMAND_SIZE - s.length(), '\0');
-          send_response(client_sock,const_cast<char*>(s.c_str()),MAX_COMMAND_SIZE,FLAG,liaison_sock,liaison_sockpath,client_sockpath);
+          send_response(client_sock,s.c_str(),MAX_COMMAND_SIZE,FLAG,liaison_sock,liaison_sockpath,client_sockpath);
           continue;
         }
-        print_vector(vec);
-        for(unsigned int i = 0; i < vec.size(); i++)
-        {
-          std::string command = pad_string(vec[i],(MAX_COMMAND_SIZE - vec[i].length()),'\0');
-          int rval = send(liaison_fid,command.c_str(),MAX_COMMAND_SIZE,FLAG);
+        //print_vector(vec);
 
+
+        if(command_id != 4 && command_id != 5)
+        {
+          std::string data = "\n";
+          for(unsigned int i = 0; i < vec.size(); i++)
+          {
+            std::string command = pad_string(vec[i],(MAX_COMMAND_SIZE - vec[i].length()),'\0');
+            int rval = send(liaison_fid,command.c_str(),MAX_COMMAND_SIZE,FLAG);
+  
+            char response[MAX_COMMAND_SIZE];
+            memset(response,'\0',MAX_COMMAND_SIZE);
+            rval = recv(liaison_fid,response,MAX_COMMAND_SIZE,FLAG);
+            if(rval > 0)
+            {
+              data += response;
+              data += "\n";
+            }
+            memset(response,'\0',MAX_COMMAND_SIZE);
+          }
+  
+          data = pad_string(data, MAX_COMMAND_SIZE - data.length(), '\0');
+          send_response(client_sock,data.c_str(),MAX_COMMAND_SIZE,FLAG,
+                        liaison_sock,liaison_sockpath,client_sockpath);
+        }
+        else
+        {
+          for(unsigned int i = 0; i < vec.size(); i++)
+          {
+            std::string command = pad_string(vec[i],(MAX_COMMAND_SIZE - vec[i].length()),'\0');
+            send(liaison_fid,command.c_str(),MAX_COMMAND_SIZE,FLAG);
+          }
+
+          std::string data = "\n";
+          std::string stemp;
           char response[MAX_COMMAND_SIZE];
           memset(response,'\0',MAX_COMMAND_SIZE);
-          rval = recv(liaison_fid,response,MAX_COMMAND_SIZE,FLAG);
-          send_response(client_sock,response,MAX_COMMAND_SIZE,FLAG,liaison_sock,liaison_sockpath,client_sockpath);
+          while(stemp != "DONE")
+          {
+            data += (stemp + "\n");
+            stemp = "";
+            int rval = recv(liaison_fid,response,MAX_COMMAND_SIZE,FLAG);
+            if(rval > 0){stemp = response;}
+          }
+
+          std::string wait = "WAIT";
+          wait = pad_string(wait, MAX_COMMAND_SIZE - wait.length(), '\0');
+          send_response(client_sock,wait.c_str(),MAX_COMMAND_SIZE,FLAG,
+                        liaison_sock,liaison_sockpath,client_sockpath);
+
+          char read_size[MAX_COMMAND_SIZE];
+          int r_size = data.length();
+
+          memset(read_size, '\0', MAX_COMMAND_SIZE);
+          memcpy(read_size, &r_size, sizeof(int));
+
+          send_response(client_sock, read_size, MAX_COMMAND_SIZE, FLAG,
+                        liaison_sock,liaison_sockpath, client_sockpath);
+
+          send_response(client_sock, data.c_str(), r_size, FLAG,
+                        liaison_sock,liaison_sockpath, client_sockpath);
+
+          //printf("Data: %s\n", data.c_str());
         }
       }
 

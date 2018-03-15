@@ -53,7 +53,7 @@ int main(int argc, char** argv)
 
   try
   {
-    d = new Disk(1000, 4096, const_cast<char *>("DISK1"));
+    d = new Disk(500, 512, const_cast<char *>("DISK1"));
     dm = new DiskManager(d);
     fs1 = new FileSystem(dm, "PartitionA");
   }
@@ -692,7 +692,7 @@ int main(int argc, char** argv)
 
       try
       {
-        fullPath.push_back("Tag7"); fullPath.push_back("Tag9"); fullPath.push_back("File2");
+        fullPath.push_back("Tag0"); fullPath.push_back("Tag1"); fullPath.push_back("File1");
         int fd1 = fs1->open_file(fullPath, 'w');
         int fd2 = fs1->open_file(fullPath, 'r'); fullPath.clear();
 
@@ -795,7 +795,7 @@ int main(int argc, char** argv)
         cout << "Resetting Buffer: " << endl;
         memset(buff, 0, bufferSize);
         cout << "Moving the fd to the ! with seek_file_absolute" << endl;
-        fs1->seek_file_absolute(fd3, 700); //should point directly at the !
+        fs1->seek_file_absolute(fd3, 699); //should point directly at the !
         ret = fs1->read_file(fd3, buff, bytes);
 
         cout << "Bytes Read return val: " << ret << " " << symbol << " symbols from FD 3" << endl;
@@ -1032,12 +1032,26 @@ int main(int argc, char** argv)
     }
     case 13:
     {
-        unordered_set<string> tags;
-        tags.insert("Tag0");
-        vector<FileInfo*>* ret = fs1->tag_search(tags);
-        string* serializedFile = FileInfo::serialize(ret->at(0));
-        
-        File* file = File::read_buff(serializedFile->c_str());
+      vector<string> fullPath;
+      fullPath.push_back("Tag0"); fullPath.push_back("Tag2"); fullPath.push_back("Tag5"); fullPath.push_back("Tag6");
+      fullPath.push_back("File4");
+      int fd3 = fs1->open_file(fullPath, 'x');
+      
+      int bufferSize = 512;
+      char* buff = new char[bufferSize];
+      memset(buff, 0, bufferSize);
+      
+      int bytes = 10;
+      char symbol = '@';
+      memset(buff, symbol, bytes);
+      fs1->write_file(fd3, buff, bytes);
+      
+      memset(buff, 0, bufferSize);
+      bytes = 1;
+      symbol = '!';
+      memset(buff, symbol, bytes);
+      fs1->append_file(fd3, buff, bytes);
+      
     }
     default:
     {

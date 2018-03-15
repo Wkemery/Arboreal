@@ -38,7 +38,7 @@ public:
     void set_cwd(std::string cwd);
     std::vector<std::string> parse(int type);
     std::vector<std::string> get_cwd_tags();
-    static std::vector<std::string> split_on_commas(std::string s);
+    static std::vector<std::string> split_on_delim(std::string s, char delim);
 private:
     std::vector<std::string> lunion(std::string string);
     std::vector<std::string> lintersect(std::string string);
