@@ -965,37 +965,34 @@ std::string get_file_info(File* file)
     else{file_info += tags[i];}
   }
 
-  file_info += " |...]";
+  //file_info += " |...]";
 
-  // if(file_info.length() < MAX_COMMAND_SIZE)
-  // {
-  //   file_info += " | ";
+  if(file_info.length() < MAX_COMMAND_SIZE)
+  {
+    file_info += " | ";
 
-  //   FileAttributes attr = file->get_attributes();
-  //   file_info += ("Created @ " + std::to_string(attr.creationTime));
+    FileAttributes attr = file->get_attributes();
+
+    std::tm * ptm = std::localtime(&attr.creationTime);
+    char buffer[32];
+    memset(buffer,'\0',32);
+    // Format: Mo, 15.06.2009 20:20:00
+    std::strftime(buffer, 32, "%a, %d.%m.%Y %H:%M:%S", ptm); 
+
+    file_info += "Created @ ";
+    file_info += buffer;
   
-  //   file_info += " | ";
-  //   file_info += ("Last Edit @ " + std::to_string(attr.lastEdit));
+    file_info += " | ";
+
+    memset(buffer,'\0',32);
+    ptm = std::localtime(&attr.lastEdit);
+    // Format: Mo, 15.06.2009 20:20:00
+    std::strftime(buffer, 32, "%a, %d.%m.%Y %H:%M:%S", ptm); 
+    file_info += "Last Edit @ ";
+    file_info += buffer;
   
-  //   file_info += " | ";
-  //   file_info += "[ ";
-  //   for(unsigned int i = 0; i < 12; i++)
-  //   {
-  //     if(file_info.length() + 5 == MAX_COMMAND_SIZE)
-  //     {
-  //       file_info += " ...]";
-  //       return file_info;
-  //     }
-  //     if(i + 1 == 12){file_info += attr.permissions[i];}
-  //     else{file_info += attr.permissions[i]; file_info += ',';}
-  //   }
-
-  //   if(file_info.length() < MAX_COMMAND_SIZE)
-  //   {
-  //     file_info += std::to_string(attr.owner);
-  //   }
-
-  // }
+    file_info += " ...]";
+  }
 
   return file_info;
 }
