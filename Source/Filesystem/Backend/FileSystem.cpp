@@ -597,10 +597,14 @@ vector<FileInfo*>* FileSystem::fileSearch(string name)
   
   auto files = _allFiles.equal_range(name);
   
-  for (auto it = files.first; it != files.second; it++) {
+  for (auto it = files.first; it != files.second; it++) 
+  {
     ret->push_back(it->second);
   }
-  
+  if(ret->size() == 0)
+  {
+    throw arboreal_exception("File Not Found","[FileSystem.cpp::fileSearch()]: ");
+  }
   return ret;
 }
 

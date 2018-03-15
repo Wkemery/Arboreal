@@ -404,14 +404,14 @@ void Parser::parse_merge(std::vector<std::string>& parsed)
   parsed.push_back(temp1 + "-" + temp2);
 }
 //======================================================================================================================
-std::vector<std::string> Parser::split_on_commas(std::string s)
+std::vector<std::string> Parser::split_on_delim(std::string s, char delim)
 {
   std::vector<std::string> rval;
   std::string temp;
   int index = 0;
   while(index < s.length())
   {
-    if(s[index] != ',')
+    if(s[index] != delim)
     {
       temp += s[index];
       index += 1;

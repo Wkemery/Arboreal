@@ -741,7 +741,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
   std::vector<std::string> data;
   switch(id)
   {
-    case(4):
+    case(4): // find tag
     {
       std::unordered_set<std::string> tags = get_set(command);
       std::vector<FileInfo*>* rval;
@@ -776,11 +776,30 @@ std::vector<std::string> execute(int id, char* command, int fd)
       delete rval;
       return data;
     }
-    case(5):
-    {
+    case(5): //find file
+    { 
+      std::string file = command;
+      std::vector<FileInfo*>* rval;
+      try
+      {
+        rval = fd_fs_map[fd]->fileSearch(file);
+        data = serialize_fileinfo(rval);
+      }
+      catch(arboreal_exception& e)
+      {
+        // And Search on tags that do not exist results in segfault
+        std::cerr << e.where() << e.what() << std::endl;
+        std::string failure;
+        failure = "The Requested File [";
+        failure += (file + "] Does Not Exist");
+        data.push_back(failure);
+        return data;
+      }
 
+      delete rval;
+      return data;
     }
-    case(6):
+    case(6): // Create Tag
     {
       std::string tag = command;
       try
@@ -801,6 +820,47 @@ std::vector<std::string> execute(int id, char* command, int fd)
       }
       return data;
     }
+    case(7): //create file
+    {
+      std::unordered_set<std::string> tags;
+      std::string filename;
+      char tag[MAX_COMMAND_SIZE];
+      memset(tags,'\0',MAX_COMMAND_SIZE);
+      int index = 0;
+      while(command[index] != '-'){filename += command[index]; index += 1;}
+      printf("Filename: %s\n",filename.c_str());
+      memcpy(tag,(command + file.length() + 1), MAX_COMMAND_SIZE - (file.length() + 1));
+      tags = get_set(tag);
+
+      try
+      {
+        FileInfo* finfo = fd_fs_map[fd]->create_file(filename,tags);
+        if(finfo != 0)
+        {
+          std::string serialized = FileInfo::serialize(finfo);
+          data.push_back(serialized);
+        }
+        else
+        {
+          std::string failure = "Creation of Requested File [";
+          failure += (filename + "] Failed");
+          data.push_back(failure);
+        }
+      }
+      catch(arboreal_exception& e)
+      {
+        std::cerr << e.where() << " -- " << e.what() << std::endl;
+        std::string failure = "Creation of Requested File [";
+        failure += (filename + "] Failed");
+        data.push_back(failure);
+        return data;
+      }
+      return data;
+    }
+    case(8):
+    {
+      
+    }
   }
 }
 
@@ -808,7 +868,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
 std::unordered_set<std::string> get_set(char* command)
 {
   std::string exec = command;
-  std::vector<std::string> temp = Parser::split_on_commas(exec);
+  std::vector<std::string> temp = Parser::split_on_delim(exec,',');
   std::unordered_set<std::string> tags;
   
   for(unsigned int i = 0; i < temp.size(); i++)
