@@ -376,6 +376,12 @@ int main(int argc, char** argv)
                     std::string temp = pad_string(data[j],(MAX_COMMAND_SIZE - data[j].length()), '\0');
                     rval = send(i, temp.c_str(), MAX_COMMAND_SIZE, FLAG);
                   }
+                  if(current_command_id == 5 || current_command_id == 4)
+                  {
+                    std::string done = "DONE";
+                    done = pad_string(done, MAX_COMMAND_SIZE - done.length(), '\0');
+                    rval = send(i, done.c_str(), MAX_COMMAND_SIZE, FLAG);
+                  }
                 }
               }
 
@@ -816,7 +822,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
         std::cerr << e.where() << " -- " << e.what() << std::endl;
         std::string failure = "Creation of Requested Tag [";
         failure += (tag + "] Failed\n");
-        failure += "Potential Causes Include: A Full Disk, Internal Logic Error\n";
+        failure += "Potential Causes Include: A Full Disk, Tag Already Exists, Internal Logic Error\n";
 
         data.push_back(failure);
         return data;
@@ -848,7 +854,8 @@ std::vector<std::string> execute(int id, char* command, int fd)
         {
           std::string failure = "Creation of Requested File [";
           failure += (filename + "] Failed\n");
-          failure += "Potential Causes Include: A Full Disk, One Or More Of The Specified Tags Do Not Exist, Internal Logic Error\n";
+          failure += "Potential Causes Include: A Full Disk, One Or More Of The Specified Tags Do Not Exist, \
+          File Already Exists, Internal Logic Error\n";
 
           data.push_back(failure);
         }
@@ -858,7 +865,8 @@ std::vector<std::string> execute(int id, char* command, int fd)
         std::cerr << e.where() << " -- " << e.what() << std::endl;
         std::string failure = "Creation of Requested File [";
         failure += (filename + "] Failed\n");
-        failure += "Potential Causes Include: A Full Disk, One Or More Of The Specified Tags Do Not Exist, Internal Logic Error\n";
+        failure += "Potential Causes Include: A Full Disk, One Or More Of The Specified Tags Do Not Exist, \
+          File Already Exists, Internal Logic Error\n";
         data.push_back(failure);
         return data;
       }
@@ -889,7 +897,8 @@ std::vector<std::string> execute(int id, char* command, int fd)
         {
           std::string failure = "Creation of Requested File [";
           failure += (filename + "] Failed\n");
-          failure += "Potential Causes Include: A Full Disk, One Or More Of The Specified Tags Do Not Exist, Internal Logic Error\n";
+          failure += "Potential Causes Include: A Full Disk, One Or More Of The Specified Tags Do Not Exist, \
+          File Already Exists, Internal Logic Error\n";
 
           data.push_back(failure);
         }
@@ -899,7 +908,8 @@ std::vector<std::string> execute(int id, char* command, int fd)
         std::cerr << e.where() << " -- " << e.what() << std::endl;
         std::string failure = "Creation of Requested File [";
         failure += (filename + "] Failed\n");
-        failure += "Potential Causes Include: A Full Disk, One Or More Of The Specified Tags Do Not Exist, Internal Logic Error\n";
+        failure += "Potential Causes Include: A Full Disk, One Or More Of The Specified Tags Do Not Exist, \
+        File Already Exists, Internal Logic Error\n";
 
         data.push_back(failure);
         return data;

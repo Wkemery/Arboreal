@@ -401,7 +401,7 @@ char* recv_msg(int client_sock, int size, int flag,
 // @ server_sockpath: This server socket's pathname
 // @ client_sockpath: The client socket's pathname
 //[================================================================================================]
-void send_response(int client_sock, char* data, int size, int flag,
+void send_response(int client_sock, const char* data, int size, int flag,
     int server_sock, std::string server_sockpath, std::string client_sockpath)
 {
     if(send(client_sock, data, size, flag) < 0)
@@ -441,63 +441,6 @@ void send_response(int client_sock, char* data, int size, int flag,
         std::string what = "Send Response To Client Failed -- ";
         what += strerror(errno);
         throw arboreal_liaison_error(what,where);
-    }
-}
-//[================================================================================================]
-std::vector<std::string> build_vector(char* cmnd, int id, int size)
-{
-    std::vector<std::string> commands;
-    for(unsigned int i = sizeof(int); i < MAX_COMMAND_SIZE; i+=size)
-    {
-        if(cmnd[i] == '\0') break;
-        std::string command(cmnd + i, size);
-        command.insert(0,(std::to_string(id) + "-"));
-        int offset = (sizeof(int) + size * 2 + 1) - command.length();
-        command.insert(end(command),offset,'\0');
-        commands.push_back(command);
-        // std::cout << "Command: " << command << std::endl;
-        // std::cout << "Command Size: " << command.length() << std::endl;
-    }
-    // std::cout << "Commands: " << std::endl;
-    // for(unsigned int i = 0; i < commands.size(); i++)
-    // {
-    //     std::cout << commands[i] << std::endl;
-    // }
-    return commands;
-}
-//[================================================================================================]
-std::vector<std::string> decompose(char* cmnd, int id, int size)
-{
-
-    switch(id)
-    {
-        case(4): return build_vector(cmnd,id,size);
-        case(5): return build_vector(cmnd,id,size);
-        case(6): return build_vector(cmnd,id,size);
-        case(7): return build_vector(cmnd,id,size);
-        case(8): return build_vector(cmnd,id,size);
-        //case(9)
-        //case(10)
-        case(11): return build_vector(cmnd,id,size);
-        case(12): return build_vector(cmnd,id,size);
-        case(13): return build_vector(cmnd,id,size);
-        //case(14)
-        case(15): return build_vector(cmnd,id,size);
-        //case(16)
-        //case(17)
-        case(18): return build_vector(cmnd,id,size);
-        //case(19)
-        //case(20)
-        //case(21)
-        //case(22)
-        //case(23)
-        default:
-        {
-            std::cerr << "Invalid Command ID" << std::endl;
-            std::vector<std::string> empty;
-            return empty;
-        }
-
     }
 }
 //[================================================================================================]
