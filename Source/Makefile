@@ -30,8 +30,8 @@ CLI_PATH=CLI
 CLI_H=$(CLI_PATH)/cli.h $(FS_PATH)/Arboreal_Exceptions.h
 CLI_CPP=$(CLI_PATH)/cli.cpp $(CLI_PATH)/cli_driver.cpp $(FS_PATH)/Arboreal_Exceptions.cpp
 
-LIASON_CPP=$(CLI_PATH)/liason.cpp $(CLI_PATH)/Parser.cpp $(FS_PATH)/Arboreal_Exceptions.cpp
-LIASON_H=$(FS_PATH)/Arboreal_Exceptions.h $(CLI_PATH)/Parser.h
+LIASON_CPP=$(CLI_PATH)/liason.cpp $(CLI_PATH)/Parser.cpp $(FS_PATH)/Arboreal_Exceptions.cpp $(CLI_PATH)/DebugMessages.cpp
+LIASON_H=$(FS_PATH)/Arboreal_Exceptions.h $(CLI_PATH)/Parser.h $(CLI_PATH)/DebugMessages.h
 
 VALGRIND= valgrind --leak-check=yes --log-file=/home/wyatt/ValgrindLogs/%p.log
 VALOPS= --leak-check=full --show-leak-kinds=all

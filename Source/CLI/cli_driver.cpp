@@ -34,6 +34,7 @@ int main(int argc, char** argv)
 
     std::string flag;
     if(argc == 3) flag = argv[2];
+    if(argc == 4) flag = argv[3];
     if(argc == 2)
     {
         try
@@ -75,7 +76,7 @@ int main(int argc, char** argv)
             exit(1);
         }
     }
-    else if(argc == 4)
+    else if(argc == 4 && flag == "-d")
     {
         std::cout << "Reading From Text File....\n";
         std::cout << "Debugging Has Been Turned ON\n\n";

@@ -16,13 +16,35 @@
 #define NEW_PLUS "n+"
 
 
+
+void clean(int signal)
+{
+  std::cout << "SIGNAL: " << signal << std::endl;
+  system("rm *socket");
+  exit(0);
+}
+//[================================================================================================]
+//[================================================================================================]
+void bad_clean(int signal)
+{
+  system("rm *socket");
+  exit(1);
+}
+//[================================================================================================]
+//[================================================================================================]
+void seg_fault(int signal)
+{
+  std::cout << "SEGFAULT: " << signal << std::endl;
+  system("rm *socket");
+  exit(1);
+}
 //[================================================================================================]
 // Convert the first X characters in a 'Command Buffer' to an integer value
 // X is the size of an integer
 //
 // @ cmnd : The command buffer
 //[================================================================================================]
-int get_cmnd_id(char* cmnd)
+int get_cmnd_id(const char* cmnd)
 {
     char temp[sizeof(int)];
     for(unsigned int i = 0; i < sizeof(int); i++)
@@ -40,7 +62,7 @@ int get_cmnd_id(char* cmnd)
 // @ cmnd: The command buffer
 // @ size: The size of the command buffer
 //[================================================================================================]
-void print_cmnd(char* cmnd, int size)
+void print_cmnd(const char* cmnd, const int size)
 {
     std::cout << get_cmnd_id(cmnd) << " ";
     for(unsigned int i = sizeof(int); i < size; i++)
@@ -51,8 +73,22 @@ void print_cmnd(char* cmnd, int size)
 }
 //[================================================================================================]
 //[================================================================================================]
+std::string get_command_string(const char* cmnd, const int size)
+{
+    std::string command;
+    int index = sizeof(int);
+    while(index < size)
+    {
+        command += cmnd[index];
+        index += 1;
+    }
+
+    return command;
+}
+//[================================================================================================]
+//[================================================================================================]
 template <typename T>
-void print_vector(std::vector<T> vec)
+void print_vector(const std::vector<T> vec)
 {
     std::cout << "Vector: " << std::endl;
     for(unsigned int i = 0; i < vec.size(); i++)
@@ -62,14 +98,14 @@ void print_vector(std::vector<T> vec)
 }
 //[================================================================================================]
 //[================================================================================================]
-std::string pad_string(std::string string, int size, char value)
+std::string pad_string(const std::string string, const int size, const char value)
 {
     std::string padded = string;
-  for(unsigned int i = 0; i < size; i++)
-  {
-    padded += value;
-  }
-  return padded;
+    for(unsigned int i = 0; i < size; i++)
+    {
+        padded += value;
+    }
+    return padded;
 }
 //[================================================================================================]
 //[================================================================================================]
@@ -83,13 +119,13 @@ std::string pad_string(std::string string, int size, char value)
 //        This is passed as a parameter from the CLI to the Liason process via main() arguments
 // @ id:  A reference to an integer in which to store the shared memory id that shmget() returns
 //[================================================================================================]
-char* get_shm_seg(key_t key, int& id)
+char* get_shm_seg(const key_t key, int& id)
 {
     int shm_id;
     char*  shm;
 
     /* Create Shared Memory Segment for Process Synchronization */
-    if ((shm_id = shmget(key, SHMSZ, PERMISSIONS)) < 0)
+    if ((shm_id = shmget(key, SharedMemorySize, Permissions)) < 0)
     {
         std::string where = "[liason_helper.hpp::get_shm_seg()]: ";
         std::string what = "Shared Memory Get Failed -- ";
@@ -120,7 +156,7 @@ char* get_shm_seg(key_t key, int& id)
 // @ shm_id: The id of the shared memory segement that will be detatched
 // @ shm:    The actual pointer to the shared memory segment
 //[================================================================================================]
-void unat_shm(int shm_id, char* shm)
+void unat_shm(const int shm_id, const char* shm)
 {
     if(shmdt(shm) == -1)
     {
@@ -193,14 +229,14 @@ int set_up_socket(std::string server_sockpath, struct sockaddr_un& server_sockad
 //[================================================================================================]
 //[================================================================================================]
 // Mark the server socket as open for buisness (i.e. capable of accepting connections)
-// The Server can queue up X number of connection requests were X = BACKLOG
+// The Server can queue up X number of connection requests were X = Backlog
 //
 // @ server_sock: This server socket's identifier
 // @ server_sockpath: This server socket's pathname
 //[================================================================================================]
-void listen_for_client(int server_sock, std::string server_sockpath)
+void listen_for_client(const int server_sock, const std::string server_sockpath)
 {
-    if(listen(server_sock, BACKLOG) < 0)
+    if(listen(server_sock, Backlog) < 0)
     {
         /* Close Connection */
         if(close(server_sock) < 0)
@@ -241,7 +277,8 @@ void listen_for_client(int server_sock, std::string server_sockpath)
 //           just a single part and is most easily retrieved via a call to sizeof() )
 // @ server_sockpath: This server socket's pathname
 //[================================================================================================]
-int accept_client(int server_sock, struct sockaddr_un& client_sockaddr, socklen_t length, std::string server_sockpath)
+int accept_client(int server_sock, struct sockaddr_un& client_sockaddr, 
+                  socklen_t length, std::string server_sockpath)
 {
     int client_sock = accept(server_sock, (struct sockaddr *) &client_sockaddr, &length);
     if(client_sock < 0)
@@ -291,7 +328,8 @@ int accept_client(int server_sock, struct sockaddr_un& client_sockaddr, socklen_
 // @ server_sock: This server socket's identifier
 // @ server_sockpath: This server socket's pathname
 //[================================================================================================]
-void get_peername(int client_sock, struct sockaddr_un& client_sockaddr, int server_sock, std::string server_sockpath)
+void get_peername(const int client_sock, const struct sockaddr_un& client_sockaddr, 
+                  const int server_sock, const std::string server_sockpath)
 {
     socklen_t length = sizeof(client_sockaddr);
 
@@ -324,7 +362,7 @@ void get_peername(int client_sock, struct sockaddr_un& client_sockaddr, int serv
         std::string where = "[liason_helper.hpp::get_peername()]: ";
         std::string what = "Get Peername Failed -- ";
         what += strerror(errno);
-        throw arboreal_liaison_error(what,where);
+        throw arboreal_liaison_error(where,what);
     }
 
     return;
@@ -341,8 +379,8 @@ void get_peername(int client_sock, struct sockaddr_un& client_sockaddr, int serv
 // @ server_sockpath: This server socket's pathname
 // @ client_sockpath: The client socket's pathname
 //[================================================================================================]
-char* recv_msg(int client_sock, int size, int flag,
-    int server_sock, std::string server_sockpath, std::string client_sockpath)
+char* recv_msg(const int client_sock, const int size, const int flag, const int server_sock, 
+               const std::string server_sockpath, const std::string client_sockpath)
 {
     char* msg = new char[size];
     memset(msg,'\0',size);
@@ -401,8 +439,8 @@ char* recv_msg(int client_sock, int size, int flag,
 // @ server_sockpath: This server socket's pathname
 // @ client_sockpath: The client socket's pathname
 //[================================================================================================]
-void send_response(int client_sock, const char* data, int size, int flag,
-    int server_sock, std::string server_sockpath, std::string client_sockpath)
+void send_response(const int client_sock, const char* data, const int size, const int flag,
+                   const int server_sock, const std::string server_sockpath, const std::string client_sockpath)
 {
     if(send(client_sock, data, size, flag) < 0)
     {
@@ -444,6 +482,128 @@ void send_response(int client_sock, const char* data, int size, int flag,
     }
 }
 //[================================================================================================]
+//[================================================================================================]
+void shutdown(const int liaison_fid,
+              const int client_sock,
+              const std::string client_sockpath,
+              const int liaison_sock,
+              const std::string liaison_sockpath)
+{
 
+    printf("\nL: Connection To File System Daemon Could Not Be Established; Exiting\n");
+    Debug.log(liaison_close);
+    if(close(liaison_fid) < 0)
+    {
+      std::string where = "[liason.cpp::main()]: ";
+      std::string what = "Liaison Client Socket Close Failed -- ";
+      what += strerror(errno);
+      throw arboreal_liaison_error(what,where);
+    }
+    if(close(liaison_sock) < 0)
+    {
+      std::string where = "[liason.cpp::main()]: ";
+      std::string what = "Liaison Server Socket Close Failed -- ";
+      what += strerror(errno);
+      throw arboreal_liaison_error(what,where);
+    }
+    if(unlink(liaison_sockpath.c_str()) < 0)
+    {
+      std::string where = "[liason.cpp::main()]: ";
+      std::string what = "Liaison Server Socket Unlink Failed -- ";
+      what += strerror(errno);
+      throw arboreal_liaison_error(what,where);
+    }
 
+    if(Parser != 0){delete Parser;}
+    char* quit = new char[MaxBufferSize];
+    memset(quit,'\0',MaxBufferSize);
+    int val = 999;
+    memcpy(quit,&val,sizeof(int));
+    memcpy(quit + sizeof(int), "QUIT", sizeof("QUIT"));
+    Debug.log(liaison_quit);
+    send_response(client_sock,quit,MaxBufferSize,Flag,liaison_sock,liaison_sockpath,client_sockpath);
+    exit(1);
+
+}
+//[================================================================================================]
+//[================================================================================================]
+int create_daemon_sock( const int client_sock,
+                        const std::string client_sockpath,
+                        const int liaison_sock, 
+                        const std::string liaison_sockpath)
+{
+    int printer = 0;
+    int timer = 0;
+    int liaison_fid;
+    while((liaison_fid = socket(AF_INET,SOCK_STREAM,0)) < 0 && timer < Timeout)
+    {
+      sleep(1);
+      if(printer % 3 == 0)
+      {
+        printf("\33[2K\r");
+        printf("\rL: Liaison Client Socket Creation Failed - %s - Retrying.", strerror(errno));
+        fflush(stdout);
+      }
+      else if(printer % 3 == 1)
+      {
+        printf("\33[2K\r");
+        printf("\rL: Liaison Client Socket Creation Failed - %s - Retrying..", strerror(errno));
+        fflush(stdout);
+      }
+      else if(printer % 3 == 2)
+      {
+        printf("\33[2K\r");
+        printf("\rL: Liaison Client Socket Creation Failed - %s - Retrying...", strerror(errno));
+        fflush(stdout);
+      }
+      timer += 1;
+      printer += 1;
+    }
+    if(timer >= Timeout)
+    {
+      shutdown(liaison_fid, client_sock, client_sockpath, liaison_sock, liaison_sockpath);
+    }
+    return liaison_fid;
+}
+//[================================================================================================]
+//[================================================================================================]
+void connect_to_daemon(int liaison_fid, struct sockaddr_in daemon_addr, 
+                        const int client_sock,
+                        const std::string client_sockpath,
+                        const int liaison_sock, 
+                        const std::string liaison_sockpath)
+{
+    int timer = 0;
+    int printer = 0;
+    while((connect(liaison_fid,(struct sockaddr*)&daemon_addr,sizeof(daemon_addr))) < 0 && timer < Timeout)
+    {
+      sleep(1);
+      if(printer % 3 == 0)
+      {
+        printf("\33[2K\r");
+        printf("\rL: Connection To File System Daemon Failed - %s - Retrying.",strerror(errno));
+        fflush(stdout);
+      }
+      else if(printer % 3 == 1)
+      {
+        printf("\33[2K\r");
+        printf("\rL: Connection To File System Daemon Failed - %s - Retrying..",strerror(errno));
+        fflush(stdout);
+      }
+      else if(printer % 3 == 2)
+      {
+        printf("\33[2K\r");
+        printf("\rL: Connection To File System Daemon Failed - %s - Retrying...",strerror(errno));
+        fflush(stdout);
+      }
+      printer += 1;
+      timer += 1;
+    }
+    if(timer >= Timeout)
+    {
+      shutdown(liaison_fid, client_sock, client_sockpath, liaison_sock, liaison_sockpath);
+    }
+}
+//[================================================================================================]
+//[================================================================================================]
 #endif
