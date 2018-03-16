@@ -394,7 +394,7 @@ int main(int argc, char** argv)
           }
 
           std::size_t found = data.find("Successfully");
-          if(command_id == 9 && found != std::string::npos && cwd != "/")
+          if((command_id == 9 || command_id == 11) && found != std::string::npos && cwd != "/")
           {
             cwd = "/";
             parser->set_cwd(cwd); 
