@@ -10,7 +10,7 @@ std::vector<std::string> Parser::parse(int type)
     parsed.push_back(std::to_string(type));
 
     if(type == 4 || type == 5 || type == 6 || type == 7
-        || type == 9 || type == 10 || type == 11 || type == 16)
+        || type == 9 || type == 16)
     {
       int index = 0;
       while(_string[index] != '[' && _string[index] != '{'){index += 1;}
@@ -54,8 +54,8 @@ std::vector<std::string> Parser::parse(int type)
         int index = 0;
 
         // Skip command start (i.e. command name + flag(s))
-        while(_string[index] != '-'){ index += 1;}
-        index += 3;
+        while(_string[index] != ' '){ index += 1;}
+        index += 1;
 
         // Read in file name
         while(_string[index] != ' ')
@@ -74,6 +74,30 @@ std::vector<std::string> Parser::parse(int type)
         {
           parsed[1] += ("-" + temp_vec[i]);
         }
+        return parsed;
+      }
+      case(10):
+      {
+        int index = 0;
+        while(_string[index] != '['){index += 1;}
+        std::vector<std::string> files = lunion(_string.substr(index,_string.length()));
+        std::vector<std::string> tags = get_cwd_tags();
+        std::string temp = "";
+        for(uint i = 0; i < files.size(); i++)
+        {
+          for(uint j = 0; j < tags.size(); j++)
+          {
+            temp += tags[j] + "-";
+          }
+          temp += files[i];
+          parsed.push_back(temp);
+          temp = "";
+        }
+        return parsed;
+      }
+      case(11):
+      {
+        parse_path(parsed);
         return parsed;
       }
       case(12):

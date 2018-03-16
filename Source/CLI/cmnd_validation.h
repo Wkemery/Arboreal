@@ -18,8 +18,7 @@
 //[    General Regex   ]
 //[================================================================================================]
 std::regex history_val ("history [0-9]+");
-std::regex good_buffer ("[\\[\\]\\-\\>0-9a-zA-Z_\\.]+");
-std::regex change_dir ("cd (/[0-9a-zA-Z_]+)+");
+std::regex change_dir ("cd (/[0-9a-zA-Z_]*)+");
 //[================================================================================================]
 //[    Regex for "find" Commands    ]
 //[================================================================================================-->]
@@ -30,13 +29,13 @@ std::regex find_files ("find -f \\[([0-9a-zA-Z_]+)(\\.[a-zA-Z]+)?(,([0-9a-zA-Z_]
 //[================================================================================================-->]
 std::regex new_tags ("new -t \\[([0-9a-zA-Z_]+)(,[0-9a-zA-Z_]+)*\\]");
 std::regex new_files ("new -f \\[([0-9a-zA-Z_]+)(\\.[a-zA-Z]+)?(,([0-9a-zA-Z_]+)(\\.[0-9a-zA-Z_]+)?)*\\]");
-std::regex new_files_t_inc ("new -f ([0-9a-zA-Z_]+)(\\.[a-zA-Z]+)? -t \\[([0-9a-zA-Z_]+)(,[0-9a-zA-Z_]+)*\\]");
+std::regex new_files_t_inc ("new ([0-9a-zA-Z_]+)(\\.[a-zA-Z]+)? -t \\[([0-9a-zA-Z_]+)(,[0-9a-zA-Z_]+)*\\]");
 //[================================================================================================-->]
 //[    Regex for "delete" Commands  ]
 //[================================================================================================-->]
 std::regex del_tags ("delete -t \\[([0-9a-zA-Z_]+)(,[0-9a-zA-Z_]+)*\\]");
 std::regex del_files ("delete -f \\[([0-9a-zA-Z_]+)(\\.[a-zA-Z]+)?(,([0-9a-zA-Z_]+)(\\.[0-9a-zA-Z_]+)?)*\\]");
-std::regex mforce_del ("fdelete -t \\[([0-9a-zA-Z_]+)(,[0-9a-zA-Z_]+)*\\]");
+std::regex del_file ("delete (/[0-9a-zA-Z_]*)*/[0-9a-zA-Z]+(\\.[a-zA-Z]+)?");
 //[================================================================================================-->]
 //[    Regex for "open" Command    ]
 //[================================================================================================-->]
@@ -85,7 +84,7 @@ int check_command(std::string command)
     else if(std::regex_match(command,new_files_t_inc)){return 8;}
     else if(std::regex_match(command,del_tags)){return 9;}
     else if(std::regex_match(command,del_files)){return 10;}
-    else if(std::regex_match(command,mforce_del)){return 11;}
+    else if(std::regex_match(command,del_file)){return 11;}
     else if(std::regex_match(command,open_files)){return 12;}
     else if(std::regex_match(command,close_files)){return 13;}
     else if(std::regex_match(command,rename_tags)){return 14;}

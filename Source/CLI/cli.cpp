@@ -379,7 +379,6 @@ void CLI::run()
                   std::string old = _cwd;
                   std::string temp = input.substr(3,input.length());
                   _cwd = temp;
-                  printf("C: Directory Changed From [%s] to [%s]\n",old.c_str(),_cwd.c_str());
                   char* new_cwd = new char[MAX_COMMAND_SIZE];
                   memset(new_cwd,'\0',MAX_COMMAND_SIZE);
                   memcpy(new_cwd,&rtrn,sizeof(int));

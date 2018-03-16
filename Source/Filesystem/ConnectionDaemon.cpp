@@ -764,20 +764,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
       }
       catch(arboreal_exception& e)
       {
-        // And Search on tags that do not exist results in segfault
-        std::cerr << e.where() << " -- " << e.what() << std::endl;
-        std::string failure;
-        if(tags.size() == 1)
-        {
-          auto it = begin(tags);
-          failure = "The Requested Tag [";
-          failure += (*it + "] Does Not Exist");
-        }
-        else
-        {
-          failure = "Some Or All Of The Requested Tags Do Not Exist";
-        }
-        data.push_back(failure);
+        data.push_back(e.what());
         return data;
       }
 
@@ -795,12 +782,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
       }
       catch(arboreal_exception& e)
       {
-        // And Search on tags that do not exist results in segfault
-        std::cerr << e.where() << e.what() << std::endl;
-        std::string failure;
-        failure = "The Requested File [";
-        failure += (file + "] Does Not Exist");
-        data.push_back(failure);
+        data.push_back(e.what());
         return data;
       }
 
@@ -819,12 +801,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
       }
       catch(arboreal_exception& e)
       {
-        std::cerr << e.where() << " -- " << e.what() << std::endl;
-        std::string failure = "Creation of Requested Tag [";
-        failure += (tag + "] Failed\n");
-        failure += "Potential Causes Include: A Full Disk, Tag Already Exists, Internal Logic Error\n";
-
-        data.push_back(failure);
+        data.push_back(e.what());
         return data;
       }
       fd_fs_map[fd]->write_changes();
@@ -862,12 +839,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
       }
       catch(arboreal_exception& e)
       {
-        std::cerr << e.where() << " -- " << e.what() << std::endl;
-        std::string failure = "Creation of Requested File [";
-        failure += (filename + "] Failed\n");
-        failure += "Potential Causes Include: A Full Disk, One Or More Of The Specified Tags Do Not Exist, \
-          File Already Exists, Internal Logic Error\n";
-        data.push_back(failure);
+        data.push_back(e.what());
         return data;
       }
       fd_fs_map[fd]->write_changes();
@@ -905,19 +877,77 @@ std::vector<std::string> execute(int id, char* command, int fd)
       }
       catch(arboreal_exception& e)
       {
-        std::cerr << e.where() << " -- " << e.what() << std::endl;
-        std::string failure = "Creation of Requested File [";
-        failure += (filename + "] Failed\n");
-        failure += "Potential Causes Include: A Full Disk, One Or More Of The Specified Tags Do Not Exist, \
-        File Already Exists, Internal Logic Error\n";
-
-        data.push_back(failure);
+        data.push_back(e.what());
         return data;
       }
       fd_fs_map[fd]->write_changes();
       return data;
     }
+    case(9):
+    {
+      std::string tagname = command;
+  
+      try
+      {
+        fd_fs_map[fd]->delete_tag(tagname);
+        std::string success = ("Tag [" + tagname + "] Successfully Deleted; Current Working Directory Changed To [ / ]");
+        data.push_back(success);
+      }
+      catch(arboreal_exception& e)
+      {
+        data.push_back(e.what());
+        return data;
+      }
+      fd_fs_map[fd]->write_changes();
+      return data;
+    }
+    case(10):
+    {
+      std::string to_delete = command;
+      std::vector<std::string> path = Parser::split_on_delim(to_delete,'-');
+  
+      try
+      {
+        fd_fs_map[fd]->delete_file(path);
+        std::string success = ("File [" + path[path.size()-1] +"] Successfully Deleted");
+        data.push_back(success);
+      }
+      catch(arboreal_exception& e)
+      {
+        data.push_back(e.what());
+        return data;
+      }
+      fd_fs_map[fd]->write_changes();
+      return data;
+    }
+    case(11):
+    {
+      std::string filepath = command;
+      std::vector<std::string> path = Parser::split_on_delim(filepath,'/');
+      for(uint i = 0; i < path.size(); i++)
+      {
+        std::cout << path[i] << std::endl;
+      }
+      try
+      {
+        fd_fs_map[fd]->delete_file(path);
+        std::string success = ("File [" + path[path.size()-1] + "] Successfully Deleted; Current Working Directory Changed To [ / ]");
+        data.push_back(success);
+      }
+      catch(arboreal_exception& e)
+      {
+        data.push_back(e.what());
+        return data;
+      }
+      fd_fs_map[fd]->write_changes();
+      return data;
+    }
+    case(12):
+    {
+      
+    }
   }
+
 }
 
 

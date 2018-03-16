@@ -383,6 +383,8 @@ int main(int argc, char** argv)
             char response[MAX_COMMAND_SIZE];
             memset(response,'\0',MAX_COMMAND_SIZE);
             rval = recv(liaison_fid,response,MAX_COMMAND_SIZE,FLAG);
+            std::string r = response;
+            if(r == "Command Accepted"){continue;}
             if(rval > 0)
             {
               data += response;
@@ -390,7 +392,13 @@ int main(int argc, char** argv)
             }
             memset(response,'\0',MAX_COMMAND_SIZE);
           }
-  
+
+          std::size_t found = data.find("Successfully");
+          if(command_id == 9 && found != std::string::npos && cwd != "/")
+          {
+            cwd = "/";
+            parser->set_cwd(cwd); 
+          }
           data = pad_string(data, MAX_COMMAND_SIZE - data.length(), '\0');
           send_response(client_sock,data.c_str(),MAX_COMMAND_SIZE,FLAG,
                         liaison_sock,liaison_sockpath,client_sockpath);
@@ -412,6 +420,8 @@ int main(int argc, char** argv)
             data += (stemp + "\n");
             stemp = "";
             int rval = recv(liaison_fid,response,MAX_COMMAND_SIZE,FLAG);
+            std::string r = response;
+            if(r == "Command Accepted"){continue;}
             if(rval > 0){stemp = response;}
           }
 
