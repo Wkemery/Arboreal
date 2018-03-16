@@ -71,6 +71,7 @@ int current_command_id = 0;
 
 std::map<int, FileSystem*> fd_fs_map;
 std::map<std::string,FileSystem*> part_fs_map;
+std::map<std::string, unsigned int> path_filedesc_map;
 
 Disk* d = 0;
 DiskManager* dm = 0;
@@ -944,7 +945,65 @@ std::vector<std::string> execute(int id, char* command, int fd)
     }
     case(12):
     {
-      
+      std::string temp = command;
+      std::vector<std::string> info = Parser::split_on_delim(temp,'/');
+
+      char mode = info[0].c_str()[0];
+      printf("Mode: %c\n",mode);
+
+
+      std::string path = temp.substr(2,temp.length());
+      printf("Path: %s\n",path.c_str());
+
+      info.erase(begin(info));
+      printf("Info Size: %lu\n",info.size());
+      for(unsigned int i = 0; i < info.size(); i++)
+      {
+        std::cout << info[i] << std::endl;
+      }
+
+      try
+      {
+        unsigned int filedesc = 0;
+        filedesc = fd_fs_map[fd]->open_file(info,mode);
+        auto it = path_filedesc_map.find(path);
+        if(filedesc != 0 && it == end(path_filedesc_map))
+        {
+          path_filedesc_map.insert(std::pair<std::string, unsigned int>(path,filedesc));
+        }
+        std::string success = ("File [" + info[info.size()-1] + "] Opened Successfuly For ");
+        if(mode == 'r'){success += "Read";}
+        else if(mode == 'w'){success += "Write";}
+        else if(mode == 'x'){success += "Read and Write";}
+
+        data.push_back(success);
+      }
+      catch(arboreal_exception& e)
+      {
+        data.push_back(e.what());
+        return data;
+      }
+
+      return data;
+    }
+    case(13):
+    {
+      std::string p = command;
+      std::vector<std::string> path = Parser::split_on_delim(p,'/');
+
+      try
+      {
+        fd_fs_map[fd]->close_file(path_filedesc_map[p]);
+        std::string success = ("File [" + path[path.size()-1] + "] Closed Successfully");
+        path_filedesc_map.erase(p);
+        data.push_back(success);
+      }
+      catch(arboreal_exception& e)
+      {
+        data.push_back(e.what());
+        return data;
+      }
+      return data;
     }
   }
 

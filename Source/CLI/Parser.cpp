@@ -102,7 +102,15 @@ std::vector<std::string> Parser::parse(int type)
       }
       case(12):
       {
-        parse_path(parsed);
+        int index = 0;
+        while(_string[index] != '-'){index += 1;}
+        index += 1;
+        std::string mode = "/";
+        mode += _string[index];
+        while(_string[index] != '/'){index += 1;}
+        _string = _string.substr(index, _string.length());
+        mode += _string;
+        parsed.push_back(mode);
         return parsed;
       }
       case(13):
@@ -442,7 +450,7 @@ std::vector<std::string> Parser::split_on_delim(std::string s, char delim)
     }
     else
     {
-      rval.push_back(temp);
+      if(temp != "" ){rval.push_back(temp);}
       temp = "";
       index += 1;
     }
