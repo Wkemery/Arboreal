@@ -1051,7 +1051,29 @@ int main(int argc, char** argv)
       symbol = '!';
       memset(buff, symbol, bytes);
       fs1->append_file(fd3, buff, bytes);
+      break;
+    }
+    case 14:
+    {
+      /*Run after driver 7*/
+      fs1->create_tag("NewTag1");
+      fs1->create_tag("NewTag2");
+      fs1->create_tag("NewTag3");
+      fs1->create_tag("NewTag4");
+      fs1->write_changes();
       
+      fs1->delete_tag("NewTag2");
+      fs1->delete_tag("NewTag3");
+      fs1->write_changes();
+      
+      fs1->create_tag("NewTag5");
+      fs1->create_tag("NewTag6");
+      fs1->write_changes();
+      
+      
+      
+      
+      break;
     }
     default:
     {

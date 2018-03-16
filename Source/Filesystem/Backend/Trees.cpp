@@ -148,6 +148,7 @@ void Addition::write_out(PartitionManager* pm)
   {
     nextEntry.blknum = _parent->get_start_block();
     nextEntry.offset = 0;
+    _parent->set_last_entry(nextEntry);
   }
   /* TODO:*/
   else if(_parent->get_free_spots()->size() != 0)
@@ -161,6 +162,7 @@ void Addition::write_out(PartitionManager* pm)
   {
     nextEntry = _parent->get_last_entry();
     _parent->increment_allocate(&nextEntry);
+    _parent->set_last_entry(nextEntry);
   }
   
   if(_parent->get_last_entry().blknum != nextEntry.blknum)
@@ -176,9 +178,8 @@ void Addition::write_out(PartitionManager* pm)
   BlkNumType tagBlk = _mod->get_block_number();
   memcpy(buff + nextEntry.offset + pm->get_file_name_size(), &tagBlk, sizeof(BlkNumType));
   
-  _parent->set_last_entry(nextEntry);
   
-  _mod->add_index(_parent, _parent->get_last_entry());
+  _mod->add_index(_parent, nextEntry);
   
   pm->writeDiskBlock(_parent->get_last_entry().blknum, buff);
   
