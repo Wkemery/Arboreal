@@ -463,15 +463,6 @@ std::vector<std::string> execute(int id, char* command, int fd)
           File* info = File::read_buff(const_cast<char*>(FileInfo::serialize(finfo)->c_str()));
           data.push_back(get_file_info(info));
         }
-        else
-        {
-          std::string failure = "Creation of Requested File [";
-          failure += (filename + "] Failed\n");
-          failure += "Potential Causes Include: A Full Disk, One Or More Of The Specified Tags Do Not Exist, \
-          File Already Exists, Internal Logic Error\n";
-
-          data.push_back(failure);
-        }
       }
       catch(arboreal_exception& e)
       {
@@ -483,15 +474,15 @@ std::vector<std::string> execute(int id, char* command, int fd)
     }
     case(8): // create file anywhere
     {
+      std::string temp = command;
       std::unordered_set<std::string> tags;
       std::string filename;
-      char tag[MAX_COMMAND_SIZE];
-      memset(tag,'\0',MAX_COMMAND_SIZE);
-      int index = 0;
-      while(command[index] != '-'){filename += command[index]; index += 1;}
-      printf("Filename: %s\n",filename.c_str());
-      memcpy(tag,(command + filename.length() + 1), MAX_COMMAND_SIZE - (filename.length() + 1));
-      tags = get_set(tag,'-');
+      
+      std::vector<std::string> path = Parser::split_on_delim(command,'/');
+      filename = path[path.size() - 1];
+      path.erase(end(path) - 1);
+
+      tags = get_set(path);
 
       try
       {
@@ -500,15 +491,6 @@ std::vector<std::string> execute(int id, char* command, int fd)
         {
           File* info = File::read_buff(const_cast<char*>(FileInfo::serialize(finfo)->c_str()));
           data.push_back(get_file_info(info));
-        }
-        else
-        {
-          std::string failure = "Creation of Requested File [";
-          failure += (filename + "] Failed\n");
-          failure += "Potential Causes Include: A Full Disk, One Or More Of The Specified Tags Do Not Exist, \
-          File Already Exists, Internal Logic Error\n";
-
-          data.push_back(failure);
         }
       }
       catch(arboreal_exception& e)

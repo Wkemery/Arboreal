@@ -58,13 +58,13 @@ void print_help()
     std::cout << "|                                                                                   |\n";
     std::cout << "|  6)  { 'new' '-t' '[tagName,...]' }--> Create tags                                |\n";
     std::cout << "|                                                                                   |\n";
-    std::cout << "|  7) { 'new' '-f' '[filename.ext...]' }--> Create file                             |\n";
+    std::cout << "|  7) { 'new' '-f' '[filename(.ext)...]' }--> Create file                           |\n";
     std::cout << "|                                                                                   |\n";
-    std::cout << "|  8) { 'new' '-f' 'filename.ext' '-t' '[tagName,...] }--> Create&Tag file          |\n";
+    std::cout << "|  8) { 'new' '../tag/filename(.ext)'                                               |\n";
     std::cout << "|                                                                                   |\n";
     std::cout << "|  9) { 'delete' '-t' '[tagName,...]' }--> Delete tags                              |\n";
     std::cout << "|                                                                                   |\n";
-    std::cout << "|  10) { 'delete' '-f' '[filename.ext,...]' }--> Delete files                       |\n";
+    std::cout << "|  10) { 'delete' '-f' '[filename(.ext),...]' }--> Delete files                     |\n";
     std::cout << "|                                                                                   |\n";
     std::cout << "|  11) { 'delete' '../tag/filename(.ext)'                                           |\n";
     std::cout << "|                                                                                   |\n";

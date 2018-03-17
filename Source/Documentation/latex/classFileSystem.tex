@@ -14,7 +14,7 @@ int \mbox{\hyperlink{classFileSystem_a0444400c1e30b7981123ba6991798c86}{get\+\_\
 \begin{Indent}\textbf{ Tag Operations}\par
 \begin{DoxyCompactItemize}
 \item 
-vector$<$ \mbox{\hyperlink{classFileInfo}{File\+Info}} $\ast$ $>$ $\ast$ \mbox{\hyperlink{classFileSystem_afa5afeedec00348c8d1ab922dac9b086}{tag\+Search}} (unordered\+\_\+set$<$ string $>$ \&tags)
+vector$<$ \mbox{\hyperlink{classFileInfo}{File\+Info}} $\ast$ $>$ $\ast$ \mbox{\hyperlink{classFileSystem_afb76c092b6ab19c9609e1707e5bdfe1b}{tag\+\_\+search}} (unordered\+\_\+set$<$ string $>$ \&tags)
 \item 
 void \mbox{\hyperlink{classFileSystem_a678d743f3dc5b86c0b0c568795ec6a29}{create\+\_\+tag}} (string tag\+Name)
 \item 
@@ -36,7 +36,7 @@ void \mbox{\hyperlink{classFileSystem_aaaecc65bbba05c3ede2e6246915e35d1}{rename\
 \begin{Indent}\textbf{ File Operations}\par
 \begin{DoxyCompactItemize}
 \item 
-vector$<$ \mbox{\hyperlink{classFileInfo}{File\+Info}} $\ast$ $>$ $\ast$ \mbox{\hyperlink{classFileSystem_aaa02d1a13bb71582a2a4268d32cba5b6}{file\+Search}} (string name)
+vector$<$ \mbox{\hyperlink{classFileInfo}{File\+Info}} $\ast$ $>$ $\ast$ \mbox{\hyperlink{classFileSystem_a7a49d757e2b4d3c7344925387b1fe124}{file\+\_\+search}} (string name)
 \item 
 \mbox{\hyperlink{classFileInfo}{File\+Info}} $\ast$ \mbox{\hyperlink{classFileSystem_a2725ca065d28de5650e8368270743614}{create\+\_\+file}} (string filename, unordered\+\_\+set$<$ string $>$ \&tags)
 \item 
@@ -186,11 +186,11 @@ Will delete the specified tag only if it has no files associated with it(it is e
 {\em tag\+Name} & the name of the tag to be deleted \\
 \hline
 \end{DoxyParams}
-\mbox{\Hypertarget{classFileSystem_aaa02d1a13bb71582a2a4268d32cba5b6}\label{classFileSystem_aaa02d1a13bb71582a2a4268d32cba5b6}} 
-\index{File\+System@{File\+System}!file\+Search@{file\+Search}}
-\index{file\+Search@{file\+Search}!File\+System@{File\+System}}
-\subsubsection{\texorpdfstring{file\+Search()}{fileSearch()}}
-{\footnotesize\ttfamily vector$<$ \mbox{\hyperlink{classFileInfo}{File\+Info}} $\ast$ $>$ $\ast$ File\+System\+::file\+Search (\begin{DoxyParamCaption}\item[{string}]{name }\end{DoxyParamCaption})}
+\mbox{\Hypertarget{classFileSystem_a7a49d757e2b4d3c7344925387b1fe124}\label{classFileSystem_a7a49d757e2b4d3c7344925387b1fe124}} 
+\index{File\+System@{File\+System}!file\+\_\+search@{file\+\_\+search}}
+\index{file\+\_\+search@{file\+\_\+search}!File\+System@{File\+System}}
+\subsubsection{\texorpdfstring{file\+\_\+search()}{file\_search()}}
+{\footnotesize\ttfamily vector$<$ \mbox{\hyperlink{classFileInfo}{File\+Info}} $\ast$ $>$ $\ast$ File\+System\+::file\+\_\+search (\begin{DoxyParamCaption}\item[{string}]{name }\end{DoxyParamCaption})}
 
 Will search for a specified file name. Searches the entire \mbox{\hyperlink{classFileSystem}{File\+System}} 
 \begin{DoxyParams}{Parameters}
@@ -399,11 +399,11 @@ An alternate way to tag a file using a file path instead.\+Will tag a file with 
 \begin{DoxySeeAlso}{See also}
 \mbox{\hyperlink{classFileSystem_a33649a9100b30978db80654ece6504f4}{tag\+\_\+file(\+File\+Info$\ast$, unordered\+\_\+set$<$string$>$)}} 
 \end{DoxySeeAlso}
-\mbox{\Hypertarget{classFileSystem_afa5afeedec00348c8d1ab922dac9b086}\label{classFileSystem_afa5afeedec00348c8d1ab922dac9b086}} 
-\index{File\+System@{File\+System}!tag\+Search@{tag\+Search}}
-\index{tag\+Search@{tag\+Search}!File\+System@{File\+System}}
-\subsubsection{\texorpdfstring{tag\+Search()}{tagSearch()}}
-{\footnotesize\ttfamily vector$<$ \mbox{\hyperlink{classFileInfo}{File\+Info}} $\ast$ $>$ $\ast$ File\+System\+::tag\+Search (\begin{DoxyParamCaption}\item[{unordered\+\_\+set$<$ string $>$ \&}]{tags }\end{DoxyParamCaption})}
+\mbox{\Hypertarget{classFileSystem_afb76c092b6ab19c9609e1707e5bdfe1b}\label{classFileSystem_afb76c092b6ab19c9609e1707e5bdfe1b}} 
+\index{File\+System@{File\+System}!tag\+\_\+search@{tag\+\_\+search}}
+\index{tag\+\_\+search@{tag\+\_\+search}!File\+System@{File\+System}}
+\subsubsection{\texorpdfstring{tag\+\_\+search()}{tag\_search()}}
+{\footnotesize\ttfamily vector$<$ \mbox{\hyperlink{classFileInfo}{File\+Info}} $\ast$ $>$ $\ast$ File\+System\+::tag\+\_\+search (\begin{DoxyParamCaption}\item[{unordered\+\_\+set$<$ string $>$ \&}]{tags }\end{DoxyParamCaption})}
 
 Search for files by tags. The tag search is an \char`\"{}and\char`\"{} operation, meaning the files returned will have at least all the specified tags. 
 \begin{DoxyParams}{Parameters}

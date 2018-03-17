@@ -8,6 +8,8 @@ std::vector<std::string> Parser::parse(int type)
 {
   std::vector<std::string> parsed;
   parsed.push_back(std::to_string(type));
+
+
   if(type == 4 || type == 5 || type == 6 || type == 7
       || type == 9)
   {
@@ -15,59 +17,48 @@ std::vector<std::string> Parser::parse(int type)
     while(_string[index] != '[' && _string[index] != '{'){index += 1;}
     _string = _string.substr(index,_string.length());
     index = 0;
+
+
     if(_string[index] == '[')
     {
-        std::vector<std::string> temp = lunion(_string.substr(1,_string.length()));
-        for(uint i = 0; i < temp.size(); i++)
+      std::vector<std::string> temp = lunion(_string.substr(1,_string.length()));
+      for(uint i = 0; i < temp.size(); i++)
+      {
+        parsed.push_back(temp[i]);
+      }
+      if(type == 7)
+      {
+        std::vector<std::string> v = get_cwd_tags();
+        for(uint i = 1; i < parsed.size(); i++)
         {
-          parsed.push_back(temp[i]);
-        }
-        if(type == 7)
-        {
-          std::vector<std::string> v = get_cwd_tags();
-          for(uint i = 1; i < parsed.size(); i++)
+          for(uint j = 0; j < v.size(); j++)
           {
-            for(uint j = 0; j < v.size(); j++)
-            {
-              parsed[i] += ("-" + v[j]);
-            }
+            parsed[i] += ("-" + v[j]);
           }
         }
+      }
     }
     else if(_string[index] == '{')
     {
-        std::vector<std::string> temp = lintersect(_string.substr(1,_string.length()));
-        for(uint i = 0; i < temp.size(); i++)
-        {
-          parsed.push_back(temp[i]);
-        }
+      std::vector<std::string> temp = lintersect(_string.substr(1,_string.length()));
+      for(uint i = 0; i < temp.size(); i++)
+      {
+        parsed.push_back(temp[i]);
+      }
     }
     return parsed;
   }
+
+
+
+
+
+
   switch(type)
   {
     case(8):
     {
-      std::string temp;
-      int index = 0;
-      // Skip command start (i.e. command name + flag(s))
-      while(_string[index] != ' '){ index += 1;}
-      index += 1;
-      // Read in file name
-      while(_string[index] != ' ')
-      {
-        temp += _string[index];
-        index += 1;
-      }
-      parsed.push_back(temp);
-      // Skip to tag list
-      while(_string[index] != '['){ index += 1;}
-      // Read in tag list
-      std::vector<std::string> temp_vec = lunion(_string.substr(index,_string.length()));
-      for(uint i = 0; i < temp_vec.size(); i++)
-      {
-        parsed[1] += ("-" + temp_vec[i]);
-      }
+      parse_path(parsed);
       return parsed;
     }
     case(10):
@@ -174,9 +165,13 @@ std::vector<std::string> Parser::parse(int type)
     {
       std::string path;
       int index = 0;
-      while(_string[index] != '/'){index += 1;}
-      while(_string[index] != ' '){path += _string[index]; index += 1;}
-      while(_string[index] != '['){index += 1;}
+
+       // Retrieve File Path
+      jump_to_char(index,'/');
+      substr_to_char(index, path, ' ');
+
+      // Jump to tag list
+      jump_to_char(index, '[');
   
       std::vector<std::string> tags = lunion(_string.substr(index,_string.length()));
       path += ">";
@@ -195,11 +190,15 @@ std::vector<std::string> Parser::parse(int type)
       std::string tags;
       int index = 0;
 
-      // Retieve the file and tag lists from the command string
-      while(_string[index] != '['){index += 1;}
-      while(_string[index] != ']'){files += _string[index]; index += 1;}
-      while(_string[index] != '['){index += 1;}
-      while(_string[index] != ']'){tags += _string[index]; index += 1;}
+      // Retieve the files list as string
+      jump_to_char(index,'[');
+      substr_to_char(index, files, ']');
+
+      // Retrieve tag list as string
+      jump_to_char(index,'[');
+      substr_to_char(index, tags, ']');
+
+      // Get Tag/File lists as vectors
 
       std::vector<std::string> vfiles = lunion(files);
       std::vector<std::string> vtags = lunion(tags);
@@ -223,9 +222,13 @@ std::vector<std::string> Parser::parse(int type)
     {
       std::string path;
       int index = 0;
-      while(_string[index] != '/'){index += 1;}
-      while(_string[index] != ' '){path += _string[index]; index += 1;}
-      while(_string[index] != '['){index += 1;}
+
+      // Retrieve File Path
+      jump_to_char(index,'/');
+      substr_to_char(index, path, ' ');
+
+      // Jump to tag list
+      jump_to_char(index, '[');
   
       std::vector<std::string> tags = lunion(_string.substr(index,_string.length()));
       path += ">";
@@ -244,12 +247,15 @@ std::vector<std::string> Parser::parse(int type)
       std::string tags;
       int index = 0;
 
-      // Retieve the file and tag lists from the command string
-      while(_string[index] != '['){index += 1;}
-      while(_string[index] != ']'){files += _string[index]; index += 1;}
-      while(_string[index] != '['){index += 1;}
-      while(_string[index] != ']'){tags += _string[index]; index += 1;}
+      // Retieve the files list as string
+      jump_to_char(index,'[');
+      substr_to_char(index, files, ']');
 
+      // Retrieve tag list as string
+      jump_to_char(index,'[');
+      substr_to_char(index, tags, ']');
+
+      // Get Tag/File lists as vectors
       std::vector<std::string> vfiles = lunion(files);
       std::vector<std::string> vtags = lunion(tags);
 
@@ -405,26 +411,36 @@ std::vector<std::string> Parser::matrix_multiply(const std::vector<std::string> 
     std::vector<std::string> product;
     while(product.size() < (v1.size() * v2.size()))
     {
-        if(v1.size() > v2.size())
-        {
-            for(uint i = 0; i < v1.size(); i++)
-            {
-                for(uint j = 0; j < v2.size(); j++)
-                {
-                    product.push_back(v1[i] + v2[j]);
-                }
-            }
-        }
-        else if(v1.size() < v2.size())
-        {
-            for(uint i = 0; i < v2.size(); i++)
-            {
-                for(uint j = 0; j < v1.size(); j++)
-                {
-                    product.push_back(v2[i] + v1[j]);
-                }
-            }
-        }
+      if(v1.size() > v2.size())
+      {
+          for(uint i = 0; i < v1.size(); i++)
+          {
+              for(uint j = 0; j < v2.size(); j++)
+              {
+                  product.push_back(v1[i] + v2[j]);
+              }
+          }
+      }
+      else if(v1.size() < v2.size())
+      {
+          for(uint i = 0; i < v2.size(); i++)
+          {
+              for(uint j = 0; j < v1.size(); j++)
+              {
+                  product.push_back(v2[i] + v1[j]);
+              }
+          }
+      }
+      else
+      {
+        for(uint i = 0; i < v2.size(); i++)
+          {
+              for(uint j = 0; j < v1.size(); j++)
+              {
+                  product.push_back(v2[i] + v1[j]);
+              }
+          }
+      }
     }
 
     return product;
@@ -535,6 +551,20 @@ std::vector<std::string> Parser::split_on_delim(std::string s, char delim)
   }
   rval.push_back(temp);
   return rval;
+}
+//======================================================================================================================
+void Parser::jump_to_char(int& index, char delim)
+{
+  while(_string[index] != delim){index += 1;}
+}
+//======================================================================================================================
+void Parser::substr_to_char(int& index, std::string& s, char delim)
+{
+  while(_string[index] != delim)
+  {
+    s += _string[index];
+    index += 1;
+  }
 }
 //======================================================================================================================
 

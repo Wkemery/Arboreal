@@ -31,6 +31,8 @@ unordered\+\_\+map$<$ string, \mbox{\hyperlink{classTreeObject}{Tree\+Object}} $
 unordered\+\_\+map$<$ string, \mbox{\hyperlink{classTreeObject}{Tree\+Object}} $\ast$ $>$\+::iterator \mbox{\hyperlink{classTreeObject_a2544e2976f3b75cd1f0230f5f908059c}{end}} ()
 \item 
 \mbox{\hyperlink{classTreeObject}{Tree\+Object}} $\ast$ \mbox{\hyperlink{classTreeObject_a6a7477c29a06a9896df549f83611252f}{find}} (string name) const
+\item 
+queue$<$ \mbox{\hyperlink{structindex}{Index}} $>$ $\ast$ \mbox{\hyperlink{classTreeObject_aa0900ad50c10023e4700f11218d30d7a}{get\+\_\+free\+\_\+spots}} ()
 \end{DoxyCompactItemize}
 \end{Indent}
 \begin{Indent}\textbf{ Modifier Functions}\par
@@ -96,7 +98,10 @@ Blk\+Num\+Type \mbox{\hyperlink{classTreeObject_a5872ffdaa0c1a0cbf393da9a8a7657f
 \begin{DoxyCompactList}\small\item\em blocknumber of the start of this data on disk \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classTreeObject_a0b2ab130a5b95945bbd81250f667d63b}\label{classTreeObject_a0b2ab130a5b95945bbd81250f667d63b}} 
 \mbox{\hyperlink{classPartitionManager}{Partition\+Manager}} $\ast$ \mbox{\hyperlink{classTreeObject_a0b2ab130a5b95945bbd81250f667d63b}{\+\_\+my\+Partition\+Manager}}
-\begin{DoxyCompactList}\small\item\em Associated \mbox{\hyperlink{classPartitionManager}{Partition\+Manager}}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Associated \mbox{\hyperlink{classPartitionManager}{Partition\+Manager}}. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classTreeObject_a43defc5d87c903cdc3e36edc3323ef87}\label{classTreeObject_a43defc5d87c903cdc3e36edc3323ef87}} 
+queue$<$ \mbox{\hyperlink{structindex}{Index}} $>$ {\bfseries \+\_\+free\+Spots}
+\end{DoxyCompactItemize}
 
 
 \subsection{Constructor \& Destructor Documentation}
@@ -216,6 +221,15 @@ a pointer to the object if found, 0 otherwise
 
 \begin{DoxyReturn}{Returns}
 The blocknumber of the superblock 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classTreeObject_aa0900ad50c10023e4700f11218d30d7a}\label{classTreeObject_aa0900ad50c10023e4700f11218d30d7a}} 
+\index{Tree\+Object@{Tree\+Object}!get\+\_\+free\+\_\+spots@{get\+\_\+free\+\_\+spots}}
+\index{get\+\_\+free\+\_\+spots@{get\+\_\+free\+\_\+spots}!Tree\+Object@{Tree\+Object}}
+\subsubsection{\texorpdfstring{get\+\_\+free\+\_\+spots()}{get\_free\_spots()}}
+{\footnotesize\ttfamily queue$<$ \mbox{\hyperlink{structindex}{Index}} $>$ $\ast$ Tree\+Object\+::get\+\_\+free\+\_\+spots (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+a pointer to the queue of empty spaces where new entries can be added 
 \end{DoxyReturn}
 \mbox{\Hypertarget{classTreeObject_ae0983a3ff99d413e22beaaac8d7b6d12}\label{classTreeObject_ae0983a3ff99d413e22beaaac8d7b6d12}} 
 \index{Tree\+Object@{Tree\+Object}!get\+\_\+index@{get\+\_\+index}}

@@ -29,7 +29,7 @@ std::regex find_files ("find -f \\[([0-9a-zA-Z_]+)(\\.[a-zA-Z]+)?(,([0-9a-zA-Z_]
 //[================================================================================================-->]
 std::regex new_tags ("new -t \\[([0-9a-zA-Z_]+)(,[0-9a-zA-Z_]+)*\\]");
 std::regex new_files ("new -f \\[([0-9a-zA-Z_]+)(\\.[a-zA-Z]+)?(,([0-9a-zA-Z_]+)(\\.[0-9a-zA-Z_]+)?)*\\]");
-std::regex new_files_t_inc ("new ([0-9a-zA-Z_]+)(\\.[a-zA-Z]+)? -t \\[([0-9a-zA-Z_]+)(,[0-9a-zA-Z_]+)*\\]");
+std::regex new_file ("new (/[0-9a-zA-Z_]+)+[0-9a-zA-Z_]+((\\.)[a-zA-Z_]+)?");
 //[================================================================================================-->]
 //[    Regex for "delete" Commands  ]
 //[================================================================================================-->]
@@ -86,7 +86,7 @@ int check_command(std::string command)
     else if(std::regex_match(command,find_files)){return 5;}
     else if(std::regex_match(command,new_tags)){return 6;}
     else if(std::regex_match(command,new_files)){return 7;}
-    else if(std::regex_match(command,new_files_t_inc)){return 8;}
+    else if(std::regex_match(command,new_file)){return 8;}
     else if(std::regex_match(command,del_tags)){return 9;}
     else if(std::regex_match(command,del_files)){return 10;}
     else if(std::regex_match(command,del_file)){return 11;}
