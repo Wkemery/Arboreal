@@ -1054,9 +1054,9 @@ std::vector<std::string> execute(int id, char* command, int fd)
     }
     case(16): //get file attr
     {
+      // NEEDS MORE TESTING
       std::string path = command;
       std::vector<std::string> vpath = Parser::split_on_delim(path,'/');
-
       try
       {
         Attributes* attr = fd_fs_map[fd]->get_attributes(vpath);
@@ -1090,17 +1090,17 @@ std::vector<std::string> execute(int id, char* command, int fd)
         int size = (int)fattr.size;
         std::string t5 = ("[ Size -- " + std::to_string(size) + "]\n");
 
-        char perm[12];
-        for(unsigned int i = 0; i < 12; i++){perm[i] = fattr.permissions[i];}
-        std::string t6 = ("[ Permissions -- [");
-        for(unsigned int i = 0; i < 12; i++)
-        {
-          if(i + 1 == 12){t6 += perm[i];}
-          else{t6 += perm[i]; t6 += ",";}
-        }
-        t6 += "]\n";
+        //char perm[12];
+        //for(unsigned int i = 0; i < 12; i++){perm[i] = fattr.permissions[i];}
+        std::string t6 = ("[ Permissions -- [TBA] ]\n");
+        // for(unsigned int i = 0; i < 12; i++)
+        // {
+        //   if(i + 1 == 12){t6 += perm[i];}
+        //   else{t6 += perm[i]; t6 += ",";}
+        // }
+        // t6 += "]\n";
 
-        std::string t7 = ("[ Owner -- " + std::to_string(fattr.owner) + "]\n");
+        std::string t7 = ("[ Owner -- Root ]\n");
 
         std::string success = t1 + t2 + t3 + t4 + t5 + t6 + t7;
         data.push_back(success);
@@ -1111,6 +1111,20 @@ std::vector<std::string> execute(int id, char* command, int fd)
         return data;
       }
       return data;
+    }
+    case(17): // merge 1:1
+    {
+      data.push_back("Building in Progress...");
+      return data;
+    }
+    case(18): // merge many:1
+    {
+      data.push_back("Building in Progress...");
+      return data;
+    }
+    case(19): // tag 
+    {
+
     }
   }
 

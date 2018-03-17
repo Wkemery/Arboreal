@@ -10,7 +10,7 @@ std::vector<std::string> Parser::parse(int type)
     parsed.push_back(std::to_string(type));
 
     if(type == 4 || type == 5 || type == 6 || type == 7
-        || type == 9 || type == 16)
+        || type == 9)
     {
       int index = 0;
       while(_string[index] != '[' && _string[index] != '{'){index += 1;}
