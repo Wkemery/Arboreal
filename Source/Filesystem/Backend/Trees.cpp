@@ -149,6 +149,14 @@ void Addition::write_out(PartitionManager* pm)
     nextEntry.blknum = _parent->get_start_block();
     nextEntry.offset = 0;
   }
+  /* TODO:*/
+  else if(_parent->get_free_spots()->size() != 0)
+  {
+    //set nextEntry to one of these entries and remove the entry from the list of empty spaces
+    queue<Index>* freeSpotList = _parent->get_free_spots();
+    nextEntry = freeSpotList->front();
+    freeSpotList->pop();
+  }
   else
   {
     nextEntry = _parent->get_last_entry();
@@ -202,6 +210,10 @@ void Deletion::write_out(PartitionManager* pm)
     
     /*Write out buff to mod blknum*/
     pm->writeDiskBlock(_mod->get_index(_parent).blknum, buff);
+    
+    /*TODO:*/
+    /*add the index to the free spot list*/
+        _parent->get_free_spots()->push(_mod->get_index(_parent));
   }
   
   delete[] buff;
@@ -237,6 +249,9 @@ Index TreeObject::get_index(TreeObject* obj) const
 BlkNumType TreeObject::get_block_number() const {return _blockNumber;}
 
 Index TreeObject::get_last_entry() const {return _lastEntry;}
+
+queue<Index>* TreeObject::get_free_spots(){return &_freeSpots;}
+
 
 BlkNumType TreeObject::get_start_block() const {return _startBlock;}
 
@@ -298,6 +313,11 @@ void TreeObject::increment_follow(Index* index)
       index->blknum = contBlkNum;
       index->offset = 0;
     }
+  }/*TODO*/
+  else if((index->blknum == _lastEntry.blknum) && (index->offset == _lastEntry.offset))
+  {
+    index->blknum = 0;
+    index->offset = 0;
   }
   else
   {
@@ -519,6 +539,12 @@ void RootTree::read_in(unordered_multimap<string, FileInfo*>* allFiles, RootTree
         throw arboreal_logic_error("Duplicate Tag Tree read in from disk", "RootTree::read_in");
       }
     }
+    else
+    {
+      /*TODO:*/
+      /*add this index to a list of empty spaces*/
+            _freeSpots.push(currentIndex);
+    }
     
     increment_follow(&currentIndex);
     if(currentIndex != EOFIndex)
@@ -689,6 +715,12 @@ void TagTree::read_in(unordered_multimap<string, FileInfo*>* allFiles, RootTree*
       {
         allFiles->insert(pair<string, FileInfo*>(fileName, finode));
       }
+    }
+    else
+    {
+      /*TODO:*/
+      /*add this index to a list of empty spaces*/
+            _freeSpots.push(currentIndex);
     }
     
     increment_follow(&currentIndex);

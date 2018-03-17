@@ -170,7 +170,7 @@ protected:
   Index _lastEntry;  //!< Index of the last entry of data on disk
   BlkNumType _startBlock; //!< blocknumber of the start of this data on disk
   PartitionManager* _myPartitionManager;//!< Associated PartitionManager
-
+  queue<Index> _freeSpots;
 public:
 /*Constructors*/
   virtual ~TreeObject();
@@ -238,6 +238,11 @@ public:
    */
   TreeObject* find(string name) const;
 
+  /*!
+   * @return a pointer to the queue of empty spaces where new entries can be added
+   */
+  queue<Index>* get_free_spots();
+  
   ///@}
 /**********************************************************************************************************************/
 
