@@ -1329,14 +1329,16 @@ void FileSystem::rename_file(vector<string>& originalFilePath, string newFileNam
   
   /*Rename the file*/
   FileInfo* file = path_to_file(originalFilePath);
-  file->set_name(newFileName);
   
   /*Change fileName in every TagTree object associated with the file*/
   for(auto tagIt = file->begin(); tagIt != file->end(); tagIt++)
   {
-    tagIt->second->erase(file->get_name());
+    tagIt->second->erase(file->mangle());
     tagIt->second->insert(newFileName, file);
   }
+  
+  file->set_name(newFileName);
+  
 }
 
 void FileSystem::write_changes()

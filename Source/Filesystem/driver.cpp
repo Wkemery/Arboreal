@@ -1070,9 +1070,6 @@ int main(int argc, char** argv)
       fs1->create_tag("NewTag6");
       fs1->write_changes();
       
-      
-      
-      
       break;
     }
     default:
