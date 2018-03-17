@@ -792,8 +792,106 @@ std::vector<std::string> execute(int id, char* command, int fd)
     }
     case(20): // tag files within CWD
     {
+        std::string temp1 = command;
+        int index = 0;
+        while(temp1[index] != '>'){index += 1;}
+        std::string path = temp1.substr(0,index);
+        index += 1;
+        std::string tags = temp1.substr(index,temp1.length());
 
+        std::vector<std::string> vpath = Parser::split_on_delim(path,'/');
+        std::unordered_set<std::string> stags = get_set(Parser::split_on_delim(tags,'-'));
+
+        try
+        {
+            fd_fs_map[fd]->tag_file(vpath,stags);
+            std::string success = ("File [" + vpath[vpath.size() - 1] + "] "); 
+            success += "Successfully Tagged With [";
+            for(auto it = begin(stags); it != end(stags); ++it)
+            {
+                if(std::next(it,1) != end(stags)){success += (*it + ",");}
+                else{success += *it;}
+            }
+            success += "]";
+            data.push_back(success);
+        }
+        catch(arboreal_exception& e)
+        {
+            data.push_back(e.what());
+            return data;
+        }
+        fd_fs_map[fd]->write_changes();
+        return data;
     }
+    case(21):
+    {
+        std::string temp1 = command;
+        int index = 0;
+        while(temp1[index] != '>'){index += 1;}
+        std::string path = temp1.substr(0,index);
+        index += 1;
+        std::string tags = temp1.substr(index,temp1.length());
+
+        std::vector<std::string> vpath = Parser::split_on_delim(path,'/');
+        std::unordered_set<std::string> stags = get_set(Parser::split_on_delim(tags,'-'));
+
+        try
+        {
+            fd_fs_map[fd]->untag_file(vpath,stags);
+            std::string success = "Tags [";
+            for(auto it = begin(stags); it != end(stags); ++it)
+            {
+                if(std::next(it,1) != end(stags)){success += (*it + ",");}
+                else{success += *it;}
+            }
+            success += ("] Successfully Removed From File [" + vpath[vpath.size() - 1] + "]");
+            data.push_back(success);
+        }
+        catch(arboreal_exception& e)
+        {
+            data.push_back(e.what());
+            return data;
+        }
+        fd_fs_map[fd]->write_changes();
+        return data;
+    }
+    case(22):
+    {
+        std::string temp1 = command;
+        int index = 0;
+        while(temp1[index] != '>'){index += 1;}
+        std::string path = temp1.substr(0,index);
+        index += 1;
+        std::string tags = temp1.substr(index,temp1.length());
+
+        std::vector<std::string> vpath = Parser::split_on_delim(path,'/');
+        std::unordered_set<std::string> stags = get_set(Parser::split_on_delim(tags,'-'));
+
+        try
+        {
+            fd_fs_map[fd]->untag_file(vpath,stags);
+            std::string success = "Tags [";
+            for(auto it = begin(stags); it != end(stags); ++it)
+            {
+                if(std::next(it,1) != end(stags)){success += (*it + ",");}
+                else{success += *it;}
+            }
+            success += ("] Successfully Removed From File [" + vpath[vpath.size() - 1] + "]");
+            data.push_back(success);
+        }
+        catch(arboreal_exception& e)
+        {
+            data.push_back(e.what());
+            return data;
+        }
+        fd_fs_map[fd]->write_changes();
+        return data;
+    }
+    default:
+    {
+        data.push_back("Unrecognized Command");
+    }
+    //case(23) switch directories is handled by the liaison process
   }
 
 }

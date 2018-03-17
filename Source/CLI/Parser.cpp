@@ -191,7 +191,82 @@ std::vector<std::string> Parser::parse(int type)
     }
     case(20):
     {
+      std::string files;
+      std::string tags;
+      int index = 0;
 
+      // Retieve the file and tag lists from the command string
+      while(_string[index] != '['){index += 1;}
+      while(_string[index] != ']'){files += _string[index]; index += 1;}
+      while(_string[index] != '['){index += 1;}
+      while(_string[index] != ']'){tags += _string[index]; index += 1;}
+
+      std::vector<std::string> vfiles = lunion(files);
+      std::vector<std::string> vtags = lunion(tags);
+
+      // build the parsed command
+      std::string path;
+      for(uint i = 0; i < vfiles.size(); i++)
+      {
+        path = (_cwd + vfiles[i]);
+        path += ">";
+        for(uint j = 0; j < vtags.size(); j++)
+        {
+          if(j + 1 < vtags.size()){path += (vtags[i] + "-");}
+          else{path += vtags[i];}
+        }
+        parsed.push_back(path);
+      }
+      return parsed;
+    }
+    case(21):
+    {
+      std::string path;
+      int index = 0;
+      while(_string[index] != '/'){index += 1;}
+      while(_string[index] != ' '){path += _string[index]; index += 1;}
+      while(_string[index] != '['){index += 1;}
+  
+      std::vector<std::string> tags = lunion(_string.substr(index,_string.length()));
+      path += ">";
+      for(uint i = 0; i < tags.size(); i++)
+      {
+        if(i + 1 >= tags.size()){path += tags[i];}
+        else{path += (tags[i] + "-");}
+      }
+
+      parsed.push_back(path);
+      return parsed;
+    }
+    case(22):
+    {
+      std::string files;
+      std::string tags;
+      int index = 0;
+
+      // Retieve the file and tag lists from the command string
+      while(_string[index] != '['){index += 1;}
+      while(_string[index] != ']'){files += _string[index]; index += 1;}
+      while(_string[index] != '['){index += 1;}
+      while(_string[index] != ']'){tags += _string[index]; index += 1;}
+
+      std::vector<std::string> vfiles = lunion(files);
+      std::vector<std::string> vtags = lunion(tags);
+
+      // build the parsed command
+      std::string path;
+      for(uint i = 0; i < vfiles.size(); i++)
+      {
+        path = (_cwd + vfiles[i]);
+        path += ">";
+        for(uint j = 0; j < vtags.size(); j++)
+        {
+          if(j + 1 < vtags.size()){path += (vtags[i] + "-");}
+          else{path += vtags[i];}
+        }
+        parsed.push_back(path);
+      }
+      return parsed;
     }
   }
 
