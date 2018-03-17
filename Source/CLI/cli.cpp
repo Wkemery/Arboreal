@@ -410,7 +410,6 @@ void CLI::run()
 //[================================================================================================]
 void CLI::send_cmnd(char* cmnd)
 {
-
    if(_dbug) std::cout << "C: Sending Command To Server..." << std::endl;
    if(_dbug) std::cout << "C: Sending To: " << _client_sock << " @ " << _client_sockpath << std::endl;
    send_to_server(_client_sock,_client_sockpath,cmnd,MAX_COMMAND_SIZE,FLAG);

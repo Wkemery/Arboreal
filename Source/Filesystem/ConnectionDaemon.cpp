@@ -808,7 +808,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
       fd_fs_map[fd]->write_changes();
       return data;
     }
-    case(7): //create file
+    case(7): //create file in CWD
     {
       std::unordered_set<std::string> tags;
       std::string filename;
@@ -846,7 +846,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
       fd_fs_map[fd]->write_changes();
       return data;
     }
-    case(8):
+    case(8): // create file anywhere
     {
       std::unordered_set<std::string> tags;
       std::string filename;
@@ -884,7 +884,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
       fd_fs_map[fd]->write_changes();
       return data;
     }
-    case(9):
+    case(9): // delete tag(s)
     {
       std::string tagname = command;
   
@@ -902,7 +902,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
       fd_fs_map[fd]->write_changes();
       return data;
     }
-    case(10):
+    case(10): // delete files from CWD
     {
       std::string to_delete = command;
       std::vector<std::string> path = Parser::split_on_delim(to_delete,'-');
@@ -921,7 +921,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
       fd_fs_map[fd]->write_changes();
       return data;
     }
-    case(11):
+    case(11): // delete file from anywhere
     {
       std::string filepath = command;
       std::vector<std::string> path = Parser::split_on_delim(filepath,'/');
@@ -1003,6 +1003,52 @@ std::vector<std::string> execute(int id, char* command, int fd)
         data.push_back(e.what());
         return data;
       }
+      return data;
+    }
+    case(14):
+    {
+      std::string rename = command;
+      std::vector<std::string> names = Parser::split_on_delim(rename,'-');
+      for(unsigned int i = 0; i < names.size(); i++)
+      {
+        std::cout << names[i] << std::endl;
+      }
+      try
+      {
+        fd_fs_map[fd]->rename_tag(names[0],names[1]);
+        std::string success = ("Tag [" + names[0] + "] Successfully Renamed To [" + names[1] + "]");
+        data.push_back(success);
+      }
+      catch(arboreal_exception& e)
+      {
+        data.push_back(e.what());
+        return data;
+      }
+      fd_fs_map[fd]->write_changes();
+      return data;
+    }
+    case(15):
+    {
+      std::string to_split = command;
+      std::vector<std::string> split = Parser::split_on_delim(to_split,'/');
+      std::string new_name = split[split.size() - 1];
+      std::cout << new_name << std::endl;
+      std::cout << split.size() << std::endl;
+      split.erase(end(split) - 1);
+      std::cout << split.size() << std::endl;
+
+      try
+      {
+        fd_fs_map[fd]->rename_file(split,new_name);
+        std::string success = ("File [" + split[split.size() - 1] + "] Successfully Renamed To [" + new_name +"]");
+        data.push_back(success);
+      }
+      catch(arboreal_exception& e)
+      {
+        data.push_back(e.what());
+        return data;
+      }
+      fd_fs_map[fd]->write_changes();
       return data;
     }
   }

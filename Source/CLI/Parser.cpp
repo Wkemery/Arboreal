@@ -125,7 +125,26 @@ std::vector<std::string> Parser::parse(int type)
       }
       case(15):
       {
-        parse_rename(parsed);
+        std::string path;
+        int index = 0;
+        while(_string[index] != '/'){index += 1;}
+        while(_string[index] != ' ')
+        {
+          path += _string[index];
+          index += 1;
+        }
+        
+        index += 4;
+
+        std::string name;
+        while(index < _string.length())
+        {
+          name += _string[index];
+          index += 1;
+        }
+
+        path += ("/" + name);
+        parsed.push_back(path);
         return parsed;
       }
       case(17):
@@ -377,37 +396,53 @@ void Parser::parse_path(std::vector<std::string>& parsed)
 //======================================================================================================================
 void Parser::parse_rename(std::vector<std::string>& parsed)
 {
+  
   int index = 0;
+  std::string old_names;
+  std::string new_names;
   while(_string[index] != '['){index += 1;}
-  _string = _string.substr(index,_string.length());
-  std::vector<std::string> old_names = lunion(_string);
-  index += 1;
-  while(_string[index] != '['){index += 1;}
-  _string = _string.substr(index,_string.length());
-  std::vector<std::string> new_names = lunion(_string);
 
-  if(old_names.size() > new_names.size())
+  while(_string[index] != ']')
+  {
+    old_names += _string[index];
+    index += 1;
+  }
+  old_names += _string[index];
+
+  while(_string[index] != '['){index += 1;}
+
+  while(_string[index] != ']')
+  {
+    new_names += _string[index];
+    index += 1;
+  }
+  new_names += _string[index];
+
+
+  std::vector<std::string> _old = lunion(old_names);
+  std::vector<std::string> _new = lunion(new_names);
+  if(_old.size() > _new.size())
   {
     // Not enough new names
-    for(uint i = 0; i < new_names.size(); i++)
+    for(uint i = 0; i < _new.size(); i++)
     {
-      parsed.push_back(old_names[i] + "-" + new_names[i]);
+      parsed.push_back(_old[i] + "-" + _new[i]);
     }
   }
-  else if(old_names.size() < new_names.size())
+  else if(_old.size() < _new.size())
   {
     // Too many new names
-    for(uint i = 0; i < old_names.size(); i++)
+    for(uint i = 0; i < _old.size(); i++)
     {
-      parsed.push_back(old_names[i] + "-" + new_names[i]);
+      parsed.push_back(_old[i] + "-" + _new[i]);
     }
   }
   else
   {
     // Sizes are equal
-    for(uint i = 0; i < old_names.size(); i++)
+    for(uint i = 0; i < _old.size(); i++)
     {
-      parsed.push_back(old_names[i] + "-" + new_names[i]);
+      parsed.push_back(_old[i] + "-" + _new[i]);
     }
   }
 }

@@ -66,26 +66,29 @@ void print_help()
     std::cout << "|                                                                                   |\n";
     std::cout << "|  10) { 'delete' '-f' '[filename.ext,...]' }--> Delete files                       |\n";
     std::cout << "|                                                                                   |\n";
-    std::cout << "|  11) { 'fdelete' '-t' '[tagName,...]' }--> Force delete tags                      |\n";
+    std::cout << "|  11) { 'delete' '../tag/filename(.ext)'                                           |\n";
     std::cout << "|                                                                                   |\n";
-    std::cout << "|  12) { 'open' '../tag/filename.ext' }--> Open files  PATH                         |\n";
+    std::cout << "|  12) { 'open' (-r|-w|-x) '../tag/filename(.ext)' }--> Open files  PATH            |\n";
     std::cout << "|                                                                                   |\n";
-    std::cout << "|  13) { 'close' '../tag/filename.ext' }--> Close files                             |\n";
+    std::cout << "|  13) { 'close' '../tag/filename(.ext)' }--> Close files                           |\n";
     std::cout << "|                                                                                   |\n";
-    std::cout << "|  14) { 'rename' '-t' '[tagName,...]' '-n' '[newName,...]' }--> Rename Tags        |\n";
+    std::cout << "|  14) { 'rename' '-t' '[tagName,...]' '=>' '[newName,...]' }--> Rename Tags        |\n";
     std::cout << "|                                                                                   |\n";
-    std::cout << "|  15) { 'rename' '-f' '[filename.ext,...]' '-n' '[newName,...]' }--> Rename files  |\n";
+    std::cout << "|  15) { 'rename' '../tag/filename(.ext)' '=>' 'newName(.ext)' }--> Rename files    |\n";
     std::cout << "|                                                                                   |\n";
-    std::cout << "|  16) { 'attr' '[filename.ext,...]' }--> Get attributes of files                   |\n";
+    std::cout << "|  16) { 'attr' '../tag/filename(.ext)' }--> Get attributes of files                |\n";
     std::cout << "|                                                                                   |\n";
-    std::cout << "|  17) { 'merge' 'tagName1' '->' 'tagName2' }--> Merge two existing tags            |\n";
+    std::cout << "|  17) { 'merge' 'tagName1' '=>' 'tagName2' }--> Merge two existing tags            |\n";
     std::cout << "|                                                                                   |\n";
-    std::cout << "|  18) { 'merge' '[tagName,...]' '->' 'tagName' }--> Merge multiple tags into one   |\n";
+    std::cout << "|  18) { 'merge' '[tagName,...]' '=>' 'tagName' }--> Merge multiple tags into one   |\n";
     std::cout << "|                                                                                   |\n";
-    std::cout << "|  19) { 'tag' 'filename.ext' '->' '[tagName,...]' }--> Add tags to file            |\n";
+    std::cout << "|  19) { 'tag' '../tag/filename(.ext)' '+>' '[tagName,...]' }--> Add tags to file   |\n";
     std::cout << "|                                                                                   |\n";
-    std::cout << "|  20) { 'tag' '[filename.ext,...]' '->' 'tagName' }--> Tag multiple files          |\n";
+    std::cout << "|  20) { 'tag' '[filename(.ext),...]' +> [tagName,...]' }--> Tag multiple files     |\n";
     std::cout << "|                                                                                   |\n";
+    std::cout << "|  21) { 'untag' '../tag/filename(.ext) -> [tagName,...]'                           |\n";
+    std::cout << "|                                                                                   |\n";
+    std::cout << "|  22) { 'untag' '[filename(.ext) -> [tagName,...]'                                 |\n";
     std::cout << "+-----------------------------------------------------------------------------------+\n";
     std::cout << "Arboreal >> ";
     return;
@@ -105,6 +108,18 @@ void print_header()
     std::cout << "[]==============================================================================[]\n";
     std::cout << "\n\n";
     std::cout << "Arboreal >> ";
+    return;
+}
+
+void print_command(char* cmnd, int size)
+{
+    int index = sizeof(int);
+    while(index < size)
+    {
+        std::cout << cmnd[index];
+        index += 1;
+    }
+    std::cout << std::endl;
     return;
 }
 //[================================================================================================]
