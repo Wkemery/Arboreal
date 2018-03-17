@@ -848,9 +848,9 @@ void FileSystem::untag_file(FileInfo* file, unordered_set<string> tags, bool del
   
   for(string tag : tagsToRemove)
   {
-    if(tag == "default")
+    if(tag == "default" && !deleting)
     {
-      throw (tag + " cannot be removed from " + file->get_name(), "FileSystem::untag_file()");
+      throw tag_error (tag + " cannot be removed from " + file->get_name(), "FileSystem::untag_file()");
     }
     
     /*find tagTree*/
