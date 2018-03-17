@@ -177,7 +177,7 @@ int main(int argc, char** argv)
         /* 999 is QUIT command */
         break;
       }
-      else if(command_id == 21)
+      else if(command_id == 23)
       {
         /* This is a change in working directory */
         std::string temp;

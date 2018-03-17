@@ -374,7 +374,7 @@ void CLI::run()
             int rtrn = check_command(input);
             if(rtrn != 0)
             {
-               if(rtrn == 21)
+               if(rtrn == 23)
                {
                   std::string old = _cwd;
                   std::string temp = input.substr(3,input.length());

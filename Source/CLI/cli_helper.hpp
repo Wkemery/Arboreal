@@ -87,8 +87,10 @@ void print_help()
     std::cout << "|  20) { 'tag' '[filename(.ext),...]' +> [tagName,...]' }--> Tag multiple files     |\n";
     std::cout << "|                                                                                   |\n";
     std::cout << "|  21) { 'untag' '../tag/filename(.ext) -> [tagName,...]'                           |\n";
-    std::cout << "|                                                                                   |\n";
+    std::cout << "|                                                                                   |\n"; 
     std::cout << "|  22) { 'untag' '[filename(.ext) -> [tagName,...]'                                 |\n";
+    std::cout << "|                                                                                   |\n";
+    std::cout << "|  23) { 'cd' '../tag1/tag2'                                                        |\n";
     std::cout << "+-----------------------------------------------------------------------------------+\n";
     std::cout << "Arboreal >> ";
     return;
