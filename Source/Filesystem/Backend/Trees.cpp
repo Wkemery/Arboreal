@@ -141,13 +141,11 @@ void Addition::write_out(PartitionManager* pm)
   
   Index nextEntry{0,0};
   
-  
-  pm->readDiskBlock(_parent->get_last_entry().blknum, buff);
-  
   if(_parent->get_last_entry().blknum == 0)
   {
     nextEntry.blknum = _parent->get_start_block();
-    nextEntry.offset = 0;
+    nextEntry.offset = 0;    
+    _parent->set_last_entry(nextEntry);
   }
   /* TODO:*/
   else if(_parent->get_free_spots()->size() != 0)
@@ -156,17 +154,20 @@ void Addition::write_out(PartitionManager* pm)
     queue<Index>* freeSpotList = _parent->get_free_spots();
     nextEntry = freeSpotList->front();
     freeSpotList->pop();
+    pm->readDiskBlock(nextEntry.blknum, buff);
   }
   else
   {
     nextEntry = _parent->get_last_entry();
     _parent->increment_allocate(&nextEntry);
+    if(_parent->get_last_entry().blknum == nextEntry.blknum)
+    {
+      pm->readDiskBlock(_parent->get_last_entry().blknum, buff);
+    }
+    _parent->set_last_entry(nextEntry);
+    
   }
   
-  if(_parent->get_last_entry().blknum != nextEntry.blknum)
-  {
-    pm->readDiskBlock(nextEntry.blknum, buff);
-  }
   
   int keySize = _mod->get_name().length();
   strncpy(buff + nextEntry.offset, _mod->get_name().c_str(), keySize);
@@ -176,11 +177,10 @@ void Addition::write_out(PartitionManager* pm)
   BlkNumType tagBlk = _mod->get_block_number();
   memcpy(buff + nextEntry.offset + pm->get_file_name_size(), &tagBlk, sizeof(BlkNumType));
   
-  _parent->set_last_entry(nextEntry);
   
-  _mod->add_index(_parent, _parent->get_last_entry());
+  _mod->add_index(_parent, nextEntry);
   
-  pm->writeDiskBlock(_parent->get_last_entry().blknum, buff);
+  pm->writeDiskBlock(nextEntry.blknum, buff);
   
   delete[] buff;
 }
@@ -268,6 +268,10 @@ void TreeObject::increment_allocate(Index* index)
   {
     BlkNumType newBlock;
     newBlock = _myPartitionManager->getFreeDiskBlock();
+    
+    /*Zero out new block*/
+    memset(buff, 0, _myPartitionManager->getBlockSize()); //zero out memory
+    _myPartitionManager->writeDiskBlock(newBlock, buff);
     
     /*Read in old block*/
     _myPartitionManager->readDiskBlock(index->blknum, buff);
