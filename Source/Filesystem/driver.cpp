@@ -1086,6 +1086,16 @@ int main(int argc, char** argv)
       filePath.push_back("defaultFIle1");
       
       fs1->delete_file(filePath);
+      fs1->write_changes();
+      break;
+    }
+    case 16:
+    {
+      vector<string> fullPath;
+      fullPath.push_back("Tag0"); fullPath.push_back("Tag2"); fullPath.push_back("Tag5"); fullPath.push_back("Tag6");
+      fullPath.push_back("File4");
+      fs1->rename_file(fullPath, "newfileName");
+      fs1->write_changes();
       break;
     }
     
