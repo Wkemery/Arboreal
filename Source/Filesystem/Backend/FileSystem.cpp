@@ -1327,7 +1327,7 @@ void FileSystem::set_permissions(vector<string>& filePath, char* perms)
 void FileSystem::rename_file(vector<string>& originalFilePath, string newFileName)
 {
   
-  /*Rename the file*/
+  /*Find the file*/
   FileInfo* file = path_to_file(originalFilePath);
   
   /*Change fileName in every TagTree object associated with the file*/
@@ -1335,7 +1335,14 @@ void FileSystem::rename_file(vector<string>& originalFilePath, string newFileNam
   {
     tagIt->second->erase(file->mangle());
     tagIt->second->insert(newFileName, file);
+    /*Note tag tree was modified*/
+    insert_modification(tagIt->second);
   }
+  
+  /*Change the File in allfiles*/
+  _allFiles.erase(file->get_name());
+  _allFiles.insert(pair<string, FileInfo*>(newFileName, file));
+  
   
   file->set_name(newFileName);
   
