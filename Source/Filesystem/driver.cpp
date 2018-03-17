@@ -1074,11 +1074,18 @@ int main(int argc, char** argv)
     }
     case 15:
     {
-      vector<string> fullPath;
-      fullPath.push_back("Tag0"); fullPath.push_back("Tag2"); fullPath.push_back("Tag5"); fullPath.push_back("Tag6");
-      fullPath.push_back("File4");
-      fs1->rename_file(fullPath, "newFileName");
+      unordered_set<string> tags;
+      fs1->create_file("defaultFIle1", tags);
+      fs1->create_file("defaultFIle2", tags);
+      fs1->create_file("defaultFIle3", tags);
+      fs1->create_file("defaultFIle4", tags);
+      
       fs1->write_changes();
+      
+      vector<string> filePath;
+      filePath.push_back("defaultFIle1");
+      
+      fs1->delete_file(filePath);
       break;
     }
     
