@@ -846,13 +846,16 @@ void FileSystem::untag_file(FileInfo* file, unordered_set<string> tags, bool del
     throw file_error(file->get_name() + " with the specified tags already exists", "FileSystem::untag_file()");
   }
   
-  for(string tag : tagsToRemove)
+  for(string tag: tagsToRemove)
   {
     if(tag == "default" && !deleting)
     {
       throw tag_error (tag + " cannot be removed from " + file->get_name(), "FileSystem::untag_file()");
     }
-    
+  }
+  
+  for(string tag : tagsToRemove)
+  {
     /*find tagTree*/
     TreeObject* tagTree = _RootTree->find(tag);
     
@@ -864,6 +867,13 @@ void FileSystem::untag_file(FileInfo* file, unordered_set<string> tags, bool del
     
     /*Note Tag Tree was modified*/
     insert_modification(tagTree);
+  }
+  
+  /*Update all the tags that file is still tagged with*/
+  for(auto tagIt = file->begin(); tagIt != file->end(); ++tagIt)
+  {
+    tagIt->second->erase(originalFileName);
+    tagIt->second->insert(file->mangle(), file);
   }
   
   /*if removed all Tags from file, add default tag*/

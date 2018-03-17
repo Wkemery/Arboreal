@@ -1098,7 +1098,21 @@ int main(int argc, char** argv)
       fs1->write_changes();
       break;
     }
-    
+    case 17:
+    {
+      unordered_set<string> tagSet; 
+      tagSet.insert("Tag1");
+      vector<string> fullPath;
+      fullPath.push_back("Tag0"); fullPath.push_back("Tag1"); fullPath.push_back("File1");
+      
+      fs1->untag_file(fullPath, tagSet);
+      
+      tagSet.clear();
+      tagSet.insert("Tag0");
+      fs1->create_file("File1", tagSet);
+      
+      break;
+    }
     default:
     {
       cerr << "Driver Error! Behavior not defined for specified number" << endl;
