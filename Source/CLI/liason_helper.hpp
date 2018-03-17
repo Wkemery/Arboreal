@@ -490,7 +490,6 @@ void shutdown(const int liaison_fid,
               const std::string liaison_sockpath)
 {
 
-    printf("\nL: Connection To File System Daemon Could Not Be Established; Exiting\n");
     Debug.log(liaison_close);
     if(close(liaison_fid) < 0)
     {
@@ -561,7 +560,8 @@ int create_daemon_sock( const int client_sock,
     }
     if(timer >= Timeout)
     {
-      shutdown(liaison_fid, client_sock, client_sockpath, liaison_sock, liaison_sockpath);
+        printf("\nL: Connection To File System Daemon Could Not Be Established; Exiting\n");
+        shutdown(liaison_fid, client_sock, client_sockpath, liaison_sock, liaison_sockpath);
     }
     return liaison_fid;
 }
@@ -601,7 +601,8 @@ void connect_to_daemon(int liaison_fid, struct sockaddr_in daemon_addr,
     }
     if(timer >= Timeout)
     {
-      shutdown(liaison_fid, client_sock, client_sockpath, liaison_sock, liaison_sockpath);
+        printf("\nL: Connection To File System Daemon Could Not Be Established; Exiting\n");
+        shutdown(liaison_fid, client_sock, client_sockpath, liaison_sock, liaison_sockpath);
     }
 }
 //[================================================================================================]

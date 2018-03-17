@@ -13,9 +13,9 @@ XXFLAGS= -ggdb -Wall -std=c++11 -pthread
 
 
 OBJFILES=disk.o diskmanager.o partitionmanager.o filesystem.o Trees.o Arboreal_Exceptions.o File.o
-HFILES=Disk.h DiskManager.h PartitionManager.h FileSystem.h Trees.h Arboreal_Exceptions.h types.h File.h
+HFILES=Disk.h DiskManager.h PartitionManager.h FileSystem.h Trees.h Arboreal_Exceptions.h types.h File.h Parser.h daemon.h
 CPPFILES=Disk.cpp DiskManager.cpp PartitionManager.cpp FileSystem.cpp Trees.cpp Arboreal_Exceptions.cpp File.cpp\
-         ConnectionDaemon.cpp
+         daemon.cpp
 
 FS_PATH=Filesystem
 FS_H=$(FS_PATH)/Arboreal_Exceptions.h $(FS_PATH)/File.h $(FS_PATH)/types.h
@@ -41,8 +41,8 @@ RUN_DAEMON= ./daemon
 
 all: clean commandline liason format daemon runformat
 
-daemon: $(BACKEND_H) $(BACKEND_CPP) $(FS_H) $(FS_CPP) $(CLI_PATH)/Parser.h $(FS_PATH)/ConnectionDaemon.cpp
-	$(CXX) $(XXFLAGS) -o daemon $(FS_PATH)/ConnectionDaemon.cpp $(CLI_PATH)/Parser.cpp $(BACKEND_CPP) $(FS_CPP)
+daemon: $(BACKEND_H) $(BACKEND_CPP) $(FS_H) $(FS_CPP) $(CLI_PATH)/Parser.h $(FS_PATH)/daemon.cpp $(FS_PATH)/daemon.h
+	$(CXX) $(XXFLAGS) -o daemon $(FS_PATH)/daemon.cpp $(CLI_PATH)/Parser.cpp $(BACKEND_CPP) $(FS_CPP)
 
 driver: $(BACKEND_H) $(BACKEND_CPP) $(FS_H) $(FS_CPP) $(FS_PATH)/driver.cpp
 	$(CXX) $(XXFLAGS) -o driver $(FS_PATH)/driver.cpp $(BACKEND_CPP) $(FS_CPP)
