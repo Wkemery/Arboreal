@@ -147,6 +147,11 @@ std::vector<std::string> Parser::parse(int type)
         parsed.push_back(path);
         return parsed;
       }
+      case(16):
+      {
+        parse_path(parsed);
+        return parsed;
+      }
       case(17):
       {
         parse_merge(parsed);

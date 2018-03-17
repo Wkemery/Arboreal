@@ -943,7 +943,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
       fd_fs_map[fd]->write_changes();
       return data;
     }
-    case(12):
+    case(12): // Open file
     {
       std::string temp = command;
       std::vector<std::string> info = Parser::split_on_delim(temp,'/');
@@ -986,7 +986,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
 
       return data;
     }
-    case(13):
+    case(13): // close file
     {
       std::string p = command;
       std::vector<std::string> path = Parser::split_on_delim(p,'/');
@@ -1005,7 +1005,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
       }
       return data;
     }
-    case(14):
+    case(14): // Rename tag
     {
       std::string rename = command;
       std::vector<std::string> names = Parser::split_on_delim(rename,'-');
@@ -1027,8 +1027,9 @@ std::vector<std::string> execute(int id, char* command, int fd)
       fd_fs_map[fd]->write_changes();
       return data;
     }
-    case(15):
+    case(15): // rename file
     {
+      // NEED TO TEST ONCE RNAME FILE IS FIXED
       std::string to_split = command;
       std::vector<std::string> split = Parser::split_on_delim(to_split,'/');
       std::string new_name = split[split.size() - 1];
@@ -1049,6 +1050,66 @@ std::vector<std::string> execute(int id, char* command, int fd)
         return data;
       }
       fd_fs_map[fd]->write_changes();
+      return data;
+    }
+    case(16): //get file attr
+    {
+      std::string path = command;
+      std::vector<std::string> vpath = Parser::split_on_delim(path,'/');
+
+      try
+      {
+        Attributes* attr = fd_fs_map[fd]->get_attributes(vpath);
+        FileAttributes fattr = attr->get_file_attributes();
+        std::string t1 = ("[ Name -- " + vpath[vpath.size() - 1] + "]\n");
+
+        std::tm * ptm = std::localtime(&fattr.creationTime);
+        char buffer[32];
+        memset(buffer,'\0',32);
+        // Format: Mo, 15.06.2009 20:20:00
+        std::strftime(buffer, 32, "%a, %d.%m.%Y %H:%M:%S", ptm);
+        std::string buf = buffer;
+
+        std::string t2 = ("[ Created -- " + buf + "]\n");
+
+        memset(buffer, '\0', 32);
+        ptm = std::localtime(&fattr.lastEdit);
+        // Format: Mo, 15.06.2009 20:20:00
+        std::strftime(buffer, 32, "%a, %d.%m.%Y %H:%M:%S", ptm);
+        buf = buffer;
+
+        std::string t3 = ("[ Last Edit -- " + buf + "]\n");
+
+        memset(buffer, '\0', 32);
+        ptm = std::localtime(&fattr.lastAccess);
+        // Format: Mo, 15.06.2009 20:20:00
+        std::strftime(buffer, 32, "%a, %d.%m.%Y %H:%M:%S", ptm);
+        buf = buffer;
+        std::string t4 = ("[ Last Accessed -- " + buf + "]\n");
+
+        int size = (int)fattr.size;
+        std::string t5 = ("[ Size -- " + std::to_string(size) + "]\n");
+
+        char perm[12];
+        for(unsigned int i = 0; i < 12; i++){perm[i] = fattr.permissions[i];}
+        std::string t6 = ("[ Permissions -- [");
+        for(unsigned int i = 0; i < 12; i++)
+        {
+          if(i + 1 == 12){t6 += perm[i];}
+          else{t6 += perm[i]; t6 += ",";}
+        }
+        t6 += "]\n";
+
+        std::string t7 = ("[ Owner -- " + std::to_string(fattr.owner) + "]\n");
+
+        std::string success = t1 + t2 + t3 + t4 + t5 + t6 + t7;
+        data.push_back(success);
+      }
+      catch(arboreal_exception& e)
+      {
+        data.push_back(e.what());
+        return data;
+      }
       return data;
     }
   }
