@@ -1072,6 +1072,16 @@ int main(int argc, char** argv)
       
       break;
     }
+    case 15:
+    {
+      vector<string> fullPath;
+      fullPath.push_back("Tag0"); fullPath.push_back("Tag2"); fullPath.push_back("Tag5"); fullPath.push_back("Tag6");
+      fullPath.push_back("File4");
+      fs1->rename_file(fullPath, "newFileName");
+      fs1->write_changes();
+      break;
+    }
+    
     default:
     {
       cerr << "Driver Error! Behavior not defined for specified number" << endl;
