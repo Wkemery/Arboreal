@@ -197,7 +197,6 @@ std::vector<std::string> Parser::parse(int type)
       // Retrieve tag list as string
       jump_to_char(index,'[');
       substr_to_char(index, tags, ']');
-
       // Get Tag/File lists as vectors
 
       std::vector<std::string> vfiles = lunion(files);
@@ -207,14 +206,16 @@ std::vector<std::string> Parser::parse(int type)
       std::string path;
       for(uint i = 0; i < vfiles.size(); i++)
       {
-        path = (_cwd + vfiles[i]);
+        if(_cwd != "/"){path = (_cwd + "/" + vfiles[i]);}
+        else{path = _cwd + vfiles[i];}
         path += ">";
         for(uint j = 0; j < vtags.size(); j++)
         {
-          if(j + 1 < vtags.size()){path += (vtags[i] + "-");}
-          else{path += vtags[i];}
+          if(j + 1 < vtags.size()){path += (vtags[j] + "-");}
+          else{path += vtags[j];}
         }
         parsed.push_back(path);
+        path = "";
       }
       return parsed;
     }
@@ -254,6 +255,9 @@ std::vector<std::string> Parser::parse(int type)
       // Retrieve tag list as string
       jump_to_char(index,'[');
       substr_to_char(index, tags, ']');
+            
+
+            
 
       // Get Tag/File lists as vectors
       std::vector<std::string> vfiles = lunion(files);
@@ -263,14 +267,18 @@ std::vector<std::string> Parser::parse(int type)
       std::string path;
       for(uint i = 0; i < vfiles.size(); i++)
       {
-        path = (_cwd + vfiles[i]);
+        if(_cwd != "/"){path = (_cwd + "/" + vfiles[i]);}
+        else{path = _cwd + vfiles[i];}
         path += ">";
         for(uint j = 0; j < vtags.size(); j++)
         {
-          if(j + 1 < vtags.size()){path += (vtags[i] + "-");}
-          else{path += vtags[i];}
+          if(j + 1 < vtags.size()){path += (vtags[j] + "-");}
+          else{path += vtags[j];}
         }
+
+
         parsed.push_back(path);
+        path = "";
       }
       return parsed;
     }
@@ -565,6 +573,7 @@ void Parser::substr_to_char(int& index, std::string& s, char delim)
     s += _string[index];
     index += 1;
   }
+  if(delim  == ']'){s += _string[index];}
 }
 //======================================================================================================================
 
