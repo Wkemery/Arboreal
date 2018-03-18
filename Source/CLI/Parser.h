@@ -4,6 +4,8 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include "../Filesystem/ErrorCodes.h"
+#include "CommandCodes.h"
 
 typedef unsigned int uint;
 

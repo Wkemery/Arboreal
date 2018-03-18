@@ -28,6 +28,8 @@
 #include "Parser.h"
 #include "DebugMessages.h"
 #include "../Filesystem/Arboreal_Exceptions.h"    /* Exception Handling */
+#include "../Filesystem/ErrorCodes.h"
+
 
 static const int Permissions = 0666;
 static const int MaxBufferSize = 4096;            /* Maximum Size a FS Command Buffer Can Be */
@@ -172,12 +174,12 @@ int main(int argc, char** argv)
 
       int command_id = get_cmnd_id(msg);
 
-      if(command_id == 999)
+      if(command_id == QUIT)
       {
         /* 999 is QUIT command */
         break;
       }
-      else if(command_id == 23)
+      else if(command_id == CD_ABS)
       {
         /* This is a change in working directory */
         std::string temp;
@@ -189,7 +191,18 @@ int main(int argc, char** argv)
         send_response(client_sock,success.c_str(),MaxBufferSize,Flag,liaison_sock,liaison_sockpath,client_sockpath);
         continue;
       }
-      else if(command_id == 0)
+      else if(command_id == CD_RLP)
+      {
+        std::string temp;
+        int index = (int)sizeof(int) + 1;
+        while(msg[index] != '\0'){ temp += msg[index]; index += 1;}
+        cwd += temp;
+        Parser->set_cwd(cwd);
+        std::string success = "Working Directory Switched To: [ " + cwd + " ]";
+        send_response(client_sock,success.c_str(),MaxBufferSize,Flag,liaison_sock,liaison_sockpath,client_sockpath);
+        continue;
+      }
+      else if(command_id == HANDSHK)
       {
         /* This is attempt HANDSHAKE */
         int rval = send(liaison_fid,msg,MaxBufferSize,0);
@@ -213,7 +226,7 @@ int main(int argc, char** argv)
           throw arboreal_liaison_error(where,what);
         }
 
-        if(get_cmnd_id(temp) == 9999)
+        if(get_cmnd_id(temp) == FTL_ERR)
         {
           /* 9999 is Failure (usually fatal) */
           std::string where = "\n\n[liason.cpp::main()]: ";
@@ -251,7 +264,7 @@ int main(int argc, char** argv)
         //print_vector(vec);
 
 
-        if(command_id != 4 && command_id != 5)
+        if(command_id != FIND_TS && command_id != FIND_FS)
         {
           std::string data = "\n";
           for(unsigned int i = 0; i < vec.size(); i++)
@@ -273,7 +286,7 @@ int main(int argc, char** argv)
           }
 
           std::size_t found = data.find("Successfully");
-          if((command_id == 9 || command_id == 11) && found != std::string::npos && cwd != "/")
+          if((command_id == DEL_TS || command_id == DEL_FP) && found != std::string::npos && cwd != "/")
           {
             cwd = "/";
             Parser->set_cwd(cwd); 
@@ -324,20 +337,6 @@ int main(int argc, char** argv)
           //printf("Data: %s\n", data.c_str());
         }
       }
-
-      // if(dbug) std::cout << "L: Building Response..." << std::endl;
-      // auto end = std::chrono::system_clock::now();
-      // std::time_t end_time = std::chrono::system_clock::to_time_t(end);
-      // std::string data = "Command Received @ ";
-      // data += std::ctime(&end_time);
-      // memset(msg,'\0', MaxBufferSize);
-      // memcpy(msg,data.c_str(),data.length());
-      // if(dbug) std::cout << "L: Response Built Successfully" << std::endl;
-
-      // if(dbug) std::cout << "L: Sending Response to Client..." << std::endl;
-      // send_response(client_sock,msg,MaxBufferSize,Flag,liaison_sock,liaison_sockpath,client_sockpath);
-      // if(dbug) std::cout << "L: Response Successfully Sent" << std::endl;
-      // if(dbug) std::cout << "L: Response Sent To: " << client_sock << " @ " << client_sockpath << std::endl;
 
     }while(true);
 

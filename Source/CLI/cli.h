@@ -26,6 +26,8 @@
 #include <sys/ipc.h>                                      /* Inter Process Communication Stds. */
 #include <sys/shm.h>                                      /* Shared Memory Handling */
 #include "../Filesystem/Arboreal_Exceptions.h"            /* Exception Handling */
+#include "CommandCodes.h"
+#include "../Filesystem/ErrorCodes.h"
 
 
 #define MAX_HISTORY_SIZE 10                 /* Maximum number of previously entered commands recorded */

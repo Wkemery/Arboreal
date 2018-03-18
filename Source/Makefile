@@ -13,12 +13,13 @@ XXFLAGS= -ggdb -Wall -std=c++11 -pthread
 
 
 OBJFILES=disk.o diskmanager.o partitionmanager.o filesystem.o Trees.o Arboreal_Exceptions.o File.o
-HFILES=Disk.h DiskManager.h PartitionManager.h FileSystem.h Trees.h Arboreal_Exceptions.h types.h File.h Parser.h daemon.h
+HFILES=Disk.h DiskManager.h PartitionManager.h FileSystem.h Trees.h Arboreal_Exceptions.h types.h \
+	   File.h Parser.h daemon.h ErrorCodes.h CommandCodes.h
 CPPFILES=Disk.cpp DiskManager.cpp PartitionManager.cpp FileSystem.cpp Trees.cpp Arboreal_Exceptions.cpp File.cpp\
          daemon.cpp
 
 FS_PATH=Filesystem
-FS_H=$(FS_PATH)/Arboreal_Exceptions.h $(FS_PATH)/File.h $(FS_PATH)/types.h
+FS_H=$(FS_PATH)/Arboreal_Exceptions.h $(FS_PATH)/File.h $(FS_PATH)/types.h $(FS_PATH)/ErrorCodes.h $(CLI_PATH)/CommandCodes.h
 FS_CPP=$(FS_PATH)/Arboreal_Exceptions.cpp $(FS_PATH)/File.cpp
 BACKEND_PATH=Filesystem/Backend
 BACKEND_H=$(BACKEND_PATH)/Disk.h $(BACKEND_PATH)/DiskManager.h $(BACKEND_PATH)/FileSystem.h \
@@ -27,11 +28,11 @@ BACKEND_CPP=$(BACKEND_PATH)/Disk.cpp $(BACKEND_PATH)/DiskManager.cpp $(BACKEND_P
   $(BACKEND_PATH)/PartitionManager.cpp $(BACKEND_PATH)/Trees.cpp
 
 CLI_PATH=CLI
-CLI_H=$(CLI_PATH)/cli.h $(FS_PATH)/Arboreal_Exceptions.h
+CLI_H=$(CLI_PATH)/cli.h $(FS_PATH)/Arboreal_Exceptions.h $(FS_PATH)/ErrorCodes.h $(CLI_PATH)/CommandCodes.h
 CLI_CPP=$(CLI_PATH)/cli.cpp $(CLI_PATH)/cli_driver.cpp $(FS_PATH)/Arboreal_Exceptions.cpp
 
 LIASON_CPP=$(CLI_PATH)/liason.cpp $(CLI_PATH)/Parser.cpp $(FS_PATH)/Arboreal_Exceptions.cpp $(CLI_PATH)/DebugMessages.cpp
-LIASON_H=$(FS_PATH)/Arboreal_Exceptions.h $(CLI_PATH)/Parser.h $(CLI_PATH)/DebugMessages.h
+LIASON_H=$(FS_PATH)/Arboreal_Exceptions.h $(CLI_PATH)/Parser.h $(CLI_PATH)/DebugMessages.h $(FS_PATH)/ErrorCodes.h $(CLI_PATH)/CommandCodes.h
 
 VALGRIND= valgrind --leak-check=yes --log-file=/home/wyatt/ValgrindLogs/%p.log
 VALOPS= --leak-check=full --show-leak-kinds=all

@@ -10,8 +10,8 @@ std::vector<std::string> Parser::parse(int type)
   parsed.push_back(std::to_string(type));
 
 
-  if(type == 4 || type == 5 || type == 6 || type == 7
-      || type == 9)
+  if(type == FIND_TS || type == FIND_FS || type == NEW_TS || type == NEW_FS
+      || type == DEL_TS)
   {
     int index = 0;
     while(_string[index] != '[' && _string[index] != '{'){index += 1;}
@@ -26,7 +26,7 @@ std::vector<std::string> Parser::parse(int type)
       {
         parsed.push_back(temp[i]);
       }
-      if(type == 7)
+      if(type == NEW_FS)
       {
         std::vector<std::string> v = get_cwd_tags();
         for(uint i = 1; i < parsed.size(); i++)
@@ -56,12 +56,12 @@ std::vector<std::string> Parser::parse(int type)
 
   switch(type)
   {
-    case(8):
+    case(NEW_FP):
     {
       parse_path(parsed);
       return parsed;
     }
-    case(10):
+    case(DEL_FS):
     {
       int index = 0;
       while(_string[index] != '['){index += 1;}
@@ -80,12 +80,12 @@ std::vector<std::string> Parser::parse(int type)
       }
       return parsed;
     }
-    case(11):
+    case(DEL_FP):
     {
       parse_path(parsed);
       return parsed;
     }
-    case(12):
+    case(OPEN_FP):
     {
       int index = 0;
       while(_string[index] != '-'){index += 1;}
@@ -98,17 +98,27 @@ std::vector<std::string> Parser::parse(int type)
       parsed.push_back(mode);
       return parsed;
     }
-    case(13):
+    case(OPEN_F):
+    {
+      parsed.push_back("Coming Soon...");
+      return parsed;
+    }
+    case(CLOSE_FP):
     {
       parse_path(parsed);
       return parsed;
     }
-    case(14):
+    case(CLOSE_F):
+    {
+      parsed.push_back("Coming Soon...");
+      return parsed;
+    }
+    case(RNAME_TS):
     {
       parse_rename(parsed);
       return parsed;
     }
-    case(15):
+    case(RNAME_FP):
     {
       std::string path;
       int index = 0;
@@ -130,17 +140,27 @@ std::vector<std::string> Parser::parse(int type)
       parsed.push_back(path);
       return parsed;
     }
-    case(16):
+    case(RNAME_FS):
+    {
+      parsed.push_back("Coming Soon...");
+      return parsed;
+    }
+    case(ATTR_FP):
     {
       parse_path(parsed);
       return parsed;
     }
-    case(17):
+    case(ATTR_FS):
+    {
+      parsed.push_back("Coming Soon...");
+      return parsed;
+    }
+    case(MERG_1_1):
     {
       parse_merge(parsed);
       return parsed;
     }
-    case(18):
+    case(MERG_M_1):
     {
       int index = 0;
       while(_string[index] != '['){index += 1;}
@@ -161,7 +181,7 @@ std::vector<std::string> Parser::parse(int type)
       }
       return parsed;
     }
-    case(19):
+    case(TAG_FP):
     {
       std::string path;
       int index = 0;
@@ -184,7 +204,7 @@ std::vector<std::string> Parser::parse(int type)
       parsed.push_back(path);
       return parsed;
     }
-    case(20):
+    case(TAG_FS):
     {
       std::string files;
       std::string tags;
@@ -219,7 +239,7 @@ std::vector<std::string> Parser::parse(int type)
       }
       return parsed;
     }
-    case(21):
+    case(UTAG_FP):
     {
       std::string path;
       int index = 0;
@@ -242,7 +262,7 @@ std::vector<std::string> Parser::parse(int type)
       parsed.push_back(path);
       return parsed;
     }
-    case(22):
+    case(UTAG_FS):
     {
       std::string files;
       std::string tags;
@@ -280,6 +300,56 @@ std::vector<std::string> Parser::parse(int type)
         parsed.push_back(path);
         path = "";
       }
+      return parsed;
+    }
+    case(READ_XP):
+    {
+      parsed.push_back("Coming Soon...");
+      return parsed;
+    }
+    case(READ_XCWD):
+    {
+      parsed.push_back("Coming Soon...");
+      return parsed;
+    }
+    case(READ_FP):
+    {
+      parsed.push_back("Coming Soon...");
+      return parsed;
+    }
+    case(READ_FCWD):
+    {
+      parsed.push_back("Coming Soon...");
+      return parsed;
+    }
+    case(WRITE_FP):
+    {
+      parsed.push_back("Coming Soon...");
+      return parsed;
+    }
+    case(WRITE_FCWD):
+    {
+      parsed.push_back("Coming Soon...");
+      return parsed;
+    }
+    case(WRITE_XFPF):
+    {
+      parsed.push_back("Coming Soon...");
+      return parsed;
+    }
+    case(WRITE_XFCWDF):
+    {
+      parsed.push_back("Coming Soon...");
+      return parsed;
+    }
+    case(CPY_FP):
+    {
+      parsed.push_back("Coming Soon...");
+      return parsed;
+    }
+    case(CPY_FCWD):
+    {
+      parsed.push_back("Coming Soon...");
       return parsed;
     }
   }

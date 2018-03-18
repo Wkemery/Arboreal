@@ -1,5 +1,6 @@
 
 
+
 //////////////////////////////////////////////////////////////////////////////////////////////
 //---------------- BEGIN FUNCTION DEFINITIONS ------------------------------------------------
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -385,7 +386,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
   std::vector<std::string> data;
   switch(id)
   {
-    case(4): // find tag
+    case(FIND_TS): // find tag
     {
       std::unordered_set<std::string> tags = get_set(command,',');
       std::vector<FileInfo*>* rval;
@@ -407,7 +408,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
       delete rval;
       return data;
     }
-    case(5): //find file
+    case(FIND_FS): //find file
     { 
       std::string file = command;
       std::vector<FileInfo*>* rval;
@@ -425,7 +426,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
       delete rval;
       return data;
     }
-    case(6): // Create Tag
+    case(NEW_TS): // Create Tag
     {
       std::string tag = command;
       try
@@ -443,7 +444,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
       fd_fs_map[fd]->write_changes();
       return data;
     }
-    case(7): //create file in CWD
+    case(NEW_FS): //create file in CWD
     {
       std::unordered_set<std::string> tags;
       std::string filename;
@@ -472,7 +473,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
       fd_fs_map[fd]->write_changes();
       return data;
     }
-    case(8): // create file anywhere
+    case(NEW_FP): // create file anywhere
     {
       std::string temp = command;
       std::unordered_set<std::string> tags;
@@ -501,7 +502,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
       fd_fs_map[fd]->write_changes();
       return data;
     }
-    case(9): // delete tag(s)
+    case(DEL_TS): // delete tag(s)
     {
       std::string tagname = command;
   
@@ -519,7 +520,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
       fd_fs_map[fd]->write_changes();
       return data;
     }
-    case(10): // delete files from CWD
+    case(DEL_FS): // delete files from CWD
     {
       std::string to_delete = command;
       std::vector<std::string> path = Parser::split_on_delim(to_delete,'-');
@@ -538,7 +539,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
       fd_fs_map[fd]->write_changes();
       return data;
     }
-    case(11): // delete file from anywhere
+    case(DEL_FP): // delete file from anywhere
     {
       std::string filepath = command;
       std::vector<std::string> path = Parser::split_on_delim(filepath,'/');
@@ -560,24 +561,16 @@ std::vector<std::string> execute(int id, char* command, int fd)
       fd_fs_map[fd]->write_changes();
       return data;
     }
-    case(12): // Open file
+    case(OPEN_FP): // Open file
     {
       std::string temp = command;
       std::vector<std::string> info = Parser::split_on_delim(temp,'/');
 
       char mode = info[0].c_str()[0];
-      printf("Mode: %c\n",mode);
-
 
       std::string path = temp.substr(2,temp.length());
-      printf("Path: %s\n",path.c_str());
 
       info.erase(begin(info));
-      printf("Info Size: %lu\n",info.size());
-      for(unsigned int i = 0; i < info.size(); i++)
-      {
-        std::cout << info[i] << std::endl;
-      }
 
       try
       {
@@ -603,7 +596,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
 
       return data;
     }
-    case(13): // close file
+    case(CLOSE_FP): // close file
     {
       std::string p = command;
       std::vector<std::string> path = Parser::split_on_delim(p,'/');
@@ -622,7 +615,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
       }
       return data;
     }
-    case(14): // Rename tag
+    case(RNAME_TS): // Rename tag
     {
       std::string rename = command;
       std::vector<std::string> names = Parser::split_on_delim(rename,'-');
@@ -644,9 +637,8 @@ std::vector<std::string> execute(int id, char* command, int fd)
       fd_fs_map[fd]->write_changes();
       return data;
     }
-    case(15): // rename file
+    case(RNAME_FP): // rename file
     {
-      // NEED TO TEST ONCE RNAME FILE IS FIXED
       std::string to_split = command;
       std::vector<std::string> split = Parser::split_on_delim(to_split,'/');
       std::string new_name = split[split.size() - 1];
@@ -669,9 +661,8 @@ std::vector<std::string> execute(int id, char* command, int fd)
       fd_fs_map[fd]->write_changes();
       return data;
     }
-    case(16): //get file attr
+    case(ATTR_FP): //get file attr
     {
-      // NEEDS MORE TESTING
       std::string path = command;
       std::vector<std::string> vpath = Parser::split_on_delim(path,'/');
       try
@@ -729,17 +720,17 @@ std::vector<std::string> execute(int id, char* command, int fd)
       }
       return data;
     }
-    case(17): // merge 1:1
+    case(MERG_1_1): // merge 1:1
     {
       data.push_back("Building in Progress...");
       return data;
     }
-    case(18): // merge many:1
+    case(MERG_M_1): // merge many:1
     {
       data.push_back("Building in Progress...");
       return data;
     }
-    case(19): // tag single file from anywhere
+    case(TAG_FP): // tag single file from anywhere
     {
         std::string temp1 = command;
         int index = 0;
@@ -772,7 +763,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
         fd_fs_map[fd]->write_changes();
         return data;
     }
-    case(20): // tag files within CWD
+    case(TAG_FS): // tag files within CWD
     {
         std::string temp1 = command;
         int index = 0;
@@ -805,7 +796,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
         fd_fs_map[fd]->write_changes();
         return data;
     }
-    case(21):
+    case(UTAG_FP):
     {
         std::string temp1 = command;
         int index = 0;
@@ -837,7 +828,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
         fd_fs_map[fd]->write_changes();
         return data;
     }
-    case(22):
+    case(UTAG_FS):
     {
         std::string temp1 = command;
         int index = 0;
@@ -872,6 +863,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
     default:
     {
         data.push_back("Unrecognized Command");
+        return data;
     }
     //case(23) switch directories is handled by the liaison process
   }

@@ -166,7 +166,7 @@ void CLI::start()
 
       if(_dbug) std::cout << "C: Building Handshake Command..." << std::endl;
       char* cmnd = new char[MAX_COMMAND_SIZE];
-      int cmnd_id = 0;
+      int cmnd_id = HANDSHK;
       memset(cmnd,'\0',MAX_COMMAND_SIZE);
       memcpy(cmnd,&cmnd_id,sizeof(int));
       memcpy(cmnd + sizeof(int), "HANDSHAKE-", sizeof("HANDSHAKE-"));
@@ -180,7 +180,7 @@ void CLI::start()
 
       if(_dbug) std::cout << "C: Awaiting Response From Server..." << std::endl;
       char* data = receive_from_server(_client_sock,_client_sockpath,MAX_COMMAND_SIZE,FLAG);
-      if(get_cmnd_id(data) == 999)
+      if(get_cmnd_id(data) == QUIT)
       {
          std::cerr << "C: Connection To File System Could Not Be Established; Exiting..." << std::endl;
          if(_dbug) std::cout << "C: Closing Client Socket Connection..." << std::endl;
@@ -330,7 +330,7 @@ void CLI::run()
                /* Send QUIT Command to Liaison Process */
                char* quit = new char[MAX_COMMAND_SIZE];
                memset(quit,'\0',MAX_COMMAND_SIZE);
-               int val = 999;
+               int val = QUIT;
                memcpy(quit,&val,sizeof(int));
                memcpy(quit + sizeof(int), "QUIT", sizeof("QUIT"));
                send_cmnd(quit);
@@ -362,7 +362,7 @@ void CLI::run()
             /* Send QUIT Command to Liaison Process */
             char* quit = new char[MAX_COMMAND_SIZE];
             memset(quit,'\0',MAX_COMMAND_SIZE);
-            int val = 999;
+            int val = QUIT;
             memcpy(quit,&val,sizeof(int));
             memcpy(quit + sizeof(int), "QUIT", sizeof("QUIT"));
             send_cmnd(quit);
@@ -374,7 +374,7 @@ void CLI::run()
             int rtrn = check_command(input);
             if(rtrn != 0)
             {
-               if(rtrn == 23)
+               if(rtrn == CD_ABS || rtrn == CD_RLP)
                {
                   std::string old = _cwd;
                   std::string temp = input.substr(3,input.length());
@@ -450,7 +450,7 @@ void CLI::await_response()
  * However I think that all of this code is very readable and pretty simple so it's not pressing
  */
 //[================================================================================================]
-char* CLI::build(int id, std::string input)
+char* CLI::build(const int id, std::string input)
 {
    char* command = new char[MAX_COMMAND_SIZE];
 
