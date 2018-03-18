@@ -596,6 +596,12 @@ std::vector<std::string> execute(int id, char* command, int fd)
 
       return data;
     }
+    case(OPEN_F):
+    {
+      std::string s = command;
+      data.push_back(command);
+      return data;
+    }
     case(CLOSE_FP): // close file
     {
       std::string p = command;
@@ -613,6 +619,12 @@ std::vector<std::string> execute(int id, char* command, int fd)
         data.push_back(e.what());
         return data;
       }
+      return data;
+    }
+    case(CLOSE_F):
+    {
+      std::string s = command;
+      data.push_back(command);
       return data;
     }
     case(RNAME_TS): // Rename tag
@@ -659,6 +671,12 @@ std::vector<std::string> execute(int id, char* command, int fd)
         return data;
       }
       fd_fs_map[fd]->write_changes();
+      return data;
+    }
+    case(RNAME_FS):
+    {
+      std::string s = command;
+      data.push_back(command);
       return data;
     }
     case(ATTR_FP): //get file attr
@@ -718,6 +736,12 @@ std::vector<std::string> execute(int id, char* command, int fd)
         data.push_back(e.what());
         return data;
       }
+      return data;
+    }
+    case(ATTR_FS):
+    {
+      std::string s = command;
+      data.push_back(command);
       return data;
     }
     case(MERG_1_1): // merge 1:1
@@ -859,6 +883,66 @@ std::vector<std::string> execute(int id, char* command, int fd)
         }
         fd_fs_map[fd]->write_changes();
         return data;
+    }
+    case(READ_XP):
+    {
+      std::string s = command;
+      data.push_back(command);
+      return data;
+    }
+    case(READ_XCWD):
+    {
+      std::string s = command;
+      data.push_back(command);
+      return data;
+    }
+    case(READ_FP):
+    {
+      std::string s = command;
+      data.push_back(command);
+      return data;
+    }
+    case(READ_FCWD):
+    {
+      std::string s = command;
+      data.push_back(command);
+      return data;
+    }
+    case(WRITE_FP):
+    {
+      std::string s = command;
+      data.push_back(command);
+      return data;
+    }
+    case(WRITE_FCWD):
+    {
+      std::string s = command;
+      data.push_back(command);
+      return data;
+    }
+    case(WRITE_XFPF):
+    {
+      std::string s = command;
+      data.push_back(command);
+      return data;
+    }
+    case(WRITE_XFCWDF):
+    {
+      std::string s = command;
+      data.push_back(command);
+      return data;
+    }
+    case(CPY_FP):
+    {
+      std::string s = command;
+      data.push_back(command);
+      return data;
+    }
+    case(CPY_FCWD):
+    {
+      std::string s = command;
+      data.push_back(command);
+      return data;
     }
     default:
     {
