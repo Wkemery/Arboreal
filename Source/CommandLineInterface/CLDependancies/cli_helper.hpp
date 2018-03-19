@@ -26,12 +26,15 @@
 
 
 
-//[================================================================================================]
-// Delete a Shared Memory Fragment
-//
-// @ shm_id: The Shared Memory Fragment's identifier
-// @ shm:    The pointer to the Shared Memory
-//[================================================================================================]
+/*!
+ *[================================================================================================]
+ * 
+ * Delete a Shared Memory Fragment
+ *
+ * @param shm_id: The Shared Memory Fragment's identifier
+ * @param shm:    The pointer to the Shared Memory
+ *[================================================================================================]
+*/
 void delete_shm(int shm_id, char* shm)
 {
     if(shmdt(shm) == -1)
@@ -63,7 +66,7 @@ char* create_shm_seg(key_t key, int& id)
     char*  shm;
 
     /* Create Shared Memory Segment for Blocking */
-    if ((shm_id = shmget(key, SHMSZ, IPC_CREAT | PERMISSIONS)) < 0)
+    if ((shm_id = shmget(key, SharedMemorySize, IPC_CREAT | Permissions)) < 0)
     {
         std::string where = "[cli_helper.hpp::create_shm_seg()]: ";
         std::string what = "Shared Memory Get Failed -- ";
@@ -264,10 +267,10 @@ char* receive_from_server(int client_sock, std::string client_sockpath, int size
 
 std::string receive_from_server(int client_sock, std::string client_sockpath)
 {
-    char data[MAX_COMMAND_SIZE];
-    memset(data, '\0', MAX_COMMAND_SIZE);
+    char data[MaxBufferSize];
+    memset(data, '\0', MaxBufferSize);
 
-    if(recv(client_sock, data, MAX_COMMAND_SIZE, 0) < 0)
+    if(recv(client_sock, data, MaxBufferSize, 0) < 0)
     {
         if(close(client_sock) < 0)
         {

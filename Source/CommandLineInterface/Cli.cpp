@@ -12,19 +12,6 @@
 #include "CLHeaders/Cli.h"
 #include "CLDependancies/cli_helper.hpp"
 
-void clean(int signal)
-{
-    std::cout << "SIGNAL: " << signal << std::endl;
-    system("rm *socket");
-    exit(0);
-}
-
-void bad_clean(int signal)
-{
-    system("rm *socket");
-    exit(1);
-}
-
 int main(int argc, char** argv)
 {
     signal(SIGABRT,bad_clean);
@@ -100,6 +87,18 @@ int main(int argc, char** argv)
     return 0;
 }
 
+void clean(int signal)
+{
+    std::cout << "SIGNAL: " << signal << std::endl;
+    system("rm *socket");
+    exit(0);
+}
+
+void bad_clean(int signal)
+{
+    system("rm *socket");
+    exit(1);
+}
 
 //[================================================================================================]
 // Constructor 1 (Basic Command Line Interaction)
@@ -177,9 +176,9 @@ void CLI::start()
 
    if(_dbug) std::cout << "C: Generating Argument Vector For Liason Process..." << std::endl;
    std::string hostname;
-   char temp[MAX_COMMAND_SIZE];
-   memset(temp,'\0',MAX_COMMAND_SIZE);
-   hostname = gethostname(temp,MAX_COMMAND_SIZE);
+   char temp[MaxBufferSize];
+   memset(temp,'\0',MaxBufferSize);
+   hostname = gethostname(temp,MaxBufferSize);
    /* Create char** to send to Liason via main() argv param */
    std::vector<char*> argv;
    argv.push_back(const_cast<char*>(_client_sockpath.c_str()));
@@ -249,9 +248,9 @@ void CLI::start()
       if(_dbug) std::cout << "C: Server Connection Successfull" << std::endl;
 
       if(_dbug) std::cout << "C: Building Handshake Command..." << std::endl;
-      char* cmnd = new char[MAX_COMMAND_SIZE];
+      char* cmnd = new char[MaxBufferSize];
       int cmnd_id = HANDSHK;
-      memset(cmnd,'\0',MAX_COMMAND_SIZE);
+      memset(cmnd,'\0',MaxBufferSize);
       memcpy(cmnd,&cmnd_id,sizeof(int));
       memcpy(cmnd + sizeof(int), "HANDSHAKE-", sizeof("HANDSHAKE-"));
       memcpy(cmnd + (sizeof(int) + sizeof("HANDSHAKE-")) - 1, const_cast<char*>(_my_partition.c_str()), _my_partition.length());
@@ -259,11 +258,11 @@ void CLI::start()
 
       if(_dbug) std::cout << "C: Sending Command To Server..." << std::endl;
       if(_dbug) std::cout << "C: Sending To: " << _client_sock << " @ " << _client_sockpath << std::endl;
-      send_to_server(_client_sock,_client_sockpath,cmnd,MAX_COMMAND_SIZE,FLAG);
+      send_to_server(_client_sock,_client_sockpath,cmnd,MaxBufferSize,Flag);
       if(_dbug) std::cout << "C: Command Successfully Sent" << std::endl;
 
       if(_dbug) std::cout << "C: Awaiting Response From Server..." << std::endl;
-      char* data = receive_from_server(_client_sock,_client_sockpath,MAX_COMMAND_SIZE,FLAG);
+      char* data = receive_from_server(_client_sock,_client_sockpath,MaxBufferSize,Flag);
       if(get_cmnd_id(data) == QUIT)
       {
          std::cerr << "C: Connection To File System Could Not Be Established; Exiting..." << std::endl;
@@ -389,8 +388,8 @@ void CLI::run()
             if(input == "Y" || input == "y")
             {
                /* Send QUIT Command to Liaison Process */
-               char* quit = new char[MAX_COMMAND_SIZE];
-               memset(quit,'\0',MAX_COMMAND_SIZE);
+               char* quit = new char[MaxBufferSize];
+               memset(quit,'\0',MaxBufferSize);
                int val = QUIT;
                memcpy(quit,&val,sizeof(int));
                memcpy(quit + sizeof(int), "QUIT", sizeof("QUIT"));
@@ -433,8 +432,8 @@ void CLI::run()
          if(input == "end" && _is_script == "-s")
          {
             /* Send QUIT Command to Liaison Process */
-            char* quit = new char[MAX_COMMAND_SIZE];
-            memset(quit,'\0',MAX_COMMAND_SIZE);
+            char* quit = new char[MaxBufferSize];
+            memset(quit,'\0',MaxBufferSize);
             int val = QUIT;
             memcpy(quit,&val,sizeof(int));
             memcpy(quit + sizeof(int), "QUIT", sizeof("QUIT"));
@@ -452,8 +451,8 @@ void CLI::run()
                   std::string old = _cwd;
                   std::string temp = input.substr(3,input.length());
                   _cwd = temp;
-                  char* new_cwd = new char[MAX_COMMAND_SIZE];
-                  memset(new_cwd,'\0',MAX_COMMAND_SIZE);
+                  char* new_cwd = new char[MaxBufferSize];
+                  memset(new_cwd,'\0',MaxBufferSize);
                   memcpy(new_cwd,&rtrn,sizeof(int));
                   memcpy(new_cwd + sizeof(int),_cwd.c_str(),_cwd.length());
                   send_cmnd(new_cwd);
@@ -485,7 +484,7 @@ void CLI::send_cmnd(char* cmnd)
 {
    if(_dbug) std::cout << "C: Sending Command To Server..." << std::endl;
    if(_dbug) std::cout << "C: Sending To: " << _client_sock << " @ " << _client_sockpath << std::endl;
-   send_to_server(_client_sock,_client_sockpath,cmnd,MAX_COMMAND_SIZE,FLAG);
+   send_to_server(_client_sock,_client_sockpath,cmnd,MaxBufferSize,Flag);
    if(_dbug) std::cout << "C: Command Successfully Sent" << std::endl;
    return;
 }
@@ -498,11 +497,11 @@ void CLI::await_response()
    std::string data = receive_from_server(_client_sock,_client_sockpath);
    if(data == "WAIT")
    {
-      char* temp = receive_from_server(_client_sock,_client_sockpath, MAX_COMMAND_SIZE, FLAG);
+      char* temp = receive_from_server(_client_sock,_client_sockpath, MaxBufferSize, Flag);
       int read_size = get_cmnd_id(temp);
       delete[] temp;
 
-      char* data = receive_from_server(_client_sock,_client_sockpath, read_size, FLAG);
+      char* data = receive_from_server(_client_sock,_client_sockpath, read_size, Flag);
       std::string to_print = data;
       std::cout << to_print << std::endl;
       delete[] data;
@@ -525,10 +524,10 @@ void CLI::await_response()
 //[================================================================================================]
 char* CLI::build(const int id, std::string input)
 {
-   char* command = new char[MAX_COMMAND_SIZE];
+   char* command = new char[MaxBufferSize];
 
    // Zero out the command buffer
-   memset(command,'\0',MAX_COMMAND_SIZE);
+   memset(command,'\0',MaxBufferSize);
 
    // Add the Command ID to the command string and convert to char*
    memcpy(command,&id,sizeof(int));
