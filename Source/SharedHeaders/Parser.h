@@ -70,7 +70,7 @@ public:
     /*!
      * @param buffer A std::string representation of the string to be parsed
      * 
-     * @param cwd   A String Literal representation of the current working directory;
+     * @param cwd   A std::string representation of the current working directory;
      *              (This value is typically provided by the Liaison process). 
      *              The directory string is used to parse commands which act within directories only 
      *              thus, providing commands such as 'tag' a "path" to the file(s) which will be tagged 
