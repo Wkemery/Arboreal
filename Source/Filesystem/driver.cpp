@@ -3,19 +3,9 @@
  * October, 12, 2017
  */
 
-#include <iostream>
-#include <fstream>
-#include <stdlib.h>
-#include "Backend/Disk.h"
-#include "Backend/DiskManager.h"
-#include "Backend/PartitionManager.h"
-#include "Backend/FileSystem.h"
-#include "File.h"
-#include "Backend/Trees.h"
-#include "File.h"
-#include <string>
-#include <string.h>
-#include<unordered_set>
+#include "DaemonDependancies/FileSystem/FileSystem.h"
+#include "DaemonDependancies/File/File.h"
+
 using namespace std;
 
 bool DEBUG = false;

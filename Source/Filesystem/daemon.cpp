@@ -10,9 +10,7 @@
 // Dated:     March | 3rd | 2018
 //////////////////////////////////////////////////////////
 
-#include <string>                           /* Strings */
-#include <iostream>                         /* Input & Output */
-#include <vector>                           /* Vectors */
+
 #include <thread>                           /* Threading */
 #include <errno.h>                          /* errno Definitions */
 #include <unistd.h>                         /* Unix Std. Stuff */
@@ -24,36 +22,10 @@
 #include <netdb.h>                          /* More Internet Socket Stuff */
 #include <sys/ioctl.h>                      /* Set Sockets To Non-Blocking */
 #include <signal.h>
-#include <algorithm>
 
-#include "Backend/FileSystem.h"
-#include "types.h"
-#include "../CLI/Parser.h"
-#include "File.h"
-
-#define BACKLOG 10                  /* Number of Connection Requests that the Server Can Queue */
-#define FLAG 0                      /* Flag for recv() */
-#define TIMEOUT 10
-#define TRUE 1
-#define FALSE 0
-#define PORT 70777
-#define MAX_COMMAND_SIZE 4096
-
-bool DEBUG = false;
-
-fd_set master_set;
-int my_fid = 999;
-int max_fid = 0;
-int current_command_id = 0;
-
-std::map<int, FileSystem*> fd_fs_map;
-std::map<std::string,FileSystem*> part_fs_map;
-std::map<std::string, unsigned int> path_filedesc_map;
-
-Disk* d = 0;
-DiskManager* dm = 0;
-
-#include "daemon.h"
+#include "DaemonDependancies/FileSystem/FileSystem.h"
+#include "DaemonDependancies/File/File.h"
+#include "DaemonHeaders/daemon.h"
 
 
 

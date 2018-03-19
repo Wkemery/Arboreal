@@ -13,49 +13,75 @@ XXFLAGS= -ggdb -Wall -std=c++11 -pthread
 
 
 OBJFILES=disk.o diskmanager.o partitionmanager.o filesystem.o Trees.o Arboreal_Exceptions.o File.o
-HFILES=Disk.h DiskManager.h PartitionManager.h FileSystem.h Trees.h Arboreal_Exceptions.h types.h \
-	   File.h Parser.h daemon.h ErrorCodes.h CommandCodes.h
-CPPFILES=Disk.cpp DiskManager.cpp PartitionManager.cpp FileSystem.cpp Trees.cpp Arboreal_Exceptions.cpp File.cpp\
-         daemon.cpp
 
-FS_PATH=Filesystem
-FS_H=$(FS_PATH)/Arboreal_Exceptions.h $(FS_PATH)/File.h $(FS_PATH)/types.h $(FS_PATH)/ErrorCodes.h $(CLI_PATH)/CommandCodes.h
-FS_CPP=$(FS_PATH)/Arboreal_Exceptions.cpp $(FS_PATH)/File.cpp
-BACKEND_PATH=Filesystem/Backend
-BACKEND_H=$(BACKEND_PATH)/Disk.h $(BACKEND_PATH)/DiskManager.h $(BACKEND_PATH)/FileSystem.h \
-  $(BACKEND_PATH)/PartitionManager.h $(BACKEND_PATH)/Trees.h
-BACKEND_CPP=$(BACKEND_PATH)/Disk.cpp $(BACKEND_PATH)/DiskManager.cpp $(BACKEND_PATH)/FileSystem.cpp \
-  $(BACKEND_PATH)/PartitionManager.cpp $(BACKEND_PATH)/Trees.cpp
 
-CLI_PATH=CLI
-CLI_H=$(CLI_PATH)/cli.h $(FS_PATH)/Arboreal_Exceptions.h $(FS_PATH)/ErrorCodes.h $(CLI_PATH)/CommandCodes.h
-CLI_CPP=$(CLI_PATH)/cli.cpp $(CLI_PATH)/cli_driver.cpp $(FS_PATH)/Arboreal_Exceptions.cpp
 
-LIASON_CPP=$(CLI_PATH)/liason.cpp $(CLI_PATH)/Parser.cpp $(FS_PATH)/Arboreal_Exceptions.cpp $(CLI_PATH)/DebugMessages.cpp
-LIASON_H=$(FS_PATH)/Arboreal_Exceptions.h $(CLI_PATH)/Parser.h $(CLI_PATH)/DebugMessages.h $(FS_PATH)/ErrorCodes.h $(CLI_PATH)/CommandCodes.h
+DAEMON_PATH=Filesystem
+DRIVER_PATH=Filesystem
+CLI_PATH=CommandLineInterface
+LIAISON_PATH=LiaisonProcess
+FORMAT_PATH=FSFormat
+
+FILESYS_PATH=Filesystem/DaemonDependancies/FileSystem
+DISK_PATH=Filesystem/DaemonDependancies/Disk
+DISKM_PATH=Filesystem/DaemonDependancies/DiskManager
+FILE_PATH=Filesystem/DaemonDependancies/File
+PM_PATH=Filesystem/DaemonDependancies/PartitionManager
+TREES_PATH=Filesystem/DaemonDependancies/Trees
+TYPES_PATH=Filesystem/DaemonDependancies/Types
+
+SHARED_CPPATH=SharedCPPFiles
+SHARED_HPATH=SharedHeaders
+
+BACKEND_H=$(FILESYS_PATH)/FileSystem.h $(FILE_PATH)/File.h $(DISK_PATH)/Disk.h \
+		  $(DISKM_PATH)/DiskManager.h $(PM_PATH)/PartitionManager.h $(TREES_PATH)/Trees.h \
+		  $(TYPES_PATH)/types.h
+BACKEND_CPP=$(FILESYS_PATH)/FileSystem.cpp $(FILE_PATH)/File.cpp $(DISK_PATH)/Disk.cpp \
+		  	$(DISKM_PATH)/DiskManager.cpp $(PM_PATH)/PartitionManager.cpp $(TREES_PATH)/Trees.cpp
+
+CLI_H=$(CLI_PATH)/CLHeaders/Cli.h $(CLI_PATH)/CLDependancies/cli_helper.hpp \
+	  $(SHARED_HPATH)/Arboreal_Exceptions.h $(SHARED_HPATH)/ErrorCodes.h \
+	  $(SHARED_HPATH)/CommandCodes.h $(SHARED_HPATH)/Print.h
+CLI_CPP=$(CLI_PATH)/Cli.cpp $(SHARED_CPPATH)/Arboreal_Exceptions.cpp
+
+
+LIAISON_H=$(LIAISON_PATH)/LiaisonDependancies/liason_helper.hpp \
+	      $(SHARED_HPATH)/Arboreal_Exceptions.h $(SHARED_HPATH)/Print.h \
+	      $(SHARED_HPATH)/Parser.h $(SHARED_HPATH)/DebugMessages.h
+LIAISON_CPP=$(LIAISON_PATH)/liaison.cpp $(SHARED_CPPATH)/Arboreal_Exceptions.cpp \
+	        $(SHARED_CPPATH)/Parser.cpp $(SHARED_CPPATH)/DebugMessages.cpp
+
+
+DAEMON_H=$(DAEMON_PATH)/DaemonHeaders/daemon.h $(SHARED_HPATH)/CommandCodes.h \
+		 $(SHARED_HPATH)/Arboreal_Exceptions.h $(BACKEND_H)
+DAEMON_CPP=$(DAEMON_PATH)/daemon.cpp $(BACKEND_CPP) $(SHARED_CPPATH)/Arboreal_Exceptions.cpp \
+		   $(SHARED_CPPATH)/Parser.cpp
+
+DRIVER_H=$(BACKEND_H)
+DRIVER_CPP=$(DRIVER_PATH)/driver.cpp $(BACKEND_CPP)
+
 
 VALGRIND= valgrind --leak-check=yes --log-file=/home/wyatt/ValgrindLogs/%p.log
 VALOPS= --leak-check=full --show-leak-kinds=all
 
 RUN_FORMAT= ./format
-RUN_DAEMON= ./daemon
 
-all: clean commandline liason format daemon runformat
+all: clean commandline liaison format daemon runformat
 
-daemon: $(BACKEND_H) $(BACKEND_CPP) $(FS_H) $(FS_CPP) $(CLI_PATH)/Parser.h $(FS_PATH)/daemon.cpp $(FS_PATH)/daemon.h
-	$(CXX) $(XXFLAGS) -o daemon $(FS_PATH)/daemon.cpp $(CLI_PATH)/Parser.cpp $(BACKEND_CPP) $(FS_CPP)
+daemon: $(DAEMON_H) $(DAEMON_PATH)
+	$(CXX) $(XXFLAGS) -o daemon $(DAEMON_CPP)
 
-driver: $(BACKEND_H) $(BACKEND_CPP) $(FS_H) $(FS_CPP) $(FS_PATH)/driver.cpp
-	$(CXX) $(XXFLAGS) -o driver $(FS_PATH)/driver.cpp $(BACKEND_CPP) $(FS_CPP)
+driver: $(DRIVER_H) $(DRIVER_CPP)
+	$(CXX) $(XXFLAGS) -o driver $(DRIVER_CPP)
 
-commandline: $(CLI_CPP) $(CLI_H)
+commandline: $(CLI_H) $(CLI_CPP)
 	$(CXX) $(XXFLAGS) -o commandline $(CLI_CPP)
 
-liason: $(LIASON_H) $(LIASON_CPP)
-	$(CXX) $(XXFLAGS) -o liaison $(LIASON_CPP)
+liaison: $(LIAISON_H) $(LIAISON_CPP)
+	$(CXX) $(XXFLAGS) -o liaison $(LIAISON_CPP)
 
-format: format.cpp
-	$(CXX) $(XXFLAGS) -o format format.cpp
+format: $(FORMAT_PATH)/format.cpp
+	$(CXX) $(XXFLAGS) -o format $(FORMAT_PATH)/format.cpp
 
 
 
@@ -128,9 +154,6 @@ mem_test_12: rest
 
 runformat: $(RUN_FORMAT) 
 	$(RUN_FORMAT) diskInfo.d
-
-rundaemon: $(RUN_DAEMON)
-	$(RUN_DAEMON) -d
 
 .PHONY clean:
 	/bin/rm -rf *.o driver commandline format daemon DISK1 *.dSYM liaison core*

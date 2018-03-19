@@ -1,2 +1,0 @@
-DISK1 1000 4096 1
-PartitionA 700 128
