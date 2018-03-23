@@ -68,7 +68,10 @@ void bad_clean(int signal)
 //[===============================================================================================]
 /*!
  * Delete a Shared Memory Fragment
- *
+ * Shared Memory Fragments can only be deleted if they are not attached to anything
+ * Calling this function without having previously unattached a process from a segment
+ * will result in failure
+ * 
  * @paramparam shm_id: The Shared Memory Fragment's identifier
  * @paramparam shm:    The pointer to the Shared Memory
  * 

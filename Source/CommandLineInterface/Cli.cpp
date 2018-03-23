@@ -157,8 +157,8 @@ int main(int argc, char** argv)
   }
   /***********************************************************************************************/
 
-  Debug.log("Command Line Interface Quit Successfully; Goodbye",true);
-  perror("Command Line Interface Quit Successfully; Goodbye\n\n");
+  Debug.log("C: Command Line Interface Quit Successfully; Goodbye",true);
+  printf("Command Line Interface Quit Successfully; Goodbye\n\n");
   return 0;
 }
 //
