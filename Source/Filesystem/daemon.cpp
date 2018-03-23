@@ -52,7 +52,7 @@ int main(int argc, char** argv)
 
   try
   {
-    d = new Disk(26214400, 4096, const_cast<char *>("/dev/sde"));
+    d = new Disk(500, 512, const_cast<char *>("DISK1"));
     dm = new DiskManager(d);
   }
   catch(arboreal_exception& e)
@@ -252,7 +252,7 @@ int main(int argc, char** argv)
               if(dbug) printf("\nBytes Received: %d\n",bytes_received);
               if(dbug) printf("Command Received: %s\n\n",buffer);
 
-              if(get_cmnd_id(buffer) == 999)
+              if(get_cmnd_id(buffer) == QUIT)
               {
                 if(dbug) printf("D: Client Closed Connection; Breaking From Receive Loop\n");
                 close_conn = TRUE;
@@ -280,7 +280,7 @@ int main(int argc, char** argv)
                   std::cerr << "D: [Error]: " << e.where() << "--" << e.what() << std::endl;
                   std::cerr << "D: Closing File Descriptor [" << i << "]" << std::endl;
                   char failed[MAX_COMMAND_SIZE];
-                  int failure = 9999;
+                  int failure = FTL_ERR;
                   memset(failed,0,MAX_COMMAND_SIZE);
                   memcpy(failed,&failure,sizeof(int));
                   rval = send(i,failed,MAX_COMMAND_SIZE,FLAG);
@@ -332,7 +332,7 @@ int main(int argc, char** argv)
                     std::string temp = pad_string(data[j],(MAX_COMMAND_SIZE - data[j].length()), '\0');
                     rval = send(i, temp.c_str(), MAX_COMMAND_SIZE, FLAG);
                   }
-                  if(current_command_id == 5 || current_command_id == 4)
+                  if(current_command_id == FIND_TS || current_command_id == FIND_FS)
                   {
                     std::string done = "DONE";
                     done = pad_string(done, MAX_COMMAND_SIZE - done.length(), '\0');

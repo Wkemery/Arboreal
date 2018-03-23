@@ -53,9 +53,9 @@
 int main(int argc, char** argv)
 {
   signal(SIGABRT,bad_clean);
-  signal(SIGTERM,clean);
+  //signal(SIGTERM,clean);
   signal(SIGINT,clean);
-  signal(SIGQUIT,clean);
+  //signal(SIGQUIT,clean);
   /***********************************************************************************************/
 
 
@@ -455,7 +455,7 @@ void CLI::start()
     int status;
     waitpid(pid,&status,0);
     Debug.log("C: Child Process Completed Successfully");
-    Debug.log("C: Command Line ");
+    Debug.log("C: Command Line Exiting; Goodbye");
     /**********************************************************************************************/
   }
 

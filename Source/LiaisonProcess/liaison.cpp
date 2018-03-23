@@ -49,9 +49,9 @@ Parser* Parser = 0;
 int main(int argc, char** argv)
 {
   signal(SIGABRT,bad_clean);
-  signal(SIGTERM,clean);
+  //signal(SIGTERM,clean);
   signal(SIGINT,clean);
-  signal(SIGQUIT,clean);
+  //signal(SIGQUIT,clean);
   signal(SIGSEGV,seg_fault);
 
 
@@ -304,7 +304,6 @@ int main(int argc, char** argv)
           memset(response,'\0',MaxBufferSize);
           while(stemp != "DONE")
           {
-            std::cout << "ME\n";
             data += (stemp + "\n");
             stemp = "";
             int rval = recv(liaison_fid,response,MaxBufferSize,Flag);
