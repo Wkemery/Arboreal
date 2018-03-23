@@ -4,7 +4,8 @@ use std::fs::File;
 use std::io::prelude::*;
 extern crate rand;
 use rand::Rng;
-
+use std::collections::HashSet;
+use std::io::{BufReader, BufWriter};
 
 fn main() {
     let  matches = App::new("wtar")
@@ -97,14 +98,21 @@ struct ScriptAttributes {
 
 impl ScriptAttributes {
     fn read_dict(&mut self, dict_file : File){
-        //TODO
-        self.names.push(String::from("test"));
+        let reader = BufReader::new(&dict_file);
+        let mut i = 0;
+        
+        for line in reader.lines() {
+            if i > (self.num_tags + self.num_files){ break; }
+            self.names.push(line.expect("Unable to read dictionary file"));
+            i += 1;
+        }
     }
 
 }
 
 fn write_tag_commands(script_atts: &mut ScriptAttributes, script_file: &mut File) -> Vec<String> {
-    let mut ret = vec![String::from("default")];
+    let mut writer = BufWriter::new(script_file);
+    let mut ret = Vec::new();
     for i in 0..script_atts.num_tags {
         let out_line =
             if let Some(name) = script_atts.names.pop() {
@@ -116,25 +124,34 @@ fn write_tag_commands(script_atts: &mut ScriptAttributes, script_file: &mut File
                 format!("new -t [tag_{}]\n", i)
             };
 
-        script_file.write(out_line.as_bytes()).expect("Unable to write to file");
+        writer.write(out_line.as_bytes()).expect("Unable to write to file");
     }
     ret
 }
 
 fn write_file_commands(script_atts: &mut ScriptAttributes, script_file: &mut File, tag_list: Vec<String>) {
+    let mut writer = BufWriter::new(script_file);
+    
     for i in 0..script_atts.num_files {
-        let out_line =
-            if let Some(name) = script_atts.names.pop() {
-                name
+        let mut tag_set = HashSet::new();
+        let num_tags = rand::thread_rng().gen_range(script_atts.tag_range.0, script_atts.tag_range.1);
+        
+        for _ in 0..num_tags {
+            if let Some(tag) = tag_list.get(rand::thread_rng().gen_range(0,tag_list.len())) {
+                tag_set.insert(tag.as_str());
             }
-            else {
-                let mut tags = String::from("/");
-                let num_tags = rand::thread_rng().gen_range(script_atts.tag_range.0, script_atts.tag_range.1);
-                for i in 0..num_tags {
-                    tags = tags + tag_list[rand::thread_rng().gen_range(0,tag_list.len() - 1)].as_str();
-                }
-                String::from("rest")
-            };
-            script_file.write(out_line.as_bytes()).expect("Unable to write to file");
+        }
+        
+        let mut tags = String::from("/");
+        for tag in tag_set {
+            tags.push_str(tag);
+            tags.push_str("/");
+        }
+                
+        let out_line =
+            if let Some(name) = script_atts.names.pop() { format!("new {}file_{}\n", tags, name) }
+            else { format!("new {}file_{}\n",tags, i) };
+            
+        writer.write(out_line.as_bytes()).expect("Unable to write to file");
     }
 }
