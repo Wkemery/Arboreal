@@ -1,2 +1,2 @@
-DISK1 500 512 1
-PartitionA 100 64
+DISK1 8000 512 1
+PartitionA 7000 64

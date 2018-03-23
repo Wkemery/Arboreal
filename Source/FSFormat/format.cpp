@@ -45,10 +45,6 @@ int main(int argc, char** argv)
   }
   char* buff = new char[blockSize];
   memset(buff, 0, blockSize);
-  for(BlkNumType i  = 0; i < numBlocks; i++)
-  {
-    disk.write(buff, blockSize);
-  }
   
   /*set up partition information*/
   vector<BlkNumType> partSizes;
@@ -97,6 +93,7 @@ int main(int argc, char** argv)
   disk.seekp(0);
   disk.write(buff, blockSize);
   
+  cout << "Working";
 
   /*Make free list*/
   for(unsigned int i = 0; i < partSizes.size(); i++)
@@ -158,9 +155,12 @@ int main(int argc, char** argv)
       next++;
       
       disk.write(buff, blockSize);
+      if(k % 1024 == 0) cout << ".";
     }
+    cout << "\nFinished a Partition! "<< endl;
   }
   
+  cout << "Done!" << endl;
   disk.close();
   
   return 0;
