@@ -41,15 +41,15 @@ BACKEND_CPP=$(FILESYS_PATH)/FileSystem.cpp $(FILE_PATH)/File.cpp $(DISK_PATH)/Di
 
 CLI_H=$(CLI_PATH)/CLHeaders/Cli.h $(CLI_PATH)/CLDependancies/cli_helper.hpp \
 	  $(SHARED_HPATH)/Arboreal_Exceptions.h $(SHARED_HPATH)/ErrorCodes.h \
-	  $(SHARED_HPATH)/CommandCodes.h $(SHARED_HPATH)/Print.h
-CLI_CPP=$(CLI_PATH)/Cli.cpp $(SHARED_CPPATH)/Arboreal_Exceptions.cpp
+	  $(SHARED_HPATH)/CommandCodes.h $(SHARED_HPATH)/Print.h $(SHARED_HPATH)/DebugMessages.hpp
+CLI_CPP=$(CLI_PATH)/Cli.cpp $(SHARED_CPPATH)/Arboreal_Exceptions.cpp \
 
 
 LIAISON_H=$(LIAISON_PATH)/LiaisonDependancies/liason_helper.hpp \
 	      $(SHARED_HPATH)/Arboreal_Exceptions.h $(SHARED_HPATH)/Print.h \
-	      $(SHARED_HPATH)/Parser.h $(SHARED_HPATH)/DebugMessages.h
+	      $(SHARED_HPATH)/Parser.h $(SHARED_HPATH)/DebugMessages.hpp
 LIAISON_CPP=$(LIAISON_PATH)/liaison.cpp $(SHARED_CPPATH)/Arboreal_Exceptions.cpp \
-	        $(SHARED_CPPATH)/Parser.cpp $(SHARED_CPPATH)/DebugMessages.cpp
+	        $(SHARED_CPPATH)/Parser.cpp
 
 
 DAEMON_H=$(DAEMON_PATH)/DaemonHeaders/daemon.h $(SHARED_HPATH)/CommandCodes.h \
@@ -57,8 +57,8 @@ DAEMON_H=$(DAEMON_PATH)/DaemonHeaders/daemon.h $(SHARED_HPATH)/CommandCodes.h \
 DAEMON_CPP=$(DAEMON_PATH)/daemon.cpp $(BACKEND_CPP) $(SHARED_CPPATH)/Arboreal_Exceptions.cpp \
 		   $(SHARED_CPPATH)/Parser.cpp
 
-DRIVER_H=$(BACKEND_H)
-DRIVER_CPP=$(DRIVER_PATH)/driver.cpp $(BACKEND_CPP)
+# DRIVER_H=$(BACKEND_H)
+# DRIVER_CPP=$(DRIVER_PATH)/driver.cpp $(BACKEND_CPP)
 
 
 VALGRIND= valgrind --leak-check=yes --log-file=/home/wyatt/ValgrindLogs/%p.log
@@ -71,8 +71,8 @@ all: clean commandline liaison format daemon runformat
 daemon: $(DAEMON_H) $(DAEMON_PATH)
 	$(CXX) $(XXFLAGS) -o daemon $(DAEMON_CPP)
 
-driver: $(DRIVER_H) $(DRIVER_CPP)
-	$(CXX) $(XXFLAGS) -o driver $(DRIVER_CPP)
+# driver: $(DRIVER_H) $(DRIVER_CPP)
+# 	$(CXX) $(XXFLAGS) -o driver $(DRIVER_CPP)
 
 commandline: $(CLI_H) $(CLI_CPP)
 	$(CXX) $(XXFLAGS) -o commandline $(CLI_CPP)

@@ -1387,7 +1387,7 @@ FileInfo* FileSystem::path_to_file(vector<string>& fullPath)
   TreeObject* file = tagTree->find(temp->mangle(path));
   if(file == 0)
   {
-    throw file_error("File Does not exist", "FileSystem::path_to_file", FILE_DNE);
+    throw file_error("File Does not exist", "FileSystem::path_to_file");
   }
   
   delete temp;

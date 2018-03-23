@@ -1,0 +1,127 @@
+\hypertarget{class_file}{}\section{File Class Reference}
+\label{class_file}\index{File@{File}}
+
+
+{\ttfamily \#include $<$File.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_file_af29e498f601951f4ccf06f2fc3fb1f73}{File}} (string name, const vector$<$ string $>$ \&tags, File\+Attributes attributes)
+\end{DoxyCompactItemize}
+\begin{Indent}\textbf{ Accessor Functions}\par
+\begin{DoxyCompactItemize}
+\item 
+string \mbox{\hyperlink{class_file_a4b8e86f4fae0219744cf82f6bab35b53}{get\+\_\+name}} ()
+\item 
+vector$<$ string $>$ \& \mbox{\hyperlink{class_file_a479270bfe1fa436d317151ac108eb28a}{get\+\_\+tags}} ()
+\item 
+File\+Attributes \mbox{\hyperlink{class_file_a9f59d3d546e8e574889558d63c71bf02}{get\+\_\+attributes}} ()
+\end{DoxyCompactItemize}
+\end{Indent}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_file}{File}} $\ast$ \mbox{\hyperlink{class_file_a1118d477e6b00d789e948e8cca5ae393}{read\+\_\+buff}} (const char $\ast$serialized\+File)
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+string \mbox{\hyperlink{class_file_a9668b6d84f8f57a737e30d87f08725cd}{\+\_\+name}}
+\item 
+File\+Attributes \mbox{\hyperlink{class_file_ae2faf26750f73c5848cf414f208282b2}{\+\_\+attributes}}
+\item 
+vector$<$ string $>$ \mbox{\hyperlink{class_file_aa4bc599b81fee53fd7b7b9d7f8129e11}{\+\_\+tags}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_file_af29e498f601951f4ccf06f2fc3fb1f73}\label{class_file_af29e498f601951f4ccf06f2fc3fb1f73}} 
+\index{File@{File}!File@{File}}
+\index{File@{File}!File@{File}}
+\subsubsection{\texorpdfstring{File()}{File()}}
+{\footnotesize\ttfamily File\+::\+File (\begin{DoxyParamCaption}\item[{string}]{name,  }\item[{const vector$<$ string $>$ \&}]{tags,  }\item[{File\+Attributes}]{attributes }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & the name of the \mbox{\hyperlink{class_file}{File}} \\
+\hline
+{\em tags} & the tags to be associated with the \mbox{\hyperlink{class_file}{File}} \\
+\hline
+{\em attributes} & the \mbox{\hyperlink{class_file}{File}} attributes \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_file_a9f59d3d546e8e574889558d63c71bf02}\label{class_file_a9f59d3d546e8e574889558d63c71bf02}} 
+\index{File@{File}!get\+\_\+attributes@{get\+\_\+attributes}}
+\index{get\+\_\+attributes@{get\+\_\+attributes}!File@{File}}
+\subsubsection{\texorpdfstring{get\+\_\+attributes()}{get\_attributes()}}
+{\footnotesize\ttfamily File\+Attributes File\+::get\+\_\+attributes (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+the attributes associated with this \mbox{\hyperlink{class_file}{File}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_file_a4b8e86f4fae0219744cf82f6bab35b53}\label{class_file_a4b8e86f4fae0219744cf82f6bab35b53}} 
+\index{File@{File}!get\+\_\+name@{get\+\_\+name}}
+\index{get\+\_\+name@{get\+\_\+name}!File@{File}}
+\subsubsection{\texorpdfstring{get\+\_\+name()}{get\_name()}}
+{\footnotesize\ttfamily string File\+::get\+\_\+name (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+The name of the \mbox{\hyperlink{class_file}{File}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_file_a479270bfe1fa436d317151ac108eb28a}\label{class_file_a479270bfe1fa436d317151ac108eb28a}} 
+\index{File@{File}!get\+\_\+tags@{get\+\_\+tags}}
+\index{get\+\_\+tags@{get\+\_\+tags}!File@{File}}
+\subsubsection{\texorpdfstring{get\+\_\+tags()}{get\_tags()}}
+{\footnotesize\ttfamily vector$<$ string $>$ \& File\+::get\+\_\+tags (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+The tags associated with this \mbox{\hyperlink{class_file}{File}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_file_a1118d477e6b00d789e948e8cca5ae393}\label{class_file_a1118d477e6b00d789e948e8cca5ae393}} 
+\index{File@{File}!read\+\_\+buff@{read\+\_\+buff}}
+\index{read\+\_\+buff@{read\+\_\+buff}!File@{File}}
+\subsubsection{\texorpdfstring{read\+\_\+buff()}{read\_buff()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_file}{File}} $\ast$ File\+::read\+\_\+buff (\begin{DoxyParamCaption}\item[{const char $\ast$}]{serialized\+File }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Will take a char$\ast$ buffer and create a \mbox{\hyperlink{class_file}{File}} object from it. The buffer must have been serialized in the correct format 
+\begin{DoxyParams}{Parameters}
+{\em serialized\+File} & the serialized\+File object \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a File$\ast$ to the created \mbox{\hyperlink{class_file}{File}} 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\mbox{\hyperlink{class_file_info_a64fc62c3e376dfd61088932d8b793589}{File\+Info\+::serialize()}} 
+\end{DoxySeeAlso}
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{class_file_ae2faf26750f73c5848cf414f208282b2}\label{class_file_ae2faf26750f73c5848cf414f208282b2}} 
+\index{File@{File}!\+\_\+attributes@{\+\_\+attributes}}
+\index{\+\_\+attributes@{\+\_\+attributes}!File@{File}}
+\subsubsection{\texorpdfstring{\+\_\+attributes}{\_attributes}}
+{\footnotesize\ttfamily File\+Attributes File\+::\+\_\+attributes\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_file_a9668b6d84f8f57a737e30d87f08725cd}\label{class_file_a9668b6d84f8f57a737e30d87f08725cd}} 
+\index{File@{File}!\+\_\+name@{\+\_\+name}}
+\index{\+\_\+name@{\+\_\+name}!File@{File}}
+\subsubsection{\texorpdfstring{\+\_\+name}{\_name}}
+{\footnotesize\ttfamily string File\+::\+\_\+name\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_file_aa4bc599b81fee53fd7b7b9d7f8129e11}\label{class_file_aa4bc599b81fee53fd7b7b9d7f8129e11}} 
+\index{File@{File}!\+\_\+tags@{\+\_\+tags}}
+\index{\+\_\+tags@{\+\_\+tags}!File@{File}}
+\subsubsection{\texorpdfstring{\+\_\+tags}{\_tags}}
+{\footnotesize\ttfamily vector$<$string$>$ File\+::\+\_\+tags\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Filesystem/\+Daemon\+Dependancies/\+File/\mbox{\hyperlink{_file_8h}{File.\+h}}\item 
+Filesystem/\+Daemon\+Dependancies/\+File/\mbox{\hyperlink{_file_8cpp}{File.\+cpp}}\end{DoxyCompactItemize}

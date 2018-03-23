@@ -1,0 +1,158 @@
+\hypertarget{liason__helper_8hpp}{}\section{Liaison\+Process/\+Liaison\+Dependancies/liason\+\_\+helper.hpp File Reference}
+\label{liason__helper_8hpp}\index{Liaison\+Process/\+Liaison\+Dependancies/liason\+\_\+helper.\+hpp@{Liaison\+Process/\+Liaison\+Dependancies/liason\+\_\+helper.\+hpp}}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{liason__helper_8hpp_a2b24458443eca59692535bce09cfe918}{N\+E\+W\+\_\+\+P\+L\+US}}~\char`\"{}n+\char`\"{}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{liason__helper_8hpp_a74ff8f0290dd41bcfcf2fd6ce32e09f1}{clean}} (int signal)
+\item 
+void \mbox{\hyperlink{liason__helper_8hpp_a1be7303f8a99ba38c8f52542a9600a28}{bad\+\_\+clean}} (int signal)
+\item 
+void \mbox{\hyperlink{liason__helper_8hpp_ad8202364a535810e51b4a78b8cee61ee}{seg\+\_\+fault}} (int signal)
+\item 
+int \mbox{\hyperlink{liason__helper_8hpp_abc1f8102cf7291a60b5bd809fe3c7ba8}{get\+\_\+cmnd\+\_\+id}} (const char $\ast$cmnd)
+\item 
+std\+::string \mbox{\hyperlink{liason__helper_8hpp_aea83d94be7e083acae9c2a67752e66af}{get\+\_\+command\+\_\+string}} (const char $\ast$cmnd, const int size)
+\item 
+std\+::string \mbox{\hyperlink{liason__helper_8hpp_ad5e09aa4b73b016b6692eb23e5cab722}{pad\+\_\+string}} (const std\+::string string, const int size, const char value)
+\item 
+char $\ast$ \mbox{\hyperlink{liason__helper_8hpp_aaf1ad04585a00bf25015003ec2cdd495}{get\+\_\+shm\+\_\+seg}} (const key\+\_\+t key, int \&id)
+\item 
+void \mbox{\hyperlink{liason__helper_8hpp_aec37df1d5226219f606f5c4b7b078b48}{unat\+\_\+shm}} (const int shm\+\_\+id, const char $\ast$shm)
+\item 
+int \mbox{\hyperlink{liason__helper_8hpp_a91ed5677cfbb5ddf1443e5de288b403a}{set\+\_\+up\+\_\+socket}} (std\+::string server\+\_\+sockpath, struct sockaddr\+\_\+un \&server\+\_\+sockaddr)
+\item 
+void \mbox{\hyperlink{liason__helper_8hpp_a39b6dadeedc24724a66dffbaaa37fa02}{listen\+\_\+for\+\_\+client}} (const int server\+\_\+sock, const std\+::string server\+\_\+sockpath)
+\item 
+int \mbox{\hyperlink{liason__helper_8hpp_ab6045fc993b94e8cea8b179908f4d279}{accept\+\_\+client}} (int server\+\_\+sock, struct sockaddr\+\_\+un \&client\+\_\+sockaddr, socklen\+\_\+t length, std\+::string server\+\_\+sockpath)
+\item 
+void \mbox{\hyperlink{liason__helper_8hpp_afdfe2de19220c0b1b742b93ab7b87b28}{get\+\_\+peername}} (const int client\+\_\+sock, const struct sockaddr\+\_\+un \&client\+\_\+sockaddr, const int server\+\_\+sock, const std\+::string server\+\_\+sockpath)
+\item 
+char $\ast$ \mbox{\hyperlink{liason__helper_8hpp_a618c9b15db7c6b465b0e7d554366a4fb}{recv\+\_\+msg}} (const int client\+\_\+sock, const int size, const int flag, const int server\+\_\+sock, const std\+::string server\+\_\+sockpath, const std\+::string client\+\_\+sockpath)
+\item 
+void \mbox{\hyperlink{liason__helper_8hpp_a1d552ecd426d579f73f6ac1de26e92ef}{send\+\_\+response}} (const int client\+\_\+sock, const char $\ast$data, const int size, const int flag, const int server\+\_\+sock, const std\+::string server\+\_\+sockpath, const std\+::string client\+\_\+sockpath)
+\item 
+void \mbox{\hyperlink{liason__helper_8hpp_abc343b2eb4f7f46d3799b4a6885580ff}{shutdown}} (const int liaison\+\_\+fid, const int client\+\_\+sock, const std\+::string client\+\_\+sockpath, const int liaison\+\_\+sock, const std\+::string liaison\+\_\+sockpath)
+\item 
+int \mbox{\hyperlink{liason__helper_8hpp_a77a4e7599997e5512ce70a4070c72206}{create\+\_\+daemon\+\_\+sock}} (const int client\+\_\+sock, const std\+::string client\+\_\+sockpath, const int liaison\+\_\+sock, const std\+::string liaison\+\_\+sockpath)
+\item 
+void \mbox{\hyperlink{liason__helper_8hpp_af90f8719637b47826c30c7b490553b57}{connect\+\_\+to\+\_\+daemon}} (int liaison\+\_\+fid, struct sockaddr\+\_\+in daemon\+\_\+addr, const int client\+\_\+sock, const std\+::string client\+\_\+sockpath, const int liaison\+\_\+sock, const std\+::string liaison\+\_\+sockpath)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{liason__helper_8hpp_a2b24458443eca59692535bce09cfe918}\label{liason__helper_8hpp_a2b24458443eca59692535bce09cfe918}} 
+\index{liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}!N\+E\+W\+\_\+\+P\+L\+US@{N\+E\+W\+\_\+\+P\+L\+US}}
+\index{N\+E\+W\+\_\+\+P\+L\+US@{N\+E\+W\+\_\+\+P\+L\+US}!liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{N\+E\+W\+\_\+\+P\+L\+US}{NEW\_PLUS}}
+{\footnotesize\ttfamily \#define N\+E\+W\+\_\+\+P\+L\+US~\char`\"{}n+\char`\"{}}
+
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{liason__helper_8hpp_ab6045fc993b94e8cea8b179908f4d279}\label{liason__helper_8hpp_ab6045fc993b94e8cea8b179908f4d279}} 
+\index{liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}!accept\+\_\+client@{accept\+\_\+client}}
+\index{accept\+\_\+client@{accept\+\_\+client}!liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{accept\+\_\+client()}{accept\_client()}}
+{\footnotesize\ttfamily int accept\+\_\+client (\begin{DoxyParamCaption}\item[{int}]{server\+\_\+sock,  }\item[{struct sockaddr\+\_\+un \&}]{client\+\_\+sockaddr,  }\item[{socklen\+\_\+t}]{length,  }\item[{std\+::string}]{server\+\_\+sockpath }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{liason__helper_8hpp_a1be7303f8a99ba38c8f52542a9600a28}\label{liason__helper_8hpp_a1be7303f8a99ba38c8f52542a9600a28}} 
+\index{liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}!bad\+\_\+clean@{bad\+\_\+clean}}
+\index{bad\+\_\+clean@{bad\+\_\+clean}!liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{bad\+\_\+clean()}{bad\_clean()}}
+{\footnotesize\ttfamily void bad\+\_\+clean (\begin{DoxyParamCaption}\item[{int}]{signal }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{liason__helper_8hpp_a74ff8f0290dd41bcfcf2fd6ce32e09f1}\label{liason__helper_8hpp_a74ff8f0290dd41bcfcf2fd6ce32e09f1}} 
+\index{liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}!clean@{clean}}
+\index{clean@{clean}!liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{clean()}{clean()}}
+{\footnotesize\ttfamily void clean (\begin{DoxyParamCaption}\item[{int}]{signal }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{liason__helper_8hpp_af90f8719637b47826c30c7b490553b57}\label{liason__helper_8hpp_af90f8719637b47826c30c7b490553b57}} 
+\index{liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}!connect\+\_\+to\+\_\+daemon@{connect\+\_\+to\+\_\+daemon}}
+\index{connect\+\_\+to\+\_\+daemon@{connect\+\_\+to\+\_\+daemon}!liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{connect\+\_\+to\+\_\+daemon()}{connect\_to\_daemon()}}
+{\footnotesize\ttfamily void connect\+\_\+to\+\_\+daemon (\begin{DoxyParamCaption}\item[{int}]{liaison\+\_\+fid,  }\item[{struct sockaddr\+\_\+in}]{daemon\+\_\+addr,  }\item[{const int}]{client\+\_\+sock,  }\item[{const std\+::string}]{client\+\_\+sockpath,  }\item[{const int}]{liaison\+\_\+sock,  }\item[{const std\+::string}]{liaison\+\_\+sockpath }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{liason__helper_8hpp_a77a4e7599997e5512ce70a4070c72206}\label{liason__helper_8hpp_a77a4e7599997e5512ce70a4070c72206}} 
+\index{liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}!create\+\_\+daemon\+\_\+sock@{create\+\_\+daemon\+\_\+sock}}
+\index{create\+\_\+daemon\+\_\+sock@{create\+\_\+daemon\+\_\+sock}!liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{create\+\_\+daemon\+\_\+sock()}{create\_daemon\_sock()}}
+{\footnotesize\ttfamily int create\+\_\+daemon\+\_\+sock (\begin{DoxyParamCaption}\item[{const int}]{client\+\_\+sock,  }\item[{const std\+::string}]{client\+\_\+sockpath,  }\item[{const int}]{liaison\+\_\+sock,  }\item[{const std\+::string}]{liaison\+\_\+sockpath }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{liason__helper_8hpp_abc1f8102cf7291a60b5bd809fe3c7ba8}\label{liason__helper_8hpp_abc1f8102cf7291a60b5bd809fe3c7ba8}} 
+\index{liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}!get\+\_\+cmnd\+\_\+id@{get\+\_\+cmnd\+\_\+id}}
+\index{get\+\_\+cmnd\+\_\+id@{get\+\_\+cmnd\+\_\+id}!liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{get\+\_\+cmnd\+\_\+id()}{get\_cmnd\_id()}}
+{\footnotesize\ttfamily int get\+\_\+cmnd\+\_\+id (\begin{DoxyParamCaption}\item[{const char $\ast$}]{cmnd }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{liason__helper_8hpp_aea83d94be7e083acae9c2a67752e66af}\label{liason__helper_8hpp_aea83d94be7e083acae9c2a67752e66af}} 
+\index{liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}!get\+\_\+command\+\_\+string@{get\+\_\+command\+\_\+string}}
+\index{get\+\_\+command\+\_\+string@{get\+\_\+command\+\_\+string}!liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{get\+\_\+command\+\_\+string()}{get\_command\_string()}}
+{\footnotesize\ttfamily std\+::string get\+\_\+command\+\_\+string (\begin{DoxyParamCaption}\item[{const char $\ast$}]{cmnd,  }\item[{const int}]{size }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{liason__helper_8hpp_afdfe2de19220c0b1b742b93ab7b87b28}\label{liason__helper_8hpp_afdfe2de19220c0b1b742b93ab7b87b28}} 
+\index{liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}!get\+\_\+peername@{get\+\_\+peername}}
+\index{get\+\_\+peername@{get\+\_\+peername}!liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{get\+\_\+peername()}{get\_peername()}}
+{\footnotesize\ttfamily void get\+\_\+peername (\begin{DoxyParamCaption}\item[{const int}]{client\+\_\+sock,  }\item[{const struct sockaddr\+\_\+un \&}]{client\+\_\+sockaddr,  }\item[{const int}]{server\+\_\+sock,  }\item[{const std\+::string}]{server\+\_\+sockpath }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{liason__helper_8hpp_aaf1ad04585a00bf25015003ec2cdd495}\label{liason__helper_8hpp_aaf1ad04585a00bf25015003ec2cdd495}} 
+\index{liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}!get\+\_\+shm\+\_\+seg@{get\+\_\+shm\+\_\+seg}}
+\index{get\+\_\+shm\+\_\+seg@{get\+\_\+shm\+\_\+seg}!liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{get\+\_\+shm\+\_\+seg()}{get\_shm\_seg()}}
+{\footnotesize\ttfamily char$\ast$ get\+\_\+shm\+\_\+seg (\begin{DoxyParamCaption}\item[{const key\+\_\+t}]{key,  }\item[{int \&}]{id }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{liason__helper_8hpp_a39b6dadeedc24724a66dffbaaa37fa02}\label{liason__helper_8hpp_a39b6dadeedc24724a66dffbaaa37fa02}} 
+\index{liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}!listen\+\_\+for\+\_\+client@{listen\+\_\+for\+\_\+client}}
+\index{listen\+\_\+for\+\_\+client@{listen\+\_\+for\+\_\+client}!liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{listen\+\_\+for\+\_\+client()}{listen\_for\_client()}}
+{\footnotesize\ttfamily void listen\+\_\+for\+\_\+client (\begin{DoxyParamCaption}\item[{const int}]{server\+\_\+sock,  }\item[{const std\+::string}]{server\+\_\+sockpath }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{liason__helper_8hpp_ad5e09aa4b73b016b6692eb23e5cab722}\label{liason__helper_8hpp_ad5e09aa4b73b016b6692eb23e5cab722}} 
+\index{liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}!pad\+\_\+string@{pad\+\_\+string}}
+\index{pad\+\_\+string@{pad\+\_\+string}!liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{pad\+\_\+string()}{pad\_string()}}
+{\footnotesize\ttfamily std\+::string pad\+\_\+string (\begin{DoxyParamCaption}\item[{const std\+::string}]{string,  }\item[{const int}]{size,  }\item[{const char}]{value }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{liason__helper_8hpp_a618c9b15db7c6b465b0e7d554366a4fb}\label{liason__helper_8hpp_a618c9b15db7c6b465b0e7d554366a4fb}} 
+\index{liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}!recv\+\_\+msg@{recv\+\_\+msg}}
+\index{recv\+\_\+msg@{recv\+\_\+msg}!liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{recv\+\_\+msg()}{recv\_msg()}}
+{\footnotesize\ttfamily char$\ast$ recv\+\_\+msg (\begin{DoxyParamCaption}\item[{const int}]{client\+\_\+sock,  }\item[{const int}]{size,  }\item[{const int}]{flag,  }\item[{const int}]{server\+\_\+sock,  }\item[{const std\+::string}]{server\+\_\+sockpath,  }\item[{const std\+::string}]{client\+\_\+sockpath }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{liason__helper_8hpp_ad8202364a535810e51b4a78b8cee61ee}\label{liason__helper_8hpp_ad8202364a535810e51b4a78b8cee61ee}} 
+\index{liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}!seg\+\_\+fault@{seg\+\_\+fault}}
+\index{seg\+\_\+fault@{seg\+\_\+fault}!liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{seg\+\_\+fault()}{seg\_fault()}}
+{\footnotesize\ttfamily void seg\+\_\+fault (\begin{DoxyParamCaption}\item[{int}]{signal }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{liason__helper_8hpp_a1d552ecd426d579f73f6ac1de26e92ef}\label{liason__helper_8hpp_a1d552ecd426d579f73f6ac1de26e92ef}} 
+\index{liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}!send\+\_\+response@{send\+\_\+response}}
+\index{send\+\_\+response@{send\+\_\+response}!liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{send\+\_\+response()}{send\_response()}}
+{\footnotesize\ttfamily void send\+\_\+response (\begin{DoxyParamCaption}\item[{const int}]{client\+\_\+sock,  }\item[{const char $\ast$}]{data,  }\item[{const int}]{size,  }\item[{const int}]{flag,  }\item[{const int}]{server\+\_\+sock,  }\item[{const std\+::string}]{server\+\_\+sockpath,  }\item[{const std\+::string}]{client\+\_\+sockpath }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{liason__helper_8hpp_a91ed5677cfbb5ddf1443e5de288b403a}\label{liason__helper_8hpp_a91ed5677cfbb5ddf1443e5de288b403a}} 
+\index{liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}!set\+\_\+up\+\_\+socket@{set\+\_\+up\+\_\+socket}}
+\index{set\+\_\+up\+\_\+socket@{set\+\_\+up\+\_\+socket}!liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{set\+\_\+up\+\_\+socket()}{set\_up\_socket()}}
+{\footnotesize\ttfamily int set\+\_\+up\+\_\+socket (\begin{DoxyParamCaption}\item[{std\+::string}]{server\+\_\+sockpath,  }\item[{struct sockaddr\+\_\+un \&}]{server\+\_\+sockaddr }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{liason__helper_8hpp_abc343b2eb4f7f46d3799b4a6885580ff}\label{liason__helper_8hpp_abc343b2eb4f7f46d3799b4a6885580ff}} 
+\index{liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}!shutdown@{shutdown}}
+\index{shutdown@{shutdown}!liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{shutdown()}{shutdown()}}
+{\footnotesize\ttfamily void shutdown (\begin{DoxyParamCaption}\item[{const int}]{liaison\+\_\+fid,  }\item[{const int}]{client\+\_\+sock,  }\item[{const std\+::string}]{client\+\_\+sockpath,  }\item[{const int}]{liaison\+\_\+sock,  }\item[{const std\+::string}]{liaison\+\_\+sockpath }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{liason__helper_8hpp_aec37df1d5226219f606f5c4b7b078b48}\label{liason__helper_8hpp_aec37df1d5226219f606f5c4b7b078b48}} 
+\index{liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}!unat\+\_\+shm@{unat\+\_\+shm}}
+\index{unat\+\_\+shm@{unat\+\_\+shm}!liason\+\_\+helper.\+hpp@{liason\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{unat\+\_\+shm()}{unat\_shm()}}
+{\footnotesize\ttfamily void unat\+\_\+shm (\begin{DoxyParamCaption}\item[{const int}]{shm\+\_\+id,  }\item[{const char $\ast$}]{shm }\end{DoxyParamCaption})}
+

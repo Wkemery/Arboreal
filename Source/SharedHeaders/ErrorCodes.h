@@ -1,12 +1,18 @@
-// Define Error Codes For Arboreal Exceptions
-// 
-// 
-// 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// ErrorCodes.h
+// Define Error Codes For Arboreal
+// Primary Author: Adrian Barberis
+// For "Arboreal" Senior Design Project
+//
+//  Tue. | Mar. 20th | 2018 | 10:50 PM | Stable | Documented 
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
 #ifndef ERR_CODES
 #define ERR_CODES
 
-static const int FILE_DNE = 404;
 
 #endif

@@ -1,0 +1,94 @@
+\hypertarget{class_tag_tree}{}\section{Tag\+Tree Class Reference}
+\label{class_tag_tree}\index{Tag\+Tree@{Tag\+Tree}}
+
+
+{\ttfamily \#include $<$Trees.\+h$>$}
+
+Inheritance diagram for Tag\+Tree\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_tag_tree}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_tag_tree_a80b23fa47a18727a248c3db1e8b2ed83}{Tag\+Tree}} (string tag\+Name, Blk\+Num\+Type blknum, \mbox{\hyperlink{class_partition_manager}{Partition\+Manager}} $\ast$pm)
+\item 
+\mbox{\hyperlink{class_tag_tree_a0522ae8933fa3e903fc1da7bdfb5d901}{$\sim$\+Tag\+Tree}} ()
+\item 
+void \mbox{\hyperlink{class_tag_tree_adf13e01b25991ecfef1ad958e02c07fe}{write\+\_\+out}} ()
+\item 
+void \mbox{\hyperlink{class_tag_tree_af86ee6713fa03c3909e04608512b8b62}{read\+\_\+in}} (unordered\+\_\+multimap$<$ string, \mbox{\hyperlink{class_file_info}{File\+Info}} $\ast$$>$ $\ast$all\+Files, \mbox{\hyperlink{class_root_tree}{Root\+Tree}} $\ast$root\+Tree)
+\item 
+void \mbox{\hyperlink{class_tag_tree_ad8108969f4d28b938e55c8339f19db35}{del}} ()
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_tag_tree_a80b23fa47a18727a248c3db1e8b2ed83}\label{class_tag_tree_a80b23fa47a18727a248c3db1e8b2ed83}} 
+\index{Tag\+Tree@{Tag\+Tree}!Tag\+Tree@{Tag\+Tree}}
+\index{Tag\+Tree@{Tag\+Tree}!Tag\+Tree@{Tag\+Tree}}
+\subsubsection{\texorpdfstring{Tag\+Tree()}{TagTree()}}
+{\footnotesize\ttfamily Tag\+Tree\+::\+Tag\+Tree (\begin{DoxyParamCaption}\item[{string}]{tag\+Name,  }\item[{Blk\+Num\+Type}]{blknum,  }\item[{\mbox{\hyperlink{class_partition_manager}{Partition\+Manager}} $\ast$}]{pm }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em tag\+Name} & the name of this tag \\
+\hline
+{\em blknum} & the blocknumber for the superblock of this tag\+Tree \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_tag_tree_a0522ae8933fa3e903fc1da7bdfb5d901}\label{class_tag_tree_a0522ae8933fa3e903fc1da7bdfb5d901}} 
+\index{Tag\+Tree@{Tag\+Tree}!````~Tag\+Tree@{$\sim$\+Tag\+Tree}}
+\index{````~Tag\+Tree@{$\sim$\+Tag\+Tree}!Tag\+Tree@{Tag\+Tree}}
+\subsubsection{\texorpdfstring{$\sim$\+Tag\+Tree()}{~TagTree()}}
+{\footnotesize\ttfamily Tag\+Tree\+::$\sim$\+Tag\+Tree (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_tag_tree_ad8108969f4d28b938e55c8339f19db35}\label{class_tag_tree_ad8108969f4d28b938e55c8339f19db35}} 
+\index{Tag\+Tree@{Tag\+Tree}!del@{del}}
+\index{del@{del}!Tag\+Tree@{Tag\+Tree}}
+\subsubsection{\texorpdfstring{del()}{del()}}
+{\footnotesize\ttfamily void Tag\+Tree\+::del (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Will completely remove the \mbox{\hyperlink{class_tree_object}{Tree\+Object}}\textquotesingle{}s presence on disk 
+
+Implements \mbox{\hyperlink{class_tree_object_af390b7479aa972888e594c07a85740b6}{Tree\+Object}}.
+
+\mbox{\Hypertarget{class_tag_tree_af86ee6713fa03c3909e04608512b8b62}\label{class_tag_tree_af86ee6713fa03c3909e04608512b8b62}} 
+\index{Tag\+Tree@{Tag\+Tree}!read\+\_\+in@{read\+\_\+in}}
+\index{read\+\_\+in@{read\+\_\+in}!Tag\+Tree@{Tag\+Tree}}
+\subsubsection{\texorpdfstring{read\+\_\+in()}{read\_in()}}
+{\footnotesize\ttfamily void Tag\+Tree\+::read\+\_\+in (\begin{DoxyParamCaption}\item[{unordered\+\_\+multimap$<$ string, \mbox{\hyperlink{class_file_info}{File\+Info}} $\ast$$>$ $\ast$}]{all\+Files,  }\item[{\mbox{\hyperlink{class_root_tree}{Root\+Tree}} $\ast$}]{root\+Tree }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Will read in all object data from disk 
+\begin{DoxyParams}{Parameters}
+{\em all\+Files} & a pointer to the map of all files \\
+\hline
+{\em root\+Tree} & a pointer to the root tree \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_tree_object_a722eb00e6782626281afc8eff92840a4}{Tree\+Object}}.
+
+\mbox{\Hypertarget{class_tag_tree_adf13e01b25991ecfef1ad958e02c07fe}\label{class_tag_tree_adf13e01b25991ecfef1ad958e02c07fe}} 
+\index{Tag\+Tree@{Tag\+Tree}!write\+\_\+out@{write\+\_\+out}}
+\index{write\+\_\+out@{write\+\_\+out}!Tag\+Tree@{Tag\+Tree}}
+\subsubsection{\texorpdfstring{write\+\_\+out()}{write\_out()}}
+{\footnotesize\ttfamily void Tag\+Tree\+::write\+\_\+out (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Intended to write out the object to disk 
+
+Implements \mbox{\hyperlink{class_tree_object_a63708d61353d83e3e03597394bb7aca0}{Tree\+Object}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Filesystem/\+Daemon\+Dependancies/\+Trees/\mbox{\hyperlink{_trees_8h}{Trees.\+h}}\item 
+Filesystem/\+Daemon\+Dependancies/\+Trees/\mbox{\hyperlink{_trees_8cpp}{Trees.\+cpp}}\end{DoxyCompactItemize}

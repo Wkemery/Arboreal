@@ -1,0 +1,578 @@
+\hypertarget{_command_validation_8h}{}\section{Shared\+Headers/\+Command\+Validation.h File Reference}
+\label{_command_validation_8h}\index{Shared\+Headers/\+Command\+Validation.\+h@{Shared\+Headers/\+Command\+Validation.\+h}}
+{\ttfamily \#include $<$regex$>$}\newline
+{\ttfamily \#include \char`\"{}Command\+Codes.\+h\char`\"{}}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_ad1b423f058a6e58e2610710664bf5f29}{history\+\_\+val}} (\char`\"{}history \mbox{[}0-\/9\mbox{]}+\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a82313d4ecbe28c292f2c714fcb2d6d4f}{change\+\_\+dir}} (\char`\"{}cd (/\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}$\ast$)+\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_aa358119890a08048891fed25115b9200}{change\+\_\+dir\+\_\+rl}} (\char`\"{}cd \textbackslash{}(/\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)+\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a08280c9b40f731d0d45fe8f0cae07a14}{usage\+\_\+help}} (\char`\"{}-\/-\/help\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a5d7fdb2291e604131fa62e4be3438179}{usage\+\_\+quit}} (\char`\"{}-\/-\/quit\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a1b7e364884bdd486662f3cc716567812}{usage\+\_\+find}} (\char`\"{}-\/-\/find\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a0b1475dea8d1ac9ce5d731798aad3339}{usage\+\_\+new}} (\char`\"{}-\/-\/new\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a6cfeab367396483f835d73fc6a15b4ee}{usage\+\_\+delete}} (\char`\"{}-\/-\/delete\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a30f3b7672bc0b2999192ace3e8fe43aa}{usage\+\_\+open}} (\char`\"{}-\/-\/open\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_aae86b35e6a688ae0620f4547eb8c49e9}{usage\+\_\+close}} (\char`\"{}-\/-\/close\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a99f60d4864daeb04dc1c28444076d17c}{usage\+\_\+rename}} (\char`\"{}-\/-\/rename\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a7a54392c758fb8e19ce874e43929e1d1}{usage\+\_\+attr}} (\char`\"{}-\/-\/attr\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a81e87f76cfa683810c95b1876036e501}{usage\+\_\+merge}} (\char`\"{}-\/-\/merge\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_ae0187a973adc80ebf387a5711242b42d}{usage\+\_\+tag}} (\char`\"{}-\/-\/tag\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a13ad4190d40d2e0181fc55688f9c38c2}{usage\+\_\+untag}} (\char`\"{}-\/-\/untag\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a44ab090418d3a48371bc129fc524c1e7}{usage\+\_\+cd}} (\char`\"{}-\/-\/cd\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a1101535a6909533246d1d8dae113309e}{usage\+\_\+read}} (\char`\"{}-\/-\/read\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_abe8d957b6e21187ea30a85876a326774}{usage\+\_\+write}} (\char`\"{}-\/-\/write\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a27e63265a46a961b2d9734c83ea216f1}{usage\+\_\+copy}} (\char`\"{}-\/-\/copy\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_af36b872470f23d6c3b2e16f2083665ad}{help\+\_\+1}} (\char`\"{}-\/h -\/-\/\mbox{\hyperlink{_print_8h_a97ee70a8770dc30d06c744b24eb2fcfc}{help}}\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a9fc33fc168fefdfc69bf11219b582945}{help\+\_\+2}} (\char`\"{}-\/h -\/-\/quit\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a22886cc43b0214c478520edbd94662c2}{help\+\_\+3}} (\char`\"{}-\/h -\/-\/find\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a528e37b4acb631e44a0aa55fb13ac640}{help\+\_\+4}} (\char`\"{}-\/h -\/-\/new\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a21515076a922487af98f3b834e1780ac}{help\+\_\+5}} (\char`\"{}-\/h -\/-\/delete\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a3803c5206c69a6db9f50f1c41faea84a}{help\+\_\+6}} (\char`\"{}-\/h -\/-\/open\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a10263f6a958d6dffbeecce49e662698f}{help\+\_\+7}} (\char`\"{}-\/h -\/-\/close\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_ad853cab1905806b6fa60e88ab34ad9e8}{help\+\_\+8}} (\char`\"{}-\/h -\/-\/rename\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a86779a1dabee964e27c77563326ef677}{help\+\_\+9}} (\char`\"{}-\/h -\/-\/attr\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a3aa264e291d6dab936d14296bf034588}{help\+\_\+10}} (\char`\"{}-\/h -\/-\/merge\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_ab16e7e365658e22541f52bf0861dc79a}{help\+\_\+11}} (\char`\"{}-\/h -\/-\/tag\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a8042677ec1d186b09a81b6031ef92d98}{help\+\_\+12}} (\char`\"{}-\/h -\/-\/untag\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a227388dd4eaa195e0aafb1017876f8d5}{help\+\_\+13}} (\char`\"{}-\/h -\/-\/cd\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a6de50bb1496ba4aa3c7391a31545e126}{help\+\_\+14}} (\char`\"{}-\/h -\/-\/read\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_aeb6a62f74ce20458cb26558e0c24076a}{help\+\_\+15}} (\char`\"{}-\/h -\/-\/write\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_abebcc5aa31fd3d2933416e8541362bd8}{help\+\_\+16}} (\char`\"{}-\/h -\/-\/copy\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a251b480150c5d6075441bee4104d3cca}{find\+\_\+tags}} (\char`\"{}find -\/t \mbox{[}\textbackslash{}\textbackslash{},0-\/9a-\/z\+A-\/\+Z\+\_\+\textbackslash{}\textbackslash{}\mbox{]}$\ast$\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a043f238b2f992e221bd471213fe50378}{find\+\_\+files}} (\char`\"{}find -\/f \textbackslash{}(\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(\textbackslash{}\mbox{[}a-\/z\+A-\/\+Z\mbox{]}+)?(,(\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(\textbackslash{}\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)?)$\ast$\textbackslash{}\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_ad3a05a717241df3cdd0a977e691f0f97}{new\+\_\+tags}} (\char`\"{}new -\/t \textbackslash{}(\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(,\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)$\ast$\textbackslash{}\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_adace1f742c2d86bfeebe6b16c4a36243}{new\+\_\+files}} (\char`\"{}new -\/f \textbackslash{}(\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(\textbackslash{}\mbox{[}a-\/z\+A-\/\+Z\mbox{]}+)?(,(\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(\textbackslash{}\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)?)$\ast$\textbackslash{}\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_aa474bb3994ff207d693282bbc0128bd2}{new\+\_\+file}} (\char`\"{}new (/\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)+\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+((\textbackslash{})\mbox{[}a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)?\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_af01505d2db4c35dd14b02213ee8b949a}{del\+\_\+tags}} (\char`\"{}delete -\/t \textbackslash{}(\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(,\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)$\ast$\textbackslash{}\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_ad6b10ca2ef5e52b1b88cf71053189f2e}{del\+\_\+files}} (\char`\"{}delete -\/f \textbackslash{}(\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(\textbackslash{}\mbox{[}a-\/z\+A-\/\+Z\mbox{]}+)?(,(\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(\textbackslash{}\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)?)$\ast$\textbackslash{}\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a1de5ecfeb8564258f72bbf13a52e10d2}{del\+\_\+file}} (\char`\"{}delete (/\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}$\ast$)$\ast$/\mbox{[}0-\/9a-\/z\+A-\/\+Z\mbox{]}+(\textbackslash{}\mbox{[}a-\/z\+A-\/\+Z\mbox{]}+)?\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_ab1aef8501dd775651b911559ab671ddc}{open\+\_\+files}} (\char`\"{}open (-\/r$\vert$-\/w$\vert$-\/x) (/\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)+\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+((\textbackslash{})\mbox{[}a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)?\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a1e1ff3cc9f18b923c9ca15cf6a84ccd2}{open\+\_\+file\+\_\+cd}} (\char`\"{}open (-\/r$\vert$-\/w$\vert$-\/x) \mbox{[}0-\/9a-\/z\+A\+\_\+\+Z\mbox{]}+(\textbackslash{}\mbox{[}a-\/z\+A-\/\+Z\mbox{]}+)?\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a58abe2ed31450962fe4d02731ca1c8e8}{close\+\_\+files}} (\char`\"{}close (/\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)+\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+((\textbackslash{})\mbox{[}a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)?\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a94ecf36ee04585f966d9c354aac4b6db}{close\+\_\+file\+\_\+cd}} (\char`\"{}close \mbox{[}0-\/9a-\/z\+A\+\_\+\+Z\mbox{]}+(\textbackslash{}\mbox{[}a-\/z\+A-\/\+Z\mbox{]}+)?\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a7e6415164274bffdadae55aecb45ad33}{rename\+\_\+tags}} (\char`\"{}rename -\/t \textbackslash{}(\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(,\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)$\ast$\textbackslash{} =$>$ \textbackslash{}(\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(,\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)$\ast$\textbackslash{}\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_ae43f5056561a932a724d67caa1d36f05}{rename\+\_\+files}} (\char`\"{}rename (/\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}$\ast$)$\ast$/\mbox{[}0-\/9a-\/z\+A-\/\+Z\mbox{]}+(\textbackslash{}\mbox{[}a-\/z\+A-\/\+Z\mbox{]}+)? =$>$ \mbox{[}0-\/9a-\/z\+A-\/\+Z\mbox{]}+(\textbackslash{}\mbox{[}a-\/z\+A-\/\+Z\mbox{]}+)?\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_ab2f0c2d22bb382e8d39f684fc2686ffe}{rename\+\_\+file\+\_\+cd}} (\char`\"{}rename \mbox{[}0-\/9a-\/z\+A\+\_\+\+Z\mbox{]}+(\textbackslash{}\mbox{[}a-\/z\+A-\/\+Z\mbox{]}+)? =$>$ \mbox{[}0-\/9a-\/z\+A\+\_\+\+Z\mbox{]}+(\textbackslash{}\mbox{[}a-\/z\+A-\/\+Z\mbox{]}+)?\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a2f2d804f4345b785c9f7cf5033e75178}{get\+\_\+attrs}} (\char`\"{}attr (/\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}$\ast$)$\ast$/\mbox{[}0-\/9a-\/z\+A-\/\+Z\mbox{]}+(\textbackslash{}\mbox{[}a-\/z\+A-\/\+Z\mbox{]}+)?\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a267922133b09432845803467afe843f7}{get\+\_\+attr\+\_\+cd}} (\char`\"{}attr \mbox{[}0-\/9a-\/z\+A\+\_\+\+Z\mbox{]}+(\textbackslash{}\mbox{[}a-\/z\+A-\/\+Z\mbox{]}+)?\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a8127ef924ca412d64a727765d3e848dd}{merge\+\_\+1\+\_\+1}} (\char`\"{}merge \mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+ -\/$>$ \mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a09d1745cafa35cd0d043995a06d7c5a7}{merge\+\_\+m\+\_\+1}} (\char`\"{}merge \textbackslash{}(\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(,\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)$\ast$\textbackslash{} -\/$>$ \mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+\mbox{[}a-\/z\+A-\/\+Z\+\_\+0-\/9\mbox{]}$\ast$\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a3f62f7abc1da21b287394a0413486b0a}{add\+\_\+tags}} (\char`\"{}tag (/\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}$\ast$)$\ast$/\mbox{[}0-\/9a-\/z\+A-\/\+Z\mbox{]}+(\textbackslash{}\mbox{[}a-\/z\+A-\/\+Z\mbox{]}+)? \textbackslash{}$>$ \textbackslash{}(\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(,\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)$\ast$\textbackslash{}\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a9ad1a4d484364da6afa0fad279ab6f77}{tag\+\_\+files}} (\char`\"{}tag \textbackslash{}(\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(\textbackslash{}\mbox{[}a-\/z\+A-\/\+Z\mbox{]}+)?(,(\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(\textbackslash{}\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)?)$\ast$\textbackslash{} \textbackslash{}$>$ \textbackslash{}(\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(,\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)$\ast$\textbackslash{}\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_ab7d9eb2d4792bef0330455f5527a17d7}{untag\+\_\+file}} (\char`\"{}untag (/\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}$\ast$)$\ast$/\mbox{[}0-\/9a-\/z\+A-\/\+Z\mbox{]}+(\textbackslash{}\mbox{[}a-\/z\+A-\/\+Z\mbox{]}+)? \textbackslash{}$>$ \textbackslash{}(\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(,\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)$\ast$\textbackslash{}\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_ab0a012b92976b1a3cb561ec4062efe3f}{untag\+\_\+files}} (\char`\"{}untag \textbackslash{}(\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(\textbackslash{}\mbox{[}a-\/z\+A-\/\+Z\mbox{]}+)?(,(\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(\textbackslash{}\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)?)$\ast$\textbackslash{} \textbackslash{}$>$ \textbackslash{}(\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(,\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)$\ast$\textbackslash{}\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_af8b5f2a8aa23cdfdeaceeafddeae2210}{read\+\_\+x\+\_\+path}} (\char`\"{}\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a971c367ad6e8c5492e1c64b141f6dacb}{read\+\_\+x\+\_\+cwd}} (\char`\"{}\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a8205e74b223567efe7199abe911e814f}{read\+\_\+path}} (\char`\"{}\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a7a76858522976c17a9440a54cb9f190d}{read\+\_\+cwd}} (\char`\"{}\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_afca222cdb9814bb8b4018e8ffd06deca}{write\+\_\+x\+\_\+path}} (\char`\"{}\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_afde32d59a030aeb1a2a0c77313ac13f3}{write\+\_\+x\+\_\+cwd}} (\char`\"{}\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a8dabbf51efd7052f55d31555568277d4}{write\+\_\+path}} (\char`\"{}\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a504a729b6086a1f110f6cb46039a0c1b}{write\+\_\+cwd}} (\char`\"{}\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a262693336c66d14dfd50eeee78f993d8}{copy\+\_\+path}} (\char`\"{}\char`\"{})
+\item 
+std\+::regex \mbox{\hyperlink{_command_validation_8h_a0ccc5c7665946b27246f1d72181e2121}{copy\+\_\+cwd}} (\char`\"{}\char`\"{})
+\item 
+int \mbox{\hyperlink{_command_validation_8h_a3466043b5812e8ef4c469dc49bd1d7c5}{check\+\_\+command}} (std\+::string command)
+\item 
+int \mbox{\hyperlink{_command_validation_8h_a74c754bb14263b5c592f018229d5e69f}{check\+\_\+usage}} (std\+::string input)
+\item 
+int \mbox{\hyperlink{_command_validation_8h_a95eed1f4e272387b6b83605fa29fc74f}{check\+\_\+help}} (std\+::string input)
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{_command_validation_8h_a3f62f7abc1da21b287394a0413486b0a}\label{_command_validation_8h_a3f62f7abc1da21b287394a0413486b0a}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!add\+\_\+tags@{add\+\_\+tags}}
+\index{add\+\_\+tags@{add\+\_\+tags}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{add\+\_\+tags()}{add\_tags()}}
+{\footnotesize\ttfamily std\+::regex add\+\_\+tags (\begin{DoxyParamCaption}\item[{\char`\"{}tag (/\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}$\ast$)$\ast$/+(\textbackslash{}-\/z\+A-\/\+Z\mbox{]}+)? \textbackslash{}}]{\mbox{[}0-\/9a-\/z\+A-\/\+Z\mbox{]},  }\item[{\textbackslash{}(\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(, \mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+) $\ast$\textbackslash{}\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a82313d4ecbe28c292f2c714fcb2d6d4f}\label{_command_validation_8h_a82313d4ecbe28c292f2c714fcb2d6d4f}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!change\+\_\+dir@{change\+\_\+dir}}
+\index{change\+\_\+dir@{change\+\_\+dir}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{change\+\_\+dir()}{change\_dir()}}
+{\footnotesize\ttfamily std\+::regex change\+\_\+dir (\begin{DoxyParamCaption}\item[{\char`\"{}cd (/\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}$\ast$)+\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_aa358119890a08048891fed25115b9200}\label{_command_validation_8h_aa358119890a08048891fed25115b9200}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!change\+\_\+dir\+\_\+rl@{change\+\_\+dir\+\_\+rl}}
+\index{change\+\_\+dir\+\_\+rl@{change\+\_\+dir\+\_\+rl}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{change\+\_\+dir\+\_\+rl()}{change\_dir\_rl()}}
+{\footnotesize\ttfamily std\+::regex change\+\_\+dir\+\_\+rl (\begin{DoxyParamCaption}\item[{\char`\"{}cd \textbackslash{}\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)+\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a3466043b5812e8ef4c469dc49bd1d7c5}\label{_command_validation_8h_a3466043b5812e8ef4c469dc49bd1d7c5}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!check\+\_\+command@{check\+\_\+command}}
+\index{check\+\_\+command@{check\+\_\+command}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{check\+\_\+command()}{check\_command()}}
+{\footnotesize\ttfamily int check\+\_\+command (\begin{DoxyParamCaption}\item[{std\+::string}]{command }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a95eed1f4e272387b6b83605fa29fc74f}\label{_command_validation_8h_a95eed1f4e272387b6b83605fa29fc74f}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!check\+\_\+help@{check\+\_\+help}}
+\index{check\+\_\+help@{check\+\_\+help}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{check\+\_\+help()}{check\_help()}}
+{\footnotesize\ttfamily int check\+\_\+help (\begin{DoxyParamCaption}\item[{std\+::string}]{input }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a74c754bb14263b5c592f018229d5e69f}\label{_command_validation_8h_a74c754bb14263b5c592f018229d5e69f}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!check\+\_\+usage@{check\+\_\+usage}}
+\index{check\+\_\+usage@{check\+\_\+usage}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{check\+\_\+usage()}{check\_usage()}}
+{\footnotesize\ttfamily int check\+\_\+usage (\begin{DoxyParamCaption}\item[{std\+::string}]{input }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a94ecf36ee04585f966d9c354aac4b6db}\label{_command_validation_8h_a94ecf36ee04585f966d9c354aac4b6db}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!close\+\_\+file\+\_\+cd@{close\+\_\+file\+\_\+cd}}
+\index{close\+\_\+file\+\_\+cd@{close\+\_\+file\+\_\+cd}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{close\+\_\+file\+\_\+cd()}{close\_file\_cd()}}
+{\footnotesize\ttfamily std\+::regex close\+\_\+file\+\_\+cd (\begin{DoxyParamCaption}\item[{\char`\"{}close +(\textbackslash{}-\/zA-\/Z\mbox{]}+)?\char`\"{}}]{\mbox{[}0-\/9a-\/z\+A\+\_\+\+Z\mbox{]} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a58abe2ed31450962fe4d02731ca1c8e8}\label{_command_validation_8h_a58abe2ed31450962fe4d02731ca1c8e8}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!close\+\_\+files@{close\+\_\+files}}
+\index{close\+\_\+files@{close\+\_\+files}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{close\+\_\+files()}{close\_files()}}
+{\footnotesize\ttfamily std\+::regex close\+\_\+files (\begin{DoxyParamCaption}\item[{\char`\"{}close (/\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)++((\textbackslash{}a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)?\char`\"{}}]{\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a0ccc5c7665946b27246f1d72181e2121}\label{_command_validation_8h_a0ccc5c7665946b27246f1d72181e2121}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!copy\+\_\+cwd@{copy\+\_\+cwd}}
+\index{copy\+\_\+cwd@{copy\+\_\+cwd}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{copy\+\_\+cwd()}{copy\_cwd()}}
+{\footnotesize\ttfamily std\+::regex copy\+\_\+cwd (\begin{DoxyParamCaption}\item[{\char`\"{}\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a262693336c66d14dfd50eeee78f993d8}\label{_command_validation_8h_a262693336c66d14dfd50eeee78f993d8}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!copy\+\_\+path@{copy\+\_\+path}}
+\index{copy\+\_\+path@{copy\+\_\+path}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{copy\+\_\+path()}{copy\_path()}}
+{\footnotesize\ttfamily std\+::regex copy\+\_\+path (\begin{DoxyParamCaption}\item[{\char`\"{}\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a1de5ecfeb8564258f72bbf13a52e10d2}\label{_command_validation_8h_a1de5ecfeb8564258f72bbf13a52e10d2}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!del\+\_\+file@{del\+\_\+file}}
+\index{del\+\_\+file@{del\+\_\+file}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{del\+\_\+file()}{del\_file()}}
+{\footnotesize\ttfamily std\+::regex del\+\_\+file (\begin{DoxyParamCaption}\item[{\char`\"{}delete (/\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}$\ast$)$\ast$/+(\textbackslash{}-\/z\+A-\/\+Z\mbox{]}+)?\char`\"{}}]{\mbox{[}0-\/9a-\/z\+A-\/\+Z\mbox{]} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_ad6b10ca2ef5e52b1b88cf71053189f2e}\label{_command_validation_8h_ad6b10ca2ef5e52b1b88cf71053189f2e}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!del\+\_\+files@{del\+\_\+files}}
+\index{del\+\_\+files@{del\+\_\+files}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{del\+\_\+files()}{del\_files()}}
+{\footnotesize\ttfamily std\+::regex del\+\_\+files (\begin{DoxyParamCaption}\item[{\char`\"{}delete -\/f \textbackslash{}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(\textbackslash{}-\/z\+A-\/\+Z\mbox{]}+)?(,(\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(\textbackslash{}-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)?)$\ast$\textbackslash{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_af01505d2db4c35dd14b02213ee8b949a}\label{_command_validation_8h_af01505d2db4c35dd14b02213ee8b949a}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!del\+\_\+tags@{del\+\_\+tags}}
+\index{del\+\_\+tags@{del\+\_\+tags}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{del\+\_\+tags()}{del\_tags()}}
+{\footnotesize\ttfamily std\+::regex del\+\_\+tags (\begin{DoxyParamCaption}\item[{\char`\"{}delete -\/t \textbackslash{}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(,\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)$\ast$\textbackslash{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a043f238b2f992e221bd471213fe50378}\label{_command_validation_8h_a043f238b2f992e221bd471213fe50378}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!find\+\_\+files@{find\+\_\+files}}
+\index{find\+\_\+files@{find\+\_\+files}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{find\+\_\+files()}{find\_files()}}
+{\footnotesize\ttfamily std\+::regex find\+\_\+files (\begin{DoxyParamCaption}\item[{\char`\"{}find -\/f \textbackslash{}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(\textbackslash{}-\/z\+A-\/\+Z\mbox{]}+)?(,(\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(\textbackslash{}-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)?)$\ast$\textbackslash{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a251b480150c5d6075441bee4104d3cca}\label{_command_validation_8h_a251b480150c5d6075441bee4104d3cca}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!find\+\_\+tags@{find\+\_\+tags}}
+\index{find\+\_\+tags@{find\+\_\+tags}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{find\+\_\+tags()}{find\_tags()}}
+{\footnotesize\ttfamily std\+::regex find\+\_\+tags (\begin{DoxyParamCaption}\item[{\char`\"{}find -\/t $\ast$\char`\"{}}]{\mbox{[}\textbackslash{}\textbackslash{}, 0-\/9a-\/z\+A-\/\+Z\+\_\+\textbackslash{}\textbackslash{}\mbox{]} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a267922133b09432845803467afe843f7}\label{_command_validation_8h_a267922133b09432845803467afe843f7}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!get\+\_\+attr\+\_\+cd@{get\+\_\+attr\+\_\+cd}}
+\index{get\+\_\+attr\+\_\+cd@{get\+\_\+attr\+\_\+cd}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{get\+\_\+attr\+\_\+cd()}{get\_attr\_cd()}}
+{\footnotesize\ttfamily std\+::regex get\+\_\+attr\+\_\+cd (\begin{DoxyParamCaption}\item[{\char`\"{}attr +(\textbackslash{}-\/zA-\/Z\mbox{]}+)?\char`\"{}}]{\mbox{[}0-\/9a-\/z\+A\+\_\+\+Z\mbox{]} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a2f2d804f4345b785c9f7cf5033e75178}\label{_command_validation_8h_a2f2d804f4345b785c9f7cf5033e75178}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!get\+\_\+attrs@{get\+\_\+attrs}}
+\index{get\+\_\+attrs@{get\+\_\+attrs}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{get\+\_\+attrs()}{get\_attrs()}}
+{\footnotesize\ttfamily std\+::regex get\+\_\+attrs (\begin{DoxyParamCaption}\item[{\char`\"{}attr (/\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}$\ast$)$\ast$/+(\textbackslash{}-\/z\+A-\/\+Z\mbox{]}+)?\char`\"{}}]{\mbox{[}0-\/9a-\/z\+A-\/\+Z\mbox{]} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_af36b872470f23d6c3b2e16f2083665ad}\label{_command_validation_8h_af36b872470f23d6c3b2e16f2083665ad}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!help\+\_\+1@{help\+\_\+1}}
+\index{help\+\_\+1@{help\+\_\+1}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{help\+\_\+1()}{help\_1()}}
+{\footnotesize\ttfamily std\+::regex help\+\_\+1 (\begin{DoxyParamCaption}\item[{\char`\"{}-\/h -\/-\/\mbox{\hyperlink{_print_8h_a97ee70a8770dc30d06c744b24eb2fcfc}{help}}\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a3aa264e291d6dab936d14296bf034588}\label{_command_validation_8h_a3aa264e291d6dab936d14296bf034588}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!help\+\_\+10@{help\+\_\+10}}
+\index{help\+\_\+10@{help\+\_\+10}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{help\+\_\+10()}{help\_10()}}
+{\footnotesize\ttfamily std\+::regex help\+\_\+10 (\begin{DoxyParamCaption}\item[{\char`\"{}-\/h -\/-\/merge\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_ab16e7e365658e22541f52bf0861dc79a}\label{_command_validation_8h_ab16e7e365658e22541f52bf0861dc79a}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!help\+\_\+11@{help\+\_\+11}}
+\index{help\+\_\+11@{help\+\_\+11}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{help\+\_\+11()}{help\_11()}}
+{\footnotesize\ttfamily std\+::regex help\+\_\+11 (\begin{DoxyParamCaption}\item[{\char`\"{}-\/h -\/-\/tag\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a8042677ec1d186b09a81b6031ef92d98}\label{_command_validation_8h_a8042677ec1d186b09a81b6031ef92d98}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!help\+\_\+12@{help\+\_\+12}}
+\index{help\+\_\+12@{help\+\_\+12}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{help\+\_\+12()}{help\_12()}}
+{\footnotesize\ttfamily std\+::regex help\+\_\+12 (\begin{DoxyParamCaption}\item[{\char`\"{}-\/h -\/-\/untag\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a227388dd4eaa195e0aafb1017876f8d5}\label{_command_validation_8h_a227388dd4eaa195e0aafb1017876f8d5}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!help\+\_\+13@{help\+\_\+13}}
+\index{help\+\_\+13@{help\+\_\+13}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{help\+\_\+13()}{help\_13()}}
+{\footnotesize\ttfamily std\+::regex help\+\_\+13 (\begin{DoxyParamCaption}\item[{\char`\"{}-\/h -\/-\/cd\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a6de50bb1496ba4aa3c7391a31545e126}\label{_command_validation_8h_a6de50bb1496ba4aa3c7391a31545e126}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!help\+\_\+14@{help\+\_\+14}}
+\index{help\+\_\+14@{help\+\_\+14}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{help\+\_\+14()}{help\_14()}}
+{\footnotesize\ttfamily std\+::regex help\+\_\+14 (\begin{DoxyParamCaption}\item[{\char`\"{}-\/h -\/-\/read\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_aeb6a62f74ce20458cb26558e0c24076a}\label{_command_validation_8h_aeb6a62f74ce20458cb26558e0c24076a}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!help\+\_\+15@{help\+\_\+15}}
+\index{help\+\_\+15@{help\+\_\+15}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{help\+\_\+15()}{help\_15()}}
+{\footnotesize\ttfamily std\+::regex help\+\_\+15 (\begin{DoxyParamCaption}\item[{\char`\"{}-\/h -\/-\/write\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_abebcc5aa31fd3d2933416e8541362bd8}\label{_command_validation_8h_abebcc5aa31fd3d2933416e8541362bd8}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!help\+\_\+16@{help\+\_\+16}}
+\index{help\+\_\+16@{help\+\_\+16}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{help\+\_\+16()}{help\_16()}}
+{\footnotesize\ttfamily std\+::regex help\+\_\+16 (\begin{DoxyParamCaption}\item[{\char`\"{}-\/h -\/-\/copy\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a9fc33fc168fefdfc69bf11219b582945}\label{_command_validation_8h_a9fc33fc168fefdfc69bf11219b582945}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!help\+\_\+2@{help\+\_\+2}}
+\index{help\+\_\+2@{help\+\_\+2}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{help\+\_\+2()}{help\_2()}}
+{\footnotesize\ttfamily std\+::regex help\+\_\+2 (\begin{DoxyParamCaption}\item[{\char`\"{}-\/h -\/-\/quit\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a22886cc43b0214c478520edbd94662c2}\label{_command_validation_8h_a22886cc43b0214c478520edbd94662c2}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!help\+\_\+3@{help\+\_\+3}}
+\index{help\+\_\+3@{help\+\_\+3}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{help\+\_\+3()}{help\_3()}}
+{\footnotesize\ttfamily std\+::regex help\+\_\+3 (\begin{DoxyParamCaption}\item[{\char`\"{}-\/h -\/-\/find\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a528e37b4acb631e44a0aa55fb13ac640}\label{_command_validation_8h_a528e37b4acb631e44a0aa55fb13ac640}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!help\+\_\+4@{help\+\_\+4}}
+\index{help\+\_\+4@{help\+\_\+4}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{help\+\_\+4()}{help\_4()}}
+{\footnotesize\ttfamily std\+::regex help\+\_\+4 (\begin{DoxyParamCaption}\item[{\char`\"{}-\/h -\/-\/new\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a21515076a922487af98f3b834e1780ac}\label{_command_validation_8h_a21515076a922487af98f3b834e1780ac}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!help\+\_\+5@{help\+\_\+5}}
+\index{help\+\_\+5@{help\+\_\+5}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{help\+\_\+5()}{help\_5()}}
+{\footnotesize\ttfamily std\+::regex help\+\_\+5 (\begin{DoxyParamCaption}\item[{\char`\"{}-\/h -\/-\/delete\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a3803c5206c69a6db9f50f1c41faea84a}\label{_command_validation_8h_a3803c5206c69a6db9f50f1c41faea84a}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!help\+\_\+6@{help\+\_\+6}}
+\index{help\+\_\+6@{help\+\_\+6}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{help\+\_\+6()}{help\_6()}}
+{\footnotesize\ttfamily std\+::regex help\+\_\+6 (\begin{DoxyParamCaption}\item[{\char`\"{}-\/h -\/-\/open\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a10263f6a958d6dffbeecce49e662698f}\label{_command_validation_8h_a10263f6a958d6dffbeecce49e662698f}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!help\+\_\+7@{help\+\_\+7}}
+\index{help\+\_\+7@{help\+\_\+7}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{help\+\_\+7()}{help\_7()}}
+{\footnotesize\ttfamily std\+::regex help\+\_\+7 (\begin{DoxyParamCaption}\item[{\char`\"{}-\/h -\/-\/close\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_ad853cab1905806b6fa60e88ab34ad9e8}\label{_command_validation_8h_ad853cab1905806b6fa60e88ab34ad9e8}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!help\+\_\+8@{help\+\_\+8}}
+\index{help\+\_\+8@{help\+\_\+8}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{help\+\_\+8()}{help\_8()}}
+{\footnotesize\ttfamily std\+::regex help\+\_\+8 (\begin{DoxyParamCaption}\item[{\char`\"{}-\/h -\/-\/rename\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a86779a1dabee964e27c77563326ef677}\label{_command_validation_8h_a86779a1dabee964e27c77563326ef677}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!help\+\_\+9@{help\+\_\+9}}
+\index{help\+\_\+9@{help\+\_\+9}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{help\+\_\+9()}{help\_9()}}
+{\footnotesize\ttfamily std\+::regex help\+\_\+9 (\begin{DoxyParamCaption}\item[{\char`\"{}-\/h -\/-\/attr\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_ad1b423f058a6e58e2610710664bf5f29}\label{_command_validation_8h_ad1b423f058a6e58e2610710664bf5f29}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!history\+\_\+val@{history\+\_\+val}}
+\index{history\+\_\+val@{history\+\_\+val}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{history\+\_\+val()}{history\_val()}}
+{\footnotesize\ttfamily std\+::regex history\+\_\+val (\begin{DoxyParamCaption}\item[{\char`\"{}history +\char`\"{}}]{\mbox{[}0-\/9\mbox{]} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a8127ef924ca412d64a727765d3e848dd}\label{_command_validation_8h_a8127ef924ca412d64a727765d3e848dd}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!merge\+\_\+1\+\_\+1@{merge\+\_\+1\+\_\+1}}
+\index{merge\+\_\+1\+\_\+1@{merge\+\_\+1\+\_\+1}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{merge\+\_\+1\+\_\+1()}{merge\_1\_1()}}
+{\footnotesize\ttfamily std\+::regex merge\+\_\+1\+\_\+1 (\begin{DoxyParamCaption}\item[{\char`\"{}merge + -\/$>$ +\char`\"{}}]{\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a09d1745cafa35cd0d043995a06d7c5a7}\label{_command_validation_8h_a09d1745cafa35cd0d043995a06d7c5a7}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!merge\+\_\+m\+\_\+1@{merge\+\_\+m\+\_\+1}}
+\index{merge\+\_\+m\+\_\+1@{merge\+\_\+m\+\_\+1}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{merge\+\_\+m\+\_\+1()}{merge\_m\_1()}}
+{\footnotesize\ttfamily std\+::regex merge\+\_\+m\+\_\+1 (\begin{DoxyParamCaption}\item[{\char`\"{}merge \textbackslash{}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(,\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)$\ast$\textbackslash{}$>$ +$\ast$\char`\"{}}]{\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}\mbox{[}a-\/z\+A-\/\+Z\+\_\+0-\/9\mbox{]} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_aa474bb3994ff207d693282bbc0128bd2}\label{_command_validation_8h_aa474bb3994ff207d693282bbc0128bd2}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!new\+\_\+file@{new\+\_\+file}}
+\index{new\+\_\+file@{new\+\_\+file}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{new\+\_\+file()}{new\_file()}}
+{\footnotesize\ttfamily std\+::regex new\+\_\+file (\begin{DoxyParamCaption}\item[{\char`\"{}new (/\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)++((\textbackslash{}a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)?\char`\"{}}]{\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_adace1f742c2d86bfeebe6b16c4a36243}\label{_command_validation_8h_adace1f742c2d86bfeebe6b16c4a36243}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!new\+\_\+files@{new\+\_\+files}}
+\index{new\+\_\+files@{new\+\_\+files}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{new\+\_\+files()}{new\_files()}}
+{\footnotesize\ttfamily std\+::regex new\+\_\+files (\begin{DoxyParamCaption}\item[{\char`\"{}new -\/f \textbackslash{}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(\textbackslash{}-\/z\+A-\/\+Z\mbox{]}+)?(,(\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(\textbackslash{}-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)?)$\ast$\textbackslash{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_ad3a05a717241df3cdd0a977e691f0f97}\label{_command_validation_8h_ad3a05a717241df3cdd0a977e691f0f97}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!new\+\_\+tags@{new\+\_\+tags}}
+\index{new\+\_\+tags@{new\+\_\+tags}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{new\+\_\+tags()}{new\_tags()}}
+{\footnotesize\ttfamily std\+::regex new\+\_\+tags (\begin{DoxyParamCaption}\item[{\char`\"{}new -\/t \textbackslash{}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(,\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)$\ast$\textbackslash{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a1e1ff3cc9f18b923c9ca15cf6a84ccd2}\label{_command_validation_8h_a1e1ff3cc9f18b923c9ca15cf6a84ccd2}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!open\+\_\+file\+\_\+cd@{open\+\_\+file\+\_\+cd}}
+\index{open\+\_\+file\+\_\+cd@{open\+\_\+file\+\_\+cd}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{open\+\_\+file\+\_\+cd()}{open\_file\_cd()}}
+{\footnotesize\ttfamily std\+::regex open\+\_\+file\+\_\+cd (\begin{DoxyParamCaption}\item[{\char`\"{}open (-\/r$\vert$-\/w$\vert$-\/x) +(\textbackslash{}-\/zA-\/Z\mbox{]}+)?\char`\"{}}]{\mbox{[}0-\/9a-\/z\+A\+\_\+\+Z\mbox{]} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_ab1aef8501dd775651b911559ab671ddc}\label{_command_validation_8h_ab1aef8501dd775651b911559ab671ddc}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!open\+\_\+files@{open\+\_\+files}}
+\index{open\+\_\+files@{open\+\_\+files}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{open\+\_\+files()}{open\_files()}}
+{\footnotesize\ttfamily std\+::regex open\+\_\+files (\begin{DoxyParamCaption}\item[{\char`\"{}open (-\/r$\vert$-\/w$\vert$-\/x) (/\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)++((\textbackslash{}a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)?\char`\"{}}]{\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a7a76858522976c17a9440a54cb9f190d}\label{_command_validation_8h_a7a76858522976c17a9440a54cb9f190d}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!read\+\_\+cwd@{read\+\_\+cwd}}
+\index{read\+\_\+cwd@{read\+\_\+cwd}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{read\+\_\+cwd()}{read\_cwd()}}
+{\footnotesize\ttfamily std\+::regex read\+\_\+cwd (\begin{DoxyParamCaption}\item[{\char`\"{}\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a8205e74b223567efe7199abe911e814f}\label{_command_validation_8h_a8205e74b223567efe7199abe911e814f}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!read\+\_\+path@{read\+\_\+path}}
+\index{read\+\_\+path@{read\+\_\+path}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{read\+\_\+path()}{read\_path()}}
+{\footnotesize\ttfamily std\+::regex read\+\_\+path (\begin{DoxyParamCaption}\item[{\char`\"{}\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a971c367ad6e8c5492e1c64b141f6dacb}\label{_command_validation_8h_a971c367ad6e8c5492e1c64b141f6dacb}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!read\+\_\+x\+\_\+cwd@{read\+\_\+x\+\_\+cwd}}
+\index{read\+\_\+x\+\_\+cwd@{read\+\_\+x\+\_\+cwd}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{read\+\_\+x\+\_\+cwd()}{read\_x\_cwd()}}
+{\footnotesize\ttfamily std\+::regex read\+\_\+x\+\_\+cwd (\begin{DoxyParamCaption}\item[{\char`\"{}\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_af8b5f2a8aa23cdfdeaceeafddeae2210}\label{_command_validation_8h_af8b5f2a8aa23cdfdeaceeafddeae2210}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!read\+\_\+x\+\_\+path@{read\+\_\+x\+\_\+path}}
+\index{read\+\_\+x\+\_\+path@{read\+\_\+x\+\_\+path}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{read\+\_\+x\+\_\+path()}{read\_x\_path()}}
+{\footnotesize\ttfamily std\+::regex read\+\_\+x\+\_\+path (\begin{DoxyParamCaption}\item[{\char`\"{}\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_ab2f0c2d22bb382e8d39f684fc2686ffe}\label{_command_validation_8h_ab2f0c2d22bb382e8d39f684fc2686ffe}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!rename\+\_\+file\+\_\+cd@{rename\+\_\+file\+\_\+cd}}
+\index{rename\+\_\+file\+\_\+cd@{rename\+\_\+file\+\_\+cd}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{rename\+\_\+file\+\_\+cd()}{rename\_file\_cd()}}
+{\footnotesize\ttfamily std\+::regex rename\+\_\+file\+\_\+cd (\begin{DoxyParamCaption}\item[{\char`\"{}rename +(\textbackslash{}-\/zA-\/Z\mbox{]}+)?}]{\mbox{[}0-\/9a-\/z\+A\+\_\+\+Z\mbox{]},  }\item[{\mbox{[}0-\/9a-\/z\+A\+\_\+\+Z\mbox{]} +(\textbackslash{}\mbox{[}a-\/zA-\/Z\mbox{]}+)?\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_ae43f5056561a932a724d67caa1d36f05}\label{_command_validation_8h_ae43f5056561a932a724d67caa1d36f05}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!rename\+\_\+files@{rename\+\_\+files}}
+\index{rename\+\_\+files@{rename\+\_\+files}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{rename\+\_\+files()}{rename\_files()}}
+{\footnotesize\ttfamily std\+::regex rename\+\_\+files (\begin{DoxyParamCaption}\item[{\char`\"{}rename (/\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}$\ast$)$\ast$/+(\textbackslash{}-\/z\+A-\/\+Z\mbox{]}+)?}]{\mbox{[}0-\/9a-\/z\+A-\/\+Z\mbox{]},  }\item[{\mbox{[}0-\/9a-\/z\+A-\/\+Z\mbox{]} +(\textbackslash{}\mbox{[}a-\/zA-\/Z\mbox{]}+)?\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a7e6415164274bffdadae55aecb45ad33}\label{_command_validation_8h_a7e6415164274bffdadae55aecb45ad33}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!rename\+\_\+tags@{rename\+\_\+tags}}
+\index{rename\+\_\+tags@{rename\+\_\+tags}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{rename\+\_\+tags()}{rename\_tags()}}
+{\footnotesize\ttfamily std\+::regex rename\+\_\+tags (\begin{DoxyParamCaption}\item[{\char`\"{}rename -\/t \textbackslash{}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(,\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)$\ast$\textbackslash{}}]{,  }\item[{\textbackslash{}(\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(, \mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+) $\ast$\textbackslash{}\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a9ad1a4d484364da6afa0fad279ab6f77}\label{_command_validation_8h_a9ad1a4d484364da6afa0fad279ab6f77}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!tag\+\_\+files@{tag\+\_\+files}}
+\index{tag\+\_\+files@{tag\+\_\+files}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{tag\+\_\+files()}{tag\_files()}}
+{\footnotesize\ttfamily std\+::regex tag\+\_\+files (\begin{DoxyParamCaption}\item[{\char`\"{}tag \textbackslash{}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(\textbackslash{}-\/z\+A-\/\+Z\mbox{]}+)?(,(\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(\textbackslash{}-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)?)$\ast$\textbackslash{}}]{,  }\item[{\textbackslash{}(\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(, \mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+) $\ast$\textbackslash{}\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_ab7d9eb2d4792bef0330455f5527a17d7}\label{_command_validation_8h_ab7d9eb2d4792bef0330455f5527a17d7}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!untag\+\_\+file@{untag\+\_\+file}}
+\index{untag\+\_\+file@{untag\+\_\+file}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{untag\+\_\+file()}{untag\_file()}}
+{\footnotesize\ttfamily std\+::regex untag\+\_\+file (\begin{DoxyParamCaption}\item[{\char`\"{}untag (/\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}$\ast$)$\ast$/+(\textbackslash{}-\/z\+A-\/\+Z\mbox{]}+)? \textbackslash{}}]{\mbox{[}0-\/9a-\/z\+A-\/\+Z\mbox{]},  }\item[{\textbackslash{}(\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(, \mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+) $\ast$\textbackslash{}\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_ab0a012b92976b1a3cb561ec4062efe3f}\label{_command_validation_8h_ab0a012b92976b1a3cb561ec4062efe3f}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!untag\+\_\+files@{untag\+\_\+files}}
+\index{untag\+\_\+files@{untag\+\_\+files}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{untag\+\_\+files()}{untag\_files()}}
+{\footnotesize\ttfamily std\+::regex untag\+\_\+files (\begin{DoxyParamCaption}\item[{\char`\"{}untag \textbackslash{}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(\textbackslash{}-\/z\+A-\/\+Z\mbox{]}+)?(,(\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(\textbackslash{}-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)?)$\ast$\textbackslash{}}]{,  }\item[{\textbackslash{}(\mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+)(, \mbox{[}0-\/9a-\/z\+A-\/\+Z\+\_\+\mbox{]}+) $\ast$\textbackslash{}\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a7a54392c758fb8e19ce874e43929e1d1}\label{_command_validation_8h_a7a54392c758fb8e19ce874e43929e1d1}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!usage\+\_\+attr@{usage\+\_\+attr}}
+\index{usage\+\_\+attr@{usage\+\_\+attr}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{usage\+\_\+attr()}{usage\_attr()}}
+{\footnotesize\ttfamily std\+::regex usage\+\_\+attr (\begin{DoxyParamCaption}\item[{\char`\"{}-\/-\/attr\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a44ab090418d3a48371bc129fc524c1e7}\label{_command_validation_8h_a44ab090418d3a48371bc129fc524c1e7}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!usage\+\_\+cd@{usage\+\_\+cd}}
+\index{usage\+\_\+cd@{usage\+\_\+cd}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{usage\+\_\+cd()}{usage\_cd()}}
+{\footnotesize\ttfamily std\+::regex usage\+\_\+cd (\begin{DoxyParamCaption}\item[{\char`\"{}-\/-\/cd\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_aae86b35e6a688ae0620f4547eb8c49e9}\label{_command_validation_8h_aae86b35e6a688ae0620f4547eb8c49e9}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!usage\+\_\+close@{usage\+\_\+close}}
+\index{usage\+\_\+close@{usage\+\_\+close}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{usage\+\_\+close()}{usage\_close()}}
+{\footnotesize\ttfamily std\+::regex usage\+\_\+close (\begin{DoxyParamCaption}\item[{\char`\"{}-\/-\/close\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a27e63265a46a961b2d9734c83ea216f1}\label{_command_validation_8h_a27e63265a46a961b2d9734c83ea216f1}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!usage\+\_\+copy@{usage\+\_\+copy}}
+\index{usage\+\_\+copy@{usage\+\_\+copy}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{usage\+\_\+copy()}{usage\_copy()}}
+{\footnotesize\ttfamily std\+::regex usage\+\_\+copy (\begin{DoxyParamCaption}\item[{\char`\"{}-\/-\/copy\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a6cfeab367396483f835d73fc6a15b4ee}\label{_command_validation_8h_a6cfeab367396483f835d73fc6a15b4ee}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!usage\+\_\+delete@{usage\+\_\+delete}}
+\index{usage\+\_\+delete@{usage\+\_\+delete}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{usage\+\_\+delete()}{usage\_delete()}}
+{\footnotesize\ttfamily std\+::regex usage\+\_\+delete (\begin{DoxyParamCaption}\item[{\char`\"{}-\/-\/delete\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a1b7e364884bdd486662f3cc716567812}\label{_command_validation_8h_a1b7e364884bdd486662f3cc716567812}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!usage\+\_\+find@{usage\+\_\+find}}
+\index{usage\+\_\+find@{usage\+\_\+find}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{usage\+\_\+find()}{usage\_find()}}
+{\footnotesize\ttfamily std\+::regex usage\+\_\+find (\begin{DoxyParamCaption}\item[{\char`\"{}-\/-\/find\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a08280c9b40f731d0d45fe8f0cae07a14}\label{_command_validation_8h_a08280c9b40f731d0d45fe8f0cae07a14}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!usage\+\_\+help@{usage\+\_\+help}}
+\index{usage\+\_\+help@{usage\+\_\+help}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{usage\+\_\+help()}{usage\_help()}}
+{\footnotesize\ttfamily std\+::regex usage\+\_\+help (\begin{DoxyParamCaption}\item[{\char`\"{}-\/-\/help\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a81e87f76cfa683810c95b1876036e501}\label{_command_validation_8h_a81e87f76cfa683810c95b1876036e501}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!usage\+\_\+merge@{usage\+\_\+merge}}
+\index{usage\+\_\+merge@{usage\+\_\+merge}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{usage\+\_\+merge()}{usage\_merge()}}
+{\footnotesize\ttfamily std\+::regex usage\+\_\+merge (\begin{DoxyParamCaption}\item[{\char`\"{}-\/-\/merge\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a0b1475dea8d1ac9ce5d731798aad3339}\label{_command_validation_8h_a0b1475dea8d1ac9ce5d731798aad3339}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!usage\+\_\+new@{usage\+\_\+new}}
+\index{usage\+\_\+new@{usage\+\_\+new}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{usage\+\_\+new()}{usage\_new()}}
+{\footnotesize\ttfamily std\+::regex usage\+\_\+new (\begin{DoxyParamCaption}\item[{\char`\"{}-\/-\/new\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a30f3b7672bc0b2999192ace3e8fe43aa}\label{_command_validation_8h_a30f3b7672bc0b2999192ace3e8fe43aa}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!usage\+\_\+open@{usage\+\_\+open}}
+\index{usage\+\_\+open@{usage\+\_\+open}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{usage\+\_\+open()}{usage\_open()}}
+{\footnotesize\ttfamily std\+::regex usage\+\_\+open (\begin{DoxyParamCaption}\item[{\char`\"{}-\/-\/open\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a5d7fdb2291e604131fa62e4be3438179}\label{_command_validation_8h_a5d7fdb2291e604131fa62e4be3438179}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!usage\+\_\+quit@{usage\+\_\+quit}}
+\index{usage\+\_\+quit@{usage\+\_\+quit}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{usage\+\_\+quit()}{usage\_quit()}}
+{\footnotesize\ttfamily std\+::regex usage\+\_\+quit (\begin{DoxyParamCaption}\item[{\char`\"{}-\/-\/quit\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a1101535a6909533246d1d8dae113309e}\label{_command_validation_8h_a1101535a6909533246d1d8dae113309e}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!usage\+\_\+read@{usage\+\_\+read}}
+\index{usage\+\_\+read@{usage\+\_\+read}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{usage\+\_\+read()}{usage\_read()}}
+{\footnotesize\ttfamily std\+::regex usage\+\_\+read (\begin{DoxyParamCaption}\item[{\char`\"{}-\/-\/read\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a99f60d4864daeb04dc1c28444076d17c}\label{_command_validation_8h_a99f60d4864daeb04dc1c28444076d17c}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!usage\+\_\+rename@{usage\+\_\+rename}}
+\index{usage\+\_\+rename@{usage\+\_\+rename}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{usage\+\_\+rename()}{usage\_rename()}}
+{\footnotesize\ttfamily std\+::regex usage\+\_\+rename (\begin{DoxyParamCaption}\item[{\char`\"{}-\/-\/rename\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_ae0187a973adc80ebf387a5711242b42d}\label{_command_validation_8h_ae0187a973adc80ebf387a5711242b42d}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!usage\+\_\+tag@{usage\+\_\+tag}}
+\index{usage\+\_\+tag@{usage\+\_\+tag}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{usage\+\_\+tag()}{usage\_tag()}}
+{\footnotesize\ttfamily std\+::regex usage\+\_\+tag (\begin{DoxyParamCaption}\item[{\char`\"{}-\/-\/tag\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a13ad4190d40d2e0181fc55688f9c38c2}\label{_command_validation_8h_a13ad4190d40d2e0181fc55688f9c38c2}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!usage\+\_\+untag@{usage\+\_\+untag}}
+\index{usage\+\_\+untag@{usage\+\_\+untag}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{usage\+\_\+untag()}{usage\_untag()}}
+{\footnotesize\ttfamily std\+::regex usage\+\_\+untag (\begin{DoxyParamCaption}\item[{\char`\"{}-\/-\/untag\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_abe8d957b6e21187ea30a85876a326774}\label{_command_validation_8h_abe8d957b6e21187ea30a85876a326774}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!usage\+\_\+write@{usage\+\_\+write}}
+\index{usage\+\_\+write@{usage\+\_\+write}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{usage\+\_\+write()}{usage\_write()}}
+{\footnotesize\ttfamily std\+::regex usage\+\_\+write (\begin{DoxyParamCaption}\item[{\char`\"{}-\/-\/write\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a504a729b6086a1f110f6cb46039a0c1b}\label{_command_validation_8h_a504a729b6086a1f110f6cb46039a0c1b}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!write\+\_\+cwd@{write\+\_\+cwd}}
+\index{write\+\_\+cwd@{write\+\_\+cwd}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{write\+\_\+cwd()}{write\_cwd()}}
+{\footnotesize\ttfamily std\+::regex write\+\_\+cwd (\begin{DoxyParamCaption}\item[{\char`\"{}\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_a8dabbf51efd7052f55d31555568277d4}\label{_command_validation_8h_a8dabbf51efd7052f55d31555568277d4}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!write\+\_\+path@{write\+\_\+path}}
+\index{write\+\_\+path@{write\+\_\+path}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{write\+\_\+path()}{write\_path()}}
+{\footnotesize\ttfamily std\+::regex write\+\_\+path (\begin{DoxyParamCaption}\item[{\char`\"{}\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_afde32d59a030aeb1a2a0c77313ac13f3}\label{_command_validation_8h_afde32d59a030aeb1a2a0c77313ac13f3}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!write\+\_\+x\+\_\+cwd@{write\+\_\+x\+\_\+cwd}}
+\index{write\+\_\+x\+\_\+cwd@{write\+\_\+x\+\_\+cwd}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{write\+\_\+x\+\_\+cwd()}{write\_x\_cwd()}}
+{\footnotesize\ttfamily std\+::regex write\+\_\+x\+\_\+cwd (\begin{DoxyParamCaption}\item[{\char`\"{}\char`\"{}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_command_validation_8h_afca222cdb9814bb8b4018e8ffd06deca}\label{_command_validation_8h_afca222cdb9814bb8b4018e8ffd06deca}} 
+\index{Command\+Validation.\+h@{Command\+Validation.\+h}!write\+\_\+x\+\_\+path@{write\+\_\+x\+\_\+path}}
+\index{write\+\_\+x\+\_\+path@{write\+\_\+x\+\_\+path}!Command\+Validation.\+h@{Command\+Validation.\+h}}
+\subsubsection{\texorpdfstring{write\+\_\+x\+\_\+path()}{write\_x\_path()}}
+{\footnotesize\ttfamily std\+::regex write\+\_\+x\+\_\+path (\begin{DoxyParamCaption}\item[{\char`\"{}\char`\"{}}]{ }\end{DoxyParamCaption})}
+

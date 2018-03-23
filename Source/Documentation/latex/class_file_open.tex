@@ -1,0 +1,182 @@
+\hypertarget{class_file_open}{}\section{File\+Open Class Reference}
+\label{class_file_open}\index{File\+Open@{File\+Open}}
+
+
+{\ttfamily \#include $<$File\+System.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_file_open_a387c8980a812856a3633ff162c1c1af4}{File\+Open}} (\mbox{\hyperlink{class_file_info}{File\+Info}} $\ast$file, char mode, \mbox{\hyperlink{class_partition_manager}{Partition\+Manager}} $\ast$pm)
+\item 
+\mbox{\hyperlink{class_file_info}{File\+Info}} $\ast$ \mbox{\hyperlink{class_file_open_ad1451c997a9300d20ba8e1af28fda08c}{get\+\_\+file}} ()
+\item 
+size\+\_\+t \mbox{\hyperlink{class_file_open_a8acd2b1d7f9cb2fe6030a75538ce62bb}{get\+\_\+seek}} ()
+\item 
+char \mbox{\hyperlink{class_file_open_a716c5d9b534be9cac550f3e64620514a}{get\+\_\+mode}} ()
+\item 
+void \mbox{\hyperlink{class_file_open_a8b178b10d2081d8c64a1218f11b9265a}{increment\+\_\+seek}} (size\+\_\+t bytes, bool write=false)
+\item 
+void \mbox{\hyperlink{class_file_open_a7e1fd46a093bef3a650e1d1e4d431cf7}{decrement\+\_\+seek}} (size\+\_\+t bytes)
+\item 
+Index \mbox{\hyperlink{class_file_open_a6d1374e052e3d9ba190e2797d9ae06a0}{byte\+\_\+to\+\_\+index}} (short offset)
+\item 
+Index \mbox{\hyperlink{class_file_open_abd29158f55f135ada0c5a0f25ee5ace6}{increment\+\_\+index}} ()
+\item 
+void \mbox{\hyperlink{class_file_open_a1523bffc4bc58984b53b309eb92cc8b9}{set\+\_\+\+E\+OF}} ()
+\item 
+void \mbox{\hyperlink{class_file_open_a1008411faf6df97c71d0ac0a867fce11}{reset\+\_\+seek}} ()
+\item 
+bool \mbox{\hyperlink{class_file_open_afc9043c99b42afaaa5f1712f5a45e066}{get\+\_\+\+E\+OF}} ()
+\item 
+void \mbox{\hyperlink{class_file_open_a966a424badc21c4cfc9b80854a052acb}{go\+\_\+past\+\_\+last\+\_\+byte}} ()
+\item 
+void \mbox{\hyperlink{class_file_open_ac10189670f476050bc3fdb44d74dcb33}{refresh}} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+Blk\+Num\+Type \mbox{\hyperlink{class_file_open_a74e35be92bea88b55c4bd27210fc1e93}{level\+Inc}} (size\+\_\+t Relative\+Block, Blk\+Num\+Type Ledger\+Block, short level)
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_file_info}{File\+Info}} $\ast$ \mbox{\hyperlink{class_file_open_a78417882067d6b7165c2c555415f916e}{\+\_\+file}}
+\item 
+size\+\_\+t \mbox{\hyperlink{class_file_open_ab86e9cd9610259823502b95ef24b1f09}{\+\_\+seek}}
+\item 
+char \mbox{\hyperlink{class_file_open_a7f676d4b9b4792d73a950ef5e7ed405b}{\+\_\+mode}}
+\item 
+bool \mbox{\hyperlink{class_file_open_a33c7c6772339bcb6533818342d415cd6}{\+\_\+\+E\+OF}}
+\item 
+\mbox{\hyperlink{class_partition_manager}{Partition\+Manager}} $\ast$ \mbox{\hyperlink{class_file_open_aa0396ecb3d4f17a4c068fea198712666}{\+\_\+my\+Partition\+Manager}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_file_open_a387c8980a812856a3633ff162c1c1af4}\label{class_file_open_a387c8980a812856a3633ff162c1c1af4}} 
+\index{File\+Open@{File\+Open}!File\+Open@{File\+Open}}
+\index{File\+Open@{File\+Open}!File\+Open@{File\+Open}}
+\subsubsection{\texorpdfstring{File\+Open()}{FileOpen()}}
+{\footnotesize\ttfamily File\+Open\+::\+File\+Open (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_file_info}{File\+Info}} $\ast$}]{file,  }\item[{char}]{mode,  }\item[{\mbox{\hyperlink{class_partition_manager}{Partition\+Manager}} $\ast$}]{pm }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_file_open_a6d1374e052e3d9ba190e2797d9ae06a0}\label{class_file_open_a6d1374e052e3d9ba190e2797d9ae06a0}} 
+\index{File\+Open@{File\+Open}!byte\+\_\+to\+\_\+index@{byte\+\_\+to\+\_\+index}}
+\index{byte\+\_\+to\+\_\+index@{byte\+\_\+to\+\_\+index}!File\+Open@{File\+Open}}
+\subsubsection{\texorpdfstring{byte\+\_\+to\+\_\+index()}{byte\_to\_index()}}
+{\footnotesize\ttfamily Index File\+Open\+::byte\+\_\+to\+\_\+index (\begin{DoxyParamCaption}\item[{short}]{offset }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_file_open_a7e1fd46a093bef3a650e1d1e4d431cf7}\label{class_file_open_a7e1fd46a093bef3a650e1d1e4d431cf7}} 
+\index{File\+Open@{File\+Open}!decrement\+\_\+seek@{decrement\+\_\+seek}}
+\index{decrement\+\_\+seek@{decrement\+\_\+seek}!File\+Open@{File\+Open}}
+\subsubsection{\texorpdfstring{decrement\+\_\+seek()}{decrement\_seek()}}
+{\footnotesize\ttfamily void File\+Open\+::decrement\+\_\+seek (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{bytes }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_file_open_afc9043c99b42afaaa5f1712f5a45e066}\label{class_file_open_afc9043c99b42afaaa5f1712f5a45e066}} 
+\index{File\+Open@{File\+Open}!get\+\_\+\+E\+OF@{get\+\_\+\+E\+OF}}
+\index{get\+\_\+\+E\+OF@{get\+\_\+\+E\+OF}!File\+Open@{File\+Open}}
+\subsubsection{\texorpdfstring{get\+\_\+\+E\+O\+F()}{get\_EOF()}}
+{\footnotesize\ttfamily bool File\+Open\+::get\+\_\+\+E\+OF (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_file_open_ad1451c997a9300d20ba8e1af28fda08c}\label{class_file_open_ad1451c997a9300d20ba8e1af28fda08c}} 
+\index{File\+Open@{File\+Open}!get\+\_\+file@{get\+\_\+file}}
+\index{get\+\_\+file@{get\+\_\+file}!File\+Open@{File\+Open}}
+\subsubsection{\texorpdfstring{get\+\_\+file()}{get\_file()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_file_info}{File\+Info}} $\ast$ File\+Open\+::get\+\_\+file (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_file_open_a716c5d9b534be9cac550f3e64620514a}\label{class_file_open_a716c5d9b534be9cac550f3e64620514a}} 
+\index{File\+Open@{File\+Open}!get\+\_\+mode@{get\+\_\+mode}}
+\index{get\+\_\+mode@{get\+\_\+mode}!File\+Open@{File\+Open}}
+\subsubsection{\texorpdfstring{get\+\_\+mode()}{get\_mode()}}
+{\footnotesize\ttfamily char File\+Open\+::get\+\_\+mode (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_file_open_a8acd2b1d7f9cb2fe6030a75538ce62bb}\label{class_file_open_a8acd2b1d7f9cb2fe6030a75538ce62bb}} 
+\index{File\+Open@{File\+Open}!get\+\_\+seek@{get\+\_\+seek}}
+\index{get\+\_\+seek@{get\+\_\+seek}!File\+Open@{File\+Open}}
+\subsubsection{\texorpdfstring{get\+\_\+seek()}{get\_seek()}}
+{\footnotesize\ttfamily size\+\_\+t File\+Open\+::get\+\_\+seek (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_file_open_a966a424badc21c4cfc9b80854a052acb}\label{class_file_open_a966a424badc21c4cfc9b80854a052acb}} 
+\index{File\+Open@{File\+Open}!go\+\_\+past\+\_\+last\+\_\+byte@{go\+\_\+past\+\_\+last\+\_\+byte}}
+\index{go\+\_\+past\+\_\+last\+\_\+byte@{go\+\_\+past\+\_\+last\+\_\+byte}!File\+Open@{File\+Open}}
+\subsubsection{\texorpdfstring{go\+\_\+past\+\_\+last\+\_\+byte()}{go\_past\_last\_byte()}}
+{\footnotesize\ttfamily void File\+Open\+::go\+\_\+past\+\_\+last\+\_\+byte (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_file_open_abd29158f55f135ada0c5a0f25ee5ace6}\label{class_file_open_abd29158f55f135ada0c5a0f25ee5ace6}} 
+\index{File\+Open@{File\+Open}!increment\+\_\+index@{increment\+\_\+index}}
+\index{increment\+\_\+index@{increment\+\_\+index}!File\+Open@{File\+Open}}
+\subsubsection{\texorpdfstring{increment\+\_\+index()}{increment\_index()}}
+{\footnotesize\ttfamily Index File\+Open\+::increment\+\_\+index (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_file_open_a8b178b10d2081d8c64a1218f11b9265a}\label{class_file_open_a8b178b10d2081d8c64a1218f11b9265a}} 
+\index{File\+Open@{File\+Open}!increment\+\_\+seek@{increment\+\_\+seek}}
+\index{increment\+\_\+seek@{increment\+\_\+seek}!File\+Open@{File\+Open}}
+\subsubsection{\texorpdfstring{increment\+\_\+seek()}{increment\_seek()}}
+{\footnotesize\ttfamily void File\+Open\+::increment\+\_\+seek (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{bytes,  }\item[{bool}]{write = {\ttfamily false} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_file_open_a74e35be92bea88b55c4bd27210fc1e93}\label{class_file_open_a74e35be92bea88b55c4bd27210fc1e93}} 
+\index{File\+Open@{File\+Open}!level\+Inc@{level\+Inc}}
+\index{level\+Inc@{level\+Inc}!File\+Open@{File\+Open}}
+\subsubsection{\texorpdfstring{level\+Inc()}{levelInc()}}
+{\footnotesize\ttfamily Blk\+Num\+Type File\+Open\+::level\+Inc (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{Relative\+Block,  }\item[{Blk\+Num\+Type}]{Ledger\+Block,  }\item[{short}]{level }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_file_open_ac10189670f476050bc3fdb44d74dcb33}\label{class_file_open_ac10189670f476050bc3fdb44d74dcb33}} 
+\index{File\+Open@{File\+Open}!refresh@{refresh}}
+\index{refresh@{refresh}!File\+Open@{File\+Open}}
+\subsubsection{\texorpdfstring{refresh()}{refresh()}}
+{\footnotesize\ttfamily void File\+Open\+::refresh (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_file_open_a1008411faf6df97c71d0ac0a867fce11}\label{class_file_open_a1008411faf6df97c71d0ac0a867fce11}} 
+\index{File\+Open@{File\+Open}!reset\+\_\+seek@{reset\+\_\+seek}}
+\index{reset\+\_\+seek@{reset\+\_\+seek}!File\+Open@{File\+Open}}
+\subsubsection{\texorpdfstring{reset\+\_\+seek()}{reset\_seek()}}
+{\footnotesize\ttfamily void File\+Open\+::reset\+\_\+seek (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_file_open_a1523bffc4bc58984b53b309eb92cc8b9}\label{class_file_open_a1523bffc4bc58984b53b309eb92cc8b9}} 
+\index{File\+Open@{File\+Open}!set\+\_\+\+E\+OF@{set\+\_\+\+E\+OF}}
+\index{set\+\_\+\+E\+OF@{set\+\_\+\+E\+OF}!File\+Open@{File\+Open}}
+\subsubsection{\texorpdfstring{set\+\_\+\+E\+O\+F()}{set\_EOF()}}
+{\footnotesize\ttfamily void File\+Open\+::set\+\_\+\+E\+OF (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{class_file_open_a33c7c6772339bcb6533818342d415cd6}\label{class_file_open_a33c7c6772339bcb6533818342d415cd6}} 
+\index{File\+Open@{File\+Open}!\+\_\+\+E\+OF@{\+\_\+\+E\+OF}}
+\index{\+\_\+\+E\+OF@{\+\_\+\+E\+OF}!File\+Open@{File\+Open}}
+\subsubsection{\texorpdfstring{\+\_\+\+E\+OF}{\_EOF}}
+{\footnotesize\ttfamily bool File\+Open\+::\+\_\+\+E\+OF\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_file_open_a78417882067d6b7165c2c555415f916e}\label{class_file_open_a78417882067d6b7165c2c555415f916e}} 
+\index{File\+Open@{File\+Open}!\+\_\+file@{\+\_\+file}}
+\index{\+\_\+file@{\+\_\+file}!File\+Open@{File\+Open}}
+\subsubsection{\texorpdfstring{\+\_\+file}{\_file}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_file_info}{File\+Info}}$\ast$ File\+Open\+::\+\_\+file\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_file_open_a7f676d4b9b4792d73a950ef5e7ed405b}\label{class_file_open_a7f676d4b9b4792d73a950ef5e7ed405b}} 
+\index{File\+Open@{File\+Open}!\+\_\+mode@{\+\_\+mode}}
+\index{\+\_\+mode@{\+\_\+mode}!File\+Open@{File\+Open}}
+\subsubsection{\texorpdfstring{\+\_\+mode}{\_mode}}
+{\footnotesize\ttfamily char File\+Open\+::\+\_\+mode\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_file_open_aa0396ecb3d4f17a4c068fea198712666}\label{class_file_open_aa0396ecb3d4f17a4c068fea198712666}} 
+\index{File\+Open@{File\+Open}!\+\_\+my\+Partition\+Manager@{\+\_\+my\+Partition\+Manager}}
+\index{\+\_\+my\+Partition\+Manager@{\+\_\+my\+Partition\+Manager}!File\+Open@{File\+Open}}
+\subsubsection{\texorpdfstring{\+\_\+my\+Partition\+Manager}{\_myPartitionManager}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_partition_manager}{Partition\+Manager}}$\ast$ File\+Open\+::\+\_\+my\+Partition\+Manager\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_file_open_ab86e9cd9610259823502b95ef24b1f09}\label{class_file_open_ab86e9cd9610259823502b95ef24b1f09}} 
+\index{File\+Open@{File\+Open}!\+\_\+seek@{\+\_\+seek}}
+\index{\+\_\+seek@{\+\_\+seek}!File\+Open@{File\+Open}}
+\subsubsection{\texorpdfstring{\+\_\+seek}{\_seek}}
+{\footnotesize\ttfamily size\+\_\+t File\+Open\+::\+\_\+seek\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Filesystem/\+Daemon\+Dependancies/\+File\+System/\mbox{\hyperlink{_file_system_8h}{File\+System.\+h}}\item 
+Filesystem/\+Daemon\+Dependancies/\+File\+System/\mbox{\hyperlink{_file_system_8cpp}{File\+System.\+cpp}}\end{DoxyCompactItemize}

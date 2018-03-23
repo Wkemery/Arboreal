@@ -27,12 +27,13 @@
 
 #include "../../SharedHeaders/Arboreal_Exceptions.h"      /* Custom Exception Handling */
 #include "../../SharedHeaders/Print.h"                    /* A Bunch of Print Functions */
-#include "../../SharedHeader/DebugLog.h"
+#include "../../SharedHeaders/DebugMessages.hpp"
 
-static const int MaxBufferSize = 4096                     /* Maximum size a command can be */
-static const int SharedMemorySize = 1                     /* Size of Shared Memory Segment */
-static const int Permissions = 0666                       /* Socket Permissions */
-static const int Flag = 0                                 /* Socket Send/Recv Flag */
+static const int MaxBufferSize = 4096;                    /* Maximum size a command can be */
+static const int SharedMemorySize = 1;                    /* Size of Shared Memory Segment */
+static const int Permissions = 0666;                      /* Socket Permissions */
+static const int Flag = 0;                                /* Socket Send/Recv Flag */
+DebugMessages Debug;
 
 
 class CLI
@@ -124,7 +125,7 @@ public:
      * followed by the command itself followed by as many nullbytes as nescesarry in order
      * to have a length = MaxBufferSize
      */
-    char* build(int id, std::string input);
+    char* build(const int id, const std::string input);
 
     /*!
      * Sends a command converted to a C-Style String to the Liaison Process
@@ -135,7 +136,7 @@ public:
      * followed by the command itself followed by as many nullbytes as nescesarry in order
      * to have a length = MaxBufferSize
      */
-    void send_cmnd(char* command);
+    void send_cmnd(const char* command);
 
     /*!
      * Receive data from the liaison process
@@ -162,7 +163,6 @@ private:
     int _client_sock;
     struct sockaddr_un _server_sockaddr;
     struct sockaddr_un _client_sockaddr;
-    DebugLog Debug;
 };
 
 #endif

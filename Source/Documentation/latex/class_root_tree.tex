@@ -1,0 +1,92 @@
+\hypertarget{class_root_tree}{}\section{Root\+Tree Class Reference}
+\label{class_root_tree}\index{Root\+Tree@{Root\+Tree}}
+
+
+{\ttfamily \#include $<$Trees.\+h$>$}
+
+Inheritance diagram for Root\+Tree\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_root_tree}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_root_tree_a491c0374c9024faf1e1c8045f21a4cad}{Root\+Tree}} (\mbox{\hyperlink{class_partition_manager}{Partition\+Manager}} $\ast$pm)
+\item 
+\mbox{\hyperlink{class_root_tree_a0e117b4a1eb94d395f9763b3cbc24916}{$\sim$\+Root\+Tree}} ()
+\item 
+void \mbox{\hyperlink{class_root_tree_ad6eefe5d46ee37b3725799897a78c2dd}{write\+\_\+out}} ()
+\item 
+void \mbox{\hyperlink{class_root_tree_a658eed78be67e890de2283af960dc532}{read\+\_\+in}} (unordered\+\_\+multimap$<$ string, \mbox{\hyperlink{class_file_info}{File\+Info}} $\ast$$>$ $\ast$all\+Files, \mbox{\hyperlink{class_root_tree}{Root\+Tree}} $\ast$root\+Tree)
+\item 
+void \mbox{\hyperlink{class_root_tree_ac431dc04b767fc66791c251d8173650d}{del}} ()
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_root_tree_a491c0374c9024faf1e1c8045f21a4cad}\label{class_root_tree_a491c0374c9024faf1e1c8045f21a4cad}} 
+\index{Root\+Tree@{Root\+Tree}!Root\+Tree@{Root\+Tree}}
+\index{Root\+Tree@{Root\+Tree}!Root\+Tree@{Root\+Tree}}
+\subsubsection{\texorpdfstring{Root\+Tree()}{RootTree()}}
+{\footnotesize\ttfamily Root\+Tree\+::\+Root\+Tree (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_partition_manager}{Partition\+Manager}} $\ast$}]{pm }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em pm} & the \mbox{\hyperlink{class_partition_manager}{Partition\+Manager}} to be associated with the \mbox{\hyperlink{class_root_tree}{Root\+Tree}} \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_root_tree_a0e117b4a1eb94d395f9763b3cbc24916}\label{class_root_tree_a0e117b4a1eb94d395f9763b3cbc24916}} 
+\index{Root\+Tree@{Root\+Tree}!````~Root\+Tree@{$\sim$\+Root\+Tree}}
+\index{````~Root\+Tree@{$\sim$\+Root\+Tree}!Root\+Tree@{Root\+Tree}}
+\subsubsection{\texorpdfstring{$\sim$\+Root\+Tree()}{~RootTree()}}
+{\footnotesize\ttfamily Root\+Tree\+::$\sim$\+Root\+Tree (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_root_tree_ac431dc04b767fc66791c251d8173650d}\label{class_root_tree_ac431dc04b767fc66791c251d8173650d}} 
+\index{Root\+Tree@{Root\+Tree}!del@{del}}
+\index{del@{del}!Root\+Tree@{Root\+Tree}}
+\subsubsection{\texorpdfstring{del()}{del()}}
+{\footnotesize\ttfamily void Root\+Tree\+::del (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Will completely remove the \mbox{\hyperlink{class_tree_object}{Tree\+Object}}\textquotesingle{}s presence on disk 
+
+Implements \mbox{\hyperlink{class_tree_object_af390b7479aa972888e594c07a85740b6}{Tree\+Object}}.
+
+\mbox{\Hypertarget{class_root_tree_a658eed78be67e890de2283af960dc532}\label{class_root_tree_a658eed78be67e890de2283af960dc532}} 
+\index{Root\+Tree@{Root\+Tree}!read\+\_\+in@{read\+\_\+in}}
+\index{read\+\_\+in@{read\+\_\+in}!Root\+Tree@{Root\+Tree}}
+\subsubsection{\texorpdfstring{read\+\_\+in()}{read\_in()}}
+{\footnotesize\ttfamily void Root\+Tree\+::read\+\_\+in (\begin{DoxyParamCaption}\item[{unordered\+\_\+multimap$<$ string, \mbox{\hyperlink{class_file_info}{File\+Info}} $\ast$$>$ $\ast$}]{all\+Files,  }\item[{\mbox{\hyperlink{class_root_tree}{Root\+Tree}} $\ast$}]{root\+Tree }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Will read in all object data from disk 
+\begin{DoxyParams}{Parameters}
+{\em all\+Files} & a pointer to the map of all files \\
+\hline
+{\em root\+Tree} & a pointer to the root tree \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_tree_object_a722eb00e6782626281afc8eff92840a4}{Tree\+Object}}.
+
+\mbox{\Hypertarget{class_root_tree_ad6eefe5d46ee37b3725799897a78c2dd}\label{class_root_tree_ad6eefe5d46ee37b3725799897a78c2dd}} 
+\index{Root\+Tree@{Root\+Tree}!write\+\_\+out@{write\+\_\+out}}
+\index{write\+\_\+out@{write\+\_\+out}!Root\+Tree@{Root\+Tree}}
+\subsubsection{\texorpdfstring{write\+\_\+out()}{write\_out()}}
+{\footnotesize\ttfamily void Root\+Tree\+::write\+\_\+out (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Intended to write out the object to disk 
+
+Implements \mbox{\hyperlink{class_tree_object_a63708d61353d83e3e03597394bb7aca0}{Tree\+Object}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Filesystem/\+Daemon\+Dependancies/\+Trees/\mbox{\hyperlink{_trees_8h}{Trees.\+h}}\item 
+Filesystem/\+Daemon\+Dependancies/\+Trees/\mbox{\hyperlink{_trees_8cpp}{Trees.\+cpp}}\end{DoxyCompactItemize}

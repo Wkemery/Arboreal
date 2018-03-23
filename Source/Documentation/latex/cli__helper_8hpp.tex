@@ -1,0 +1,169 @@
+\hypertarget{cli__helper_8hpp}{}\section{Command\+Line\+Interface/\+C\+L\+Dependancies/cli\+\_\+helper.hpp File Reference}
+\label{cli__helper_8hpp}\index{Command\+Line\+Interface/\+C\+L\+Dependancies/cli\+\_\+helper.\+hpp@{Command\+Line\+Interface/\+C\+L\+Dependancies/cli\+\_\+helper.\+hpp}}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{cli__helper_8hpp_ae06a0232878ddccdf21a8a670a74efae}{I\+N\+C\+L\+U\+S\+I\+VE}}~0
+\item 
+\#define \mbox{\hyperlink{cli__helper_8hpp_a6c1822eb5bae8152f1d0b7d92098409d}{E\+X\+C\+L\+U\+S\+I\+VE}}~1
+\item 
+\#define \mbox{\hyperlink{cli__helper_8hpp_a130a3364bf57ba1e78957c33c501945b}{N\+E\+W\+\_\+\+A\+N\+D\+\_\+\+T\+AG}}~2
+\item 
+\#define \mbox{\hyperlink{cli__helper_8hpp_a19e32e30ff7e962bf53ecff542e3f787}{N\+E\+W\+\_\+\+A\+N\+D\+\_\+\+T\+A\+G\+\_\+\+E\+XC}}~3
+\item 
+\#define \mbox{\hyperlink{cli__helper_8hpp_aa25ce51e5e445a0eac506450d9ba77bc}{M\+E\+R\+G\+E\+\_\+1}}~4
+\item 
+\#define \mbox{\hyperlink{cli__helper_8hpp_a94ab3e9890ba3995187ea0cdb92a0de3}{M\+E\+R\+G\+E\+\_\+2}}~5
+\item 
+\#define \mbox{\hyperlink{cli__helper_8hpp_acbc1ebd142227eadaa10b5f5113b2d5e}{T\+A\+G\+\_\+1}}~6
+\item 
+\#define \mbox{\hyperlink{cli__helper_8hpp_a4b62f323236a877c88a85412ecefe52b}{T\+A\+G\+\_\+2}}~7
+\item 
+\#define \mbox{\hyperlink{cli__helper_8hpp_a8d92a24fb50644cbd60b6fda2ff1d318}{T\+A\+G\+\_\+3}}~8
+\item 
+\#define \mbox{\hyperlink{cli__helper_8hpp_a1354b70ac6803a06beebe84f61b5f95b}{O\+P\+EN}}~9
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{cli__helper_8hpp_a29ecb490f9644dd283298edaaa0b2130}{delete\+\_\+shm}} (int shm\+\_\+id, char $\ast$shm)
+\item 
+char $\ast$ \mbox{\hyperlink{cli__helper_8hpp_a14dda64a66946535eb19bb8af973fc73}{create\+\_\+shm\+\_\+seg}} (key\+\_\+t key, int \&id)
+\item 
+int \mbox{\hyperlink{cli__helper_8hpp_a9caf20ba13e1adbc3e58c175a9b11fc0}{get\+\_\+cmnd\+\_\+id}} (char $\ast$cmnd)
+\item 
+int \mbox{\hyperlink{cli__helper_8hpp_ac8ce69e525016b90209b0d970c9e7d2c}{set\+\_\+up\+\_\+socket}} (std\+::string client\+\_\+sockpath, struct sockaddr\+\_\+un \&client\+\_\+sockaddr)
+\item 
+void \mbox{\hyperlink{cli__helper_8hpp_ab6f42e113e3dbd5dc0dceb087e3d6474}{connect\+\_\+to\+\_\+server}} (int client\+\_\+sock, std\+::string client\+\_\+sockpath, std\+::string server\+\_\+sockpath, struct sockaddr\+\_\+un \&server\+\_\+sockaddr, socklen\+\_\+t len)
+\item 
+void \mbox{\hyperlink{cli__helper_8hpp_a297fd0c2ef5604c0516a404d3414e41a}{send\+\_\+to\+\_\+server}} (int client\+\_\+sock, std\+::string client\+\_\+sockpath, char $\ast$cmnd, int size, int flag)
+\item 
+char $\ast$ \mbox{\hyperlink{cli__helper_8hpp_a9a7850489cf50a8693b388acc259ccaa}{receive\+\_\+from\+\_\+server}} (int client\+\_\+sock, std\+::string client\+\_\+sockpath, int size, int flag)
+\item 
+std\+::string \mbox{\hyperlink{cli__helper_8hpp_a07e9b770e5dae5d1cbda59ba458c69d2}{receive\+\_\+from\+\_\+server}} (int client\+\_\+sock, std\+::string client\+\_\+sockpath)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{cli__helper_8hpp_a6c1822eb5bae8152f1d0b7d92098409d}\label{cli__helper_8hpp_a6c1822eb5bae8152f1d0b7d92098409d}} 
+\index{cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}!E\+X\+C\+L\+U\+S\+I\+VE@{E\+X\+C\+L\+U\+S\+I\+VE}}
+\index{E\+X\+C\+L\+U\+S\+I\+VE@{E\+X\+C\+L\+U\+S\+I\+VE}!cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{E\+X\+C\+L\+U\+S\+I\+VE}{EXCLUSIVE}}
+{\footnotesize\ttfamily \#define E\+X\+C\+L\+U\+S\+I\+VE~1}
+
+\mbox{\Hypertarget{cli__helper_8hpp_ae06a0232878ddccdf21a8a670a74efae}\label{cli__helper_8hpp_ae06a0232878ddccdf21a8a670a74efae}} 
+\index{cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}!I\+N\+C\+L\+U\+S\+I\+VE@{I\+N\+C\+L\+U\+S\+I\+VE}}
+\index{I\+N\+C\+L\+U\+S\+I\+VE@{I\+N\+C\+L\+U\+S\+I\+VE}!cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{I\+N\+C\+L\+U\+S\+I\+VE}{INCLUSIVE}}
+{\footnotesize\ttfamily \#define I\+N\+C\+L\+U\+S\+I\+VE~0}
+
+\mbox{\Hypertarget{cli__helper_8hpp_aa25ce51e5e445a0eac506450d9ba77bc}\label{cli__helper_8hpp_aa25ce51e5e445a0eac506450d9ba77bc}} 
+\index{cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}!M\+E\+R\+G\+E\+\_\+1@{M\+E\+R\+G\+E\+\_\+1}}
+\index{M\+E\+R\+G\+E\+\_\+1@{M\+E\+R\+G\+E\+\_\+1}!cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{M\+E\+R\+G\+E\+\_\+1}{MERGE\_1}}
+{\footnotesize\ttfamily \#define M\+E\+R\+G\+E\+\_\+1~4}
+
+\mbox{\Hypertarget{cli__helper_8hpp_a94ab3e9890ba3995187ea0cdb92a0de3}\label{cli__helper_8hpp_a94ab3e9890ba3995187ea0cdb92a0de3}} 
+\index{cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}!M\+E\+R\+G\+E\+\_\+2@{M\+E\+R\+G\+E\+\_\+2}}
+\index{M\+E\+R\+G\+E\+\_\+2@{M\+E\+R\+G\+E\+\_\+2}!cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{M\+E\+R\+G\+E\+\_\+2}{MERGE\_2}}
+{\footnotesize\ttfamily \#define M\+E\+R\+G\+E\+\_\+2~5}
+
+\mbox{\Hypertarget{cli__helper_8hpp_a130a3364bf57ba1e78957c33c501945b}\label{cli__helper_8hpp_a130a3364bf57ba1e78957c33c501945b}} 
+\index{cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}!N\+E\+W\+\_\+\+A\+N\+D\+\_\+\+T\+AG@{N\+E\+W\+\_\+\+A\+N\+D\+\_\+\+T\+AG}}
+\index{N\+E\+W\+\_\+\+A\+N\+D\+\_\+\+T\+AG@{N\+E\+W\+\_\+\+A\+N\+D\+\_\+\+T\+AG}!cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{N\+E\+W\+\_\+\+A\+N\+D\+\_\+\+T\+AG}{NEW\_AND\_TAG}}
+{\footnotesize\ttfamily \#define N\+E\+W\+\_\+\+A\+N\+D\+\_\+\+T\+AG~2}
+
+\mbox{\Hypertarget{cli__helper_8hpp_a19e32e30ff7e962bf53ecff542e3f787}\label{cli__helper_8hpp_a19e32e30ff7e962bf53ecff542e3f787}} 
+\index{cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}!N\+E\+W\+\_\+\+A\+N\+D\+\_\+\+T\+A\+G\+\_\+\+E\+XC@{N\+E\+W\+\_\+\+A\+N\+D\+\_\+\+T\+A\+G\+\_\+\+E\+XC}}
+\index{N\+E\+W\+\_\+\+A\+N\+D\+\_\+\+T\+A\+G\+\_\+\+E\+XC@{N\+E\+W\+\_\+\+A\+N\+D\+\_\+\+T\+A\+G\+\_\+\+E\+XC}!cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{N\+E\+W\+\_\+\+A\+N\+D\+\_\+\+T\+A\+G\+\_\+\+E\+XC}{NEW\_AND\_TAG\_EXC}}
+{\footnotesize\ttfamily \#define N\+E\+W\+\_\+\+A\+N\+D\+\_\+\+T\+A\+G\+\_\+\+E\+XC~3}
+
+\mbox{\Hypertarget{cli__helper_8hpp_a1354b70ac6803a06beebe84f61b5f95b}\label{cli__helper_8hpp_a1354b70ac6803a06beebe84f61b5f95b}} 
+\index{cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}!O\+P\+EN@{O\+P\+EN}}
+\index{O\+P\+EN@{O\+P\+EN}!cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{O\+P\+EN}{OPEN}}
+{\footnotesize\ttfamily \#define O\+P\+EN~9}
+
+\mbox{\Hypertarget{cli__helper_8hpp_acbc1ebd142227eadaa10b5f5113b2d5e}\label{cli__helper_8hpp_acbc1ebd142227eadaa10b5f5113b2d5e}} 
+\index{cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}!T\+A\+G\+\_\+1@{T\+A\+G\+\_\+1}}
+\index{T\+A\+G\+\_\+1@{T\+A\+G\+\_\+1}!cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{T\+A\+G\+\_\+1}{TAG\_1}}
+{\footnotesize\ttfamily \#define T\+A\+G\+\_\+1~6}
+
+\mbox{\Hypertarget{cli__helper_8hpp_a4b62f323236a877c88a85412ecefe52b}\label{cli__helper_8hpp_a4b62f323236a877c88a85412ecefe52b}} 
+\index{cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}!T\+A\+G\+\_\+2@{T\+A\+G\+\_\+2}}
+\index{T\+A\+G\+\_\+2@{T\+A\+G\+\_\+2}!cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{T\+A\+G\+\_\+2}{TAG\_2}}
+{\footnotesize\ttfamily \#define T\+A\+G\+\_\+2~7}
+
+\mbox{\Hypertarget{cli__helper_8hpp_a8d92a24fb50644cbd60b6fda2ff1d318}\label{cli__helper_8hpp_a8d92a24fb50644cbd60b6fda2ff1d318}} 
+\index{cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}!T\+A\+G\+\_\+3@{T\+A\+G\+\_\+3}}
+\index{T\+A\+G\+\_\+3@{T\+A\+G\+\_\+3}!cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{T\+A\+G\+\_\+3}{TAG\_3}}
+{\footnotesize\ttfamily \#define T\+A\+G\+\_\+3~8}
+
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{cli__helper_8hpp_ab6f42e113e3dbd5dc0dceb087e3d6474}\label{cli__helper_8hpp_ab6f42e113e3dbd5dc0dceb087e3d6474}} 
+\index{cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}!connect\+\_\+to\+\_\+server@{connect\+\_\+to\+\_\+server}}
+\index{connect\+\_\+to\+\_\+server@{connect\+\_\+to\+\_\+server}!cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{connect\+\_\+to\+\_\+server()}{connect\_to\_server()}}
+{\footnotesize\ttfamily void connect\+\_\+to\+\_\+server (\begin{DoxyParamCaption}\item[{int}]{client\+\_\+sock,  }\item[{std\+::string}]{client\+\_\+sockpath,  }\item[{std\+::string}]{server\+\_\+sockpath,  }\item[{struct sockaddr\+\_\+un \&}]{server\+\_\+sockaddr,  }\item[{socklen\+\_\+t}]{len }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cli__helper_8hpp_a14dda64a66946535eb19bb8af973fc73}\label{cli__helper_8hpp_a14dda64a66946535eb19bb8af973fc73}} 
+\index{cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}!create\+\_\+shm\+\_\+seg@{create\+\_\+shm\+\_\+seg}}
+\index{create\+\_\+shm\+\_\+seg@{create\+\_\+shm\+\_\+seg}!cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{create\+\_\+shm\+\_\+seg()}{create\_shm\_seg()}}
+{\footnotesize\ttfamily char$\ast$ create\+\_\+shm\+\_\+seg (\begin{DoxyParamCaption}\item[{key\+\_\+t}]{key,  }\item[{int \&}]{id }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cli__helper_8hpp_a29ecb490f9644dd283298edaaa0b2130}\label{cli__helper_8hpp_a29ecb490f9644dd283298edaaa0b2130}} 
+\index{cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}!delete\+\_\+shm@{delete\+\_\+shm}}
+\index{delete\+\_\+shm@{delete\+\_\+shm}!cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{delete\+\_\+shm()}{delete\_shm()}}
+{\footnotesize\ttfamily void delete\+\_\+shm (\begin{DoxyParamCaption}\item[{int}]{shm\+\_\+id,  }\item[{char $\ast$}]{shm }\end{DoxyParamCaption})}
+
+\mbox{[}================================================================================================\mbox{]}
+
+Delete a Shared Memory Fragment
+
+
+\begin{DoxyParams}{Parameters}
+{\em shm\+\_\+id} & The Shared Memory Fragment\textquotesingle{}s identifier \\
+\hline
+{\em shm} & The pointer to the Shared Memory \mbox{[}================================================================================================\mbox{]} \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{cli__helper_8hpp_a9caf20ba13e1adbc3e58c175a9b11fc0}\label{cli__helper_8hpp_a9caf20ba13e1adbc3e58c175a9b11fc0}} 
+\index{cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}!get\+\_\+cmnd\+\_\+id@{get\+\_\+cmnd\+\_\+id}}
+\index{get\+\_\+cmnd\+\_\+id@{get\+\_\+cmnd\+\_\+id}!cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{get\+\_\+cmnd\+\_\+id()}{get\_cmnd\_id()}}
+{\footnotesize\ttfamily int get\+\_\+cmnd\+\_\+id (\begin{DoxyParamCaption}\item[{char $\ast$}]{cmnd }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cli__helper_8hpp_a9a7850489cf50a8693b388acc259ccaa}\label{cli__helper_8hpp_a9a7850489cf50a8693b388acc259ccaa}} 
+\index{cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}!receive\+\_\+from\+\_\+server@{receive\+\_\+from\+\_\+server}}
+\index{receive\+\_\+from\+\_\+server@{receive\+\_\+from\+\_\+server}!cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{receive\+\_\+from\+\_\+server()}{receive\_from\_server()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily char$\ast$ receive\+\_\+from\+\_\+server (\begin{DoxyParamCaption}\item[{int}]{client\+\_\+sock,  }\item[{std\+::string}]{client\+\_\+sockpath,  }\item[{int}]{size,  }\item[{int}]{flag }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cli__helper_8hpp_a07e9b770e5dae5d1cbda59ba458c69d2}\label{cli__helper_8hpp_a07e9b770e5dae5d1cbda59ba458c69d2}} 
+\index{cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}!receive\+\_\+from\+\_\+server@{receive\+\_\+from\+\_\+server}}
+\index{receive\+\_\+from\+\_\+server@{receive\+\_\+from\+\_\+server}!cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{receive\+\_\+from\+\_\+server()}{receive\_from\_server()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily std\+::string receive\+\_\+from\+\_\+server (\begin{DoxyParamCaption}\item[{int}]{client\+\_\+sock,  }\item[{std\+::string}]{client\+\_\+sockpath }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cli__helper_8hpp_a297fd0c2ef5604c0516a404d3414e41a}\label{cli__helper_8hpp_a297fd0c2ef5604c0516a404d3414e41a}} 
+\index{cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}!send\+\_\+to\+\_\+server@{send\+\_\+to\+\_\+server}}
+\index{send\+\_\+to\+\_\+server@{send\+\_\+to\+\_\+server}!cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{send\+\_\+to\+\_\+server()}{send\_to\_server()}}
+{\footnotesize\ttfamily void send\+\_\+to\+\_\+server (\begin{DoxyParamCaption}\item[{int}]{client\+\_\+sock,  }\item[{std\+::string}]{client\+\_\+sockpath,  }\item[{char $\ast$}]{cmnd,  }\item[{int}]{size,  }\item[{int}]{flag }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cli__helper_8hpp_ac8ce69e525016b90209b0d970c9e7d2c}\label{cli__helper_8hpp_ac8ce69e525016b90209b0d970c9e7d2c}} 
+\index{cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}!set\+\_\+up\+\_\+socket@{set\+\_\+up\+\_\+socket}}
+\index{set\+\_\+up\+\_\+socket@{set\+\_\+up\+\_\+socket}!cli\+\_\+helper.\+hpp@{cli\+\_\+helper.\+hpp}}
+\subsubsection{\texorpdfstring{set\+\_\+up\+\_\+socket()}{set\_up\_socket()}}
+{\footnotesize\ttfamily int set\+\_\+up\+\_\+socket (\begin{DoxyParamCaption}\item[{std\+::string}]{client\+\_\+sockpath,  }\item[{struct sockaddr\+\_\+un \&}]{client\+\_\+sockaddr }\end{DoxyParamCaption})}
+

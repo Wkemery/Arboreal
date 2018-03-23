@@ -26,7 +26,7 @@
 #include <netdb.h>
 #include <signal.h>
 #include "../SharedHeaders/Parser.h"
-#include "../SharedHeaders/DebugMessages.h"
+#include "../SharedHeaders/DebugMessages.hpp"
 #include "../SharedHeaders/Arboreal_Exceptions.h"    /* Exception Handling */
 #include "../SharedHeaders/Print.h"
 
@@ -56,24 +56,19 @@ int main(int argc, char** argv)
 
 
   /* Turn on debug printing */
-  if(argc == 7){Debug.ON();}
+  if(argc == 5){Debug.ON();}
   else{Debug.OFF();}
 
-  Debug.log(liaison_start);
-
-  std::string client_sockpath = argv[0];
-  std::string liaison_sockpath = argv[1];
-  std::string hostname = argv[3];
-  std::string partition = argv[4];
-  std::string cwd = argv[5];
-
-  Debug.log(liaison_hostname,hostname);
-  Debug.log(liaison_partiton,partition);
-  Debug.log(liaison_client_sock_path,client_sockpath);
-  Debug.log(liaison_sock_path,liaison_sockpath);
-  Debug.log(liaison_daemon_port,DaemonPort);
-  Debug.log(liaison_cwd,cwd);
-
+  
+  Debug.log("L: Liaison Process Initiated");
+  std::string client_sockpath = argv[1];
+  std::string liaison_sockpath = argv[2];;
+  std::string partition = argv[3];
+  std::string cwd = argv[4];
+  Debug.log(("L: Client Socket Path: " + client_sockpath));
+  Debug.log(("L: Liaison Socket Path: " + liaison_sockpath));
+  Debug.log(("L: File System Partition: " + partition));
+  Debug.log(("L: Current Working Directory: " + cwd));
 
   int max_string_size; // Will be set via handshake
   struct sockaddr_un liaison_sockaddr;
@@ -89,68 +84,77 @@ int main(int argc, char** argv)
 
     // Connect to CLI
 
-    key_t shm_key = atoi(argv[2]);
+    key_t shm_key = atoi(argv[0]);
     int shm_id;
 
-    Debug.log(liaison_get_shm);
+    Debug.log(("L: Shared Memory Segment Key: " + std::to_string((int)shm_key)));
+
+
+    Debug.log("L: Attaching to Shared Memory Segment...");
     char* shm = get_shm_seg(shm_key,shm_id);
-    Debug.log(liaison_get_shm_success);
+    Debug.log("L: Success");
+    
 
     /* Zero the structure buffers */
     memset(&liaison_sockaddr, 0, sizeof(struct sockaddr_un));
     memset(&client_sockaddr, 0, sizeof(struct sockaddr_un));
 
-    Debug.log(liaison_init_socket);
+    
+    Debug.log("L: Initializing [Liaison --> Command Line] Socket...");
     liaison_sock = set_up_socket(liaison_sockpath,liaison_sockaddr);
-    Debug.log(liaison_init_sock_success);
+    Debug.log("L: Success");
+    
 
 
-    Debug.log(liaison_signal);
+    Debug.log("L: Signaling Command Line");
     /* Signal CLI that it is ok to continue */
     shm[0] = 1;
 
-    Debug.log(liaison_listen);
+    
+    Debug.log("L: Listening For Clients...");
     listen_for_client(liaison_sock,liaison_sockpath);
-    Debug.log(liaison_listen_success);
+  
 
     length = sizeof(liaison_sockaddr);
-
-    Debug.log(liaison_accept);
     /* Wait until CLI is ready, if this is not done you will get a
      * "Connection Refused Error" every once in a while */
     while(shm[0] == 1)
     {
       client_sock = accept_client(liaison_sock,client_sockaddr,length,liaison_sockpath);
     }
-    Debug.log(liaison_accept_success);
+    Debug.log("L: Client Connection Accepted");
 
 
-    Debug.log(liaison_unattch_shm);
+    Debug.log("L: Unattaching Shared Memory Segment...");
     unat_shm(shm_id,shm);
-    Debug.log(liaison_unattch_success);
+    Debug.log("L: Success");
+    
 
-    Debug.log(liaison_get_peer);
+    Debug.log("L: Retrieving Client Information");
     get_peername(client_sock,client_sockaddr,liaison_sock,liaison_sockpath);
-    Debug.log(liaison_get_peer_success,client_sockaddr.sun_path);
+    
 
 
 
-
-     // Connect To Daemon
-
-    // Debug.log...
+    Debug.log("L: Connection To Client Successful");
+    Debug.log("L: Attempting To Connect To File System...");
+    Debug.log("L: Initializing [Liaison --> File System] Socket...");
+    // Connect To Daemon
+    // 
     /* Initialize a connection to the File System, The parameters passed here are purely in the case
      * of failure since we need to send a message to the CLI process notifying of the failure */
-    liaison_fid = create_daemon_sock(client_sock, client_sockpath, liaison_sock, liaison_sockpath);
-     // Debug.log...
+    liaison_fid = create_daemon_sock(client_sock, client_sockpath, liaison_sock, liaison_sockpath); 
+    Debug.log("L: Success");
 
     memset(&daemon_addr, '\0', sizeof(daemon_addr));
     daemon_addr.sin_family = AF_INET;
     daemon_addr.sin_port = htons(DaemonPort);
 
+    Debug.log("L: Connecting To File System...");
     /* Attempt to connect to File System. The parameters passed here are purely in the case
      * of failure since we need to send a message to the CLI process notifying of the failure */
     connect_to_daemon(liaison_fid, daemon_addr, client_sock, client_sockpath, liaison_sock, liaison_sockpath);
+    Debug.log("L: Success");
 
 
 
@@ -158,20 +162,11 @@ int main(int argc, char** argv)
     do
     {
       // TO DO: Place More debug statements around here somewhere
-
       char* msg = recv_msg(client_sock,MaxBufferSize,Flag,liaison_sock,liaison_sockpath,client_sockpath);
-      Debug.log(liaison_command_received);
       std::string sender = (std::to_string(client_sock) + " @ " + client_sockpath);
-      Debug.log(liaison_command_sender, sender);
-      Debug.log(liaison_command, get_command_string(msg,MaxBufferSize));
-
       auto end = std::chrono::system_clock::now();
       std::time_t end_time = std::chrono::system_clock::to_time_t(end);
       std::string data = std::ctime(&end_time);
-      Debug.log(liaison_received_time,data);
-
-
-
       int command_id = get_cmnd_id(msg);
 
       if(command_id == QUIT)
@@ -309,6 +304,7 @@ int main(int argc, char** argv)
           memset(response,'\0',MaxBufferSize);
           while(stemp != "DONE")
           {
+            std::cout << "ME\n";
             data += (stemp + "\n");
             stemp = "";
             int rval = recv(liaison_fid,response,MaxBufferSize,Flag);

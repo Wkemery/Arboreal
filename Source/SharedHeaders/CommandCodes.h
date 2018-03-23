@@ -1,10 +1,13 @@
-// Defines Command Codes For FileSystem
-// 
+///////////////////////////////////////////////////////////////////////////////////////////////////
 //
+// CommandCodes.h
+// Defines Command Codes For Arboreal
+// Primary Author: Adrian Barberis
+// For "Arboreal" Senior Design Project
 //
+//  Tue. | Mar. 20th | 2018 | 10:50 PM | Stable | Documented 
 //
-//
-//
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
 #ifndef COM_CODES
 #define COM_CODES
@@ -30,19 +33,19 @@ static const int DEL_FP = 500;
 /* Delete A Tag(s) (Must Be Empty) */
 static const int DEL_TS = 501;
 
-/* Delete A File(s) (From Current Working Directory) */
+/* Delete A File(s) (In Current Working Directory) */
 static const int DEL_FS = 502;
 
 /* Open A File For Operations (Must Supply File Path) */
 static const int OPEN_FP = 200;
 
-/* Open A File (From Current Working Directory) */
+/* Open A File (In Current Working Directory) */
 static const int OPEN_F = 201;
 
 /* Close A File (Must Supply File Path) */
 static const int CLOSE_FP = 600;
 
-/* Close A File (From Current Working Directory) */
+/* Close A File (In Current Working Directory) */
 static const int CLOSE_F = 601;
 
 /* Rename File(s) (Must Supply File Path) */
@@ -51,13 +54,13 @@ static const int RNAME_FP = 100;
 /* Rename Tag(s) */
 static const int RNAME_TS = 101;
 
-/* Rename File(s) (From Current Working Directory) */
+/* Rename File(s) (In Current Working Directory) */
 static const int RNAME_FS = 102;
 
 /* Get File Attributes (Must Supply File Path) */
 static const int ATTR_FP = 700;
 
-/* Get File Attributes (From Current Working Directory) */
+/* Get File Attributes (In Current Working Directory) */
 static const int ATTR_FS = 701;
 
 /* Merge One Tag Into Another */
@@ -69,13 +72,13 @@ static const int MERG_M_1 = 802;
 /* Tag File (Must Supply File Path) */
 static const int TAG_FP = 900;
 
-/* Tag File(s) (From Current Working Directory) */
+/* Tag File(s) (In Current Working Directory) */
 static const int TAG_FS = 901;
 
 /* Untag File (Must Supply File Path) */
 static const int UTAG_FP = 1000;
 
-/* Untag File(s) (From Current Working Directory) */
+/* Untag File(s) (In Current Working Directory) */
 static const int UTAG_FS = 1001;
 
 /* Change Directory (Absolute Path) */
@@ -90,29 +93,46 @@ static const int READ_XP = 3000;
 /* Read Whole File (Must Supply Path) */
 static const int READ_FP = 3300;
 
-/* Read X Bytes From File (From Current Working Directory) */
+/* Read X Bytes From File (In Current Working Directory) */
 static const int READ_XCWD = 3001;
 
-/* Read Whole File (From Current Working Directory) */
+/* Read Whole File (In Current Working Directory) */
 static const int READ_FCWD = 3002;
 
 /* Write To File (Must Supply File Path) */
 static const int WRITE_FP = 4000;
 
-/* Write X Bytes From File To File (Must Supply File Paths) */
-static const int WRITE_XFPF = 4400;
+/* Append To File (Must Supply File Path) */
+static const int APPND_FP = 4400;
 
-/* Write To File (From Current Working Directory) */
+/* Write X Bytes From File To File (Must Supply File Paths) */
+static const int WRITE_XFPF = 4440;
+
+/* Append X Bytes From File To File (Must Supply File Paths) */
+static const int APPND_XFPF = 4444;
+
+/* Write To File (In Current Working Directory) */
 static const int WRITE_FCWD = 4001;
 
-/* Write X Bytes From File To File (From Current Working Directory) */
-static const int WRITE_XFCWDF = 4002;
+/* Append To File (In Current Working Directory) */
+static const int APPND_FCWD = 4002;
+
+/* Write X Bytes From File To File (In Current Working Directory) */
+static const int WRITE_XFCWDF = 4003;
+
+/* Append X Bytes From File To File (In Current Directory) */
+static const int APPND_XFCWDF = 4004;
 
 /* Copy Contents Of One File To Another (Overwrites File; Must Supply File Paths) */
 static const int CPY_FP = 6000;
 
-/* Copy Contents Of One File To Another (Overwrites File; From Current Working Directory */
+/* Copy Contents Of One File To Another (Overwrites File; In Current Working Directory */
 static const int CPY_FCWD = 6001;
+/*************************************************************************************************/
+
+
+
+
 
 /* Quit Interface */
 static const int QUIT = 999;
@@ -170,7 +190,7 @@ static const int UWRITE = 10015;
 
 /* Usage Copy */
 static const int UCOPY = 10016;
-
+/*************************************************************************************************/
 
 #endif
 

@@ -27,19 +27,19 @@ I think we'll be able to get rid of alot of the helper functions actually. becau
 //LATER: we should try not to write out the whole tag tree everytime. instead we should only write out the parts that changed if we can. I know this is a tough solution, if a tag is deleted in the middle of the tree and we really have no way of knowing where stuff will be in the tree... but it might be possible to keep some sort of secondary data structure, like a vector with all the info because it doens't matter what order we reconstruct the map in memory, just that all the data is there. this is also somehting we can implement later.
 **INtermeidary Data structure will store, (in addition to Memory pointer, block pointer) a tuple (int blknum, int pos_in_blknum) of the key_value pair so we can use it later for delete operations.** 
 
-** A NOTE about speed: 
- right now, in order to do tag search, we have to read in the finode of each file in the smallest tag tree becuase I am not storing the number of tags associated with a file in the tag tree inodes. This can be changed later, but for now I just want to get it done. If, when we are testing speeds this is something that will surely improve speed.
+**A NOTE about speed: 
+ right now, in order to do tag search, we have to read in the finode of each file in the smallest tag tree becuase I am not storing the number of tags associated with a file in the tag tree inodes. This can be changed later, but for now I just want to get it done. If, when we are testing speeds this is something that will surely improve speed.**
 
-** Estimated read in time for everything on startup:
-O(n^2*log(n))
+**Estimated read in time for everything on startup:
+O(n^2*log(n))***
 
-** FileInode structure
+**FileInode structure
 filename - filenameSize
 Finode struct = sizeof(finode struct)
 local tag storage = rest of the space
-possible tag cont. block = sizeof(blknumType)
+possible tag cont. block = sizeof(blknumType)**
 
-**Restrictions:
+**Restrictions:**
 1. filename size restricted to no more than 1/2 block size
 2. block size should be a power of 2
 3. Hard cap on the number of tags that can be associated with a file. = (((blocksize - filenamesize - 136) / sizeof(BlkNumType)) + (blocksize / sizeof(BlkNumType)). 103 tags for blocksize of 512. and 64b filename

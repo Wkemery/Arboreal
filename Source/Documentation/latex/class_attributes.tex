@@ -1,0 +1,222 @@
+\hypertarget{class_attributes}{}\section{Attributes Class Reference}
+\label{class_attributes}\index{Attributes@{Attributes}}
+
+
+{\ttfamily \#include $<$Trees.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_attributes_a0d6b154029e34f811f0930806768f022}{Attributes}} (Blk\+Num\+Type blknum, \mbox{\hyperlink{class_partition_manager}{Partition\+Manager}} $\ast$pm)
+\end{DoxyCompactItemize}
+\begin{Indent}\textbf{ Modifier Functions}\par
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_attributes_a7066f30d97317f75a02a137d09a2065e}{write\+\_\+out}} ()
+\item 
+void \mbox{\hyperlink{class_attributes_ac33fbd6871ef707878690be92b9fc7ec}{read\+\_\+in}} ()
+\item 
+void \mbox{\hyperlink{class_attributes_acf28e724c914f066ecdae788d95b3212}{del}} ()
+\item 
+void \mbox{\hyperlink{class_attributes_a4c518dae976d9186337f655f7b09cecc}{set\+\_\+creation\+\_\+time}} ()
+\item 
+void \mbox{\hyperlink{class_attributes_affdf3abb52a45ac3c9051bafd0da9e7e}{set\+\_\+owner}} (int owner)
+\item 
+void \mbox{\hyperlink{class_attributes_aac8ca00f98b22280df69f62e42b72b8b}{set\+\_\+permissions}} (char $\ast$perms)
+\item 
+void \mbox{\hyperlink{class_attributes_af2ce6f6dce652a7adfeba3f28b4ee0bc}{set\+\_\+access}} ()
+\item 
+void \mbox{\hyperlink{class_attributes_a88674bf65fba99d32870c7fa48edf135}{set\+\_\+edit}} ()
+\item 
+void \mbox{\hyperlink{class_attributes_a3983ec45af66e9b19367222092b7df6c}{update\+\_\+size}} (size\+\_\+t size)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Accessor Functions}\par
+\begin{DoxyCompactItemize}
+\item 
+time\+\_\+t \mbox{\hyperlink{class_attributes_aeb0845464130e292875be4f8dcc51e8a}{get\+\_\+creation\+\_\+time}} ()
+\item 
+int \mbox{\hyperlink{class_attributes_a8b9efe0186ccf74b4b08c4031a99f5bb}{get\+\_\+owner}} ()
+\item 
+char $\ast$ \mbox{\hyperlink{class_attributes_a52a8dc1b5d9c4c1eb19bcb336705cc42}{get\+\_\+permissions}} ()
+\item 
+time\+\_\+t \mbox{\hyperlink{class_attributes_a9cd0c49733d3de43a8916a318ba62bc1}{get\+\_\+access}} ()
+\item 
+time\+\_\+t \mbox{\hyperlink{class_attributes_a4ff80c2f3a31f86d874d7982354e4f70}{get\+\_\+edit}} ()
+\item 
+size\+\_\+t \mbox{\hyperlink{class_attributes_a6e5df8252fc902c0fbe22058fe0b4fb1}{get\+\_\+size}} ()
+\item 
+File\+Attributes \mbox{\hyperlink{class_attributes_a774666651c1d61cade39cc15cf03b9b2}{get\+\_\+file\+\_\+attributes}} ()
+\end{DoxyCompactItemize}
+\end{Indent}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+File\+Attributes \mbox{\hyperlink{class_attributes_adb049fd16001d1634a6534917dcaf8c3}{\+\_\+atts}}
+\item 
+Blk\+Num\+Type \mbox{\hyperlink{class_attributes_a58984b59c6cf95453f54824113a95d67}{\+\_\+block\+Number}}
+\item 
+\mbox{\hyperlink{class_partition_manager}{Partition\+Manager}} $\ast$ \mbox{\hyperlink{class_attributes_ae344a55e94b87cbc3cb9e956f5753eee}{\+\_\+my\+Partition\+Manager}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_attributes_a0d6b154029e34f811f0930806768f022}\label{class_attributes_a0d6b154029e34f811f0930806768f022}} 
+\index{Attributes@{Attributes}!Attributes@{Attributes}}
+\index{Attributes@{Attributes}!Attributes@{Attributes}}
+\subsubsection{\texorpdfstring{Attributes()}{Attributes()}}
+{\footnotesize\ttfamily Attributes\+::\+Attributes (\begin{DoxyParamCaption}\item[{Blk\+Num\+Type}]{blknum,  }\item[{\mbox{\hyperlink{class_partition_manager}{Partition\+Manager}} $\ast$}]{pm }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_attributes_acf28e724c914f066ecdae788d95b3212}\label{class_attributes_acf28e724c914f066ecdae788d95b3212}} 
+\index{Attributes@{Attributes}!del@{del}}
+\index{del@{del}!Attributes@{Attributes}}
+\subsubsection{\texorpdfstring{del()}{del()}}
+{\footnotesize\ttfamily void Attributes\+::del (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Removes the \mbox{\hyperlink{class_attributes}{Attributes}} presence on disk \mbox{\Hypertarget{class_attributes_a9cd0c49733d3de43a8916a318ba62bc1}\label{class_attributes_a9cd0c49733d3de43a8916a318ba62bc1}} 
+\index{Attributes@{Attributes}!get\+\_\+access@{get\+\_\+access}}
+\index{get\+\_\+access@{get\+\_\+access}!Attributes@{Attributes}}
+\subsubsection{\texorpdfstring{get\+\_\+access()}{get\_access()}}
+{\footnotesize\ttfamily time\+\_\+t Attributes\+::get\+\_\+access (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+the U\+N\+IX time the file was last accessed 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_attributes_aeb0845464130e292875be4f8dcc51e8a}\label{class_attributes_aeb0845464130e292875be4f8dcc51e8a}} 
+\index{Attributes@{Attributes}!get\+\_\+creation\+\_\+time@{get\+\_\+creation\+\_\+time}}
+\index{get\+\_\+creation\+\_\+time@{get\+\_\+creation\+\_\+time}!Attributes@{Attributes}}
+\subsubsection{\texorpdfstring{get\+\_\+creation\+\_\+time()}{get\_creation\_time()}}
+{\footnotesize\ttfamily time\+\_\+t Attributes\+::get\+\_\+creation\+\_\+time (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+the U\+N\+IX time the file was created 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_attributes_a4ff80c2f3a31f86d874d7982354e4f70}\label{class_attributes_a4ff80c2f3a31f86d874d7982354e4f70}} 
+\index{Attributes@{Attributes}!get\+\_\+edit@{get\+\_\+edit}}
+\index{get\+\_\+edit@{get\+\_\+edit}!Attributes@{Attributes}}
+\subsubsection{\texorpdfstring{get\+\_\+edit()}{get\_edit()}}
+{\footnotesize\ttfamily time\+\_\+t Attributes\+::get\+\_\+edit (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+the U\+N\+IX time the file was last edited 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_attributes_a774666651c1d61cade39cc15cf03b9b2}\label{class_attributes_a774666651c1d61cade39cc15cf03b9b2}} 
+\index{Attributes@{Attributes}!get\+\_\+file\+\_\+attributes@{get\+\_\+file\+\_\+attributes}}
+\index{get\+\_\+file\+\_\+attributes@{get\+\_\+file\+\_\+attributes}!Attributes@{Attributes}}
+\subsubsection{\texorpdfstring{get\+\_\+file\+\_\+attributes()}{get\_file\_attributes()}}
+{\footnotesize\ttfamily File\+Attributes Attributes\+::get\+\_\+file\+\_\+attributes (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+the entire File\+Attributes struct 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_attributes_a8b9efe0186ccf74b4b08c4031a99f5bb}\label{class_attributes_a8b9efe0186ccf74b4b08c4031a99f5bb}} 
+\index{Attributes@{Attributes}!get\+\_\+owner@{get\+\_\+owner}}
+\index{get\+\_\+owner@{get\+\_\+owner}!Attributes@{Attributes}}
+\subsubsection{\texorpdfstring{get\+\_\+owner()}{get\_owner()}}
+{\footnotesize\ttfamily int Attributes\+::get\+\_\+owner (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+the U\+ID of the owner of the file 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_attributes_a52a8dc1b5d9c4c1eb19bcb336705cc42}\label{class_attributes_a52a8dc1b5d9c4c1eb19bcb336705cc42}} 
+\index{Attributes@{Attributes}!get\+\_\+permissions@{get\+\_\+permissions}}
+\index{get\+\_\+permissions@{get\+\_\+permissions}!Attributes@{Attributes}}
+\subsubsection{\texorpdfstring{get\+\_\+permissions()}{get\_permissions()}}
+{\footnotesize\ttfamily char $\ast$ Attributes\+::get\+\_\+permissions (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+the permisssions 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+File\+Info\+::get\+\_\+permissions(char$\ast$) 
+\end{DoxySeeAlso}
+\mbox{\Hypertarget{class_attributes_a6e5df8252fc902c0fbe22058fe0b4fb1}\label{class_attributes_a6e5df8252fc902c0fbe22058fe0b4fb1}} 
+\index{Attributes@{Attributes}!get\+\_\+size@{get\+\_\+size}}
+\index{get\+\_\+size@{get\+\_\+size}!Attributes@{Attributes}}
+\subsubsection{\texorpdfstring{get\+\_\+size()}{get\_size()}}
+{\footnotesize\ttfamily size\+\_\+t Attributes\+::get\+\_\+size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+the size of the file in bytes 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_attributes_ac33fbd6871ef707878690be92b9fc7ec}\label{class_attributes_ac33fbd6871ef707878690be92b9fc7ec}} 
+\index{Attributes@{Attributes}!read\+\_\+in@{read\+\_\+in}}
+\index{read\+\_\+in@{read\+\_\+in}!Attributes@{Attributes}}
+\subsubsection{\texorpdfstring{read\+\_\+in()}{read\_in()}}
+{\footnotesize\ttfamily void Attributes\+::read\+\_\+in (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Reads in the \mbox{\hyperlink{class_attributes}{Attributes}} from disk \mbox{\Hypertarget{class_attributes_af2ce6f6dce652a7adfeba3f28b4ee0bc}\label{class_attributes_af2ce6f6dce652a7adfeba3f28b4ee0bc}} 
+\index{Attributes@{Attributes}!set\+\_\+access@{set\+\_\+access}}
+\index{set\+\_\+access@{set\+\_\+access}!Attributes@{Attributes}}
+\subsubsection{\texorpdfstring{set\+\_\+access()}{set\_access()}}
+{\footnotesize\ttfamily void Attributes\+::set\+\_\+access (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Marks down the time as accessed time as U\+N\+IX timestamp \mbox{\Hypertarget{class_attributes_a4c518dae976d9186337f655f7b09cecc}\label{class_attributes_a4c518dae976d9186337f655f7b09cecc}} 
+\index{Attributes@{Attributes}!set\+\_\+creation\+\_\+time@{set\+\_\+creation\+\_\+time}}
+\index{set\+\_\+creation\+\_\+time@{set\+\_\+creation\+\_\+time}!Attributes@{Attributes}}
+\subsubsection{\texorpdfstring{set\+\_\+creation\+\_\+time()}{set\_creation\_time()}}
+{\footnotesize\ttfamily void Attributes\+::set\+\_\+creation\+\_\+time (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Marks down the creation time of the associated \mbox{\hyperlink{class_file_info}{File\+Info}} as U\+N\+IX timestamp \mbox{\Hypertarget{class_attributes_a88674bf65fba99d32870c7fa48edf135}\label{class_attributes_a88674bf65fba99d32870c7fa48edf135}} 
+\index{Attributes@{Attributes}!set\+\_\+edit@{set\+\_\+edit}}
+\index{set\+\_\+edit@{set\+\_\+edit}!Attributes@{Attributes}}
+\subsubsection{\texorpdfstring{set\+\_\+edit()}{set\_edit()}}
+{\footnotesize\ttfamily void Attributes\+::set\+\_\+edit (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Marks down the time as modified time as U\+N\+IX timestamp \mbox{\Hypertarget{class_attributes_affdf3abb52a45ac3c9051bafd0da9e7e}\label{class_attributes_affdf3abb52a45ac3c9051bafd0da9e7e}} 
+\index{Attributes@{Attributes}!set\+\_\+owner@{set\+\_\+owner}}
+\index{set\+\_\+owner@{set\+\_\+owner}!Attributes@{Attributes}}
+\subsubsection{\texorpdfstring{set\+\_\+owner()}{set\_owner()}}
+{\footnotesize\ttfamily void Attributes\+::set\+\_\+owner (\begin{DoxyParamCaption}\item[{int}]{owner }\end{DoxyParamCaption})}
+
+Marks the owner as their U\+ID \mbox{\Hypertarget{class_attributes_aac8ca00f98b22280df69f62e42b72b8b}\label{class_attributes_aac8ca00f98b22280df69f62e42b72b8b}} 
+\index{Attributes@{Attributes}!set\+\_\+permissions@{set\+\_\+permissions}}
+\index{set\+\_\+permissions@{set\+\_\+permissions}!Attributes@{Attributes}}
+\subsubsection{\texorpdfstring{set\+\_\+permissions()}{set\_permissions()}}
+{\footnotesize\ttfamily void Attributes\+::set\+\_\+permissions (\begin{DoxyParamCaption}\item[{char $\ast$}]{perms }\end{DoxyParamCaption})}
+
+sets the permisssions of the file \begin{DoxySeeAlso}{See also}
+\mbox{\hyperlink{class_file_info_a377208012195dba0b24723837f6db39f}{File\+Info\+::set\+\_\+permissions(char$\ast$)}} 
+\end{DoxySeeAlso}
+\mbox{\Hypertarget{class_attributes_a3983ec45af66e9b19367222092b7df6c}\label{class_attributes_a3983ec45af66e9b19367222092b7df6c}} 
+\index{Attributes@{Attributes}!update\+\_\+size@{update\+\_\+size}}
+\index{update\+\_\+size@{update\+\_\+size}!Attributes@{Attributes}}
+\subsubsection{\texorpdfstring{update\+\_\+size()}{update\_size()}}
+{\footnotesize\ttfamily void Attributes\+::update\+\_\+size (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{size }\end{DoxyParamCaption})}
+
+sets the size to the specified size \mbox{\Hypertarget{class_attributes_a7066f30d97317f75a02a137d09a2065e}\label{class_attributes_a7066f30d97317f75a02a137d09a2065e}} 
+\index{Attributes@{Attributes}!write\+\_\+out@{write\+\_\+out}}
+\index{write\+\_\+out@{write\+\_\+out}!Attributes@{Attributes}}
+\subsubsection{\texorpdfstring{write\+\_\+out()}{write\_out()}}
+{\footnotesize\ttfamily void Attributes\+::write\+\_\+out (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Writes out the \mbox{\hyperlink{class_attributes}{Attributes}} to disk 
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{class_attributes_adb049fd16001d1634a6534917dcaf8c3}\label{class_attributes_adb049fd16001d1634a6534917dcaf8c3}} 
+\index{Attributes@{Attributes}!\+\_\+atts@{\+\_\+atts}}
+\index{\+\_\+atts@{\+\_\+atts}!Attributes@{Attributes}}
+\subsubsection{\texorpdfstring{\+\_\+atts}{\_atts}}
+{\footnotesize\ttfamily File\+Attributes Attributes\+::\+\_\+atts\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_attributes_a58984b59c6cf95453f54824113a95d67}\label{class_attributes_a58984b59c6cf95453f54824113a95d67}} 
+\index{Attributes@{Attributes}!\+\_\+block\+Number@{\+\_\+block\+Number}}
+\index{\+\_\+block\+Number@{\+\_\+block\+Number}!Attributes@{Attributes}}
+\subsubsection{\texorpdfstring{\+\_\+block\+Number}{\_blockNumber}}
+{\footnotesize\ttfamily Blk\+Num\+Type Attributes\+::\+\_\+block\+Number\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_attributes_ae344a55e94b87cbc3cb9e956f5753eee}\label{class_attributes_ae344a55e94b87cbc3cb9e956f5753eee}} 
+\index{Attributes@{Attributes}!\+\_\+my\+Partition\+Manager@{\+\_\+my\+Partition\+Manager}}
+\index{\+\_\+my\+Partition\+Manager@{\+\_\+my\+Partition\+Manager}!Attributes@{Attributes}}
+\subsubsection{\texorpdfstring{\+\_\+my\+Partition\+Manager}{\_myPartitionManager}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_partition_manager}{Partition\+Manager}}$\ast$ Attributes\+::\+\_\+my\+Partition\+Manager\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Filesystem/\+Daemon\+Dependancies/\+Trees/\mbox{\hyperlink{_trees_8h}{Trees.\+h}}\item 
+Filesystem/\+Daemon\+Dependancies/\+Trees/\mbox{\hyperlink{_trees_8cpp}{Trees.\+cpp}}\end{DoxyCompactItemize}

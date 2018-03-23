@@ -122,6 +122,10 @@ std::regex write_x_path("");
 std::regex write_x_cwd("");
 std::regex write_path("");
 std::regex write_cwd("");
+std::regex append_path("");
+std::regex append_x_path("");
+std::regex append_cwd("");
+std::regex append_x_cwd("");
 //[================================================================================================-->]
 //[    Regex for "write" Commands  ]
 //[================================================================================================-->]
@@ -182,6 +186,10 @@ int check_command(std::string command)
     else if(std::regex_match(command,write_cwd)){return WRITE_FCWD;}
     else if(std::regex_match(command,write_x_path)){return WRITE_XFPF;}
     else if(std::regex_match(command,write_x_cwd)){return WRITE_XFCWDF;}
+    else if(std::regex_match(command,append_path)){return APPND_FP;}
+    else if(std::regex_match(command,append_x_path)){return APPND_XFPF;}
+    else if(std::regex_match(command,append_cwd)){return APPND_FCWD;}
+    else if(std::regex_match(command,append_x_cwd)){return APPND_XFCWDF;}
     else if(std::regex_match(command,copy_path)){return CPY_FP;}
     else if(std::regex_match(command,copy_cwd)){return CPY_FCWD;}
     else{return 0;}

@@ -1,0 +1,115 @@
+\hypertarget{liaison_8cpp}{}\section{Liaison\+Process/liaison.cpp File Reference}
+\label{liaison_8cpp}\index{Liaison\+Process/liaison.\+cpp@{Liaison\+Process/liaison.\+cpp}}
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$errno.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$sys/socket.\+h$>$}\newline
+{\ttfamily \#include $<$sys/un.\+h$>$}\newline
+{\ttfamily \#include $<$sys/ipc.\+h$>$}\newline
+{\ttfamily \#include $<$sys/shm.\+h$>$}\newline
+{\ttfamily \#include $<$chrono$>$}\newline
+{\ttfamily \#include $<$ctime$>$}\newline
+{\ttfamily \#include $<$netinet/in.\+h$>$}\newline
+{\ttfamily \#include $<$netdb.\+h$>$}\newline
+{\ttfamily \#include $<$signal.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}../\+Shared\+Headers/\+Parser.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../\+Shared\+Headers/\+Debug\+Messages.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../\+Shared\+Headers/\+Arboreal\+\_\+\+Exceptions.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../\+Shared\+Headers/\+Print.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Liaison\+Dependancies/liason\+\_\+helper.\+hpp\char`\"{}}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{liaison_8cpp_a3c04138a5bfe5d72780bb7e82a18e627}{main}} (int argc, char $\ast$$\ast$argv)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+static const int \mbox{\hyperlink{liaison_8cpp_aec9a592dc865ea28079e962fafdbcae7}{Permissions}} = 0666
+\item 
+static const int \mbox{\hyperlink{liaison_8cpp_a97a33a33e5428e13cfa0eff5ba0e846f}{Max\+Buffer\+Size}} = 4096
+\item 
+static const int \mbox{\hyperlink{liaison_8cpp_a1a8c39b0213b72565986c561031b9293}{Shared\+Memory\+Size}} = 1
+\item 
+static const int \mbox{\hyperlink{liaison_8cpp_a01680d96621519782e0b90144ee2c162}{Backlog}} = 10
+\item 
+static const int \mbox{\hyperlink{liaison_8cpp_a1ca03d8f367ec7987b5a7321fe82e23e}{Flag}} = 0
+\item 
+static const int \mbox{\hyperlink{liaison_8cpp_a04eef50f9bae0dc2e184858eaba9a710}{Daemon\+Port}} = 70777
+\item 
+static const int \mbox{\hyperlink{liaison_8cpp_a6a9bee71f55ed121a1cc1ce9f897c37c}{Timeout}} = 10
+\item 
+\mbox{\hyperlink{class_debug_messages}{Debug\+Messages}} \mbox{\hyperlink{liaison_8cpp_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}
+\item 
+\mbox{\hyperlink{class_parser}{Parser}} $\ast$ \mbox{\hyperlink{liaison_8cpp_adc1630682cdb40d51e06d7a3436e2ffd}{Parser}} = 0
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{liaison_8cpp_a3c04138a5bfe5d72780bb7e82a18e627}\label{liaison_8cpp_a3c04138a5bfe5d72780bb7e82a18e627}} 
+\index{liaison.\+cpp@{liaison.\+cpp}!main@{main}}
+\index{main@{main}!liaison.\+cpp@{liaison.\+cpp}}
+\subsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$$\ast$}]{argv }\end{DoxyParamCaption})}
+
+
+
+\subsection{Variable Documentation}
+\mbox{\Hypertarget{liaison_8cpp_a01680d96621519782e0b90144ee2c162}\label{liaison_8cpp_a01680d96621519782e0b90144ee2c162}} 
+\index{liaison.\+cpp@{liaison.\+cpp}!Backlog@{Backlog}}
+\index{Backlog@{Backlog}!liaison.\+cpp@{liaison.\+cpp}}
+\subsubsection{\texorpdfstring{Backlog}{Backlog}}
+{\footnotesize\ttfamily const int Backlog = 10\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{liaison_8cpp_a04eef50f9bae0dc2e184858eaba9a710}\label{liaison_8cpp_a04eef50f9bae0dc2e184858eaba9a710}} 
+\index{liaison.\+cpp@{liaison.\+cpp}!Daemon\+Port@{Daemon\+Port}}
+\index{Daemon\+Port@{Daemon\+Port}!liaison.\+cpp@{liaison.\+cpp}}
+\subsubsection{\texorpdfstring{Daemon\+Port}{DaemonPort}}
+{\footnotesize\ttfamily const int Daemon\+Port = 70777\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{liaison_8cpp_ab6d95a4e6a59b4ad033ed3af31d878e0}\label{liaison_8cpp_ab6d95a4e6a59b4ad033ed3af31d878e0}} 
+\index{liaison.\+cpp@{liaison.\+cpp}!Debug@{Debug}}
+\index{Debug@{Debug}!liaison.\+cpp@{liaison.\+cpp}}
+\subsubsection{\texorpdfstring{Debug}{Debug}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_debug_messages}{Debug\+Messages}} Debug}
+
+\mbox{\Hypertarget{liaison_8cpp_a1ca03d8f367ec7987b5a7321fe82e23e}\label{liaison_8cpp_a1ca03d8f367ec7987b5a7321fe82e23e}} 
+\index{liaison.\+cpp@{liaison.\+cpp}!Flag@{Flag}}
+\index{Flag@{Flag}!liaison.\+cpp@{liaison.\+cpp}}
+\subsubsection{\texorpdfstring{Flag}{Flag}}
+{\footnotesize\ttfamily const int Flag = 0\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{liaison_8cpp_a97a33a33e5428e13cfa0eff5ba0e846f}\label{liaison_8cpp_a97a33a33e5428e13cfa0eff5ba0e846f}} 
+\index{liaison.\+cpp@{liaison.\+cpp}!Max\+Buffer\+Size@{Max\+Buffer\+Size}}
+\index{Max\+Buffer\+Size@{Max\+Buffer\+Size}!liaison.\+cpp@{liaison.\+cpp}}
+\subsubsection{\texorpdfstring{Max\+Buffer\+Size}{MaxBufferSize}}
+{\footnotesize\ttfamily const int Max\+Buffer\+Size = 4096\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{liaison_8cpp_adc1630682cdb40d51e06d7a3436e2ffd}\label{liaison_8cpp_adc1630682cdb40d51e06d7a3436e2ffd}} 
+\index{liaison.\+cpp@{liaison.\+cpp}!Parser@{Parser}}
+\index{Parser@{Parser}!liaison.\+cpp@{liaison.\+cpp}}
+\subsubsection{\texorpdfstring{Parser}{Parser}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_parser}{Parser}}$\ast$ \mbox{\hyperlink{class_parser}{Parser}} = 0}
+
+\mbox{\Hypertarget{liaison_8cpp_aec9a592dc865ea28079e962fafdbcae7}\label{liaison_8cpp_aec9a592dc865ea28079e962fafdbcae7}} 
+\index{liaison.\+cpp@{liaison.\+cpp}!Permissions@{Permissions}}
+\index{Permissions@{Permissions}!liaison.\+cpp@{liaison.\+cpp}}
+\subsubsection{\texorpdfstring{Permissions}{Permissions}}
+{\footnotesize\ttfamily const int Permissions = 0666\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{liaison_8cpp_a1a8c39b0213b72565986c561031b9293}\label{liaison_8cpp_a1a8c39b0213b72565986c561031b9293}} 
+\index{liaison.\+cpp@{liaison.\+cpp}!Shared\+Memory\+Size@{Shared\+Memory\+Size}}
+\index{Shared\+Memory\+Size@{Shared\+Memory\+Size}!liaison.\+cpp@{liaison.\+cpp}}
+\subsubsection{\texorpdfstring{Shared\+Memory\+Size}{SharedMemorySize}}
+{\footnotesize\ttfamily const int Shared\+Memory\+Size = 1\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{liaison_8cpp_a6a9bee71f55ed121a1cc1ce9f897c37c}\label{liaison_8cpp_a6a9bee71f55ed121a1cc1ce9f897c37c}} 
+\index{liaison.\+cpp@{liaison.\+cpp}!Timeout@{Timeout}}
+\index{Timeout@{Timeout}!liaison.\+cpp@{liaison.\+cpp}}
+\subsubsection{\texorpdfstring{Timeout}{Timeout}}
+{\footnotesize\ttfamily const int Timeout = 10\hspace{0.3cm}{\ttfamily [static]}}
+

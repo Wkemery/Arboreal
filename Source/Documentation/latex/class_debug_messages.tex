@@ -1,0 +1,150 @@
+\hypertarget{class_debug_messages}{}\section{Debug\+Messages Class Reference}
+\label{class_debug_messages}\index{Debug\+Messages@{Debug\+Messages}}
+
+
+{\ttfamily \#include $<$Debug\+Messages.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_debug_messages_a7fb2c5a7cce97eb05661b1f6657cb650}{Debug\+Messages}} ()
+\item 
+\mbox{\hyperlink{class_debug_messages_aa60430ca0e05e43a8bb27f4cdc1a158c}{Debug\+Messages}} (std\+::string logfile\+\_\+name)
+\item 
+\mbox{\hyperlink{class_debug_messages_a3700e476ad70d27ba14be67b43ff6f69}{$\sim$\+Debug\+Messages}} ()
+\item 
+void \mbox{\hyperlink{class_debug_messages_a9a73bcf5d8298fd68b55a28c0878e852}{display}} (const \mbox{\hyperlink{_debug_messages_8h_a0da83e35f29c11f7f3c637234f2149f9}{Control}} flow)
+\item 
+void \mbox{\hyperlink{class_debug_messages_a802f7d26dedc412f06bfe0957415bfd4}{log}} (const \mbox{\hyperlink{_debug_messages_8h_a0da83e35f29c11f7f3c637234f2149f9}{Control}} flow)
+\item 
+void \mbox{\hyperlink{class_debug_messages_a5cd8aa8eb917f7da19484adc2c7e31a2}{debug}} (const \mbox{\hyperlink{_debug_messages_8h_a0da83e35f29c11f7f3c637234f2149f9}{Control}} flow)
+\item 
+void \mbox{\hyperlink{class_debug_messages_a95866775dcf301773daa7bed529c557e}{ON}} (void)
+\item 
+void \mbox{\hyperlink{class_debug_messages_ac1e4085ade0d1ff7b603fd8205f74b7c}{O\+FF}} (void)
+\item 
+{\footnotesize template$<$typename T $>$ }\\void \mbox{\hyperlink{class_debug_messages_ae9e335acbae42f1c8c97e03d4d588a8f}{display}} (const \mbox{\hyperlink{_debug_messages_8h_a0da83e35f29c11f7f3c637234f2149f9}{Control}} flow, T data)
+\item 
+{\footnotesize template$<$typename T $>$ }\\void \mbox{\hyperlink{class_debug_messages_accb5bd318d0b085aa1824ddd7b1bd31e}{log}} (const \mbox{\hyperlink{_debug_messages_8h_a0da83e35f29c11f7f3c637234f2149f9}{Control}} flow, T data)
+\item 
+{\footnotesize template$<$typename T $>$ }\\void \mbox{\hyperlink{class_debug_messages_a49564f4a501f15317f26c360d0bfdb90}{debug}} (const \mbox{\hyperlink{_debug_messages_8h_a0da83e35f29c11f7f3c637234f2149f9}{Control}} flow, T data)
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{class_debug_messages_ab964d3dbcf0d1ad351323bb5b0956cf1}{\+\_\+\+D\+E\+B\+UG}}
+\item 
+std\+::ofstream \mbox{\hyperlink{class_debug_messages_a590ca93cb60b3bc8912887e6062db082}{\+\_\+logfile}}
+\item 
+std\+::string \mbox{\hyperlink{class_debug_messages_a8ea5b7fdb0d5f127589fecbc444c499b}{\+\_\+logfile\+\_\+name}} = \char`\"{}Arboreal.\+log\char`\"{}
+\item 
+std\+::map$<$ const \mbox{\hyperlink{_debug_messages_8h_a0da83e35f29c11f7f3c637234f2149f9}{Control}}, const char $\ast$ $>$ \mbox{\hyperlink{class_debug_messages_a1069b263ae4eab6c06fb78e428f4893f}{Message\+Map}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_debug_messages_a7fb2c5a7cce97eb05661b1f6657cb650}\label{class_debug_messages_a7fb2c5a7cce97eb05661b1f6657cb650}} 
+\index{Debug\+Messages@{Debug\+Messages}!Debug\+Messages@{Debug\+Messages}}
+\index{Debug\+Messages@{Debug\+Messages}!Debug\+Messages@{Debug\+Messages}}
+\subsubsection{\texorpdfstring{Debug\+Messages()}{DebugMessages()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Debug\+Messages\+::\+Debug\+Messages (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_debug_messages_aa60430ca0e05e43a8bb27f4cdc1a158c}\label{class_debug_messages_aa60430ca0e05e43a8bb27f4cdc1a158c}} 
+\index{Debug\+Messages@{Debug\+Messages}!Debug\+Messages@{Debug\+Messages}}
+\index{Debug\+Messages@{Debug\+Messages}!Debug\+Messages@{Debug\+Messages}}
+\subsubsection{\texorpdfstring{Debug\+Messages()}{DebugMessages()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Debug\+Messages\+::\+Debug\+Messages (\begin{DoxyParamCaption}\item[{std\+::string}]{logfile\+\_\+name }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_debug_messages_a3700e476ad70d27ba14be67b43ff6f69}\label{class_debug_messages_a3700e476ad70d27ba14be67b43ff6f69}} 
+\index{Debug\+Messages@{Debug\+Messages}!````~Debug\+Messages@{$\sim$\+Debug\+Messages}}
+\index{````~Debug\+Messages@{$\sim$\+Debug\+Messages}!Debug\+Messages@{Debug\+Messages}}
+\subsubsection{\texorpdfstring{$\sim$\+Debug\+Messages()}{~DebugMessages()}}
+{\footnotesize\ttfamily Debug\+Messages\+::$\sim$\+Debug\+Messages (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_debug_messages_a5cd8aa8eb917f7da19484adc2c7e31a2}\label{class_debug_messages_a5cd8aa8eb917f7da19484adc2c7e31a2}} 
+\index{Debug\+Messages@{Debug\+Messages}!debug@{debug}}
+\index{debug@{debug}!Debug\+Messages@{Debug\+Messages}}
+\subsubsection{\texorpdfstring{debug()}{debug()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Debug\+Messages\+::debug (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{_debug_messages_8h_a0da83e35f29c11f7f3c637234f2149f9}{Control}}}]{flow }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_debug_messages_a49564f4a501f15317f26c360d0bfdb90}\label{class_debug_messages_a49564f4a501f15317f26c360d0bfdb90}} 
+\index{Debug\+Messages@{Debug\+Messages}!debug@{debug}}
+\index{debug@{debug}!Debug\+Messages@{Debug\+Messages}}
+\subsubsection{\texorpdfstring{debug()}{debug()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void Debug\+Messages\+::debug (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{_debug_messages_8h_a0da83e35f29c11f7f3c637234f2149f9}{Control}}}]{flow,  }\item[{T}]{data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_debug_messages_a9a73bcf5d8298fd68b55a28c0878e852}\label{class_debug_messages_a9a73bcf5d8298fd68b55a28c0878e852}} 
+\index{Debug\+Messages@{Debug\+Messages}!display@{display}}
+\index{display@{display}!Debug\+Messages@{Debug\+Messages}}
+\subsubsection{\texorpdfstring{display()}{display()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Debug\+Messages\+::display (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{_debug_messages_8h_a0da83e35f29c11f7f3c637234f2149f9}{Control}}}]{flow }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_debug_messages_ae9e335acbae42f1c8c97e03d4d588a8f}\label{class_debug_messages_ae9e335acbae42f1c8c97e03d4d588a8f}} 
+\index{Debug\+Messages@{Debug\+Messages}!display@{display}}
+\index{display@{display}!Debug\+Messages@{Debug\+Messages}}
+\subsubsection{\texorpdfstring{display()}{display()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void Debug\+Messages\+::display (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{_debug_messages_8h_a0da83e35f29c11f7f3c637234f2149f9}{Control}}}]{flow,  }\item[{T}]{data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_debug_messages_a802f7d26dedc412f06bfe0957415bfd4}\label{class_debug_messages_a802f7d26dedc412f06bfe0957415bfd4}} 
+\index{Debug\+Messages@{Debug\+Messages}!log@{log}}
+\index{log@{log}!Debug\+Messages@{Debug\+Messages}}
+\subsubsection{\texorpdfstring{log()}{log()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Debug\+Messages\+::log (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{_debug_messages_8h_a0da83e35f29c11f7f3c637234f2149f9}{Control}}}]{flow }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_debug_messages_accb5bd318d0b085aa1824ddd7b1bd31e}\label{class_debug_messages_accb5bd318d0b085aa1824ddd7b1bd31e}} 
+\index{Debug\+Messages@{Debug\+Messages}!log@{log}}
+\index{log@{log}!Debug\+Messages@{Debug\+Messages}}
+\subsubsection{\texorpdfstring{log()}{log()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void Debug\+Messages\+::log (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{_debug_messages_8h_a0da83e35f29c11f7f3c637234f2149f9}{Control}}}]{flow,  }\item[{T}]{data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_debug_messages_ac1e4085ade0d1ff7b603fd8205f74b7c}\label{class_debug_messages_ac1e4085ade0d1ff7b603fd8205f74b7c}} 
+\index{Debug\+Messages@{Debug\+Messages}!O\+FF@{O\+FF}}
+\index{O\+FF@{O\+FF}!Debug\+Messages@{Debug\+Messages}}
+\subsubsection{\texorpdfstring{O\+F\+F()}{OFF()}}
+{\footnotesize\ttfamily void Debug\+Messages\+::\+O\+FF (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_debug_messages_a95866775dcf301773daa7bed529c557e}\label{class_debug_messages_a95866775dcf301773daa7bed529c557e}} 
+\index{Debug\+Messages@{Debug\+Messages}!ON@{ON}}
+\index{ON@{ON}!Debug\+Messages@{Debug\+Messages}}
+\subsubsection{\texorpdfstring{O\+N()}{ON()}}
+{\footnotesize\ttfamily void Debug\+Messages\+::\+ON (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{class_debug_messages_ab964d3dbcf0d1ad351323bb5b0956cf1}\label{class_debug_messages_ab964d3dbcf0d1ad351323bb5b0956cf1}} 
+\index{Debug\+Messages@{Debug\+Messages}!\+\_\+\+D\+E\+B\+UG@{\+\_\+\+D\+E\+B\+UG}}
+\index{\+\_\+\+D\+E\+B\+UG@{\+\_\+\+D\+E\+B\+UG}!Debug\+Messages@{Debug\+Messages}}
+\subsubsection{\texorpdfstring{\+\_\+\+D\+E\+B\+UG}{\_DEBUG}}
+{\footnotesize\ttfamily bool Debug\+Messages\+::\+\_\+\+D\+E\+B\+UG\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_debug_messages_a590ca93cb60b3bc8912887e6062db082}\label{class_debug_messages_a590ca93cb60b3bc8912887e6062db082}} 
+\index{Debug\+Messages@{Debug\+Messages}!\+\_\+logfile@{\+\_\+logfile}}
+\index{\+\_\+logfile@{\+\_\+logfile}!Debug\+Messages@{Debug\+Messages}}
+\subsubsection{\texorpdfstring{\+\_\+logfile}{\_logfile}}
+{\footnotesize\ttfamily std\+::ofstream Debug\+Messages\+::\+\_\+logfile\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_debug_messages_a8ea5b7fdb0d5f127589fecbc444c499b}\label{class_debug_messages_a8ea5b7fdb0d5f127589fecbc444c499b}} 
+\index{Debug\+Messages@{Debug\+Messages}!\+\_\+logfile\+\_\+name@{\+\_\+logfile\+\_\+name}}
+\index{\+\_\+logfile\+\_\+name@{\+\_\+logfile\+\_\+name}!Debug\+Messages@{Debug\+Messages}}
+\subsubsection{\texorpdfstring{\+\_\+logfile\+\_\+name}{\_logfile\_name}}
+{\footnotesize\ttfamily std\+::string Debug\+Messages\+::\+\_\+logfile\+\_\+name = \char`\"{}Arboreal.\+log\char`\"{}\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_debug_messages_a1069b263ae4eab6c06fb78e428f4893f}\label{class_debug_messages_a1069b263ae4eab6c06fb78e428f4893f}} 
+\index{Debug\+Messages@{Debug\+Messages}!Message\+Map@{Message\+Map}}
+\index{Message\+Map@{Message\+Map}!Debug\+Messages@{Debug\+Messages}}
+\subsubsection{\texorpdfstring{Message\+Map}{MessageMap}}
+{\footnotesize\ttfamily std\+::map$<$const \mbox{\hyperlink{_debug_messages_8h_a0da83e35f29c11f7f3c637234f2149f9}{Control}}, const char$\ast$$>$ Debug\+Messages\+::\+Message\+Map\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Shared\+Headers/\mbox{\hyperlink{_debug_messages_8h}{Debug\+Messages.\+h}}\item 
+Shared\+C\+P\+P\+Files/\mbox{\hyperlink{_debug_messages_8cpp}{Debug\+Messages.\+cpp}}\end{DoxyCompactItemize}

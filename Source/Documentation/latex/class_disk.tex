@@ -1,0 +1,150 @@
+\hypertarget{class_disk}{}\section{Disk Class Reference}
+\label{class_disk}\index{Disk@{Disk}}
+
+
+{\ttfamily \#include $<$Disk.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_disk_a5be49d1002da046d1890df1b088900e4}{Disk}} (Blk\+Num\+Type numblocks, size\+\_\+t block\+Size, char $\ast$location)
+\item 
+\mbox{\hyperlink{class_disk_a77518c808f3f5d9e902a55942542c337}{$\sim$\+Disk}} ()
+\end{DoxyCompactItemize}
+\begin{Indent}\textbf{ Modifier Functions}\par
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_disk_a5d335138f56e6b87c8ebc4b6473183e7}{write\+Disk\+Block}} (Blk\+Num\+Type blknum, char $\ast$blkdata)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Accessor Functions}\par
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_disk_a2598cdd9013bdbb1213afa878c567daa}{read\+Disk\+Block}} (Blk\+Num\+Type blknum, char $\ast$blkdata)
+\item 
+size\+\_\+t \mbox{\hyperlink{class_disk_a1c149b57524fe4e7ae7c8643309e0501}{get\+Block\+Size}} ()
+\item 
+int \mbox{\hyperlink{class_disk_a3c61119ce5707dd4ab039201590a7c22}{get\+Block\+Count}} ()
+\end{DoxyCompactItemize}
+\end{Indent}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+Blk\+Num\+Type \mbox{\hyperlink{class_disk_a6389ea8f99ad557d02685b292c23a656}{\+\_\+disk\+Size}}
+\item 
+size\+\_\+t \mbox{\hyperlink{class_disk_a3207de813954dad3e2547c7a892a04a7}{\+\_\+block\+Size}}
+\item 
+Blk\+Num\+Type \mbox{\hyperlink{class_disk_a35a2900e2a8d3b567ef7280d3c475eac}{\+\_\+block\+Count}}
+\item 
+char $\ast$ \mbox{\hyperlink{class_disk_a04bd92b804d0c07e87a9277fa647c972}{\+\_\+disk\+Location}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_disk_a5be49d1002da046d1890df1b088900e4}\label{class_disk_a5be49d1002da046d1890df1b088900e4}} 
+\index{Disk@{Disk}!Disk@{Disk}}
+\index{Disk@{Disk}!Disk@{Disk}}
+\subsubsection{\texorpdfstring{Disk()}{Disk()}}
+{\footnotesize\ttfamily Disk\+::\+Disk (\begin{DoxyParamCaption}\item[{Blk\+Num\+Type}]{numblocks,  }\item[{size\+\_\+t}]{block\+Size,  }\item[{char $\ast$}]{location }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em numblocks} & the number of blocks on the \mbox{\hyperlink{class_disk}{Disk}} \\
+\hline
+{\em blocksize} & the block size for \mbox{\hyperlink{class_disk}{Disk}} blocks \\
+\hline
+{\em location} & the location of the \mbox{\hyperlink{class_disk}{Disk}} \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_disk_a77518c808f3f5d9e902a55942542c337}\label{class_disk_a77518c808f3f5d9e902a55942542c337}} 
+\index{Disk@{Disk}!````~Disk@{$\sim$\+Disk}}
+\index{````~Disk@{$\sim$\+Disk}!Disk@{Disk}}
+\subsubsection{\texorpdfstring{$\sim$\+Disk()}{~Disk()}}
+{\footnotesize\ttfamily Disk\+::$\sim$\+Disk (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_disk_a3c61119ce5707dd4ab039201590a7c22}\label{class_disk_a3c61119ce5707dd4ab039201590a7c22}} 
+\index{Disk@{Disk}!get\+Block\+Count@{get\+Block\+Count}}
+\index{get\+Block\+Count@{get\+Block\+Count}!Disk@{Disk}}
+\subsubsection{\texorpdfstring{get\+Block\+Count()}{getBlockCount()}}
+{\footnotesize\ttfamily int Disk\+::get\+Block\+Count (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+the number of blocks on the entire \mbox{\hyperlink{class_disk}{Disk}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_disk_a1c149b57524fe4e7ae7c8643309e0501}\label{class_disk_a1c149b57524fe4e7ae7c8643309e0501}} 
+\index{Disk@{Disk}!get\+Block\+Size@{get\+Block\+Size}}
+\index{get\+Block\+Size@{get\+Block\+Size}!Disk@{Disk}}
+\subsubsection{\texorpdfstring{get\+Block\+Size()}{getBlockSize()}}
+{\footnotesize\ttfamily size\+\_\+t Disk\+::get\+Block\+Size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+the blocksize of the \mbox{\hyperlink{class_disk}{Disk}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_disk_a2598cdd9013bdbb1213afa878c567daa}\label{class_disk_a2598cdd9013bdbb1213afa878c567daa}} 
+\index{Disk@{Disk}!read\+Disk\+Block@{read\+Disk\+Block}}
+\index{read\+Disk\+Block@{read\+Disk\+Block}!Disk@{Disk}}
+\subsubsection{\texorpdfstring{read\+Disk\+Block()}{readDiskBlock()}}
+{\footnotesize\ttfamily void Disk\+::read\+Disk\+Block (\begin{DoxyParamCaption}\item[{Blk\+Num\+Type}]{blknum,  }\item[{char $\ast$}]{blkdata }\end{DoxyParamCaption})}
+
+Reads a block from the \mbox{\hyperlink{class_disk}{Disk}}. 
+\begin{DoxyParams}{Parameters}
+{\em blknum} & the blocknumber to be read \\
+\hline
+{\em blkdata} & the buffer to put the read data. must be large enough to contain an entire block of data \\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+Partition\+Manger\+::read\+Disk\+Block() Parition\+Manager\+::read\+Disk\+Block() 
+\end{DoxySeeAlso}
+\mbox{\Hypertarget{class_disk_a5d335138f56e6b87c8ebc4b6473183e7}\label{class_disk_a5d335138f56e6b87c8ebc4b6473183e7}} 
+\index{Disk@{Disk}!write\+Disk\+Block@{write\+Disk\+Block}}
+\index{write\+Disk\+Block@{write\+Disk\+Block}!Disk@{Disk}}
+\subsubsection{\texorpdfstring{write\+Disk\+Block()}{writeDiskBlock()}}
+{\footnotesize\ttfamily void Disk\+::write\+Disk\+Block (\begin{DoxyParamCaption}\item[{Blk\+Num\+Type}]{blknum,  }\item[{char $\ast$}]{blkdata }\end{DoxyParamCaption})}
+
+Writes a block to the \mbox{\hyperlink{class_disk}{Disk}}. 
+\begin{DoxyParams}{Parameters}
+{\em blknum} & the blocknumber to be written \\
+\hline
+{\em blkdata} & the buffer to write the data from. It Will write an entire block size of data. \\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+Partition\+Manger\+::write\+Disk\+Block() Parition\+Manager\+::write\+Disk\+Block() 
+\end{DoxySeeAlso}
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{class_disk_a35a2900e2a8d3b567ef7280d3c475eac}\label{class_disk_a35a2900e2a8d3b567ef7280d3c475eac}} 
+\index{Disk@{Disk}!\+\_\+block\+Count@{\+\_\+block\+Count}}
+\index{\+\_\+block\+Count@{\+\_\+block\+Count}!Disk@{Disk}}
+\subsubsection{\texorpdfstring{\+\_\+block\+Count}{\_blockCount}}
+{\footnotesize\ttfamily Blk\+Num\+Type Disk\+::\+\_\+block\+Count\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_disk_a3207de813954dad3e2547c7a892a04a7}\label{class_disk_a3207de813954dad3e2547c7a892a04a7}} 
+\index{Disk@{Disk}!\+\_\+block\+Size@{\+\_\+block\+Size}}
+\index{\+\_\+block\+Size@{\+\_\+block\+Size}!Disk@{Disk}}
+\subsubsection{\texorpdfstring{\+\_\+block\+Size}{\_blockSize}}
+{\footnotesize\ttfamily size\+\_\+t Disk\+::\+\_\+block\+Size\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_disk_a04bd92b804d0c07e87a9277fa647c972}\label{class_disk_a04bd92b804d0c07e87a9277fa647c972}} 
+\index{Disk@{Disk}!\+\_\+disk\+Location@{\+\_\+disk\+Location}}
+\index{\+\_\+disk\+Location@{\+\_\+disk\+Location}!Disk@{Disk}}
+\subsubsection{\texorpdfstring{\+\_\+disk\+Location}{\_diskLocation}}
+{\footnotesize\ttfamily char$\ast$ Disk\+::\+\_\+disk\+Location\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_disk_a6389ea8f99ad557d02685b292c23a656}\label{class_disk_a6389ea8f99ad557d02685b292c23a656}} 
+\index{Disk@{Disk}!\+\_\+disk\+Size@{\+\_\+disk\+Size}}
+\index{\+\_\+disk\+Size@{\+\_\+disk\+Size}!Disk@{Disk}}
+\subsubsection{\texorpdfstring{\+\_\+disk\+Size}{\_diskSize}}
+{\footnotesize\ttfamily Blk\+Num\+Type Disk\+::\+\_\+disk\+Size\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Filesystem/\+Daemon\+Dependancies/\+Disk/\mbox{\hyperlink{_disk_8h}{Disk.\+h}}\item 
+Filesystem/\+Daemon\+Dependancies/\+Disk/\mbox{\hyperlink{_disk_8cpp}{Disk.\+cpp}}\end{DoxyCompactItemize}

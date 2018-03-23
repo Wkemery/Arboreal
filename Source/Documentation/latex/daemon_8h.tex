@@ -1,0 +1,285 @@
+\hypertarget{daemon_8h}{}\section{Filesystem/\+Daemon\+Headers/daemon.h File Reference}
+\label{daemon_8h}\index{Filesystem/\+Daemon\+Headers/daemon.\+h@{Filesystem/\+Daemon\+Headers/daemon.\+h}}
+{\ttfamily \#include \char`\"{}../../\+Shared\+Headers/\+Parser.\+h\char`\"{}}\newline
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{daemon_8h_aeefbbafa97642defe3ee6c3080b7d66f}{B\+A\+C\+K\+L\+OG}}~10                  /$\ast$ Number of Connection Requests that the Server Can Queue $\ast$/
+\item 
+\#define \mbox{\hyperlink{daemon_8h_af8bfae90c5d6853fcfb487e05b9f50c8}{F\+L\+AG}}~0                      /$\ast$ \mbox{\hyperlink{liaison_8cpp_a1ca03d8f367ec7987b5a7321fe82e23e}{Flag}} for recv() $\ast$/
+\item 
+\#define \mbox{\hyperlink{daemon_8h_a45ba202b05caf39795aeca91b0ae547e}{T\+I\+M\+E\+O\+UT}}~10
+\item 
+\#define \mbox{\hyperlink{daemon_8h_aa8cecfc5c5c054d2875c03e77b7be15d}{T\+R\+UE}}~1
+\item 
+\#define \mbox{\hyperlink{daemon_8h_aa93f0eb578d23995850d61f7d61c55c1}{F\+A\+L\+SE}}~0
+\item 
+\#define \mbox{\hyperlink{daemon_8h_a614217d263be1fb1a5f76e2ff7be19a2}{P\+O\+RT}}~70777
+\item 
+\#define \mbox{\hyperlink{daemon_8h_ab95c4556ea9e5b815392d36c3d7b2ec0}{M\+A\+X\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+S\+I\+ZE}}~4096
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{daemon_8h_ab4a62974db5b3e74837faeaa0bc6c4f2}{sig\+\_\+caught}} (int sig)
+\item 
+void \mbox{\hyperlink{daemon_8h_a3cec7419eb92271b6b9ff30b2e77f58d}{quit\+\_\+fs}} (void)
+\item 
+int \mbox{\hyperlink{daemon_8h_a09a26d939003d8d53c3a075bb3e33118}{create\+\_\+sock}} (int timeout)
+\item 
+void \mbox{\hyperlink{daemon_8h_af7bef115721550ae58dc8ac789d2e751}{set\+\_\+socket\+\_\+opt}} (int daemon\+\_\+sock, int sock\+\_\+opt, int timeout)
+\item 
+void \mbox{\hyperlink{daemon_8h_a53c816ce3634c7269aa5c25272a8eea9}{set\+\_\+nonblocking}} (int daemon\+\_\+sock, int is\+\_\+on)
+\item 
+void \mbox{\hyperlink{daemon_8h_aaa8bd496208c38056fdac7942bdc132e}{bind\+\_\+socket}} (int daemon\+\_\+sock, struct sockaddr\+\_\+in daemon\+\_\+sockaddr, int timeout)
+\item 
+void \mbox{\hyperlink{daemon_8h_a6298a60a52052d460b7130a0066fa81e}{listen\+\_\+on\+\_\+socket}} (int daemon\+\_\+sock, int backlog, int timeout)
+\item 
+int \mbox{\hyperlink{daemon_8h_a9caf20ba13e1adbc3e58c175a9b11fc0}{get\+\_\+cmnd\+\_\+id}} (char $\ast$cmnd)
+\item 
+std\+::string \mbox{\hyperlink{daemon_8h_a24753980cf1ab8a31fc2a6abd5554607}{get\+\_\+partition}} (char $\ast$cmnd)
+\item 
+bool \mbox{\hyperlink{daemon_8h_a1e9d353a1de9c066f98ed62817e90dc6}{is\+\_\+number}} (const char $\ast$str)
+\item 
+std\+::string \mbox{\hyperlink{daemon_8h_aaee85810f5a0e60ff44564c606f6a712}{pad\+\_\+string}} (std\+::string string, int size, char value)
+\item 
+std\+::unordered\+\_\+set$<$ std\+::string $>$ \mbox{\hyperlink{daemon_8h_a152af34b1cdda709bddebcdf6c738db0}{get\+\_\+set}} (char $\ast$command, char delim)
+\item 
+std\+::unordered\+\_\+set$<$ std\+::string $>$ \mbox{\hyperlink{daemon_8h_ae4981573d689aeeb7f314dcbb8a38dcc}{get\+\_\+set}} (std\+::vector$<$ std\+::string $>$ vec)
+\item 
+std\+::string \mbox{\hyperlink{daemon_8h_ad7e66a31d0fc71335e3708039adbdb17}{get\+\_\+file\+\_\+info}} (\mbox{\hyperlink{class_file}{File}} $\ast$file)
+\item 
+std\+::vector$<$ std\+::string $>$ \mbox{\hyperlink{daemon_8h_a64011b3439e50918326d7c69fa00dcbe}{serialize\+\_\+fileinfo}} (std\+::vector$<$ \mbox{\hyperlink{class_file_info}{File\+Info}} $\ast$$>$ $\ast$fileinfo)
+\item 
+std\+::vector$<$ std\+::string $>$ \mbox{\hyperlink{daemon_8h_a4917ccf4a875b7535060d480a8d8af07}{execute}} (int id, char $\ast$command, int fd)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{daemon_8h_a117352cc494cc62c6b2f1882786a332c}{D\+E\+B\+UG}} = false
+\item 
+fd\+\_\+set \mbox{\hyperlink{daemon_8h_a04d8a08e3567acd8692f61fe72152604}{master\+\_\+set}}
+\item 
+int \mbox{\hyperlink{daemon_8h_a013c95bedcbc0533a9807236a434742c}{my\+\_\+fid}} = 999
+\item 
+int \mbox{\hyperlink{daemon_8h_a94fe599a4c2af5cd6dbcaafc8e52a012}{max\+\_\+fid}} = 0
+\item 
+int \mbox{\hyperlink{daemon_8h_ab38100700e25b170fce49787ae19dcb8}{current\+\_\+command\+\_\+id}} = 0
+\item 
+std\+::map$<$ int, \mbox{\hyperlink{class_file_system}{File\+System}} $\ast$ $>$ \mbox{\hyperlink{daemon_8h_a357d51ebf401b50a7fdca6764e0d2cf1}{fd\+\_\+fs\+\_\+map}}
+\item 
+std\+::map$<$ std\+::string, \mbox{\hyperlink{class_file_system}{File\+System}} $\ast$ $>$ \mbox{\hyperlink{daemon_8h_a64ebd32eaa7ffd7ac4bd03cac2c4dab7}{part\+\_\+fs\+\_\+map}}
+\item 
+std\+::map$<$ std\+::string, unsigned int $>$ \mbox{\hyperlink{daemon_8h_ae4c11c8968b49578dff32367abcc8b66}{path\+\_\+filedesc\+\_\+map}}
+\item 
+\mbox{\hyperlink{class_disk}{Disk}} $\ast$ \mbox{\hyperlink{daemon_8h_a86c4a7377e8e3575bcce3c81a810d503}{d}} = 0
+\item 
+\mbox{\hyperlink{class_disk_manager}{Disk\+Manager}} $\ast$ \mbox{\hyperlink{daemon_8h_aa4c8f283fd621cbde00155b93e826d00}{dm}} = 0
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{daemon_8h_aeefbbafa97642defe3ee6c3080b7d66f}\label{daemon_8h_aeefbbafa97642defe3ee6c3080b7d66f}} 
+\index{daemon.\+h@{daemon.\+h}!B\+A\+C\+K\+L\+OG@{B\+A\+C\+K\+L\+OG}}
+\index{B\+A\+C\+K\+L\+OG@{B\+A\+C\+K\+L\+OG}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{B\+A\+C\+K\+L\+OG}{BACKLOG}}
+{\footnotesize\ttfamily \#define B\+A\+C\+K\+L\+OG~10                  /$\ast$ Number of Connection Requests that the Server Can Queue $\ast$/}
+
+\mbox{\Hypertarget{daemon_8h_aa93f0eb578d23995850d61f7d61c55c1}\label{daemon_8h_aa93f0eb578d23995850d61f7d61c55c1}} 
+\index{daemon.\+h@{daemon.\+h}!F\+A\+L\+SE@{F\+A\+L\+SE}}
+\index{F\+A\+L\+SE@{F\+A\+L\+SE}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{F\+A\+L\+SE}{FALSE}}
+{\footnotesize\ttfamily \#define F\+A\+L\+SE~0}
+
+\mbox{\Hypertarget{daemon_8h_af8bfae90c5d6853fcfb487e05b9f50c8}\label{daemon_8h_af8bfae90c5d6853fcfb487e05b9f50c8}} 
+\index{daemon.\+h@{daemon.\+h}!F\+L\+AG@{F\+L\+AG}}
+\index{F\+L\+AG@{F\+L\+AG}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{F\+L\+AG}{FLAG}}
+{\footnotesize\ttfamily \#define F\+L\+AG~0                      /$\ast$ \mbox{\hyperlink{liaison_8cpp_a1ca03d8f367ec7987b5a7321fe82e23e}{Flag}} for recv() $\ast$/}
+
+\mbox{\Hypertarget{daemon_8h_ab95c4556ea9e5b815392d36c3d7b2ec0}\label{daemon_8h_ab95c4556ea9e5b815392d36c3d7b2ec0}} 
+\index{daemon.\+h@{daemon.\+h}!M\+A\+X\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+S\+I\+ZE@{M\+A\+X\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+S\+I\+ZE}}
+\index{M\+A\+X\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+S\+I\+ZE@{M\+A\+X\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+S\+I\+ZE}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{M\+A\+X\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+S\+I\+ZE}{MAX\_COMMAND\_SIZE}}
+{\footnotesize\ttfamily \#define M\+A\+X\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+S\+I\+ZE~4096}
+
+\mbox{\Hypertarget{daemon_8h_a614217d263be1fb1a5f76e2ff7be19a2}\label{daemon_8h_a614217d263be1fb1a5f76e2ff7be19a2}} 
+\index{daemon.\+h@{daemon.\+h}!P\+O\+RT@{P\+O\+RT}}
+\index{P\+O\+RT@{P\+O\+RT}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{P\+O\+RT}{PORT}}
+{\footnotesize\ttfamily \#define P\+O\+RT~70777}
+
+\mbox{\Hypertarget{daemon_8h_a45ba202b05caf39795aeca91b0ae547e}\label{daemon_8h_a45ba202b05caf39795aeca91b0ae547e}} 
+\index{daemon.\+h@{daemon.\+h}!T\+I\+M\+E\+O\+UT@{T\+I\+M\+E\+O\+UT}}
+\index{T\+I\+M\+E\+O\+UT@{T\+I\+M\+E\+O\+UT}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{T\+I\+M\+E\+O\+UT}{TIMEOUT}}
+{\footnotesize\ttfamily \#define T\+I\+M\+E\+O\+UT~10}
+
+\mbox{\Hypertarget{daemon_8h_aa8cecfc5c5c054d2875c03e77b7be15d}\label{daemon_8h_aa8cecfc5c5c054d2875c03e77b7be15d}} 
+\index{daemon.\+h@{daemon.\+h}!T\+R\+UE@{T\+R\+UE}}
+\index{T\+R\+UE@{T\+R\+UE}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{T\+R\+UE}{TRUE}}
+{\footnotesize\ttfamily \#define T\+R\+UE~1}
+
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{daemon_8h_aaa8bd496208c38056fdac7942bdc132e}\label{daemon_8h_aaa8bd496208c38056fdac7942bdc132e}} 
+\index{daemon.\+h@{daemon.\+h}!bind\+\_\+socket@{bind\+\_\+socket}}
+\index{bind\+\_\+socket@{bind\+\_\+socket}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{bind\+\_\+socket()}{bind\_socket()}}
+{\footnotesize\ttfamily void bind\+\_\+socket (\begin{DoxyParamCaption}\item[{int}]{daemon\+\_\+sock,  }\item[{struct sockaddr\+\_\+in}]{daemon\+\_\+sockaddr,  }\item[{int}]{timeout }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{daemon_8h_a09a26d939003d8d53c3a075bb3e33118}\label{daemon_8h_a09a26d939003d8d53c3a075bb3e33118}} 
+\index{daemon.\+h@{daemon.\+h}!create\+\_\+sock@{create\+\_\+sock}}
+\index{create\+\_\+sock@{create\+\_\+sock}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{create\+\_\+sock()}{create\_sock()}}
+{\footnotesize\ttfamily int create\+\_\+sock (\begin{DoxyParamCaption}\item[{int}]{timeout }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{daemon_8h_a4917ccf4a875b7535060d480a8d8af07}\label{daemon_8h_a4917ccf4a875b7535060d480a8d8af07}} 
+\index{daemon.\+h@{daemon.\+h}!execute@{execute}}
+\index{execute@{execute}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{execute()}{execute()}}
+{\footnotesize\ttfamily std\+::vector$<$std\+::string$>$ execute (\begin{DoxyParamCaption}\item[{int}]{id,  }\item[{char $\ast$}]{command,  }\item[{int}]{fd }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{daemon_8h_a9caf20ba13e1adbc3e58c175a9b11fc0}\label{daemon_8h_a9caf20ba13e1adbc3e58c175a9b11fc0}} 
+\index{daemon.\+h@{daemon.\+h}!get\+\_\+cmnd\+\_\+id@{get\+\_\+cmnd\+\_\+id}}
+\index{get\+\_\+cmnd\+\_\+id@{get\+\_\+cmnd\+\_\+id}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{get\+\_\+cmnd\+\_\+id()}{get\_cmnd\_id()}}
+{\footnotesize\ttfamily int get\+\_\+cmnd\+\_\+id (\begin{DoxyParamCaption}\item[{char $\ast$}]{cmnd }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{daemon_8h_ad7e66a31d0fc71335e3708039adbdb17}\label{daemon_8h_ad7e66a31d0fc71335e3708039adbdb17}} 
+\index{daemon.\+h@{daemon.\+h}!get\+\_\+file\+\_\+info@{get\+\_\+file\+\_\+info}}
+\index{get\+\_\+file\+\_\+info@{get\+\_\+file\+\_\+info}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{get\+\_\+file\+\_\+info()}{get\_file\_info()}}
+{\footnotesize\ttfamily std\+::string get\+\_\+file\+\_\+info (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_file}{File}} $\ast$}]{file }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{daemon_8h_a24753980cf1ab8a31fc2a6abd5554607}\label{daemon_8h_a24753980cf1ab8a31fc2a6abd5554607}} 
+\index{daemon.\+h@{daemon.\+h}!get\+\_\+partition@{get\+\_\+partition}}
+\index{get\+\_\+partition@{get\+\_\+partition}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{get\+\_\+partition()}{get\_partition()}}
+{\footnotesize\ttfamily std\+::string get\+\_\+partition (\begin{DoxyParamCaption}\item[{char $\ast$}]{cmnd }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{daemon_8h_a152af34b1cdda709bddebcdf6c738db0}\label{daemon_8h_a152af34b1cdda709bddebcdf6c738db0}} 
+\index{daemon.\+h@{daemon.\+h}!get\+\_\+set@{get\+\_\+set}}
+\index{get\+\_\+set@{get\+\_\+set}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{get\+\_\+set()}{get\_set()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily std\+::unordered\+\_\+set$<$std\+::string$>$ get\+\_\+set (\begin{DoxyParamCaption}\item[{char $\ast$}]{command,  }\item[{char}]{delim }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{daemon_8h_ae4981573d689aeeb7f314dcbb8a38dcc}\label{daemon_8h_ae4981573d689aeeb7f314dcbb8a38dcc}} 
+\index{daemon.\+h@{daemon.\+h}!get\+\_\+set@{get\+\_\+set}}
+\index{get\+\_\+set@{get\+\_\+set}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{get\+\_\+set()}{get\_set()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily std\+::unordered\+\_\+set$<$std\+::string$>$ get\+\_\+set (\begin{DoxyParamCaption}\item[{std\+::vector$<$ std\+::string $>$}]{vec }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{daemon_8h_a1e9d353a1de9c066f98ed62817e90dc6}\label{daemon_8h_a1e9d353a1de9c066f98ed62817e90dc6}} 
+\index{daemon.\+h@{daemon.\+h}!is\+\_\+number@{is\+\_\+number}}
+\index{is\+\_\+number@{is\+\_\+number}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{is\+\_\+number()}{is\_number()}}
+{\footnotesize\ttfamily bool is\+\_\+number (\begin{DoxyParamCaption}\item[{const char $\ast$}]{str }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{daemon_8h_a6298a60a52052d460b7130a0066fa81e}\label{daemon_8h_a6298a60a52052d460b7130a0066fa81e}} 
+\index{daemon.\+h@{daemon.\+h}!listen\+\_\+on\+\_\+socket@{listen\+\_\+on\+\_\+socket}}
+\index{listen\+\_\+on\+\_\+socket@{listen\+\_\+on\+\_\+socket}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{listen\+\_\+on\+\_\+socket()}{listen\_on\_socket()}}
+{\footnotesize\ttfamily void listen\+\_\+on\+\_\+socket (\begin{DoxyParamCaption}\item[{int}]{daemon\+\_\+sock,  }\item[{int}]{backlog,  }\item[{int}]{timeout }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{daemon_8h_aaee85810f5a0e60ff44564c606f6a712}\label{daemon_8h_aaee85810f5a0e60ff44564c606f6a712}} 
+\index{daemon.\+h@{daemon.\+h}!pad\+\_\+string@{pad\+\_\+string}}
+\index{pad\+\_\+string@{pad\+\_\+string}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{pad\+\_\+string()}{pad\_string()}}
+{\footnotesize\ttfamily std\+::string pad\+\_\+string (\begin{DoxyParamCaption}\item[{std\+::string}]{string,  }\item[{int}]{size,  }\item[{char}]{value }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{daemon_8h_a3cec7419eb92271b6b9ff30b2e77f58d}\label{daemon_8h_a3cec7419eb92271b6b9ff30b2e77f58d}} 
+\index{daemon.\+h@{daemon.\+h}!quit\+\_\+fs@{quit\+\_\+fs}}
+\index{quit\+\_\+fs@{quit\+\_\+fs}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{quit\+\_\+fs()}{quit\_fs()}}
+{\footnotesize\ttfamily void quit\+\_\+fs (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{daemon_8h_a64011b3439e50918326d7c69fa00dcbe}\label{daemon_8h_a64011b3439e50918326d7c69fa00dcbe}} 
+\index{daemon.\+h@{daemon.\+h}!serialize\+\_\+fileinfo@{serialize\+\_\+fileinfo}}
+\index{serialize\+\_\+fileinfo@{serialize\+\_\+fileinfo}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{serialize\+\_\+fileinfo()}{serialize\_fileinfo()}}
+{\footnotesize\ttfamily std\+::vector$<$std\+::string$>$ serialize\+\_\+fileinfo (\begin{DoxyParamCaption}\item[{std\+::vector$<$ \mbox{\hyperlink{class_file_info}{File\+Info}} $\ast$$>$ $\ast$}]{fileinfo }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{daemon_8h_a53c816ce3634c7269aa5c25272a8eea9}\label{daemon_8h_a53c816ce3634c7269aa5c25272a8eea9}} 
+\index{daemon.\+h@{daemon.\+h}!set\+\_\+nonblocking@{set\+\_\+nonblocking}}
+\index{set\+\_\+nonblocking@{set\+\_\+nonblocking}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{set\+\_\+nonblocking()}{set\_nonblocking()}}
+{\footnotesize\ttfamily void set\+\_\+nonblocking (\begin{DoxyParamCaption}\item[{int}]{daemon\+\_\+sock,  }\item[{int}]{is\+\_\+on }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{daemon_8h_af7bef115721550ae58dc8ac789d2e751}\label{daemon_8h_af7bef115721550ae58dc8ac789d2e751}} 
+\index{daemon.\+h@{daemon.\+h}!set\+\_\+socket\+\_\+opt@{set\+\_\+socket\+\_\+opt}}
+\index{set\+\_\+socket\+\_\+opt@{set\+\_\+socket\+\_\+opt}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{set\+\_\+socket\+\_\+opt()}{set\_socket\_opt()}}
+{\footnotesize\ttfamily void set\+\_\+socket\+\_\+opt (\begin{DoxyParamCaption}\item[{int}]{daemon\+\_\+sock,  }\item[{int}]{sock\+\_\+opt,  }\item[{int}]{timeout }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{daemon_8h_ab4a62974db5b3e74837faeaa0bc6c4f2}\label{daemon_8h_ab4a62974db5b3e74837faeaa0bc6c4f2}} 
+\index{daemon.\+h@{daemon.\+h}!sig\+\_\+caught@{sig\+\_\+caught}}
+\index{sig\+\_\+caught@{sig\+\_\+caught}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{sig\+\_\+caught()}{sig\_caught()}}
+{\footnotesize\ttfamily void sig\+\_\+caught (\begin{DoxyParamCaption}\item[{int}]{sig }\end{DoxyParamCaption})}
+
+
+
+\subsection{Variable Documentation}
+\mbox{\Hypertarget{daemon_8h_ab38100700e25b170fce49787ae19dcb8}\label{daemon_8h_ab38100700e25b170fce49787ae19dcb8}} 
+\index{daemon.\+h@{daemon.\+h}!current\+\_\+command\+\_\+id@{current\+\_\+command\+\_\+id}}
+\index{current\+\_\+command\+\_\+id@{current\+\_\+command\+\_\+id}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{current\+\_\+command\+\_\+id}{current\_command\_id}}
+{\footnotesize\ttfamily int current\+\_\+command\+\_\+id = 0}
+
+\mbox{\Hypertarget{daemon_8h_a86c4a7377e8e3575bcce3c81a810d503}\label{daemon_8h_a86c4a7377e8e3575bcce3c81a810d503}} 
+\index{daemon.\+h@{daemon.\+h}!d@{d}}
+\index{d@{d}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{d}{d}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_disk}{Disk}}$\ast$ d = 0}
+
+\mbox{\Hypertarget{daemon_8h_a117352cc494cc62c6b2f1882786a332c}\label{daemon_8h_a117352cc494cc62c6b2f1882786a332c}} 
+\index{daemon.\+h@{daemon.\+h}!D\+E\+B\+UG@{D\+E\+B\+UG}}
+\index{D\+E\+B\+UG@{D\+E\+B\+UG}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{D\+E\+B\+UG}{DEBUG}}
+{\footnotesize\ttfamily bool D\+E\+B\+UG = false}
+
+\mbox{\Hypertarget{daemon_8h_aa4c8f283fd621cbde00155b93e826d00}\label{daemon_8h_aa4c8f283fd621cbde00155b93e826d00}} 
+\index{daemon.\+h@{daemon.\+h}!dm@{dm}}
+\index{dm@{dm}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{dm}{dm}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_disk_manager}{Disk\+Manager}}$\ast$ dm = 0}
+
+\mbox{\Hypertarget{daemon_8h_a357d51ebf401b50a7fdca6764e0d2cf1}\label{daemon_8h_a357d51ebf401b50a7fdca6764e0d2cf1}} 
+\index{daemon.\+h@{daemon.\+h}!fd\+\_\+fs\+\_\+map@{fd\+\_\+fs\+\_\+map}}
+\index{fd\+\_\+fs\+\_\+map@{fd\+\_\+fs\+\_\+map}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{fd\+\_\+fs\+\_\+map}{fd\_fs\_map}}
+{\footnotesize\ttfamily std\+::map$<$int, \mbox{\hyperlink{class_file_system}{File\+System}}$\ast$$>$ fd\+\_\+fs\+\_\+map}
+
+\mbox{\Hypertarget{daemon_8h_a04d8a08e3567acd8692f61fe72152604}\label{daemon_8h_a04d8a08e3567acd8692f61fe72152604}} 
+\index{daemon.\+h@{daemon.\+h}!master\+\_\+set@{master\+\_\+set}}
+\index{master\+\_\+set@{master\+\_\+set}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{master\+\_\+set}{master\_set}}
+{\footnotesize\ttfamily fd\+\_\+set master\+\_\+set}
+
+\mbox{\Hypertarget{daemon_8h_a94fe599a4c2af5cd6dbcaafc8e52a012}\label{daemon_8h_a94fe599a4c2af5cd6dbcaafc8e52a012}} 
+\index{daemon.\+h@{daemon.\+h}!max\+\_\+fid@{max\+\_\+fid}}
+\index{max\+\_\+fid@{max\+\_\+fid}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{max\+\_\+fid}{max\_fid}}
+{\footnotesize\ttfamily int max\+\_\+fid = 0}
+
+\mbox{\Hypertarget{daemon_8h_a013c95bedcbc0533a9807236a434742c}\label{daemon_8h_a013c95bedcbc0533a9807236a434742c}} 
+\index{daemon.\+h@{daemon.\+h}!my\+\_\+fid@{my\+\_\+fid}}
+\index{my\+\_\+fid@{my\+\_\+fid}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{my\+\_\+fid}{my\_fid}}
+{\footnotesize\ttfamily int my\+\_\+fid = 999}
+
+\mbox{\Hypertarget{daemon_8h_a64ebd32eaa7ffd7ac4bd03cac2c4dab7}\label{daemon_8h_a64ebd32eaa7ffd7ac4bd03cac2c4dab7}} 
+\index{daemon.\+h@{daemon.\+h}!part\+\_\+fs\+\_\+map@{part\+\_\+fs\+\_\+map}}
+\index{part\+\_\+fs\+\_\+map@{part\+\_\+fs\+\_\+map}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{part\+\_\+fs\+\_\+map}{part\_fs\_map}}
+{\footnotesize\ttfamily std\+::map$<$std\+::string,\mbox{\hyperlink{class_file_system}{File\+System}}$\ast$$>$ part\+\_\+fs\+\_\+map}
+
+\mbox{\Hypertarget{daemon_8h_ae4c11c8968b49578dff32367abcc8b66}\label{daemon_8h_ae4c11c8968b49578dff32367abcc8b66}} 
+\index{daemon.\+h@{daemon.\+h}!path\+\_\+filedesc\+\_\+map@{path\+\_\+filedesc\+\_\+map}}
+\index{path\+\_\+filedesc\+\_\+map@{path\+\_\+filedesc\+\_\+map}!daemon.\+h@{daemon.\+h}}
+\subsubsection{\texorpdfstring{path\+\_\+filedesc\+\_\+map}{path\_filedesc\_map}}
+{\footnotesize\ttfamily std\+::map$<$std\+::string, unsigned int$>$ path\+\_\+filedesc\+\_\+map}
+

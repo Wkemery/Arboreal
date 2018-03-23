@@ -463,7 +463,7 @@ void shutdown(const int liaison_fid,
               const std::string liaison_sockpath)
 {
 
-    Debug.log(liaison_close);
+    
     if(close(liaison_fid) < 0)
     {
       std::string where = "[liason.cpp::main()]: ";
@@ -492,7 +492,7 @@ void shutdown(const int liaison_fid,
     int val = 999;
     memcpy(quit,&val,sizeof(int));
     memcpy(quit + sizeof(int), "QUIT", sizeof("QUIT"));
-    Debug.log(liaison_quit);
+    
     send_response(client_sock,quit,MaxBufferSize,Flag,liaison_sock,liaison_sockpath,client_sockpath);
     exit(1);
 
