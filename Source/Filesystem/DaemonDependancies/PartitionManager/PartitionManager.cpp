@@ -12,6 +12,8 @@
 
 #include "PartitionManager.h"
 
+bool DEBUG = false;
+
 PartitionManager::PartitionManager(DiskManager *dm, string partitionName)
 {
   _myDM = dm;

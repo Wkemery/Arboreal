@@ -11,6 +11,7 @@
 
 #include "Trees.h"
 
+
 bool operator ==(Index& lhs, Index& rhs)
 {
   return ((lhs.blknum == rhs.blknum) && (lhs.offset == rhs.offset));

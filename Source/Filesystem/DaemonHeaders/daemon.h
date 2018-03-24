@@ -1,28 +1,30 @@
 
 
 #include "../../SharedHeaders/Parser.h"
+#include "../../SharedHeaders/DebugMessages.hpp"
 
-#define BACKLOG 10                  /* Number of Connection Requests that the Server Can Queue */
-#define FLAG 0                      /* Flag for recv() */
-#define TIMEOUT 10
-#define TRUE 1
-#define FALSE 0
-#define PORT 70777
-#define MAX_COMMAND_SIZE 4096
+static const int BACKLOG = 10;              /* Number of Connection Requests that the Server Can Queue */
+static const int FLAG = 0;                  /* Flag for recv() */
+static const int TIMEOUT = 10;              /* How Long Retries Should Take */
+static const int TRUE = 1;                  /* Integer Boolean True */
+static const int FALSE = 0;                 /* Integer Boolean False */
+static const int PORT = 70777;              /* File System Port Number */
+static const int MAX_COMMAND_SIZE = 4096;   /* Maximum Buffer Size */
+static const int WRITE_CHANGES_WAIT = 5;    /* How Long To Wait Before Writing Changes */
 
-bool DEBUG = false;
+DebugMessages Debug;                       /* For Debugging */
 
-fd_set master_set;
-int my_fid = 999;
-int max_fid = 0;
-int current_command_id = 0;
+fd_set master_set;                         /* Used for call to select() holds file descriptors */
+int my_fid = 999;                          /* File system socket ID */
+int max_fid = 0;                           /* Used by call to select() max_fid == 0 is FS socket */
+int current_command_id = 0;                /* The Command Being Operated On's ID */
 
-std::map<int, FileSystem*> fd_fs_map;
-std::map<std::string,FileSystem*> part_fs_map;
-std::map<std::string, unsigned int> path_filedesc_map;
+std::map<int, FileSystem*> fd_fs_map;                   /* Maps a file descriptor (socket) to a Partition */
+std::map<std::string,FileSystem*> part_fs_map;          /* Maps a partition name to and FS object */
+std::map<std::string, unsigned int> path_filedesc_map;  /* Maps a pathname to a file descriptor (socket) */
 
-Disk* d = 0;
-DiskManager* dm = 0;
+Disk* d = 0;               /* Disk Object */
+DiskManager* dm = 0;       /* Disk Manager */
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -65,9 +67,28 @@ void quit_fs(void)
   }
   return;
 }
+
+void save_to_disk(void)
+{
+  while(true)
+  {
+    sleep(WRITE_CHANGES_WAIT);
+    for(auto it = begin(fd_fs_map); it != end(fd_fs_map); ++it)
+    {
+      it->second->write_changes();
+    }
+  }
+}
 //--------------------------------------------------------------------------------------------
 
+std::string command_to_string(char* cmnd, int size)
+{
+  std::string s;
+  int index = sizeof(int);
 
+  while(index < size){s += cmnd[index]; index += 1;}
+  return s;
+}
 
 int create_sock(int timeout)
 {
@@ -513,7 +534,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
         data.push_back(e.what());
         return data;
       }
-      fd_fs_map[fd]->write_changes();
+      //fd_fs_map[fd]->write_changes();
       return data;
     }
     case(NEW_FS): //create file in CWD
@@ -524,7 +545,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
       memset(tag,'\0',MAX_COMMAND_SIZE);
       int index = 0;
       while(command[index] != '-'){filename += command[index]; index += 1;}
-      printf("Filename: %s\n",filename.c_str());
+      //printf("Filename: %s\n",filename.c_str());
       memcpy(tag,(command + filename.length() + 1), MAX_COMMAND_SIZE - (filename.length() + 1));
       tags = get_set(tag,'-');
 
@@ -571,7 +592,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
         data.push_back(e.what());
         return data;
       }
-      fd_fs_map[fd]->write_changes();
+      //fd_fs_map[fd]->write_changes();
       return data;
     }
     case(DEL_TS): // delete tag(s)
@@ -589,7 +610,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
         data.push_back(e.what());
         return data;
       }
-      fd_fs_map[fd]->write_changes();
+      //fd_fs_map[fd]->write_changes();
       return data;
     }
     case(DEL_FS): // delete files from CWD
@@ -608,7 +629,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
         data.push_back(e.what());
         return data;
       }
-      fd_fs_map[fd]->write_changes();
+      //fd_fs_map[fd]->write_changes();
       return data;
     }
     case(DEL_FP): // delete file from anywhere
@@ -630,7 +651,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
         data.push_back(e.what());
         return data;
       }
-      fd_fs_map[fd]->write_changes();
+      //fd_fs_map[fd]->write_changes();
       return data;
     }
     case(OPEN_FP): // Open file
@@ -718,7 +739,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
         data.push_back(e.what());
         return data;
       }
-      fd_fs_map[fd]->write_changes();
+      //fd_fs_map[fd]->write_changes();
       return data;
     }
     case(RNAME_FP): // rename file
@@ -742,7 +763,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
         data.push_back(e.what());
         return data;
       }
-      fd_fs_map[fd]->write_changes();
+      //fd_fs_map[fd]->write_changes();
       return data;
     }
     case(RNAME_FS):
@@ -856,7 +877,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
             data.push_back(e.what());
             return data;
         }
-        fd_fs_map[fd]->write_changes();
+        //fd_fs_map[fd]->write_changes();
         return data;
     }
     case(TAG_FS): // tag files within CWD
@@ -889,7 +910,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
             data.push_back(e.what());
             return data;
         }
-        fd_fs_map[fd]->write_changes();
+        //fd_fs_map[fd]->write_changes();
         return data;
     }
     case(UTAG_FP):
@@ -921,7 +942,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
             data.push_back(e.what());
             return data;
         }
-        fd_fs_map[fd]->write_changes();
+        //fd_fs_map[fd]->write_changes();
         return data;
     }
     case(UTAG_FS):
@@ -953,7 +974,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
             data.push_back(e.what());
             return data;
         }
-        fd_fs_map[fd]->write_changes();
+        //fd_fs_map[fd]->write_changes();
         return data;
     }
     case(READ_XP):

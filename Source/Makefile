@@ -51,7 +51,7 @@ LIAISON_CPP=$(LIAISON_PATH)/liaison.cpp $(SHARED_CPPATH)/Arboreal_Exceptions.cpp
 
 
 DAEMON_H=$(DAEMON_PATH)/DaemonHeaders/daemon.h $(SHARED_HPATH)/CommandCodes.h \
-		 $(SHARED_HPATH)/Arboreal_Exceptions.h $(BACKEND_H)
+		 $(SHARED_HPATH)/Arboreal_Exceptions.h $(SHARED_HPATH)/DebugMessages.hpp $(BACKEND_H)
 DAEMON_CPP=$(DAEMON_PATH)/daemon.cpp $(BACKEND_CPP) $(SHARED_CPPATH)/Arboreal_Exceptions.cpp \
 		   $(SHARED_CPPATH)/Parser.cpp
 

@@ -90,7 +90,7 @@ int main(int argc, char** argv)
       exit(1);
     }
   }
-  else if(argc == 3 && flag == "-s")
+  else if(argc == 3 && (flag == "-s" || flag == "-sp"))
   {
     Debug.log("C: Command Line Initiated",true);
     Debug.log("C: Reading From Fstream",true);
@@ -226,10 +226,20 @@ CLI::CLI(char** partition, bool debug)
 CLI::CLI(char** partition, char* isScript)
 {
   _my_partition = partition[1];
-  _is_script = isScript;
+  std::string script = isScript;
   _my_pid = std::to_string(getpid());
   _client_sockpath = "cli-" + _my_pid + "-socket";
   _server_sockpath = "lson-" + _my_pid + "-socket";
+  if(script == "-s")
+  {
+    _is_script = true;
+    _script_print = false;
+  }
+  else if(script == "-sp")
+  {
+    _is_script = true;
+    _script_print = true;
+  }
 
   start();
 }
@@ -243,10 +253,21 @@ CLI::CLI(char** partition, char* isScript)
 CLI::CLI(char** partition, char* isScript, bool debug)
 {
   _my_partition = partition[1];
-  _is_script = isScript;
+  std::string script = isScript;
   _my_pid = std::to_string(getpid());
   _client_sockpath = "cli-" + _my_pid + "-socket";
   _server_sockpath = "lson-" + _my_pid + "-socket";
+
+  if(script == "-s")
+  {
+    _is_script = true;
+    _script_print = false;
+  }
+  else if(script == "-sp")
+  {
+    _is_script = true;
+    _script_print = true;
+  }
 
   Debug.log(_my_partition);
   Debug.log(_my_pid);
@@ -482,11 +503,12 @@ void CLI::run()
 
   /* Reprint prompt after bad command (but only after a bad command) */
   bool print_prompt = false;
-  /* Print the welcome header */
 
-  print_header();
+  /* Print the welcome header */
+  if(!_is_script){print_header();}
+
   /* Operations will differ slightly if reading commands from a text file */
-  if(_is_script == "-s")
+  if(_is_script)
   {
     std::cout << "Reading from input file...\n";
     std::cout << "+---------------------------------------\n\n\n";
@@ -499,7 +521,7 @@ void CLI::run()
   {
     if(print_prompt)
     {
-      std::cout << "Arboreal >> ";
+      if(!_is_script) std::cout << "Arboreal >> ";
       print_prompt = false;
     }
     /*********************************************************************************************/
@@ -508,7 +530,7 @@ void CLI::run()
     if(c == '\n')
     {
       /* Don't print prompt if reading from file */
-      if(_is_script != "-s"){std::cout << "Arboreal >> ";}
+      if(!_is_script){std::cout << "Arboreal >> ";}
       continue;
     }
     /*********************************************************************************************/
@@ -543,13 +565,13 @@ void CLI::run()
         else{continue;}
       }
       /*******************************************************************************************/
-      else if(input == "help" || input == "h")
+      else if((input == "help" || input == "h") && !_is_script )
       {
         help();
         continue;
       }
       /*******************************************************************************************/
-      else if(input[1] == 'h')
+      else if(input[1] == 'h' && !_is_script)
       {
         /* Single Command Usage Help */
         switch(check_help(input))
@@ -576,7 +598,7 @@ void CLI::run()
         continue;
       }
       /*******************************************************************************************/
-      else if(input == "end" && _is_script == "-s")
+      else if(input == "end" && _is_script)
       {
         Debug.log("C: Notifying Liaison Process Of Program Termination");
         char* quit = new char[MaxBufferSize];
@@ -610,20 +632,20 @@ void CLI::run()
 
             send_cmnd(new_cwd);
             await_response();
-            if(_is_script != "-s"){std::cout << "\nArboreal >> ";}
+            if(!_is_script){std::cout << "\nArboreal >> ";}
             continue;
           }
         }
         else
         {
           std::cerr << "Comand Not Valid\n";
-          if(_is_script != "-s"){std::cout << "Arboreal >> ";}
+          if(!_is_script){std::cout << "Arboreal >> ";}
           continue;
         }
 
         send_cmnd(build(rtrn,input));
         await_response();
-        if(_is_script != "-s"){std::cout << "Arboreal >> ";}
+        if(!_is_script){std::cout << "Arboreal >> ";}
       }
       /*******************************************************************************************/
     }
@@ -673,9 +695,11 @@ void CLI::send_cmnd(const char* cmnd)
 //[===============================================================================================]
 void CLI::await_response()
 {
-    Debug.log("C: Receiving Data From File System...");
-    std::string data = receive_from_server(_client_sock,_client_sockpath);
-    Debug.log(("C: Received: " + data));
+  if(_is_script && !_script_print) return;
+
+  Debug.log("C: Receiving Data From File System...");
+  std::string data = receive_from_server(_client_sock,_client_sockpath);
+  Debug.log(("C: Received: " + data));
 
   if(data == "WAIT")
   {
