@@ -378,6 +378,54 @@ std::string get_file_info(File* file)
 }
 
 
+std::string get_file_info(FileInfo* file)
+{
+  std::string file_info = ("[ " + file->get_name() + " | ");
+  std::vector<std::string> tags = file->get_vec_tags();
+  for(unsigned int i = 0; i < tags.size(); i++)
+  {
+    if(file_info.length() + 5 == MAX_COMMAND_SIZE)
+    {
+      file_info += " ...]";
+      return file_info;
+    }
+    if(i + 1 != tags.size()){file_info += (tags[i] + ",");}
+    else{file_info += tags[i];}
+  }
+  
+  //file_info += " |...]";
+  
+  if(file_info.length() < MAX_COMMAND_SIZE)
+  {
+    file_info += " | ";
+    
+    FileAttributes attr = file->get_file_attributes();
+    
+    std::tm * ptm = std::localtime(&attr.creationTime);
+    char buffer[32];
+    memset(buffer,'\0',32);
+    // Format: Mo, 15.06.2009 20:20:00
+    std::strftime(buffer, 32, "%a, %d.%m.%Y %H:%M:%S", ptm); 
+    
+    file_info += "Created @ ";
+    file_info += buffer;
+    
+    file_info += " | ";
+    
+    memset(buffer,'\0',32);
+    ptm = std::localtime(&attr.lastEdit);
+    // Format: Mo, 15.06.2009 20:20:00
+    std::strftime(buffer, 32, "%a, %d.%m.%Y %H:%M:%S", ptm); 
+    file_info += "Last Edit @ ";
+    file_info += buffer;
+    
+    file_info += " ...]";
+  }
+  
+  return file_info;
+}
+
+
 std::vector<std::string> serialize_fileinfo(std::vector<FileInfo*>* fileinfo)
 {
   std::vector<std::string> data;
@@ -387,8 +435,8 @@ std::vector<std::string> serialize_fileinfo(std::vector<FileInfo*>* fileinfo)
     {
       if(fileinfo->at(i) != 0)
       {
-        File* info = File::read_buff(const_cast<char*>(FileInfo::serialize(fileinfo->at(i))->c_str()));
-        data.push_back(get_file_info(info));
+//         File* info = File::read_buff(const_cast<char*>(FileInfo::serialize(fileinfo->at(i))->c_str()));
+        data.push_back(get_file_info(fileinfo->at(i)));
       }
       else{continue;}
     }
@@ -485,8 +533,8 @@ std::vector<std::string> execute(int id, char* command, int fd)
         FileInfo* finfo = fd_fs_map[fd]->create_file(filename,tags);
         if(finfo != 0)
         {
-          File* info = File::read_buff(const_cast<char*>(FileInfo::serialize(finfo)->c_str()));
-          data.push_back(get_file_info(info));
+//           File* info = File::read_buff(const_cast<char*>(FileInfo::serialize(finfo)->c_str()));
+          data.push_back(get_file_info(finfo));
         }
       }
       catch(arboreal_exception& e)
@@ -514,8 +562,8 @@ std::vector<std::string> execute(int id, char* command, int fd)
         FileInfo* finfo = fd_fs_map[fd]->create_file(filename,tags);
         if(finfo != 0)
         {
-          File* info = File::read_buff(const_cast<char*>(FileInfo::serialize(finfo)->c_str()));
-          data.push_back(get_file_info(info));
+//           File* info = File::read_buff(const_cast<char*>(FileInfo::serialize(finfo)->c_str()));
+          data.push_back(get_file_info(finfo));
         }
       }
       catch(arboreal_exception& e)

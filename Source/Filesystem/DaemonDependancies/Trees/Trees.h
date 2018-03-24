@@ -427,10 +427,13 @@ public:
    */
   Attributes* get_attributes();
   
+  FileAttributes get_file_attributes();
   /*!
    * @returns The tags associated with this file
    */
   unordered_set<string> get_tags();
+  
+  vector<string> get_vec_tags();
   
   ///@}
   

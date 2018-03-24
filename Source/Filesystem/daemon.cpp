@@ -52,7 +52,7 @@ int main(int argc, char** argv)
 
   try
   {
-    d = new Disk(500, 512, const_cast<char *>("DISK1"));
+    d = new Disk(10000, 4096, const_cast<char *>("DISK1"));
     dm = new DiskManager(d);
   }
   catch(arboreal_exception& e)

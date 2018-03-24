@@ -1123,6 +1123,12 @@ void FileInfo::insert_deletion(TreeObject* del)
 
 Attributes* FileInfo::get_attributes(){return _myAttributes;}
 
+FileAttributes FileInfo::get_file_attributes()
+{
+  return _myAttributes->get_file_attributes();
+}
+
+
 Finode FileInfo::get_finode(){return _myFinode;}
 
 unordered_set<string> FileInfo::get_tags()
@@ -1134,6 +1140,17 @@ unordered_set<string> FileInfo::get_tags()
   }
   return ret;
 }
+
+vector<string> FileInfo::get_vec_tags()
+{
+  vector<string> ret;
+  for(auto it = _myTree.begin(); it != _myTree.end(); it++)
+  {
+    ret.push_back(it->first);
+  }
+  return ret;
+}
+
 
 void FileInfo::init_attributes()
 {
