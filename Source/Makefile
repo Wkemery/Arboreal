@@ -85,4 +85,4 @@ runformat: format
 	./format diskInfo.d
 
 .PHONY clean:
-	/bin/rm -rf *.o driver commandline format daemon DISK1 *.dSYM liaison core*
+	/bin/rm -rf *.o driver commandline format daemon DISK1 *.dSYM liaison core* *.log
