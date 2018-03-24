@@ -26,10 +26,10 @@
 #include "DaemonDependancies/FileSystem/FileSystem.h"
 #include "DaemonDependancies/File/File.h"
 #include "DaemonHeaders/daemon.h"
+/*************************************************************************************************/
 
 
-
-/***************** BEGIN MAIN *******************/
+/* MAIN */
 
 int main(int argc, char** argv)
 {
@@ -44,7 +44,7 @@ int main(int argc, char** argv)
   if(argc == 2) arg = argv[1];
   if(arg == "-d") Debug.ON();
 
-//---------------- INITIALIZATIONS ---------------------------------------------------------
+//---------------- INITIALIZATIONS ----------------------------------------------------------------
 //
 //
 //
@@ -60,6 +60,8 @@ int main(int argc, char** argv)
     std::cerr << "[Error]: " << e.what() << " in " << e.where() << std::endl;
     exit(1);
   }
+  /***********************************************************************************************/
+
 
   fd_set working_set;
   struct sockaddr_in daemon_sockaddr;
@@ -76,12 +78,12 @@ int main(int argc, char** argv)
 //
 //
 //
-//--------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 
 
 
 
-//---------------- BEGIN "MAIN" PROGRAM ------------------------------------------------------
+//---------------- BEGIN "MAIN" PROGRAM -----------------------------------------------------------
 //
 //
 //
@@ -99,6 +101,7 @@ int main(int argc, char** argv)
     daemon_sock = create_sock(TIMEOUT);
     my_fid = daemon_sock;
     Debug.log("D: Success");
+    /*********************************************************************************************/
 
 
     Debug.log(("D: Daemon Socket ID: " + std::to_string(daemon_sock)));
@@ -111,28 +114,35 @@ int main(int argc, char** argv)
 
     Debug.log("D: Setting Socket To Non-Blocking Mode");
     set_nonblocking(daemon_sock,on);
+    /*********************************************************************************************/
+
 
     Debug.log("D: Binding Socket To [" + std::to_string(daemon_sock) + 
               "] To Port [" + std::to_string(PORT) + "]");
 
     bind_socket(daemon_sock,daemon_sockaddr,TIMEOUT);
+    /*********************************************************************************************/
+
 
     Debug.log("D: Listening on Socket [" + std::to_string(daemon_sock) +"]" + 
               "With a Backlog of [" + std::to_string(BACKLOG) + "]");
 
     listen_on_socket(daemon_sock,BACKLOG,TIMEOUT);
+    /*********************************************************************************************/
+
 
     Debug.log("D: Initializing Master File Descriptor (Socket ID) Array");
     FD_ZERO(&master_set);
     max_fid = daemon_sock;
     FD_SET(daemon_sock,&master_set);
+
   //
   //
-  //---------------- END SOCKET SET UP -------------------------------------------------------
+  //---------------- END SOCKET SET UP ------------------------------------------------------------
 
 
 
-  //---------------- START THREADS -----------------------------------------------------------
+  //---------------- START THREADS ----------------------------------------------------------------
   //
   //
     
@@ -142,20 +152,22 @@ int main(int argc, char** argv)
     quit.detach();
 
     Debug.log("D: [Quit] Thread Started and Detatched From Main Process");
+    /*********************************************************************************************/
 
-    // Debug.log("D: Launching [Write Changes] Thread...");
-    // std::thread write(save_to_disk);
-    // write.detach();
 
-    // Debug.log("D: [Write Changes] Thread Started and Detatched From Main Process");
+    Debug.log("D: Launching [Write Changes] Thread...");
+    std::thread write(save_to_disk);
+    write.detach();
+
+    Debug.log("D: [Write Changes] Thread Started and Detatched From Main Process");
   //
   //
-  //------------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------------
 
 
 
 
-  //---------------- BEGIN COMMUNICATIONS ----------------------------------------------------
+  //---------------- BEGIN COMMUNICATIONS ---------------------------------------------------------
   //
   //
   //
@@ -165,7 +177,7 @@ int main(int argc, char** argv)
       Debug.log("D: Copying Master File Descriptor Set Into Working Set");
       memcpy(&working_set, &master_set, sizeof(master_set));
 
-    //---------------- ATTEMPT SELECT() ------------------------------------------------------
+    //---------------- ATTEMPT SELECT() -----------------------------------------------------------
     //
     //
       
@@ -190,11 +202,11 @@ int main(int argc, char** argv)
       Debug.log("D: Success");
     //
     //
-    //----------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
 
 
 
-    //---------------- BEGIN ACCEPTING AND RECEIVING LOOP ------------------------------------
+    //---------------- BEGIN ACCEPTING AND RECEIVING LOOP -----------------------------------------
     //
     //
       Debug.log("D: Beginning Accept Loop");
@@ -203,13 +215,19 @@ int main(int argc, char** argv)
       {
         if(FD_ISSET(i,&working_set))
         {
+
           desc_ready -= 1;
           if(i == daemon_sock)
           {
+
             Debug.log("D: Listening Socket (Server) Is Readable; Now Accepting Connections");
+            /*************************************************************************************/
             do
             {
               client_sock = accept(daemon_sock,NULL,NULL);
+              /***********************************************************************************/
+
+
               if(client_sock < 0)
               {
                 if(errno != EWOULDBLOCK)
@@ -222,6 +240,9 @@ int main(int argc, char** argv)
                 }
                 break;
               }
+              /***********************************************************************************/
+
+
               Debug.log("D: New Incoming Connection -" +
                         std::to_string(client_sock) + " - Detected, Adding To Master Set");
 
@@ -229,17 +250,25 @@ int main(int argc, char** argv)
               if(client_sock > max_fid) max_fid = client_sock;
 
             }while(client_sock != -1);
+
+            /* END DO WHILE */
+            /*************************************************************************************/
+
           }
           else
           {
             Debug.log("D: Client Descriptor - " + std::to_string(i) + " - Is Readable");
             Debug.log("D: Beginning Receive Loop");
             close_conn = FALSE;
+            /*************************************************************************************/
 
             do
             {
               memset(buffer,'\0',MAX_COMMAND_SIZE);
               rval = recv(i, buffer, MAX_COMMAND_SIZE, FLAG);
+              /***********************************************************************************/
+
+
               if(rval < 0)
               {
                 if(errno != EWOULDBLOCK)
@@ -252,6 +281,8 @@ int main(int argc, char** argv)
                 }
                 break;
               }
+              /***********************************************************************************/
+
 
               if(rval == 0)
               {
@@ -259,11 +290,15 @@ int main(int argc, char** argv)
                 close_conn = TRUE;
                 break;
               }
+              /***********************************************************************************/
+
 
               int bytes_received = rval;
 
               Debug.log("D: Bytes Received [" + std::to_string(bytes_received) + "]");
               Debug.log("D: Command Received: " + command_to_string(buffer, MAX_COMMAND_SIZE));
+              /***********************************************************************************/
+
 
               if(get_cmnd_id(buffer) == QUIT)
               {
@@ -275,8 +310,17 @@ int main(int argc, char** argv)
               {
                 std::string part = get_partition(buffer);
                 Debug.log("D: Requested Partition [" + part + "]");
+                /***********************************************************************************/
+
                 try
                 {
+                  /* Attempt to create new FS object using the requested partition */
+                  /* 
+                   * If an object with that partition exists already simply add a new
+                   * entry to the map using a differet file descriptor but the SAME EXACT
+                   * FS object that is already in the map
+                   */
+                   
                   auto it = part_fs_map.find(part);
                   if(it == end(part_fs_map))
                   {
@@ -290,6 +334,7 @@ int main(int argc, char** argv)
                 }
                 catch(arboreal_exception& e)
                 {
+                  /* Problems Creating the FS Object */
                   std::cerr << "D: [Error]: " << e.where() << "--" << e.what() << std::endl;
                   std::cerr << "D: Closing File Descriptor [" << i << "]" << std::endl;
 
@@ -306,16 +351,24 @@ int main(int argc, char** argv)
                   int failure = FTL_ERR;
                   memset(failed,0,MAX_COMMAND_SIZE);
                   memcpy(failed,&failure,sizeof(int));
+                  /*******************************************************************************/
+
                   rval = send(i,failed,MAX_COMMAND_SIZE,FLAG);
                   close_conn = TRUE;
                   break;
                 }
+
+                /* END TRY/CATCH */
+                /*********************************************************************************/
+
 
                 Debug.log("D: Handshake Accepted; Sending Maximum String Size");
                 char str_size[MAX_COMMAND_SIZE];
                 memset(str_size,0,MAX_COMMAND_SIZE);
                 int temp = fd_fs_map[i]->get_file_name_size();
                 memcpy(str_size,&temp,sizeof(int));
+                /*********************************************************************************/
+
 
                 rval = send(i, str_size, sizeof(int), FLAG);
                 if(rval < 0)
@@ -329,18 +382,28 @@ int main(int argc, char** argv)
 
                   break;
                 }
-
+                /*********************************************************************************/
 
               }
               else
               {
                 if(is_number(buffer))
                 {
+                  /* Send command acceptance conformation and set current command ID */
+                  /* The ID will not change until a different command is issued */
+                  /* 
+                   * This is nescesarry because some commands come bundled as lists
+                   * and it is important to continue using the same excecution steps for as long
+                   * as the data is coming (provided that the incoming data is not a new command).
+                   * this section checks the buffer to make sure it is not a number 
+                   * (i.e. a new command)
+                   */
                   char* end;
                   int recv_command = (int)strtol(buffer, &end, 10);
                   current_command_id = recv_command;
 
-                  Debug.log("D: Current Command ID Set To [" + std::to_string(current_command_id) + "]");
+                  Debug.log("D: Current Command ID Set To [" + 
+                             std::to_string(current_command_id) + "]");
 
                   std::string response = "Command Accepted";
                   response = pad_string(response,MAX_COMMAND_SIZE - response.length(), '\0');
@@ -354,24 +417,39 @@ int main(int argc, char** argv)
                     failure = pad_string(failure, MAX_COMMAND_SIZE - failure.length(), '\0');
                     rval = send(i, failure.c_str(), MAX_COMMAND_SIZE, FLAG);
                   }
+                  /*******************************************************************************/
+
+
+                  /* Execute the command */
                   std::vector<std::string> data = execute(current_command_id, buffer,i);
+                  /*******************************************************************************/
+
                   
+                  /* Send Response */
                   for(unsigned int j = 0; j < data.size(); j++)
                   {
-                    std::string temp = pad_string(data[j],(MAX_COMMAND_SIZE - data[j].length()), '\0');
+                    std::string temp = pad_string(data[j],(MAX_COMMAND_SIZE-data[j].length()),'\0');
                     rval = send(i, temp.c_str(), MAX_COMMAND_SIZE, FLAG);
                   }
                   if(current_command_id == FIND_TS || current_command_id == FIND_FS)
                   {
+                    /* If Command is a find command send DONE after sending main data */
                     std::string done = "DONE";
                     done = pad_string(done, MAX_COMMAND_SIZE - done.length(), '\0');
                     rval = send(i, done.c_str(), MAX_COMMAND_SIZE, FLAG);
                   }
+                  /*******************************************************************************/
+
                 }
               }
 
             }while(TRUE);
 
+            /* END DO/WHILE */
+            /*************************************************************************************/
+
+
+            /* Connection ended remove from active set */
             if(close_conn)
             {
               Debug.log("D: Removing Closed Connection - " + std::to_string(i) + 
@@ -384,22 +462,24 @@ int main(int argc, char** argv)
                 while (FD_ISSET(max_fid, &master_set) == FALSE) max_fid -= 1;
               }
             }
+            /**************************************************************************************/
+
           }
         }
       }
     //
     //
-    //---------------- END ACCEPT/RECEIVE LOOP -----------------------------------------------
+    //---------------- END ACCEPT/RECEIVE LOOP ----------------------------------------------------
 
 
 
 
-    }while(END_SERVER == FALSE);
+  }while(END_SERVER == FALSE);
   //
   //
   //
   //
-  //---------------- END COMMUNICATIONS ------------------------------------------------------
+  //---------------- END COMMUNICATIONS -----------------------------------------------------------
 
 
   } // END try{}
@@ -416,9 +496,33 @@ int main(int argc, char** argv)
     Debug.log("D: Closing All Open Connections and Exiting");
     printf("D: Closing All Open Connections and Exiting...\n");
 
-    for (int i=0; i <= max_fid; ++i)
+    quit_writing = true;
+
+    /* 
+     * Prevent Abort Trabs and Segfaults:
+     * The Quit thread does not quit fast enough to avoid an 
+     * exception being thrown due to a bad call to select thus 
+     * The quit thread deletes everything, then the exception handling
+     * tries to delete everything and it throws all kinds of segfaults
+     * in order to stop this from happening it is nescesarry to
+     * either reimagine how the quit thread works or (more easily)
+     * guard the deletion of items in the exception handling; using a boolean 
+     * flag which is set by the quit_thread so that if the quit thread intercepts
+     * a quit signal it tells the exception handler to NOT delete any of the data
+     * (since it will be doing the deleteing) however in circumstances were 
+     * quit was not called but an exception still occurs it is nescesarry to properly
+     * delete all of the pointers and the like.
+     */
+    if(!quit_signaled)
     {
-      if (FD_ISSET(i, &master_set)) close(i);
+      for (int i=0; i <= max_fid; ++i)
+      {
+        if (FD_ISSET(i, &master_set)) close(i);
+      }
+      for(auto it = begin(part_fs_map); it != end(part_fs_map); ++it)
+      {
+        delete it->second;
+      }
     }
     printf("D: Goodbye\n");
     return 1;
@@ -427,11 +531,14 @@ int main(int argc, char** argv)
 //
 //
 //
-//---------------- END "MAIN" PROGRAM --------------------------------------------------------
+//---------------- END "MAIN" PROGRAM -------------------------------------------------------------
 
 
   Debug.log("D: Closing All Open Connections and Exiting");
   printf("D: Closing All Open Connections and Exiting...\n");
+  /************************************************************************************************/
+
+  quit_writing = true;
   for (int i=0; i <= max_fid; ++i)
   {
     if (FD_ISSET(i, &master_set)) close(i);
@@ -440,6 +547,8 @@ int main(int argc, char** argv)
   {
     delete it->second;
   }
+  /************************************************************************************************/
+
   printf("D: Goodbye\n");
   return 0;
 }

@@ -111,9 +111,9 @@ int main(int argc, char** argv)
   else if(argc == 3 && flag == "-d")
   {
     Debug.ON();
-    Debug.log("C: Command Line Initiated",true);
-    Debug.log("C: Reading From Stdin",true);
-    Debug.log("C: Debugging Turned On",true);
+    Debug.log("C: Command Line Initiated");
+    Debug.log("C: Reading From Stdin");
+    Debug.log("C: Debugging Turned On");
     try
     {
       CLI cli(argv,true);
@@ -131,9 +131,9 @@ int main(int argc, char** argv)
   else if(argc == 4 && flag == "-d")
   {
     Debug.ON();
-    Debug.log("C: Command Line Initiated",true);
-    Debug.log("C: Reading From Fstream",true);
-    Debug.log("C: Debugging Turned On",true);
+    Debug.log("C: Command Line Initiated");
+    Debug.log("C: Reading From Fstream");
+    Debug.log("C: Debugging Turned On");
     try
     {
       CLI cli(argv,argv[2],true);
