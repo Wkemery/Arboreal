@@ -87,6 +87,9 @@ fn main() {
     let tag_list = write_tag_commands(&mut script_atts, &mut script_file);
     /*Write out the create file commands*/
     write_file_commands(&mut script_atts, &mut script_file, tag_list);
+    
+    /*Write out end*/
+    script_file.write("end".as_bytes()).expect("Could not write to file");
 }
 
 struct ScriptAttributes {
