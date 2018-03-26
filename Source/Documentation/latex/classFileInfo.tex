@@ -1,0 +1,443 @@
+\hypertarget{classFileInfo}{}\section{File\+Info Class Reference}
+\label{classFileInfo}\index{File\+Info@{File\+Info}}
+Inheritance diagram for File\+Info\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classFileInfo}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classFileInfo_a3586bb4f50c4a0f63ff4ea0a1e56ce9c}{File\+Info} (string filename, Blk\+Num\+Type blknum, \hyperlink{classPartitionManager}{Partition\+Manager} $\ast$pm)
+\item 
+void \hyperlink{classFileInfo_a8e835f000ddfd0f1097ccfa7e7801a09}{write\+\_\+out} ()
+\item 
+void \hyperlink{classFileInfo_ad03ba3ec10f8e9ad75d659ae36dcd155}{read\+\_\+in} (unordered\+\_\+multimap$<$ string, \hyperlink{classFileInfo}{File\+Info} $\ast$ $>$ $\ast$all\+Files, \hyperlink{classRootTree}{Root\+Tree} $\ast$root\+Tree)
+\item 
+void \hyperlink{classFileInfo_ae058242283d3317eaf2b79428e6137f6}{erase} (string name)
+\item 
+void \hyperlink{classFileInfo_ad93a84b63e417b07aa68b619051ab746}{insert} (string name, \hyperlink{classTreeObject}{Tree\+Object} $\ast$ptr)
+\item 
+void \hyperlink{classFileInfo_a2ca34d945ed1208f227a249ba72ee427}{del} ()
+\item 
+void \hyperlink{classFileInfo_a8c6b58cb9f7e9978064291ef81380e01}{delete\+\_\+cont\+\_\+blocks} (Blk\+Num\+Type blknum)
+\item 
+void \hyperlink{classFileInfo_a7f788f31521c535646eebfa9959bbb24}{insert\+\_\+addition} (\hyperlink{classTreeObject}{Tree\+Object} $\ast$add)
+\item 
+void \hyperlink{classFileInfo_a278136b1d68f55dc56a4be807076fc0d}{insert\+\_\+deletion} (\hyperlink{classTreeObject}{Tree\+Object} $\ast$\hyperlink{classFileInfo_a2ca34d945ed1208f227a249ba72ee427}{del})
+\end{DoxyCompactItemize}
+\begin{Indent}{\bf Accessor Functions}\par
+\begin{DoxyCompactItemize}
+\item 
+string \hyperlink{classFileInfo_a96827c2e48fb1a15d468e9afd545383e}{mangle} ()
+\begin{DoxyCompactList}\small\item\em mangles the filename with its tags \end{DoxyCompactList}\item 
+string \hyperlink{classFileInfo_a105ad751f21bead6fc2a76e79cb3b701}{mangle} (vector$<$ string $>$ \&tags)
+\begin{DoxyCompactList}\small\item\em mangles the filename with the specified tags \end{DoxyCompactList}\item 
+string \hyperlink{classFileInfo_aec8a60addbed54097f6cac0a6a516717}{mangle} (unordered\+\_\+set$<$ string $>$ \&tags)
+\begin{DoxyCompactList}\small\item\em mangles the filename with the specified tags \end{DoxyCompactList}\item 
+\hyperlink{structfinode}{Finode} \hyperlink{classFileInfo_a706117270bcf31739d7ce0aa0d79891f}{get\+\_\+finode} ()
+\item 
+size\+\_\+t \hyperlink{classFileInfo_aa07a5b95bfd41814b7fb2ee30a279c65}{get\+\_\+file\+\_\+size} ()
+\item 
+\hyperlink{classAttributes}{Attributes} $\ast$ \hyperlink{classFileInfo_a07f09582ef3c3beb105906d5c71234a5}{get\+\_\+attributes} ()
+\item 
+\hyperlink{structfile__attributes}{File\+Attributes} {\bfseries get\+\_\+file\+\_\+attributes} ()\hypertarget{classFileInfo_a0acbb8eead54541137757001474fa689}{}\label{classFileInfo_a0acbb8eead54541137757001474fa689}
+
+\item 
+unordered\+\_\+set$<$ string $>$ \hyperlink{classFileInfo_a63d01334c1c2ae22e5d1930afa5c74d4}{get\+\_\+tags} ()
+\item 
+vector$<$ string $>$ {\bfseries get\+\_\+vec\+\_\+tags} ()\hypertarget{classFileInfo_ad66648be9d256ac110cdcf204a3eacc7}{}\label{classFileInfo_ad66648be9d256ac110cdcf204a3eacc7}
+
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}{\bf Modifier Functions}\par
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classFileInfo_a1537d2ac2b5c170d144911c8337c81bc}{add\+\_\+direct\+\_\+block} (Blk\+Num\+Type blknum, int \hyperlink{structindex}{index})
+\item 
+void \hyperlink{classFileInfo_a074956f43b5a6900205a541dbeaeb8c5}{add\+\_\+indirect\+\_\+block} (Blk\+Num\+Type blknum, short level)
+\item 
+void \hyperlink{classFileInfo_a3c548a8dfcb6530bfef7551ac24ca473}{update\+\_\+file\+\_\+size} (size\+\_\+t bytes)
+\item 
+void \hyperlink{classFileInfo_aacaeadeeb41726f8cbea0b7cb1ff6a22}{set\+\_\+access} ()
+\item 
+void \hyperlink{classFileInfo_a05eb10c6804660ecd47e556c27ecd019}{set\+\_\+edit} ()
+\item 
+void \hyperlink{classFileInfo_a377208012195dba0b24723837f6db39f}{set\+\_\+permissions} (char $\ast$perms)
+\begin{DoxyCompactList}\small\item\em sets the permisssions for this file \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static string $\ast$ \hyperlink{classFileInfo_a64fc62c3e376dfd61088932d8b793589}{serialize} (\hyperlink{classFileInfo}{File\+Info} $\ast$file)
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{File\+Info@{File\+Info}!File\+Info@{File\+Info}}
+\index{File\+Info@{File\+Info}!File\+Info@{File\+Info}}
+\subsubsection[{\texorpdfstring{File\+Info(string filename, Blk\+Num\+Type blknum, Partition\+Manager $\ast$pm)}{FileInfo(string filename, BlkNumType blknum, PartitionManager *pm)}}]{\setlength{\rightskip}{0pt plus 5cm}File\+Info\+::\+File\+Info (
+\begin{DoxyParamCaption}
+\item[{string}]{filename, }
+\item[{Blk\+Num\+Type}]{blknum, }
+\item[{{\bf Partition\+Manager} $\ast$}]{pm}
+\end{DoxyParamCaption}
+)}\hypertarget{classFileInfo_a3586bb4f50c4a0f63ff4ea0a1e56ce9c}{}\label{classFileInfo_a3586bb4f50c4a0f63ff4ea0a1e56ce9c}
+
+\begin{DoxyParams}{Parameters}
+{\em filename} & Name of the \hyperlink{classFile}{File} \\
+\hline
+{\em blknum} & the blocknumber of the associated Finode on disk \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\index{File\+Info@{File\+Info}!add\+\_\+direct\+\_\+block@{add\+\_\+direct\+\_\+block}}
+\index{add\+\_\+direct\+\_\+block@{add\+\_\+direct\+\_\+block}!File\+Info@{File\+Info}}
+\subsubsection[{\texorpdfstring{add\+\_\+direct\+\_\+block(\+Blk\+Num\+Type blknum, int index)}{add_direct_block(BlkNumType blknum, int index)}}]{\setlength{\rightskip}{0pt plus 5cm}void File\+Info\+::add\+\_\+direct\+\_\+block (
+\begin{DoxyParamCaption}
+\item[{Blk\+Num\+Type}]{blknum, }
+\item[{int}]{index}
+\end{DoxyParamCaption}
+)}\hypertarget{classFileInfo_a1537d2ac2b5c170d144911c8337c81bc}{}\label{classFileInfo_a1537d2ac2b5c170d144911c8337c81bc}
+adds the specified blocknumber to the array of direct blocks in this file\textquotesingle{}s Finode 
+\begin{DoxyParams}{Parameters}
+{\em blknum} & the block number of the direct block that has already been allocated \\
+\hline
+{\em index} & the index of the blknum in the array, must be less than 12 and at least 0. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em \hyperlink{classarboreal__logic__error}{arboreal\+\_\+logic\+\_\+error}} & index out of bounds \\
+\hline
+\end{DoxyExceptions}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{classFileInfo_a074956f43b5a6900205a541dbeaeb8c5}{add\+\_\+indirect\+\_\+block} 
+\end{DoxySeeAlso}
+\index{File\+Info@{File\+Info}!add\+\_\+indirect\+\_\+block@{add\+\_\+indirect\+\_\+block}}
+\index{add\+\_\+indirect\+\_\+block@{add\+\_\+indirect\+\_\+block}!File\+Info@{File\+Info}}
+\subsubsection[{\texorpdfstring{add\+\_\+indirect\+\_\+block(\+Blk\+Num\+Type blknum, short level)}{add_indirect_block(BlkNumType blknum, short level)}}]{\setlength{\rightskip}{0pt plus 5cm}void File\+Info\+::add\+\_\+indirect\+\_\+block (
+\begin{DoxyParamCaption}
+\item[{Blk\+Num\+Type}]{blknum, }
+\item[{short}]{level}
+\end{DoxyParamCaption}
+)}\hypertarget{classFileInfo_a074956f43b5a6900205a541dbeaeb8c5}{}\label{classFileInfo_a074956f43b5a6900205a541dbeaeb8c5}
+adds the specified blocknumber to the Finode as the start of the specified level of indirect blocks 
+\begin{DoxyParams}{Parameters}
+{\em blknum} & the block number of the indirect block that has already been allocated \\
+\hline
+{\em level} & the level that the block number is associated with. must be 1, 2 or 3. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em \hyperlink{classarboreal__logic__error}{arboreal\+\_\+logic\+\_\+error}} & Invalid level \\
+\hline
+\end{DoxyExceptions}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{classFileInfo_a1537d2ac2b5c170d144911c8337c81bc}{add\+\_\+direct\+\_\+block} 
+\end{DoxySeeAlso}
+\index{File\+Info@{File\+Info}!del@{del}}
+\index{del@{del}!File\+Info@{File\+Info}}
+\subsubsection[{\texorpdfstring{del()}{del()}}]{\setlength{\rightskip}{0pt plus 5cm}void File\+Info\+::del (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\hypertarget{classFileInfo_a2ca34d945ed1208f227a249ba72ee427}{}\label{classFileInfo_a2ca34d945ed1208f227a249ba72ee427}
+Will completely remove the \hyperlink{classTreeObject}{Tree\+Object}\textquotesingle{}s presence on disk 
+
+Implements \hyperlink{classTreeObject_af390b7479aa972888e594c07a85740b6}{Tree\+Object}.
+
+\index{File\+Info@{File\+Info}!delete\+\_\+cont\+\_\+blocks@{delete\+\_\+cont\+\_\+blocks}}
+\index{delete\+\_\+cont\+\_\+blocks@{delete\+\_\+cont\+\_\+blocks}!File\+Info@{File\+Info}}
+\subsubsection[{\texorpdfstring{delete\+\_\+cont\+\_\+blocks(\+Blk\+Num\+Type blknum)}{delete_cont_blocks(BlkNumType blknum)}}]{\setlength{\rightskip}{0pt plus 5cm}void File\+Info\+::delete\+\_\+cont\+\_\+blocks (
+\begin{DoxyParamCaption}
+\item[{Blk\+Num\+Type}]{blknum}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\hypertarget{classFileInfo_a8c6b58cb9f7e9978064291ef81380e01}{}\label{classFileInfo_a8c6b58cb9f7e9978064291ef81380e01}
+Will follow the chain of continuation blocks and free all of them 
+\begin{DoxyParams}{Parameters}
+{\em blknum} & will free the blknum and use it to follow the chain of continuation blocks \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \hyperlink{classTreeObject_a07f5f5de1cff0cfdc2372e81559f5181}{Tree\+Object}.
+
+\index{File\+Info@{File\+Info}!erase@{erase}}
+\index{erase@{erase}!File\+Info@{File\+Info}}
+\subsubsection[{\texorpdfstring{erase(string name)}{erase(string name)}}]{\setlength{\rightskip}{0pt plus 5cm}void File\+Info\+::erase (
+\begin{DoxyParamCaption}
+\item[{string}]{name}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\hypertarget{classFileInfo_ae058242283d3317eaf2b79428e6137f6}{}\label{classFileInfo_ae058242283d3317eaf2b79428e6137f6}
+Disassociate the given name from this object 
+\begin{DoxyParams}{Parameters}
+{\em name} & the name of the object to be erased. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em \hyperlink{classarboreal__logic__error}{arboreal\+\_\+logic\+\_\+error}} & \\
+\hline
+\end{DoxyExceptions}
+
+
+Reimplemented from \hyperlink{classTreeObject_a453b5df2a9ef7c6faad259900d574ee2}{Tree\+Object}.
+
+\index{File\+Info@{File\+Info}!get\+\_\+attributes@{get\+\_\+attributes}}
+\index{get\+\_\+attributes@{get\+\_\+attributes}!File\+Info@{File\+Info}}
+\subsubsection[{\texorpdfstring{get\+\_\+attributes()}{get_attributes()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Attributes} $\ast$ File\+Info\+::get\+\_\+attributes (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{classFileInfo_a07f09582ef3c3beb105906d5c71234a5}{}\label{classFileInfo_a07f09582ef3c3beb105906d5c71234a5}
+\begin{DoxyReturn}{Returns}
+the \hyperlink{classAttributes}{Attributes} accociated with this file 
+\end{DoxyReturn}
+\index{File\+Info@{File\+Info}!get\+\_\+file\+\_\+size@{get\+\_\+file\+\_\+size}}
+\index{get\+\_\+file\+\_\+size@{get\+\_\+file\+\_\+size}!File\+Info@{File\+Info}}
+\subsubsection[{\texorpdfstring{get\+\_\+file\+\_\+size()}{get_file_size()}}]{\setlength{\rightskip}{0pt plus 5cm}size\+\_\+t File\+Info\+::get\+\_\+file\+\_\+size (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{classFileInfo_aa07a5b95bfd41814b7fb2ee30a279c65}{}\label{classFileInfo_aa07a5b95bfd41814b7fb2ee30a279c65}
+\begin{DoxyReturn}{Returns}
+the size of this file in bytes 
+\end{DoxyReturn}
+\index{File\+Info@{File\+Info}!get\+\_\+finode@{get\+\_\+finode}}
+\index{get\+\_\+finode@{get\+\_\+finode}!File\+Info@{File\+Info}}
+\subsubsection[{\texorpdfstring{get\+\_\+finode()}{get_finode()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Finode} File\+Info\+::get\+\_\+finode (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{classFileInfo_a706117270bcf31739d7ce0aa0d79891f}{}\label{classFileInfo_a706117270bcf31739d7ce0aa0d79891f}
+\begin{DoxyReturn}{Returns}
+the Finode associated with this file 
+\end{DoxyReturn}
+\index{File\+Info@{File\+Info}!get\+\_\+tags@{get\+\_\+tags}}
+\index{get\+\_\+tags@{get\+\_\+tags}!File\+Info@{File\+Info}}
+\subsubsection[{\texorpdfstring{get\+\_\+tags()}{get_tags()}}]{\setlength{\rightskip}{0pt plus 5cm}unordered\+\_\+set$<$ string $>$ File\+Info\+::get\+\_\+tags (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{classFileInfo_a63d01334c1c2ae22e5d1930afa5c74d4}{}\label{classFileInfo_a63d01334c1c2ae22e5d1930afa5c74d4}
+\begin{DoxyReturn}{Returns}
+The tags associated with this file 
+\end{DoxyReturn}
+\index{File\+Info@{File\+Info}!insert@{insert}}
+\index{insert@{insert}!File\+Info@{File\+Info}}
+\subsubsection[{\texorpdfstring{insert(string name, Tree\+Object $\ast$ptr)}{insert(string name, TreeObject *ptr)}}]{\setlength{\rightskip}{0pt plus 5cm}void File\+Info\+::insert (
+\begin{DoxyParamCaption}
+\item[{string}]{name, }
+\item[{{\bf Tree\+Object} $\ast$}]{obj}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\hypertarget{classFileInfo_ad93a84b63e417b07aa68b619051ab746}{}\label{classFileInfo_ad93a84b63e417b07aa68b619051ab746}
+Associate a \hyperlink{classTreeObject}{Tree\+Object} with this object 
+\begin{DoxyParams}{Parameters}
+{\em name} & name of the object, mangled if inserting a \hyperlink{classFileInfo}{File\+Info} \\
+\hline
+{\em obj} & the object to be inserted \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em \hyperlink{classtag__error}{tag\+\_\+error}} & \\
+\hline
+\end{DoxyExceptions}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{classFileInfo_ad93a84b63e417b07aa68b619051ab746}{File\+Info\+::insert()} 
+\end{DoxySeeAlso}
+
+
+Reimplemented from \hyperlink{classTreeObject_af8cc57edba9f435b52ccf33cfbbb2fc6}{Tree\+Object}.
+
+\index{File\+Info@{File\+Info}!insert\+\_\+addition@{insert\+\_\+addition}}
+\index{insert\+\_\+addition@{insert\+\_\+addition}!File\+Info@{File\+Info}}
+\subsubsection[{\texorpdfstring{insert\+\_\+addition(\+Tree\+Object $\ast$add)}{insert_addition(TreeObject *add)}}]{\setlength{\rightskip}{0pt plus 5cm}void File\+Info\+::insert\+\_\+addition (
+\begin{DoxyParamCaption}
+\item[{{\bf Tree\+Object} $\ast$}]{add}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\hypertarget{classFileInfo_a7f788f31521c535646eebfa9959bbb24}{}\label{classFileInfo_a7f788f31521c535646eebfa9959bbb24}
+Do not call on \hyperlink{classFileInfo}{File\+Info} 
+
+Reimplemented from \hyperlink{classTreeObject_a41ce6080e0df5adcea4b0a76d35af885}{Tree\+Object}.
+
+\index{File\+Info@{File\+Info}!insert\+\_\+deletion@{insert\+\_\+deletion}}
+\index{insert\+\_\+deletion@{insert\+\_\+deletion}!File\+Info@{File\+Info}}
+\subsubsection[{\texorpdfstring{insert\+\_\+deletion(\+Tree\+Object $\ast$del)}{insert_deletion(TreeObject *del)}}]{\setlength{\rightskip}{0pt plus 5cm}void File\+Info\+::insert\+\_\+deletion (
+\begin{DoxyParamCaption}
+\item[{{\bf Tree\+Object} $\ast$}]{del}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\hypertarget{classFileInfo_a278136b1d68f55dc56a4be807076fc0d}{}\label{classFileInfo_a278136b1d68f55dc56a4be807076fc0d}
+Do not call on \hyperlink{classFileInfo}{File\+Info} 
+
+Reimplemented from \hyperlink{classTreeObject_afcc4b3928d2b77ff080aa229a9706215}{Tree\+Object}.
+
+\index{File\+Info@{File\+Info}!mangle@{mangle}}
+\index{mangle@{mangle}!File\+Info@{File\+Info}}
+\subsubsection[{\texorpdfstring{mangle()}{mangle()}}]{\setlength{\rightskip}{0pt plus 5cm}string File\+Info\+::mangle (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{classFileInfo_a96827c2e48fb1a15d468e9afd545383e}{}\label{classFileInfo_a96827c2e48fb1a15d468e9afd545383e}
+
+
+mangles the filename with its tags 
+
+The name is mangled as follows\+: Each tag is placed in alphabetical order and appended to the filename using \textquotesingle{}\+\_\+\textquotesingle{} as the seperator.
+
+\begin{DoxyReturn}{Returns}
+the mangled name of this file. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{classFileInfo_a105ad751f21bead6fc2a76e79cb3b701}{mangle(vector$<$string$>$\&)} \hyperlink{classFileInfo_aec8a60addbed54097f6cac0a6a516717}{mangle(unordered\+\_\+set$<$string$>$\& tags)} 
+\end{DoxySeeAlso}
+\index{File\+Info@{File\+Info}!mangle@{mangle}}
+\index{mangle@{mangle}!File\+Info@{File\+Info}}
+\subsubsection[{\texorpdfstring{mangle(vector$<$ string $>$ \&tags)}{mangle(vector< string > &tags)}}]{\setlength{\rightskip}{0pt plus 5cm}string File\+Info\+::mangle (
+\begin{DoxyParamCaption}
+\item[{vector$<$ string $>$ \&}]{tags}
+\end{DoxyParamCaption}
+)}\hypertarget{classFileInfo_a105ad751f21bead6fc2a76e79cb3b701}{}\label{classFileInfo_a105ad751f21bead6fc2a76e79cb3b701}
+
+
+mangles the filename with the specified tags 
+
+The name is mangled as follows\+: Each tag is placed in alphabetical order and appended to the filename using \textquotesingle{}\+\_\+\textquotesingle{} as the seperator. \begin{DoxyReturn}{Returns}
+the mangled name of this file. 
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em tags} & the tags you wish to mangle the filename with \\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{classFileInfo_a96827c2e48fb1a15d468e9afd545383e}{mangle()} \hyperlink{classFileInfo_aec8a60addbed54097f6cac0a6a516717}{mangle(unordered\+\_\+set$<$string$>$\& tags)} 
+\end{DoxySeeAlso}
+\index{File\+Info@{File\+Info}!mangle@{mangle}}
+\index{mangle@{mangle}!File\+Info@{File\+Info}}
+\subsubsection[{\texorpdfstring{mangle(unordered\+\_\+set$<$ string $>$ \&tags)}{mangle(unordered_set< string > &tags)}}]{\setlength{\rightskip}{0pt plus 5cm}string File\+Info\+::mangle (
+\begin{DoxyParamCaption}
+\item[{unordered\+\_\+set$<$ string $>$ \&}]{tags}
+\end{DoxyParamCaption}
+)}\hypertarget{classFileInfo_aec8a60addbed54097f6cac0a6a516717}{}\label{classFileInfo_aec8a60addbed54097f6cac0a6a516717}
+
+
+mangles the filename with the specified tags 
+
+) The name is mangled as follows\+: Each tag is placed in alphabetical order and appended to the filename using \textquotesingle{}\+\_\+\textquotesingle{} as the seperator.
+
+\begin{DoxyReturn}{Returns}
+the mangled name of this file. 
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em tags} & the tags you wish to mangle the filename with \\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{classFileInfo_a96827c2e48fb1a15d468e9afd545383e}{mangle()} \hyperlink{classFileInfo_a96827c2e48fb1a15d468e9afd545383e}{mangle}(unordered\+\_\+set$<$string$>$\& tags 
+\end{DoxySeeAlso}
+\index{File\+Info@{File\+Info}!read\+\_\+in@{read\+\_\+in}}
+\index{read\+\_\+in@{read\+\_\+in}!File\+Info@{File\+Info}}
+\subsubsection[{\texorpdfstring{read\+\_\+in(unordered\+\_\+multimap$<$ string, File\+Info $\ast$ $>$ $\ast$all\+Files, Root\+Tree $\ast$root\+Tree)}{read_in(unordered_multimap< string, FileInfo * > *allFiles, RootTree *rootTree)}}]{\setlength{\rightskip}{0pt plus 5cm}void File\+Info\+::read\+\_\+in (
+\begin{DoxyParamCaption}
+\item[{unordered\+\_\+multimap$<$ string, {\bf File\+Info} $\ast$ $>$ $\ast$}]{all\+Files, }
+\item[{{\bf Root\+Tree} $\ast$}]{root\+Tree}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\hypertarget{classFileInfo_ad03ba3ec10f8e9ad75d659ae36dcd155}{}\label{classFileInfo_ad03ba3ec10f8e9ad75d659ae36dcd155}
+Will read in all object data from disk 
+\begin{DoxyParams}{Parameters}
+{\em all\+Files} & a pointer to the map of all files \\
+\hline
+{\em root\+Tree} & a pointer to the root tree \\
+\hline
+\end{DoxyParams}
+
+
+Implements \hyperlink{classTreeObject_a6b3c3585f5e7bdd6d76c6970d7784c6d}{Tree\+Object}.
+
+\index{File\+Info@{File\+Info}!serialize@{serialize}}
+\index{serialize@{serialize}!File\+Info@{File\+Info}}
+\subsubsection[{\texorpdfstring{serialize(\+File\+Info $\ast$file)}{serialize(FileInfo *file)}}]{\setlength{\rightskip}{0pt plus 5cm}string $\ast$ File\+Info\+::serialize (
+\begin{DoxyParamCaption}
+\item[{{\bf File\+Info} $\ast$}]{file}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classFileInfo_a64fc62c3e376dfd61088932d8b793589}{}\label{classFileInfo_a64fc62c3e376dfd61088932d8b793589}
+Will serialize a \hyperlink{classFileInfo}{File\+Info} object such that it can be read in as a \hyperlink{classFile}{File} object 
+\begin{DoxyParams}{Parameters}
+{\em file} & the \hyperlink{classFileInfo}{File\+Info} object to be serialized \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The serialized object in string form 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{classFile_a1118d477e6b00d789e948e8cca5ae393}{File\+::read\+\_\+buff()} 
+\end{DoxySeeAlso}
+\index{File\+Info@{File\+Info}!set\+\_\+access@{set\+\_\+access}}
+\index{set\+\_\+access@{set\+\_\+access}!File\+Info@{File\+Info}}
+\subsubsection[{\texorpdfstring{set\+\_\+access()}{set_access()}}]{\setlength{\rightskip}{0pt plus 5cm}void File\+Info\+::set\+\_\+access (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{classFileInfo_aacaeadeeb41726f8cbea0b7cb1ff6a22}{}\label{classFileInfo_aacaeadeeb41726f8cbea0b7cb1ff6a22}
+marks the file as accessed at the current U\+N\+IX time \index{File\+Info@{File\+Info}!set\+\_\+edit@{set\+\_\+edit}}
+\index{set\+\_\+edit@{set\+\_\+edit}!File\+Info@{File\+Info}}
+\subsubsection[{\texorpdfstring{set\+\_\+edit()}{set_edit()}}]{\setlength{\rightskip}{0pt plus 5cm}void File\+Info\+::set\+\_\+edit (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{classFileInfo_a05eb10c6804660ecd47e556c27ecd019}{}\label{classFileInfo_a05eb10c6804660ecd47e556c27ecd019}
+marks the file as edited at the current U\+N\+IX time \index{File\+Info@{File\+Info}!set\+\_\+permissions@{set\+\_\+permissions}}
+\index{set\+\_\+permissions@{set\+\_\+permissions}!File\+Info@{File\+Info}}
+\subsubsection[{\texorpdfstring{set\+\_\+permissions(char $\ast$perms)}{set_permissions(char *perms)}}]{\setlength{\rightskip}{0pt plus 5cm}void File\+Info\+::set\+\_\+permissions (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{perms}
+\end{DoxyParamCaption}
+)}\hypertarget{classFileInfo_a377208012195dba0b24723837f6db39f}{}\label{classFileInfo_a377208012195dba0b24723837f6db39f}
+
+
+sets the permisssions for this file 
+
+The permisssions format is as follows. a 1 for true 0 false Byte 0, 1, 2 \+: reserved, for now Byte 3 -\/ 5 \+: read write and execute permisssions for the user Byte 6 -\/ 8 \+: read write and execute permisssions for the group Byte 9 -\/ 11 \+: read write and execute permisssions for the world Currently there is no differentiation between user group and world
+
+
+\begin{DoxyParams}{Parameters}
+{\em perms} & the permisssions in the correct format \\
+\hline
+\end{DoxyParams}
+\index{File\+Info@{File\+Info}!update\+\_\+file\+\_\+size@{update\+\_\+file\+\_\+size}}
+\index{update\+\_\+file\+\_\+size@{update\+\_\+file\+\_\+size}!File\+Info@{File\+Info}}
+\subsubsection[{\texorpdfstring{update\+\_\+file\+\_\+size(size\+\_\+t bytes)}{update_file_size(size_t bytes)}}]{\setlength{\rightskip}{0pt plus 5cm}void File\+Info\+::update\+\_\+file\+\_\+size (
+\begin{DoxyParamCaption}
+\item[{size\+\_\+t}]{bytes}
+\end{DoxyParamCaption}
+)}\hypertarget{classFileInfo_a3c548a8dfcb6530bfef7551ac24ca473}{}\label{classFileInfo_a3c548a8dfcb6530bfef7551ac24ca473}
+Sets the file size to the specified bytes. Only the filesystem should call. 
+\begin{DoxyParams}{Parameters}
+{\em bytes} & the new file size \\
+\hline
+\end{DoxyParams}
+\index{File\+Info@{File\+Info}!write\+\_\+out@{write\+\_\+out}}
+\index{write\+\_\+out@{write\+\_\+out}!File\+Info@{File\+Info}}
+\subsubsection[{\texorpdfstring{write\+\_\+out()}{write_out()}}]{\setlength{\rightskip}{0pt plus 5cm}void File\+Info\+::write\+\_\+out (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\hypertarget{classFileInfo_a8e835f000ddfd0f1097ccfa7e7801a09}{}\label{classFileInfo_a8e835f000ddfd0f1097ccfa7e7801a09}
+Intended to write out the object to disk 
+
+Implements \hyperlink{classTreeObject_a63708d61353d83e3e03597394bb7aca0}{Tree\+Object}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Filesystem/\+Daemon\+Dependancies/\+Trees/Trees.\+h\item 
+Filesystem/\+Daemon\+Dependancies/\+Trees/Trees.\+cpp\end{DoxyCompactItemize}

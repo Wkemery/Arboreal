@@ -1,22 +1,10 @@
 var searchData=
 [
-  ['handshk',['HANDSHK',['../_command_codes_8h.html#a5ca3130c74a24a8e4d792e9d11fd8d95',1,'CommandCodes.h']]],
-  ['help',['help',['../_print_8h.html#a97ee70a8770dc30d06c744b24eb2fcfc',1,'Print.h']]],
-  ['help_5f1',['help_1',['../_command_validation_8h.html#af36b872470f23d6c3b2e16f2083665ad',1,'CommandValidation.h']]],
-  ['help_5f10',['help_10',['../_command_validation_8h.html#a3aa264e291d6dab936d14296bf034588',1,'CommandValidation.h']]],
-  ['help_5f11',['help_11',['../_command_validation_8h.html#ab16e7e365658e22541f52bf0861dc79a',1,'CommandValidation.h']]],
-  ['help_5f12',['help_12',['../_command_validation_8h.html#a8042677ec1d186b09a81b6031ef92d98',1,'CommandValidation.h']]],
-  ['help_5f13',['help_13',['../_command_validation_8h.html#a227388dd4eaa195e0aafb1017876f8d5',1,'CommandValidation.h']]],
-  ['help_5f14',['help_14',['../_command_validation_8h.html#a6de50bb1496ba4aa3c7391a31545e126',1,'CommandValidation.h']]],
-  ['help_5f15',['help_15',['../_command_validation_8h.html#aeb6a62f74ce20458cb26558e0c24076a',1,'CommandValidation.h']]],
-  ['help_5f16',['help_16',['../_command_validation_8h.html#abebcc5aa31fd3d2933416e8541362bd8',1,'CommandValidation.h']]],
-  ['help_5f2',['help_2',['../_command_validation_8h.html#a9fc33fc168fefdfc69bf11219b582945',1,'CommandValidation.h']]],
-  ['help_5f3',['help_3',['../_command_validation_8h.html#a22886cc43b0214c478520edbd94662c2',1,'CommandValidation.h']]],
-  ['help_5f4',['help_4',['../_command_validation_8h.html#a528e37b4acb631e44a0aa55fb13ac640',1,'CommandValidation.h']]],
-  ['help_5f5',['help_5',['../_command_validation_8h.html#a21515076a922487af98f3b834e1780ac',1,'CommandValidation.h']]],
-  ['help_5f6',['help_6',['../_command_validation_8h.html#a3803c5206c69a6db9f50f1c41faea84a',1,'CommandValidation.h']]],
-  ['help_5f7',['help_7',['../_command_validation_8h.html#a10263f6a958d6dffbeecce49e662698f',1,'CommandValidation.h']]],
-  ['help_5f8',['help_8',['../_command_validation_8h.html#ad853cab1905806b6fa60e88ab34ad9e8',1,'CommandValidation.h']]],
-  ['help_5f9',['help_9',['../_command_validation_8h.html#a86779a1dabee964e27c77563326ef677',1,'CommandValidation.h']]],
-  ['history_5fval',['history_val',['../_command_validation_8h.html#ad1b423f058a6e58e2610710664bf5f29',1,'CommandValidation.h']]]
+  ['increment_5fallocate',['increment_allocate',['../classTreeObject.html#a6b6f0a5c23577748b489652013fa1728',1,'TreeObject']]],
+  ['increment_5ffollow',['increment_follow',['../classTreeObject.html#a86fbde9e7ee245385bf7ca7a8f355bd0',1,'TreeObject']]],
+  ['index',['index',['../structindex.html',1,'']]],
+  ['insert',['insert',['../classTreeObject.html#af8cc57edba9f435b52ccf33cfbbb2fc6',1,'TreeObject::insert()'],['../classFileInfo.html#ad93a84b63e417b07aa68b619051ab746',1,'FileInfo::insert()']]],
+  ['insert_5faddition',['insert_addition',['../classTreeObject.html#a41ce6080e0df5adcea4b0a76d35af885',1,'TreeObject::insert_addition()'],['../classFileInfo.html#a7f788f31521c535646eebfa9959bbb24',1,'FileInfo::insert_addition()']]],
+  ['insert_5fdeletion',['insert_deletion',['../classTreeObject.html#afcc4b3928d2b77ff080aa229a9706215',1,'TreeObject::insert_deletion()'],['../classFileInfo.html#a278136b1d68f55dc56a4be807076fc0d',1,'FileInfo::insert_deletion()']]],
+  ['invalid_5farg',['invalid_arg',['../classinvalid__arg.html',1,'']]]
 ];

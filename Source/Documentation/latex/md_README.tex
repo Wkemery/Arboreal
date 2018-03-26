@@ -1,0 +1,40 @@
+This is a file for specific code notes. things to do, consider, etc, that doesn\textquotesingle{}t need to clutter up the main readme file.
+
+{\bfseries Doing T\+R\+Y-\/\+C\+A\+T\+CH}
+
+{\bfseries tage\+Search() returns a vector of structs with (string \char`\"{}filename\char`\"{}, int fidentifier) \mbox{[}fidentifier can be F\+I\+O\+N\+O\+DE blknum or unique file identifier that is mapped to a F\+I\+O\+N\+DE blknum\mbox{]}} {\bfseries Hand off storage of file tag\+Search() return vector to Danny to be stored in a \char`\"{}current\char`\"{} buffer or smoe such}/
+
+There should probably be an attributes object to make our lives easier. and thats what real filesystems do. {\bfseries \hyperlink{classAttributes}{Attributes} object should be stored in F\+I\+N\+O\+DE or another indirect block who\textquotesingle{}s reference is stored in the F\+I\+N\+O\+DE. Which one is used should be decided dynamically, if F\+I\+O\+N\+DE is full get empty data block, store address in F\+I\+O\+N\+DE (migrate data)\mbox{[}optional\mbox{]} to new block, add new data to new block, otherwise add data directly to F\+I\+O\+N\+DE. T\+A\+GS A\+RE A\+T\+T\+R\+I\+B\+U\+T\+ES}
+
+I think we may need two open functions. One that takes the unique file id,(block number) and one that takes the vector of tags and the file name . similar to a path. {\bfseries Y\+ES}
+
+{\itshape I removed valid\+Name() because we should check for valid input before passing it to our filesystem. as much as possible anyway.}
+
+I think we\textquotesingle{}ll be able to get rid of alot of the helper functions actually. because map will be able to do all that for us. the {\bfseries big helper functions will be reading in a map and writing out a map}. which i think we can just basically write out all the key, value pairs, because a map can do that easily with its iterator. {\bfseries for reading in, we\textquotesingle{}ll just read in all the key value pairs and add them to the map one by one.} {\bfseries Name Length H\+A\+RD C\+A\+PS at size specified in partition info during formatting} {\bfseries N\+E\+ED T\+R\+EE I\+N\+O\+DE} {\bfseries R\+E\+A\+D\+I\+NG A M\+AP F\+R\+OM D\+I\+SK TO M\+A\+IN M\+E\+M\+O\+RY} $\ast$$\ast$-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---$\ast$$\ast$
+
+{\bfseries so we\textquotesingle{}ll have to have a reserved spot at the end of a block for a block number to the next block of continuing data.}
+
+{\bfseries We should write everything out in plaintext and have a converter that can change it to byte stuff that we can implement later. also we should have a flag that will zero out blocks (F\+OR S\+P\+E\+ED), mainly for debugging. but can also repourpose to an encrypt flag later.}
+
+//\+L\+A\+T\+ER\+: we should try not to write out the whole tag tree everytime. instead we should only write out the parts that changed if we can. I know this is a tough solution, if a tag is deleted in the middle of the tree and we really have no way of knowing where stuff will be in the tree... but it might be possible to keep some sort of secondary data structure, like a vector with all the info because it doens\textquotesingle{}t matter what order we reconstruct the map in memory, just that all the data is there. this is also somehting we can implement later. {\bfseries I\+Ntermeidary Data structure will store, (in addition to Memory pointer, block pointer) a tuple (int blknum, int pos\+\_\+in\+\_\+blknum) of the key\+\_\+value pair so we can use it later for delete operations.}
+
+{\bfseries A N\+O\+TE about speed\+: right now, in order to do tag search, we have to read in the finode of each file in the smallest tag tree becuase I am not storing the number of tags associated with a file in the tag tree inodes. This can be changed later, but for now I just want to get it done. If, when we are testing speeds this is something that will surely improve speed.}
+
+$\ast$$\ast$\+Estimated read in time for everything on startup\+: O(n$^\wedge$2$\ast$log(n))$\ast$$\ast$$\ast$
+
+{\bfseries File\+Inode structure filename -\/ filename\+Size Finode struct = sizeof(finode struct) local tag storage = rest of the space possible tag cont. block = sizeof(blknum\+Type)}
+
+{\bfseries Restrictions\+:}
+\begin{DoxyEnumerate}
+\item filename size restricted to no more than 1/2 block size
+\item block size should be a power of 2
+\item Hard cap on the number of tags that can be associated with a file. = (((blocksize -\/ filenamesize -\/ 136) / sizeof(\+Blk\+Num\+Type)) + (blocksize / sizeof(\+Blk\+Num\+Type)). 103 tags for blocksize of 512. and 64b filename
+\item max block size = 16k
+\end{DoxyEnumerate}
+
+{\bfseries T\+O\+DO\+:}
+\begin{DoxyEnumerate}
+\item Incorporate storing number of tags associated with file in Tag tree on disk, not yet
+\item add rename\+Tag function
+\item don\textquotesingle{}t allow duplicate tags to be sent to the filesystem when sending a tagset of any kind 
+\end{DoxyEnumerate}

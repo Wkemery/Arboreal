@@ -1,0 +1,12 @@
+cargo run -- -f 602455 -t 311 --maxtags 50 -o script23.ab -d words_alpha.txt --filemult 289 --multmin 25 --multmax 750
+cargo run -- -f 270517 -t 250 --maxtags 50 -o script24.ab -d words_alpha.txt --filemult 782 --multmin 25 --multmax 750
+cargo run -- -f 798894 -t 326 --maxtags 50 -o script25.ab -d words_alpha.txt --filemult 891 --multmin 25 --multmax 750
+cargo run -- -f 619585 -t 334 --maxtags 50 -o script26.ab -d words_alpha.txt --filemult 502 --multmin 25 --multmax 750
+cargo run -- -f 241703 -t 498 --maxtags 50 -o script27.ab -d words_alpha.txt --filemult 201 --multmin 25 --multmax 750
+cargo run -- -f 204728 -t 494 --maxtags 50 -o script28.ab -d words_alpha.txt --filemult 217 --multmin 25 --multmax 750
+cargo run -- -f 889834 -t 311 --maxtags 50 -o script29.ab -d words_alpha.txt --filemult 918 --multmin 25 --multmax 750
+cargo run -- -f 553293 -t 224 --maxtags 50 -o script30.ab -d words_alpha.txt --filemult 539 --multmin 25 --multmax 750
+cargo run -- -f 977305 -t 372 --maxtags 50 -o script31.ab -d words_alpha.txt --filemult 586 --multmin 25 --multmax 750
+cargo run -- -f 770822 -t 393 --maxtags 50 -o script32.ab -d words_alpha.txt --filemult 582 --multmin 25 --multmax 750
+cargo run -- -f 753049 -t 586 --maxtags 50 -o script33.ab -d words_alpha.txt --filemult 851 --multmin 25 --multmax 750
+cargo run -- -f 946295 -t 271 --maxtags 50 -o script34.ab -d words_alpha.txt --filemult 673 --multmin 25 --multmax 750

@@ -44,7 +44,7 @@ void FileOpen::increment_seek(size_t bytes, bool write)
         _seek++;
       }
       size_t newSize =bytes + _seek - 1;
-      
+
       _seek += bytes;
       if(_file->get_file_size() < newSize)
       {
@@ -85,27 +85,27 @@ Index FileOpen::byte_to_index(short offset)
   {
     throw arboreal_logic_error("Cannot get index when past EOF", "FileOPen::byte_to_index()");
   }
-  
+
   if(_seek == 0)
   {
     /*Empty file. return {0,0}*/
     return Index{0,0};
   }
-  
+
   size_t seek = _seek + offset;
   unsigned int entriesPerBlock = _myPartitionManager->getBlockSize() / sizeof(BlkNumType);
   size_t blockIndex = seek / _myPartitionManager->getBlockSize();
   Index ret;
   vector<int> remainders;
   char* buff = new char[_myPartitionManager->getBlockSize()];
-  
+
   /*Set the return offset*/
   ret.offset = (seek - 1) % _myPartitionManager->getBlockSize();
-  
+
   if(blockIndex < 12)
   {
     if(_file->get_finode().directBlocks[blockIndex] == 0)
-    { 
+    {
       /*Space not yet allocated*/
       delete[] buff;
       return Index{0,0};
@@ -127,105 +127,105 @@ Index FileOpen::byte_to_index(short offset)
     switch(levelCount)
     {
       case 0:
-      {        
+      {
         /*Read in Level 1 indirect block*/
         if(_file->get_finode().level1Indirect == 0)
-        { 
+        {
           /*Space not yet allocated*/
           delete[] buff;
           return Index{0,0};
         }
         try{_myPartitionManager->readDiskBlock(_file->get_finode().level1Indirect, buff);}
         catch(arboreal_exception& e) { delete[] buff; throw; }
-  
+
         /*blockIndex is the level 1 offset*/
         BlkNumType blknum;
         memcpy(&blknum, buff + (blockIndex * sizeof(BlkNumType)), sizeof(BlkNumType));
         ret.blknum = blknum;
-        
-        break; 
+
+        break;
       }
       case 1:
       {
         /*Read in Level 2 indirect block*/
         if(_file->get_finode().level2Indirect == 0)
-        { 
+        {
           /*Space not yet allocated*/
           delete[] buff;
           return Index{0,0};
         }
         try{_myPartitionManager->readDiskBlock(_file->get_finode().level2Indirect, buff);}
         catch(arboreal_exception& e) { delete[] buff; throw; }
-        
+
         /*blockIndex - 1 is the level 2 offset*/
         BlkNumType l1blknum;
         memcpy(&l1blknum, buff + ((blockIndex - 1) * sizeof(BlkNumType)), sizeof(BlkNumType));
-        
+
         /*Read in Level 1 indirect block*/
         if(l1blknum == 0)
-        { 
+        {
           /*Space not yet allocated*/
           delete[] buff;
           return Index{0,0};
         }
         try{_myPartitionManager->readDiskBlock(l1blknum, buff);}
         catch(arboreal_exception& e) { delete[] buff; throw; }
-        
+
         /*remainders[0] is the level 1 offset*/
         BlkNumType blknum;
         memcpy(&blknum, buff + (remainders[0] * sizeof(BlkNumType)), sizeof(BlkNumType));
-        
+
         ret.blknum = blknum;
-        
+
         break;
       }
       case 2:
-      {        
+      {
         /*Read in Level 3 indirect block*/
-        
+
         if(_file->get_finode().level3Indirect == 0)
-        { 
+        {
           /*Space not yet allocated*/
           delete[] buff;
           return Index{0,0};
         }
         try{_myPartitionManager->readDiskBlock(_file->get_finode().level3Indirect, buff);}
         catch(arboreal_exception& e) { delete[] buff; throw; }
-        
+
         /*blockIndex - 1 is the level 3 offset*/
         BlkNumType l2blknum;
         memcpy(&l2blknum, buff + ((blockIndex - 1) * sizeof(BlkNumType)), sizeof(BlkNumType));
-        
+
         /*Read in level 2 indirect block*/
         if(l2blknum == 0)
-        { 
+        {
           /*Space not yet allocated*/
           delete[] buff;
           return Index{0,0};
         }
         try{_myPartitionManager->readDiskBlock(l2blknum, buff);}
         catch(arboreal_exception& e) { delete[] buff; throw; }
-        
+
         /*remainders[1] - 1 is the level 2 offset*/
         BlkNumType l1blknum;
         memcpy(&l1blknum, buff + ((remainders[1] - 1) * sizeof(BlkNumType)), sizeof(BlkNumType));
-        
+
         /*Read in Level 1 indirect block*/
         if(l1blknum == 0)
-        { 
+        {
           /*Space not yet allocated*/
           delete[] buff;
           return Index{0,0};
         }
         try{_myPartitionManager->readDiskBlock(l1blknum, buff);}
         catch(arboreal_exception& e) { delete[] buff; throw; }
-        
+
         /*remainders[0] is the level 1 offset*/
         BlkNumType blknum;
         memcpy(&blknum, buff + (remainders[0] * sizeof(BlkNumType)), sizeof(BlkNumType));
-        
+
         ret.blknum = blknum;
-        
+
         break;
       }
       default:
@@ -242,30 +242,30 @@ Index FileOpen::byte_to_index(short offset)
 Index FileOpen::increment_index()
 {
   refresh();
-  
+
   /*Assuming this function is only called when the seek pointing to the end of a block*/
   int check = (_seek - 1) % _myPartitionManager->getBlockSize();
   if(check != 0 && (_seek != 0))
   {
     throw arboreal_logic_error("Called increment_index when seekptr was not at end of a block", "FileOpen::increment_index");
   }
-  
+
   if(get_EOF() || ((_seek != _file->get_file_size() + 1) && (_seek != 0)))
   {
     /*Assuming this function is only called when the seek is at the last byte of the file*/
     throw arboreal_logic_error("Called increment_index when seek pointer was not pointing to last byte of file", "FileOpen::increment_index");
   }
-  
+
   Index ret{0,0};
   size_t seek = _file->get_file_size();
   size_t entriesPerBlock = _myPartitionManager->getBlockSize() / sizeof(BlkNumType);
   size_t blockIndex = seek / _myPartitionManager->getBlockSize();
-  
+
   size_t directOffset = 12;
   size_t level1Offset = entriesPerBlock;
   size_t level2Offset = (entriesPerBlock) * level1Offset;
   size_t level3Offset = (entriesPerBlock) * level2Offset;
-  
+
   if (blockIndex < directOffset)
   {
     /*Need to allocate the next direct block*/
@@ -279,7 +279,7 @@ Index FileOpen::increment_index()
     /*Need to allocate the level 1 indirect block*/
     BlkNumType blknum = _myPartitionManager->getFreeDiskBlock();
     _file->add_indirect_block(blknum, 1);
-    
+
   }
   else if(blockIndex == directOffset + level1Offset)
   {
@@ -291,13 +291,13 @@ Index FileOpen::increment_index()
   {
     /*Need to allocate level 3 indirect block*/
     BlkNumType blknum = _myPartitionManager->getFreeDiskBlock();
-    _file->add_indirect_block(blknum, 3);      
+    _file->add_indirect_block(blknum, 3);
   }
   else if(blockIndex == directOffset + level3Offset)
   {
     throw file_error("Maximum File Size Reached!", "FileOpen::increment_index");
   }
-  
+
   int levelCount = 0;
   if(blockIndex <= 12)
   {
@@ -313,7 +313,7 @@ Index FileOpen::increment_index()
     levelFind /= entriesPerBlock;
     levelCount++;
   }
-  
+
   switch(levelCount)
   {
     case 0:
@@ -355,10 +355,10 @@ BlkNumType FileOpen::levelInc(size_t relativeBlock, BlkNumType ledgerBlock, shor
   memset(buff, 0, blockSize);
   char* zeroBuff = new char[blockSize];
   memset(zeroBuff, 0, blockSize);
-  
+
   try{ _myPartitionManager->readDiskBlock(ledgerBlock, buff); }
   catch(arboreal_exception& e) { delete[] buff; throw; }
-  
+
   switch(level)
   {
     case 1:
@@ -369,7 +369,7 @@ BlkNumType FileOpen::levelInc(size_t relativeBlock, BlkNumType ledgerBlock, shor
       catch(arboreal_exception& e) { delete[] buff; delete zeroBuff; throw; }
       delete[] buff; delete[] zeroBuff;
       return dataBlock;
-      
+
     }
     case 2:
     {
@@ -395,7 +395,7 @@ BlkNumType FileOpen::levelInc(size_t relativeBlock, BlkNumType ledgerBlock, shor
         level2Block = _myPartitionManager->getFreeDiskBlock();
         try{_myPartitionManager->writeDiskBlock(level2Block, zeroBuff);}
         catch(arboreal_exception& e) { delete[] buff; delete zeroBuff; throw; }
-        
+
         memcpy(buff + ((relativeBlock/entriesPerBlock^2) * sizeof(BlkNumType)), &level2Block, sizeof(BlkNumType));
         try{_myPartitionManager->writeDiskBlock(ledgerBlock, buff);}
         catch(arboreal_exception& e) { delete[] buff; delete zeroBuff; throw; }
@@ -446,14 +446,14 @@ void FileOpen::refresh()
 FileSystem::FileSystem(DiskManager *dm, string partitionName)
 {
   _FSName = partitionName;
-  
+
   /* set partition manager for my partition */
   _myPartitionManager = new PartitionManager(dm, partitionName);
-  
+
   /*Read in the root tree*/
   _RootTree = new RootTree(_myPartitionManager);
   _RootTree->read_in(&_allFiles, _RootTree);
-  
+
   /*Read in every tag Tree*/
   for(auto it = _RootTree->begin(); it != _RootTree->end(); it++)
   {
@@ -469,18 +469,18 @@ FileSystem::~FileSystem()
   {
     delete file.second;
   }
-  
+
   for(auto objIt = objsToDelete.begin(); objIt != objsToDelete.end(); objIt++)
   {
     delete *objIt;
   }
   objsToDelete.clear();
-  
+
   for(auto fileIt = _fileOpenTable.begin(); fileIt != _fileOpenTable.end(); fileIt++)
   {
     if(*fileIt != 0 )
     {
-      delete *fileIt; 
+      delete *fileIt;
       *fileIt = 0;
     }
   }
@@ -498,22 +498,22 @@ vector<FileInfo*>* FileSystem::tag_search(unordered_set<string>& tags)
   {
     /*find the tag in root tree*/
     TreeObject* tagTree = _RootTree->find(*(tags.begin()));
-    
+
     if(tagTree == 0)
     {
         throw tag_error("Tag " + *(tags.begin()) + " Does not exist", "FileSystem::tag_search()");
     }
-    
+
     /*List files in tag tree pointed to by root tree*/
-    
+
     for(auto fileIt = tagTree->begin(); fileIt != tagTree->end(); fileIt++)//Complexity: number of files in answer
     {
       ret->push_back((FileInfo*)fileIt->second);
     }
-    
+
   }
   else
-  {    
+  {
     //   * Use size field in root node of tag tree to find smallest tree among the tags you want to search
     /*create vector of tagtrees that we want to search*/
     vector<TreeObject*> searchTrees;
@@ -529,12 +529,12 @@ vector<FileInfo*>* FileSystem::tag_search(unordered_set<string>& tags)
         searchTrees.push_back(tagTree);
       }
     }
-    
+
     if(searchTrees.size() == 0)
     {
         return ret;
     }
-    
+
     TreeObject* smallest = searchTrees[0];
     for(size_t i = 1; i < searchTrees.size(); i++)//Complexity: number of tags specified
     {
@@ -543,7 +543,7 @@ vector<FileInfo*>* FileSystem::tag_search(unordered_set<string>& tags)
         smallest = searchTrees[i];
       }
     }
-    
+
     /*Search the smallest tree:*/
     for(auto fileIt = smallest->begin(); fileIt != smallest->end(); fileIt++)
     {
@@ -561,7 +561,7 @@ vector<FileInfo*>* FileSystem::tag_search(unordered_set<string>& tags)
             break;
           }
         }
-        
+
         if(match)
         {
           /*Push back the matching file*/
@@ -570,7 +570,7 @@ vector<FileInfo*>* FileSystem::tag_search(unordered_set<string>& tags)
       }
     }
   }
-  
+
   /* return vector of the found file(s)*/
   return ret;
 }
@@ -578,12 +578,12 @@ vector<FileInfo*>* FileSystem::tag_search(unordered_set<string>& tags)
 vector<FileInfo*>* FileSystem::file_search(string name)
 {
   /*We're going to use the _allFiles variable to find the files*/
-  
+
   vector<FileInfo*>* ret = new vector<FileInfo*>;
-  
+
   auto files = _allFiles.equal_range(name);
-  
-  for (auto it = files.first; it != files.second; it++) 
+
+  for (auto it = files.first; it != files.second; it++)
   {
     ret->push_back(it->second);
   }
@@ -599,17 +599,17 @@ void FileSystem::create_tag(string tagName)
   /*Get a block from disk to store tag tree super block*/
   BlkNumType newblknum = 0;
   newblknum = _myPartitionManager->getFreeDiskBlock();
-  
+
   /* initialize tree in main memory */
   TagTree* newTag = new TagTree(tagName, newblknum, _myPartitionManager);
   try
   {
     /* add TagTree to root tree */
     _RootTree->insert(tagName, newTag);
-    
+
     /*Note Root Tree was modified*/
     insert_modification(_RootTree);
-    
+
     /*Write out newly created TagTree. it will only write out the TagTree superblock*/
     newTag->write_out();
   }
@@ -629,26 +629,26 @@ void FileSystem::delete_tag(string tagName)
   {
     throw tag_error(tagName + " Does Not Exist", "FileSystem::delete_tag");
   }
-    
+
   /* CANNOT delete tag if tag tree Size > 0 */
   if(tagTree->size() > 0)
   {
     throw tag_error(tagName + " cannot be deleted: Tag has files associated with it", "FileSystem::delete_tag");
   }
-  
+
   /*Delete tagTree on disk*/
   tagTree->del();
   /*Delete TagTree from Root Tree*/
   _RootTree->erase(tagName);
   /*Note Root Tree was modified*/
   insert_modification(_RootTree);
-  
+
   objsToDelete.push_back(tagTree);
 }
 
 void FileSystem::merge_tags(string tag1, string tag2)
 {
-  
+
   //   - create new tag tree if needed
   //   - Move all Nodes in largest tag tree to new (assuming new tree was created otherwise add to existsing tree) Tree
   //   * delete refrences to old tags in Fionde as you go
@@ -657,7 +657,7 @@ void FileSystem::merge_tags(string tag1, string tag2)
   //   * if Yes: Skip
   //   * if NO: Add
   //   * Repete
-  
+
 }
 
 void FileSystem::tag_file(FileInfo* file, unordered_set<string> tags)
@@ -665,13 +665,13 @@ void FileSystem::tag_file(FileInfo* file, unordered_set<string> tags)
   /*Validate the tagging of this file first*/
   unordered_set<string> tagsToAdd = tags;
   if(file == 0) {throw file_error ("File Does not Exist", "FileSystem::tag_file");}
-  
+
   if(tagsToAdd.size() == 0) {throw tag_error("No tags specified","FileSystem::tag_file");}
-  
+
   unordered_set<string> wholeTagSet = file->get_tags();
-  
+
   TreeObject* tagTree = 0;
-  
+
   for(string tag : tags)
   {
     /*Disallow tagging with default*/
@@ -691,64 +691,64 @@ void FileSystem::tag_file(FileInfo* file, unordered_set<string> tags)
       wholeTagSet.insert(tag);
     }
   }
-  
+
   if(tagsToAdd.size() == 0)
   {
     throw tag_error("No valid tags specified: file not Changed", "FileSystem::tag_file");
   }
-  
+
 
   /*Validate the new file*/
   TreeObject* fileCheck = 0;
-  
+
   tagTree = _RootTree->find(*(wholeTagSet.begin()));
   if(tagTree == 0)
   {
     throw arboreal_logic_error(*wholeTagSet.begin() + " does not exist", "FileSystem::untag_file");
   }
   fileCheck =  tagTree->find(file->mangle(wholeTagSet));
-  
+
   if(fileCheck != 0)
   {
     throw file_error(file->get_name() + " with the specified tags already exists", "FileSystem::tag_file");
   }
-  
+
   /*Remove tags already that the file already has*/
   unordered_set<string> fileTagSet = file->get_tags();
   for(string tag : fileTagSet)
   {
     wholeTagSet.erase(tag);
   }
-  
+
   if(wholeTagSet.size() == 0)
   {
     throw tag_error("File was not tagged with anything new", "FileSystem::tag_file");
     return;
   }
-  
+
   /*For every tag in newTags*/
   for(string tag : wholeTagSet)
   {
     /*find tagTree*/
     tagTree = _RootTree->find(tag);
-    
+
     /*Add Tag to Finode */
     file->insert(tag, tagTree);
-    
+
     /*Add Finode to tagTree*/
     tagTree->insert(file->mangle(wholeTagSet), file);
-    
+
     /*Note TagTree was modified*/
     insert_modification(tagTree);
-  
+
   }
-  
+
   /*Remove default tag, if it exists in this file */
   if(file->find("default") != 0)
   {
     file->erase("default");
   }
-  
+
   file->write_out();
 }
 
@@ -770,13 +770,13 @@ void FileSystem::untag_file(FileInfo* file, unordered_set<string> tags, bool del
   {
     throw arboreal_logic_error("Invalid FileInfo*", "FileSystem::untag_file()");
   }
-  
+
   string originalFileName = file->mangle();
   unordered_set<string> tagsToRemove = tags;
   unordered_set<string> currentTagSet = file->get_tags();
-  
+
   TreeObject* tagTree = 0;
-  
+
   for(string tag : tags)
   {
     /*Remove tags that do not exist and that are not part of the file's current tag set*/
@@ -791,13 +791,13 @@ void FileSystem::untag_file(FileInfo* file, unordered_set<string> tags, bool del
       tagsToRemove.erase(tag);
     }
   }
-  
+
   unordered_set<string> potentialTagSet = file->get_tags();
   for(string tag : tagsToRemove)
   {
     potentialTagSet.erase(tag);
   }
-  
+
   /*Validate the new file*/
   TreeObject* fileCheck = 0;
   if(potentialTagSet.size() == 0)
@@ -809,7 +809,7 @@ void FileSystem::untag_file(FileInfo* file, unordered_set<string> tags, bool del
       {
         throw arboreal_logic_error("Default Tree not Found!", "FileSystem::untag_file()");
       }
-      
+
       fileCheck = defaultTree->find(file->mangle());
     }
   }
@@ -827,7 +827,7 @@ void FileSystem::untag_file(FileInfo* file, unordered_set<string> tags, bool del
   {
     throw file_error(file->get_name() + " with the specified tags already exists", "FileSystem::untag_file()");
   }
-  
+
   for(string tag: tagsToRemove)
   {
     if(tag == "default" && !deleting)
@@ -835,29 +835,29 @@ void FileSystem::untag_file(FileInfo* file, unordered_set<string> tags, bool del
       throw tag_error (tag + " cannot be removed from " + file->get_name(), "FileSystem::untag_file()");
     }
   }
-  
+
   for(string tag : tagsToRemove)
   {
     /*find tagTree*/
     TreeObject* tagTree = _RootTree->find(tag);
-    
+
     /*Remove Finode from tagTree*/
     tagTree->erase(originalFileName);
-    
+
     /*Remove tag from Finode*/
     file->erase(tag);
-    
+
     /*Note Tag Tree was modified*/
     insert_modification(tagTree);
   }
-  
+
   /*Update all the tags that file is still tagged with*/
   for(auto tagIt = file->begin(); tagIt != file->end(); ++tagIt)
   {
     tagIt->second->erase(originalFileName);
     tagIt->second->insert(file->mangle(), file);
   }
-  
+
   /*if removed all Tags from file, add default tag*/
   if(file->size() == 0 && !deleting)
   {
@@ -867,7 +867,7 @@ void FileSystem::untag_file(FileInfo* file, unordered_set<string> tags, bool del
     defaultTree->insert(file->mangle(tagSet), file);
     insert_modification(defaultTree);
   }
-  
+
   /* write updated Finode to disk*/
   file->write_out();
 }
@@ -880,22 +880,22 @@ void FileSystem::rename_tag(string originalTagName, string newTagName)
   {
     throw tag_error("new Tag name must not already exist!", " FileSystem::rename_tag()");
   }
-  
+
   /*Rename the tagTree*/
   TreeObject* tagTree = _RootTree->find(originalTagName);
   tagTree->set_name(newTagName);
-  
+
   /*Note TagTree was modified*/
   insert_modification(tagTree);
-  
+
   /*Change tagName in rootTree*/
   _RootTree->erase(originalTagName);
   _RootTree->insert(newTagName, tagTree);
-  
+
   /*Note RootTree was modified*/
   insert_modification(_RootTree);
-  
-  
+
+
   /*Change tagName in every FileInfo object of the tagTree*/
   for(auto fileIt = tagTree->begin(); fileIt != tagTree->end(); fileIt++)
   {
@@ -908,14 +908,14 @@ void FileSystem::rename_tag(string originalTagName, string newTagName)
 FileInfo* FileSystem::create_file(string filename, unordered_set<string>& tags)
 {
   /*Get a block from disk to store Finode*/
-  
+
   BlkNumType newblknum = 0;
   newblknum = _myPartitionManager->getFreeDiskBlock();
-  
+
   FileInfo* newFile = new FileInfo(filename, newblknum, _myPartitionManager);
   /* If no tag was specified then add file to "default" tag tree
    * File remains in default tag tree until a non-default tag is associated with file*/
-  
+
   try
   {
     if(tags.size() == 0)
@@ -925,7 +925,7 @@ FileInfo* FileSystem::create_file(string filename, unordered_set<string>& tags)
       {
         throw arboreal_logic_error("Default Tree not Found!", "FileSystem::untag_file()");
       }
-      
+
       newFile->insert("default", defaultTree);
       vector<string> tagSet; tagSet.push_back("default");
       defaultTree->insert(newFile->mangle(tagSet), newFile);
@@ -935,7 +935,7 @@ FileInfo* FileSystem::create_file(string filename, unordered_set<string>& tags)
     {
       tag_file(newFile, tags);
     }
-    
+
     newFile->write_out();
     _allFiles.insert(pair<string, FileInfo*>(filename, newFile));
   }
@@ -955,15 +955,15 @@ void FileSystem::delete_file(FileInfo* file)
   {
     throw arboreal_logic_error("Invalid FileInfo*", "FileSystem::delete_file()");
   }
-  
+
   unordered_set<string> tags = file->get_tags();
-  
+
   /*Dissasociate all tags from the file*/
   untag_file(file, tags, true);
 
   /*Delete file from disk*/
   file->del();
-  
+
   /*Delete file from _allFiles*/
   auto ret = _allFiles.equal_range(file->get_name());
   for(auto fileIt = ret.first; fileIt != ret.second; fileIt++)
@@ -986,15 +986,15 @@ void FileSystem::delete_file(vector<string>& filePath)
 int FileSystem::open_file(vector<string>& filePath, char mode)
 {
   int fileDesc = -1;
-    
+
   /*Find the file*/
   FileInfo* file = path_to_file(filePath);
-  
+
   /*Create a FileOpen object corresponding to this file descriptor*/
   FileOpen* open_file = new FileOpen(file, mode, _myPartitionManager);
-  
+
   /*Add the FileOpen* to the fileOpen table*/
-  
+
   if(_fileOpenTable.size() <= MAXopen_fileS)
   {
     _fileOpenTable.push_back(open_file);
@@ -1017,7 +1017,7 @@ int FileSystem::open_file(vector<string>& filePath, char mode)
       throw file_error("Reached maximum number of open Files", "FileSystem::open_file()");
     }
   }
-  
+
   /*Return the index of the FileOpen* in the fileopen table*/
   return fileDesc;
 }
@@ -1028,7 +1028,7 @@ void FileSystem::close_file(unsigned int fileDesc)
   {
     throw file_error("Invalid file descriptor", "FileSystem::close_file");
   }
-  
+
   /*Close the File*/
   delete _fileOpenTable[fileDesc]; _fileOpenTable[fileDesc] = 0;
 }
@@ -1039,7 +1039,7 @@ size_t FileSystem::read_file(unsigned int fileDesc, char* data, size_t len)
   {
     return 0;
   }
-  
+
   /*Start read_ing at seek pointer*/
   if(fileDesc > _fileOpenTable.size() || _fileOpenTable[fileDesc] == 0)
   {
@@ -1050,20 +1050,20 @@ size_t FileSystem::read_file(unsigned int fileDesc, char* data, size_t len)
   Index currentIndex;
   size_t dataOffset = 0;
   char* buff = new char[_myPartitionManager->getBlockSize()];
-  
+
   if(open_file->get_mode() != 'r' && open_file->get_mode() != 'x')
   {
     delete[] buff;
     throw file_error("File not opened with read permissions", "FileSystem::write_file");
   }
-  
+
   /*If seek pointer is past the end of the file, throw error*/
   if(open_file->get_EOF())
   {
     delete[] buff;
     throw file_error("Attempt to read past EOF", "FileSystem::read_file()");
   }
-  
+
   /*Get the index we need to start read_ing from*/
   currentIndex = open_file->byte_to_index(0);
   if(currentIndex.blknum == 0)
@@ -1073,18 +1073,18 @@ size_t FileSystem::read_file(unsigned int fileDesc, char* data, size_t len)
     delete[] buff;
     return 0;
   }
-  
+
   /*Set len so we don't actually read past the end of valid data*/
   if(len > (open_file->get_file()->get_file_size() - (open_file->get_seek() - 1)))
   {
-    len = open_file->get_file()->get_file_size() - open_file->get_seek(); 
+    len = open_file->get_file()->get_file_size() - open_file->get_seek();
     set_EOF = true;
   }
-  
+
   /*Read data remaining in current block*/
   size_t bytesToRead = _myPartitionManager->getBlockSize() - currentIndex.offset;
 
-  
+
   if(len <= bytesToRead)
   {
     try{_myPartitionManager->readDiskBlock(currentIndex.blknum, buff);}
@@ -1107,7 +1107,7 @@ size_t FileSystem::read_file(unsigned int fileDesc, char* data, size_t len)
   }
 
   len-= bytesToRead; dataOffset+= bytesToRead;
-  
+
   /*Read as many full blocks as we can*/
   while(len >= _myPartitionManager->getBlockSize())
   {
@@ -1116,16 +1116,16 @@ size_t FileSystem::read_file(unsigned int fileDesc, char* data, size_t len)
     {
       throw arboreal_logic_error("A supposedly valid seek returned no valid index", "FileSystem::read_file()");
     }
-    
+
     /*Read a full block*/
     try{_myPartitionManager->readDiskBlock(currentIndex.blknum, buff);}
     catch(arboreal_exception& e) { delete[] buff; throw; }
     memcpy(data + dataOffset, buff + currentIndex.offset, _myPartitionManager->getBlockSize());
-    
+
     open_file->increment_seek(_myPartitionManager->getBlockSize());
     dataOffset+= _myPartitionManager->getBlockSize(); len-= _myPartitionManager->getBlockSize();
   }
-  
+
   /*Read any leftover bytes*/
   if(len > 0)
   {
@@ -1134,7 +1134,7 @@ size_t FileSystem::read_file(unsigned int fileDesc, char* data, size_t len)
     {
       throw arboreal_logic_error("A supposedly valid seek returned no valid index", "FileSystem::read_file()");
     }
-    
+
     /*Read len bytes*/
     try{_myPartitionManager->readDiskBlock(currentIndex.blknum, buff);}
     catch(arboreal_exception& e) { delete[] buff; throw; }
@@ -1142,7 +1142,7 @@ size_t FileSystem::read_file(unsigned int fileDesc, char* data, size_t len)
     open_file->increment_seek(len);
     dataOffset+= len;
   }
-  
+
   if(set_EOF)
   {
     open_file->set_EOF();
@@ -1154,17 +1154,17 @@ size_t FileSystem::read_file(unsigned int fileDesc, char* data, size_t len)
 size_t FileSystem::write_file(unsigned int fileDesc, const char* data, size_t len)
 {
   /*Start writing at seek pointer*/
-  
+
   if(fileDesc > _fileOpenTable.size() || _fileOpenTable[fileDesc] == 0)
   {
     throw file_error("Invalid File descriptor", "FileSystem::write_file");
   }
-  
+
   FileOpen* open_file = _fileOpenTable[fileDesc];
   Index currentIndex;
   size_t dataOffset = 0;
   char* buff = new char[_myPartitionManager->getBlockSize()];
-  
+
   if(open_file->get_mode() != 'w' && open_file->get_mode() != 'x')
   {
     delete[] buff;
@@ -1177,7 +1177,7 @@ size_t FileSystem::write_file(unsigned int fileDesc, const char* data, size_t le
     delete[] buff;
     throw file_error("Attempt to write past EOF", "FileSystem::write()");
   }
-  
+
   /*Get the index we need to start writing to, 1 past the seek pointer*/
   currentIndex = open_file->byte_to_index(0);
   if(currentIndex.blknum == 0)
@@ -1185,12 +1185,12 @@ size_t FileSystem::write_file(unsigned int fileDesc, const char* data, size_t le
     /*There is not space allocated yet, increment Index*/
     currentIndex = open_file->increment_index();
   }
-  
+
   /*Fill up current Block, must preserve data already there*/
   try{_myPartitionManager->readDiskBlock(currentIndex.blknum, buff);}
   catch(arboreal_exception& e) { delete[] buff; throw; }
   size_t bytesToWrite = _myPartitionManager->getBlockSize() - currentIndex.offset;
-  
+
   if(len <= bytesToWrite)
   {
     memcpy(buff + currentIndex.offset, data, len);
@@ -1223,16 +1223,16 @@ size_t FileSystem::write_file(unsigned int fileDesc, const char* data, size_t le
         currentIndex = open_file->increment_index();
       }
     }
-    
+
     /*Write a full block of data*/
     memcpy(buff, data + dataOffset, _myPartitionManager->getBlockSize());
     try{_myPartitionManager->writeDiskBlock(currentIndex.blknum, buff);}
     catch(arboreal_exception& e) { delete[] buff; throw; }
     open_file->increment_seek(_myPartitionManager->getBlockSize(), true); open_file->get_file()->set_edit();
-    len -= _myPartitionManager->getBlockSize(); dataOffset += _myPartitionManager->getBlockSize(); 
-    
+    len -= _myPartitionManager->getBlockSize(); dataOffset += _myPartitionManager->getBlockSize();
+
   }
-  
+
   if(len > 0)
   {
     /*More, but not a full block of data to write*/
@@ -1242,15 +1242,15 @@ size_t FileSystem::write_file(unsigned int fileDesc, const char* data, size_t le
       /*There is not space allocated yet, increment Index*/
       currentIndex = open_file->increment_index();
     }
-    
+
     memset(buff, 0, _myPartitionManager->getBlockSize());
     memcpy(buff + currentIndex.offset, data + dataOffset, len);
     try{_myPartitionManager->writeDiskBlock(currentIndex.blknum, buff);}
     catch(arboreal_exception& e) { delete[] buff; throw; }
     open_file->increment_seek(len, true); open_file->get_file()->set_edit();
-    dataOffset += len; 
+    dataOffset += len;
   }
-  
+
   delete[] buff;
   return dataOffset;
 }
@@ -1258,12 +1258,12 @@ size_t FileSystem::write_file(unsigned int fileDesc, const char* data, size_t le
 size_t FileSystem::append_file(unsigned int fileDesc, const char* data, size_t len)
 {
   /*Start writing at last byte of file*/
-  
+
   if(fileDesc > _fileOpenTable.size())
   {
     throw file_error("Invalid File descriptor", "FileSystem::write_file");
   }
-  
+
   FileOpen* open_file = _fileOpenTable[fileDesc];
   open_file->go_past_last_byte();
   return write_file(fileDesc, data, len);
@@ -1277,7 +1277,7 @@ void FileSystem::seek_file_absolute(unsigned int fileDesc, size_t offset)
     throw file_error("Invalid file descriptor", "FileSystem::seek_file_absolute");
   }
   FileOpen* open_file = _fileOpenTable.at(fileDesc);
-  
+
   open_file->reset_seek();
   open_file->increment_seek(offset);
 }
@@ -1289,7 +1289,7 @@ void FileSystem::seek_file_relative(unsigned int fileDesc, long int offset)
     throw file_error("Invalid file descriptor", "FileSystem::seek_file_relative");
   }
   FileOpen* open_file = _fileOpenTable.at(fileDesc);
-  
+
   if(offset < 0)
   {
     open_file->decrement_seek(-offset);
@@ -1304,7 +1304,7 @@ Attributes* FileSystem::get_attributes(vector<string>& filePath)
 {
   /*Find the file*/
   FileInfo* file = path_to_file(filePath);
-  
+
   return file->get_attributes();
 }
 
@@ -1312,16 +1312,16 @@ void FileSystem::set_permissions(vector<string>& filePath, char* perms)
 {
   /*Find the file*/
   FileInfo* file = path_to_file(filePath);
-  
+
   file->set_permissions(perms);
 }
 
 void FileSystem::rename_file(vector<string>& originalFilePath, string newFileName)
 {
-  
+
   /*Find the file*/
   FileInfo* file = path_to_file(originalFilePath);
-  
+
   /*Change fileName in every TagTree object associated with the file*/
   for(auto tagIt = file->begin(); tagIt != file->end(); tagIt++)
   {
@@ -1330,14 +1330,14 @@ void FileSystem::rename_file(vector<string>& originalFilePath, string newFileNam
     /*Note tag tree was modified*/
     insert_modification(tagIt->second);
   }
-  
+
   /*Change the File in allfiles*/
   _allFiles.erase(file->get_name());
   _allFiles.insert(pair<string, FileInfo*>(newFileName, file));
-  
-  
+
+
   file->set_name(newFileName);
-  
+
 }
 
 void FileSystem::write_changes()
@@ -1356,15 +1356,15 @@ void FileSystem::insert_modification(TreeObject* object)
 }
 
 FileInfo* FileSystem::path_to_file(vector<string>& fullPath)
-{  
+{
   if(fullPath.size() == 0)
   {
     throw arboreal_logic_error("path must at least have a file name", "FileSystem::path_to_file");
   }
-  
+
   vector<string> path;
   string filename = fullPath.at(fullPath.size() - 1);
-  
+
   if(fullPath.size() == 1)
   {
     /*Search default tag tree*/
@@ -1376,20 +1376,20 @@ FileInfo* FileSystem::path_to_file(vector<string>& fullPath)
     path = fullPath;
     path.pop_back();
   }
-  
+
   TreeObject* tagTree = _RootTree->find(path[0]);
   if(tagTree == 0)
   {
     throw tag_error(path[0] + "Does not Exist", "FileSystem::path_to_file");
   }
-  
+
   FileInfo* temp = new FileInfo(filename, 0, _myPartitionManager);
   TreeObject* file = tagTree->find(temp->mangle(path));
   if(file == 0)
   {
     throw file_error("File Does not exist", "FileSystem::path_to_file");
   }
-  
+
   delete temp;
   return (FileInfo*)file;
 }
@@ -1408,7 +1408,7 @@ void FileSystem::print_tags()
   for(auto it = _RootTree->begin(); it != _RootTree->end(); it++)
   {
     cout << "TagName: " << it->first << " \tBlockNumber: " << it->second->get_block_number() << endl;
-    
+
     for(auto it2 = it->second->begin(); it2 != it->second->end(); it2++)
     {
       cout << "\t FilePath: " << ((FileInfo*)(it2->second))->mangle() << " \tBlockNumber: " << it2->second->get_block_number() << endl;
@@ -1429,4 +1429,5 @@ int FileSystem::get_file_name_size()
   return _myPartitionManager->get_file_name_size();
 }
 
-
+size_t FileSystem::num_of_files(){return _allFiles.size();}
+size_t FileSystem::num_of_tags(){return _RootTree->size();}

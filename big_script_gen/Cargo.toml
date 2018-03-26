@@ -1,0 +1,7 @@
+[package]
+name = "big_script_gen"
+version = "0.1.0"
+authors = ["Wkemery@github.com <wyatt.emery@yahoo.com>"]
+
+[dependencies]
+rand = "0.4"

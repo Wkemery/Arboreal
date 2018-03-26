@@ -22,13 +22,16 @@
 #include <netdb.h>                          /* More Internet Socket Stuff */
 #include <sys/ioctl.h>                      /* Set Sockets To Non-Blocking */
 #include <signal.h>
+#include <chrono>
+#include <ctime>
 
 #include "DaemonDependancies/FileSystem/FileSystem.h"
 #include "DaemonDependancies/File/File.h"
 #include "DaemonHeaders/daemon.h"
 #include "../SharedHeaders/Print.h"
-/*************************************************************************************************/
 
+/*************************************************************************************************/
+#define STARTTUPDATA "Data/startup_time.txt"
 
 /* MAIN */
 
@@ -59,11 +62,11 @@ int main(int argc, char** argv)
 //
 //
 //
-  
+
   Debug.log("D: Launching File System...");
   try
   {
-    d = new Disk(500, 512, const_cast<char *>("DISK1"));
+    d = new Disk(300000, 4096, const_cast<char *>("/dev/sdc"));
     dm = new DiskManager(d);
   }
   catch(arboreal_exception& e)
@@ -82,7 +85,7 @@ int main(int argc, char** argv)
   int rval = 0;
   int desc_ready, client_sock = 0;
   int END_SERVER = FALSE;
-  int daemon_addrlen = daemon_addrlen = sizeof(daemon_sockaddr);
+  int daemon_addrlen = sizeof(daemon_sockaddr);
   char buffer[MAX_COMMAND_SIZE];
   std::vector<int> active_connections;
 
@@ -128,14 +131,14 @@ int main(int argc, char** argv)
     /*********************************************************************************************/
 
 
-    Debug.log("D: Binding Socket To [" + std::to_string(daemon_sock) + 
+    Debug.log("D: Binding Socket To [" + std::to_string(daemon_sock) +
               "] To Port [" + std::to_string(PORT) + "]");
 
     bind_socket(daemon_sock,daemon_sockaddr,TIMEOUT);
     /*********************************************************************************************/
 
 
-    Debug.log("D: Listening on Socket [" + std::to_string(daemon_sock) +"]" + 
+    Debug.log("D: Listening on Socket [" + std::to_string(daemon_sock) +"]" +
               "With a Backlog of [" + std::to_string(BACKLOG) + "]");
 
     listen_on_socket(daemon_sock,BACKLOG,TIMEOUT);
@@ -156,7 +159,7 @@ int main(int argc, char** argv)
   //---------------- START THREADS ----------------------------------------------------------------
   //
   //
-    
+
     /* Unsafe */
     // Debug.log("D: Launching [Quit] Thread...");
     // // Listens for "Q"/"q"/"quit" and quits daemon (for testing only)
@@ -192,7 +195,7 @@ int main(int argc, char** argv)
     //---------------- ATTEMPT SELECT() -----------------------------------------------------------
     //
     //
-      
+
       Debug.log("D: Attempting Call To select()...");
       rval = select(max_fid + 1, &working_set, NULL, NULL, NULL);
       if(rval < 0)
@@ -326,16 +329,25 @@ int main(int argc, char** argv)
                 try
                 {
                   /* Attempt to create new FS object using the requested partition */
-                  /* 
+                  /*
                    * If an object with that partition exists already simply add a new
                    * entry to the map using a differet file descriptor but the SAME EXACT
                    * FS object that is already in the map
                    */
-                   
+
                   auto it = part_fs_map.find(part);
                   if(it == end(part_fs_map))
                   {
-                    fd_fs_map.insert(std::pair<int,FileSystem*>(i,new FileSystem(dm,part)));
+                    /*Timing Code*/
+                    std::ofstream outfile;
+                    outfile.open(STARTTUPDATA, std::ofstream::out | std::ofstream::app);
+                    auto t_start = std::chrono::high_resolution_clock::now();
+                    FileSystem* fs = new FileSystem(dm, part);
+                    auto t_end = std::chrono::high_resolution_clock::now();
+                    outfile << std::chrono::duration<double, std::milli>(t_end-t_start).count() << " "
+                            << fs->num_of_files() << " " << " " << fs->num_of_tags() <<endl;
+                    /*Timing Code*/
+                    fd_fs_map.insert(std::pair<int,FileSystem*>(i,fs));
                     part_fs_map.insert(std::pair<std::string,FileSystem*>(part,fd_fs_map[i]));
                   }
                   else
@@ -405,18 +417,18 @@ int main(int argc, char** argv)
                 {
                   /* Send command acceptance conformation and set current command ID */
                   /* The ID will not change until a different command is issued */
-                  /* 
+                  /*
                    * This is nescesarry because some commands come bundled as lists
                    * and it is important to continue using the same excecution steps for as long
                    * as the data is coming (provided that the incoming data is not a new command).
-                   * this section checks the buffer to make sure it is not a number 
+                   * this section checks the buffer to make sure it is not a number
                    * (i.e. a new command)
                    */
                   char* end;
                   int recv_command = (int)strtol(buffer, &end, 10);
                   current_command_id = recv_command;
 
-                  Debug.log("D: Current Command ID Set To [" + 
+                  Debug.log("D: Current Command ID Set To [" +
                              std::to_string(current_command_id) + "]");
                 }
                 else if(end_check == "$")
@@ -491,7 +503,7 @@ int main(int argc, char** argv)
             /* Connection ended remove from active set */
             if(close_conn)
             {
-              Debug.log("D: Removing Closed Connection - " + std::to_string(i) + 
+              Debug.log("D: Removing Closed Connection - " + std::to_string(i) +
                 "- From Master File Descriptor Set");
 
               close(i);
@@ -542,18 +554,18 @@ int main(int argc, char** argv)
 
     quit_writing = true;
 
-    /* 
+    /*
      * Prevent Abort Trabs and Segfaults:
-     * The Quit thread does not quit fast enough to avoid an 
-     * exception being thrown due to a bad call to select thus 
+     * The Quit thread does not quit fast enough to avoid an
+     * exception being thrown due to a bad call to select thus
      * The quit thread deletes everything, then the exception handling
      * tries to delete everything and it throws all kinds of segfaults
      * in order to stop this from happening it is nescesarry to
      * either reimagine how the quit thread works or (more easily)
-     * guard the deletion of items in the exception handling; using a boolean 
+     * guard the deletion of items in the exception handling; using a boolean
      * flag which is set by the quit_thread so that if the quit thread intercepts
      * a quit signal it tells the exception handler to NOT delete any of the data
-     * (since it will be doing the deleteing) however in circumstances were 
+     * (since it will be doing the deleteing) however in circumstances were
      * quit was not called but an exception still occurs it is nescesarry to properly
      * delete all of the pointers and the like.
      */
@@ -601,31 +613,3 @@ int main(int argc, char** argv)
   printf("D: Goodbye\n");
   return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

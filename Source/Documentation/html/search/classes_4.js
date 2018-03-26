@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['modification',['Modification',['../class_modification.html',1,'']]]
+  ['index',['index',['../structindex.html',1,'']]],
+  ['invalid_5farg',['invalid_arg',['../classinvalid__arg.html',1,'']]]
 ];

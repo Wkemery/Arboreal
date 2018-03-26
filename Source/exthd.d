@@ -1,2 +1,2 @@
-/dev/sde 2621440 4096 1
-PartitionA 2621439 256
+/dev/sdc 300000 4096 1
+PartitionA 299999 512

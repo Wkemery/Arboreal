@@ -1,0 +1,10 @@
+cargo run -- -f 1000 -t 85 --maxtags 25 -o script1K.ab -d words_alpha.txt --filemult 250 --multmin 10 --multmax 25
+
+cargo run -- -f 10000 -t 150 --maxtags 65 -o script10K.ab -d words_alpha.txt --filemult 500 --multmin 10 --multmax 50
+
+cargo run -- -f 100000 -t 500 --maxtags 50 -o script100K.ab -d words_alpha.txt --filemult 1000 --multmin 50 --multmax 100
+
+cargo run -- -f 1000000 -t 1000 --maxtags 50 -o script1M.ab -d words_alpha.txt --filemult 10000 --multmin 100 --multmax 1000
+
+cargo run -- -f 10000000 -t 5000 --maxtags 50 -o script10M.ab -d words_alpha.txt --filemult 10000 --multmin 100 --multmax 1000
+
