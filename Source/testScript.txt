@@ -1,4 +1,2 @@
-new -f [f1,f2,f3,f4,f5,f6]
-new -t [tag1,tag2,tag3,tag4,tag5,tag6]
-tag [f2,f3] +> [tag1,tag2]
+new /tag1/file1
 end

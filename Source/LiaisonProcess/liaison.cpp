@@ -38,6 +38,7 @@ static const int Backlog = 10;                    /* Number of Connection Reques
 static const int Flag = 0;                        /* Flag for Send/Recv. Operations */
 static const int DaemonPort = 70777;              /* Port On Which The FS Daemon Is Listening */
 static const int Timeout = 10;                    /* How Many Seconds More To Continue Trying If An Operation Fails */
+static const bool VERBOSE = true;
 DebugMessages Debug;
 Parser* Parser = 0;
 #include "LiaisonDependancies/liason_helper.hpp"                      /* Helper Functions */
@@ -60,7 +61,7 @@ int main(int argc, char** argv)
   if(argc == 5){Debug.ON();}
   else{Debug.OFF();}
 
-  
+
   Debug.log("L: Liaison Process Initiated");
   std::string client_sockpath = argv[1];
   std::string liaison_sockpath = argv[2];;
@@ -100,28 +101,28 @@ int main(int argc, char** argv)
     char* shm = get_shm_seg(shm_key,shm_id);
     Debug.log("L: Success");
     /*********************************************************************************************/
-    
+
 
     /* Zero the structure buffers */
     memset(&liaison_sockaddr, 0, sizeof(struct sockaddr_un));
     memset(&client_sockaddr, 0, sizeof(struct sockaddr_un));
-    
+
     Debug.log("L: Initializing [Liaison --> Command Line] Socket...");
     liaison_sock = set_up_socket(liaison_sockpath,liaison_sockaddr);
     Debug.log("L: Success");
     /*********************************************************************************************/
-    
+
 
 
     Debug.log("L: Signaling Command Line");
     /* Signal CLI that it is ok to continue */
     shm[0] = 1;
     /*********************************************************************************************/
-    
+
 
     Debug.log("L: Listening For Clients...");
     listen_for_client(liaison_sock,liaison_sockpath);
-  
+
 
     length = sizeof(liaison_sockaddr);
     /* Wait until CLI is ready, if this is not done you will get a
@@ -154,7 +155,7 @@ int main(int argc, char** argv)
     Debug.log("L: Initializing [Liaison --> File System] Socket...");
     /* Initialize a connection to the File System, The parameters passed here are purely in the case
      * of failure since we need to send a message to the CLI process notifying of the failure */
-    liaison_fid = create_daemon_sock(client_sock, client_sockpath, liaison_sock, liaison_sockpath); 
+    liaison_fid = create_daemon_sock(client_sock, client_sockpath, liaison_sock, liaison_sockpath);
     Debug.log("L: Success");
 
     memset(&daemon_addr, '\0', sizeof(daemon_addr));
@@ -166,7 +167,7 @@ int main(int argc, char** argv)
     Debug.log("L: Connecting To File System...");
     /* Attempt to connect to File System. The parameters passed here are purely in the case
      * of failure since we need to send a message to the CLI process notifying of the failure */
-    connect_to_daemon(liaison_fid, daemon_addr, 
+    connect_to_daemon(liaison_fid, daemon_addr,
                       client_sock, client_sockpath, liaison_sock, liaison_sockpath);
     Debug.log("L: Success");
     /*********************************************************************************************/
@@ -287,7 +288,7 @@ int main(int argc, char** argv)
         /*****************************************************************************************/
 
 
-        Debug.log("L: Success, Maximum Filename/Tagname Size [" + 
+        Debug.log("L: Success, Maximum Filename/Tagname Size [" +
                    std::to_string(max_string_size) + "]");
         continue;
       }
@@ -330,7 +331,7 @@ int main(int argc, char** argv)
         /*****************************************************************************************/
 
 
-        
+
         Debug.log("L: Sending Parsed Data To File System...");
         /***************************************************************************************/
 
@@ -364,8 +365,10 @@ int main(int argc, char** argv)
         for(unsigned int i = 0; i < read_size - 1; i++){debug_print += data[i];}
         Debug.log("L: Received :\n" + debug_print);
 
-        std::cout << std::endl;
-        std::cout << debug_print << std::endl;
+        if(VERBOSE){
+          std::cout << std::endl;
+          std::cout << debug_print << std::endl;
+        }
         /***************************************************************************************/
 
 
@@ -374,6 +377,7 @@ int main(int argc, char** argv)
         send_response(client_sock,success.c_str(),MaxBufferSize,Flag,
                       liaison_sock,liaison_sockpath,client_sockpath);
         Debug.log("L: Return Value [" + std::to_string(rval) + "]");
+
 
       }
     }while(true);
