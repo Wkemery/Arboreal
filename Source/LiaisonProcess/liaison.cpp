@@ -341,6 +341,8 @@ int main(int argc, char** argv)
           Debug.log("L: Sending [" + vec[i] + "]");
           rval = send(liaison_fid,vec[i].c_str(),MaxBufferSize,Flag);
         }
+        /***************************************************************************************/
+
 
         Debug.log("L: Waiting For Read Size...");
         char read_size_buf[MaxBufferSize];
@@ -349,6 +351,8 @@ int main(int argc, char** argv)
 
         int read_size = get_cmnd_id(read_size_buf);
         Debug.log("L: Read Size Received [" + std::to_string(read_size) + "]");
+        /***************************************************************************************/
+
 
         Debug.log("L: Receiving Data...");
         char data[read_size];
@@ -356,11 +360,14 @@ int main(int argc, char** argv)
         rval = recv(liaison_fid,data,read_size,Flag);
 
         std::string debug_print;
+
         for(unsigned int i = 0; i < read_size - 1; i++){debug_print += data[i];}
         Debug.log("L: Received :\n" + debug_print);
-      
+
         std::cout << std::endl;
         std::cout << debug_print << std::endl;
+        /***************************************************************************************/
+
 
         Debug.log("L: Sending Confirmation To Command Line");
         std::string success = "Success";

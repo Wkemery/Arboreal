@@ -452,6 +452,8 @@ int main(int argc, char** argv)
                       index += 1;
                     }
                   }
+                  /*******************************************************************************/
+
 
                   std::string temp_string;
                   for(unsigned int i = 0; i < send_size; i++){temp_string += data_buf[i];}
@@ -472,6 +474,7 @@ int main(int argc, char** argv)
                     rval = send(i, failure.c_str(), MAX_COMMAND_SIZE, FLAG);
                   }
                   /*******************************************************************************/
+
 
                   /* Execute the command */
                   execute(current_command_id, buffer, i, data);

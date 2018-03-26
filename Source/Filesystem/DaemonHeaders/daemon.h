@@ -778,6 +778,7 @@ void execute(int id, char* command, int fd, std::vector<std::string>& data)
         }
         else
         {
+          data.push_back("Search Found [" + std::to_string(rval->size()) + "] Files");
           for(unsigned int i = 0; i < temp.size(); i++){data.push_back(temp[i]);}
         }
       }
@@ -798,6 +799,8 @@ void execute(int id, char* command, int fd, std::vector<std::string>& data)
       {
         rval = fd_fs_map[fd]->file_search(file);
         std::vector<std::string> temp = serialize_fileinfo(rval);
+
+        data.push_back("Search Found [" + std::to_string(rval->size()) + "] Files");
         for(unsigned int i = 0; i < temp.size(); i++){data.push_back(temp[i]);}
 
       }
