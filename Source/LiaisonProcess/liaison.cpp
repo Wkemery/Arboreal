@@ -37,11 +37,7 @@ static const int Backlog = 10;                    /* Number of Connection Reques
 static const int Flag = 0;                        /* Flag for Send/Recv. Operations */
 static const int DaemonPort = 70777;              /* Port On Which The FS Daemon Is Listening */
 static const int Timeout = 10;                    /* How Many Seconds More To Continue Trying If An Operation Fails */
-<<<<<<< HEAD
 static const bool VERBOSE = false;
-=======
-static const bool VERBOSE = true;
->>>>>>> 181b39972e14de136006cb7d9e07d26c5878a082
 DebugMessages Debug;
 Parser* Parser = 0;
 #include "LiaisonDependancies/liason_helper.hpp"                      /* Helper Functions */
@@ -368,12 +364,8 @@ int main(int argc, char** argv)
         for(unsigned int i = 0; i < read_size - 1; i++){debug_print += data[i];}
         Debug.log("L: Received :\n" + debug_print);
 
-<<<<<<< HEAD
         if(VERBOSE)
         {
-=======
-        if(VERBOSE){
->>>>>>> 181b39972e14de136006cb7d9e07d26c5878a082
           std::cout << std::endl;
           std::cout << debug_print << std::endl;
         }
