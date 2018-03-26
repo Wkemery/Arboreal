@@ -51,12 +51,10 @@ LIAISON_CPP=$(LIAISON_PATH)/liaison.cpp $(SHARED_CPPATH)/Arboreal_Exceptions.cpp
 
 
 DAEMON_H=$(DAEMON_PATH)/DaemonHeaders/daemon.h $(SHARED_HPATH)/CommandCodes.h \
-		 $(SHARED_HPATH)/Arboreal_Exceptions.h $(BACKEND_H)
+		 $(SHARED_HPATH)/Arboreal_Exceptions.h $(SHARED_HPATH)/DebugMessages.hpp $(BACKEND_H)
 DAEMON_CPP=$(DAEMON_PATH)/daemon.cpp $(BACKEND_CPP) $(SHARED_CPPATH)/Arboreal_Exceptions.cpp \
 		   $(SHARED_CPPATH)/Parser.cpp
 
-# DRIVER_H=$(BACKEND_H)
-# DRIVER_CPP=$(DRIVER_PATH)/driver.cpp $(BACKEND_CPP)
 
 
 VALGRIND= valgrind --leak-check=yes --log-file=/home/wyatt/ValgrindLogs/%p.log
@@ -68,9 +66,6 @@ all: commandline liaison format daemon runformat
 
 daemon: $(DAEMON_H) $(DAEMON_PATH)
 	$(CXX) $(XXFLAGS) -o daemon $(DAEMON_CPP)
-
-# driver: $(DRIVER_H) $(DRIVER_CPP)
-# 	$(CXX) $(XXFLAGS) -o driver $(DRIVER_CPP)
 
 commandline: $(CLI_H) $(CLI_CPP)
 	$(CXX) $(XXFLAGS) -o commandline $(CLI_CPP)

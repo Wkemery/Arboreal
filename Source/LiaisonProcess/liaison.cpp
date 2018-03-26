@@ -41,13 +41,14 @@ static const int Timeout = 10;                    /* How Many Seconds More To Co
 DebugMessages Debug;
 Parser* Parser = 0;
 #include "LiaisonDependancies/liason_helper.hpp"                      /* Helper Functions */
-
+/*************************************************************************************************/
 
 
 
 
 int main(int argc, char** argv)
 {
+  /* Catch Termination Signals */
   signal(SIGABRT,bad_clean);
   signal(SIGTERM,clean);
   signal(SIGINT,clean);
@@ -65,10 +66,14 @@ int main(int argc, char** argv)
   std::string liaison_sockpath = argv[2];;
   std::string partition = argv[3];
   std::string cwd = argv[4];
+
+
   Debug.log(("L: Client Socket Path: " + client_sockpath));
   Debug.log(("L: Liaison Socket Path: " + liaison_sockpath));
   Debug.log(("L: File System Partition: " + partition));
   Debug.log(("L: Current Working Directory: " + cwd));
+  /***********************************************************************************************/
+
 
   int max_string_size; // Will be set via handshake
   struct sockaddr_un liaison_sockaddr;
@@ -78,6 +83,7 @@ int main(int argc, char** argv)
   int liaison_sock;
   int client_sock;
   socklen_t length;
+  /***********************************************************************************************/
 
   try
   {
@@ -93,24 +99,26 @@ int main(int argc, char** argv)
     Debug.log("L: Attaching to Shared Memory Segment...");
     char* shm = get_shm_seg(shm_key,shm_id);
     Debug.log("L: Success");
+    /*********************************************************************************************/
     
 
     /* Zero the structure buffers */
     memset(&liaison_sockaddr, 0, sizeof(struct sockaddr_un));
     memset(&client_sockaddr, 0, sizeof(struct sockaddr_un));
-
     
     Debug.log("L: Initializing [Liaison --> Command Line] Socket...");
     liaison_sock = set_up_socket(liaison_sockpath,liaison_sockaddr);
     Debug.log("L: Success");
+    /*********************************************************************************************/
     
 
 
     Debug.log("L: Signaling Command Line");
     /* Signal CLI that it is ok to continue */
     shm[0] = 1;
-
+    /*********************************************************************************************/
     
+
     Debug.log("L: Listening For Clients...");
     listen_for_client(liaison_sock,liaison_sockpath);
   
@@ -123,24 +131,27 @@ int main(int argc, char** argv)
       client_sock = accept_client(liaison_sock,client_sockaddr,length,liaison_sockpath);
     }
     Debug.log("L: Client Connection Accepted");
+    /*********************************************************************************************/
 
 
     Debug.log("L: Unattaching Shared Memory Segment...");
     unat_shm(shm_id,shm);
     Debug.log("L: Success");
-    
+    /*********************************************************************************************/
+
 
     Debug.log("L: Retrieving Client Information");
     get_peername(client_sock,client_sockaddr,liaison_sock,liaison_sockpath);
-    
-
-
-
     Debug.log("L: Connection To Client Successful");
+    /*********************************************************************************************/
+
+
+    /* Connect To File System */
+
     Debug.log("L: Attempting To Connect To File System...");
+
+
     Debug.log("L: Initializing [Liaison --> File System] Socket...");
-    // Connect To Daemon
-    // 
     /* Initialize a connection to the File System, The parameters passed here are purely in the case
      * of failure since we need to send a message to the CLI process notifying of the failure */
     liaison_fid = create_daemon_sock(client_sock, client_sockpath, liaison_sock, liaison_sockpath); 
@@ -149,33 +160,41 @@ int main(int argc, char** argv)
     memset(&daemon_addr, '\0', sizeof(daemon_addr));
     daemon_addr.sin_family = AF_INET;
     daemon_addr.sin_port = htons(DaemonPort);
+    /*********************************************************************************************/
+
 
     Debug.log("L: Connecting To File System...");
     /* Attempt to connect to File System. The parameters passed here are purely in the case
      * of failure since we need to send a message to the CLI process notifying of the failure */
-    connect_to_daemon(liaison_fid, daemon_addr, client_sock, client_sockpath, liaison_sock, liaison_sockpath);
+    connect_to_daemon(liaison_fid, daemon_addr, 
+                      client_sock, client_sockpath, liaison_sock, liaison_sockpath);
     Debug.log("L: Success");
-
+    /*********************************************************************************************/
 
 
     /* Begin communication */
     do
     {
-      // TO DO: Place More debug statements around here somewhere
-      char* msg = recv_msg(client_sock,MaxBufferSize,Flag,liaison_sock,liaison_sockpath,client_sockpath);
-      Debug.log(("L: Received: " + get_command_string(msg,MaxBufferSize)));
+      /* Receive Command From Command Line */
+      char* msg = recv_msg(client_sock,MaxBufferSize,
+                           Flag,liaison_sock,liaison_sockpath,client_sockpath);
+      /*******************************************************************************************/
 
+
+      /* Some Debug Info */
+      Debug.log(("L: Received: " + get_command_string(msg,MaxBufferSize)));
       std::string sender = (std::to_string(client_sock) + " @ " + client_sockpath);
       auto end = std::chrono::system_clock::now();
       std::time_t end_time = std::chrono::system_clock::to_time_t(end);
       std::string datetime = std::ctime(&end_time);
-
       Debug.log(("L: Received From: " + sender));
       Debug.log(("L: Received @ " + datetime));
+      /*******************************************************************************************/
 
 
       int command_id = get_cmnd_id(msg);
       Debug.log(("L: Command ID: " + std::to_string(command_id)));
+      /*******************************************************************************************/
 
       if(command_id == QUIT)
       {
@@ -189,10 +208,12 @@ int main(int argc, char** argv)
         while(msg[index] != '\0'){ temp += msg[index]; index += 1;}
         cwd = temp;
         Parser->set_cwd(cwd);
+        /*****************************************************************************************/
+
 
         std::string success = "Working Directory Switched To: [ " + cwd + " ]";
-        send_response(client_sock,success.c_str(),MaxBufferSize,Flag,liaison_sock,liaison_sockpath,client_sockpath);
-
+        send_response(client_sock,success.c_str(),MaxBufferSize,
+                      Flag,liaison_sock,liaison_sockpath,client_sockpath);
         Debug.log(success);
         continue;
       }
@@ -204,18 +225,23 @@ int main(int argc, char** argv)
         while(msg[index] != '\0'){ temp += msg[index]; index += 1;}
         cwd += temp;
         Parser->set_cwd(cwd);
+        /*****************************************************************************************/
+
 
         std::string success = "Working Directory Switched To: [ " + cwd + " ]";
-        send_response(client_sock,success.c_str(),MaxBufferSize,Flag,liaison_sock,liaison_sockpath,client_sockpath);
-
+        send_response(client_sock,success.c_str(),MaxBufferSize,
+                      Flag,liaison_sock,liaison_sockpath,client_sockpath);
         Debug.log(success);
         continue;
       }
       else if(command_id == HANDSHK)
       {
+
         Debug.log("L: Iniating Handshake With File System...");
-        /* This is attempt HANDSHAKE */
         int rval = send(liaison_fid,msg,MaxBufferSize,0);
+        /*****************************************************************************************/
+
+
         if(rval < 0)
         {
           std::string where = "\n\n[liason.cpp::main()]: ";
@@ -224,9 +250,15 @@ int main(int argc, char** argv)
           what += "\n\n";
           throw arboreal_liaison_error(where,what);
         }
+        /*****************************************************************************************/
+
+
         char temp[MaxBufferSize];
         memset(temp,'\0',MaxBufferSize);
         rval = recv(liaison_fid,temp,MaxBufferSize,0);
+        /*****************************************************************************************/
+
+
         if(rval < 0)
         {
           std::string where = "\n\n[liason.cpp::main()]: ";
@@ -235,6 +267,8 @@ int main(int argc, char** argv)
           what += "\n\n";
           throw arboreal_liaison_error(where,what);
         }
+        /*****************************************************************************************/
+
 
         if(get_cmnd_id(temp) == FTL_ERR)
         {
@@ -243,25 +277,38 @@ int main(int argc, char** argv)
           std::string what = "Requested Partition Does Not Exist\n\n";
           throw arboreal_liaison_error(where,what);
         }
+        /*****************************************************************************************/
+
+
         max_string_size = get_cmnd_id(temp);
         Parser = new class Parser("",cwd,max_string_size);
-        send_response(client_sock,temp,MaxBufferSize,Flag,liaison_sock,liaison_sockpath,client_sockpath);
+        send_response(client_sock,temp,MaxBufferSize,
+                      Flag,liaison_sock,liaison_sockpath,client_sockpath);
+        /*****************************************************************************************/
 
-        Debug.log("L: Success, Maximum Filename/Tagname Size [" + std::to_string(max_string_size) + "]");
+
+        Debug.log("L: Success, Maximum Filename/Tagname Size [" + 
+                   std::to_string(max_string_size) + "]");
         continue;
       }
       else
       {
-        Debug.log("L: Parsing Command");
+
         /* All other commands don't have any special considerations */
+        Debug.log("L: Parsing Command");
         char temp[MaxBufferSize];
         memset(temp,'\0',MaxBufferSize);
         memcpy(temp,(msg + sizeof(int)), MaxBufferSize - sizeof(int));
         Parser->reset(temp,cwd);
         std::vector<std::string> vec;
+        /*****************************************************************************************/
+
+
+        /* Attempt Parsing */
         try
         {
           vec = Parser->parse(command_id);
+          vec.push_back("$");
         }
         catch(ParseError& e)
         {
@@ -271,111 +318,73 @@ int main(int argc, char** argv)
           s += std::to_string(max_string_size);
           s += "\n";
           s = pad_string(s, MaxBufferSize - s.length(), '\0');
-          send_response(client_sock,s.c_str(),MaxBufferSize,Flag,liaison_sock,liaison_sockpath,client_sockpath);
+          send_response(client_sock,s.c_str(),MaxBufferSize,
+                        Flag,liaison_sock,liaison_sockpath,client_sockpath);
           continue;
         }
+        /*****************************************************************************************/
+
+        //print_vector(vec);
         Debug.log("Parsed Data Follows: ");
         for(unsigned int i = 0; i < vec.size(); i++){Debug.log((vec[i] + " "));}
+        /*****************************************************************************************/
 
-        if(command_id != FIND_TS && command_id != FIND_FS)
+
+        
+        Debug.log("L: Sending Parsed Data To File System...");
+        /***************************************************************************************/
+
+        int rval = 0;
+        for(unsigned int i = 0; i < vec.size(); i++)
         {
-          Debug.log("L: Sending Parsed Data To File System...");
-          std::string data = "\n";
-          for(unsigned int i = 0; i < vec.size(); i++)
-          {
-            std::string command = pad_string(vec[i],(MaxBufferSize - vec[i].length()),'\0');
-            int rval = send(liaison_fid,command.c_str(),MaxBufferSize,Flag);
-  
-            char response[MaxBufferSize];
-            memset(response,'\0',MaxBufferSize);
-
-            Debug.log("L: Awaiting Response...");
-            rval = recv(liaison_fid,response,MaxBufferSize,Flag);
-            std::string r = response;
-            if(r == "Command Accepted"){continue;}
-            if(rval > 0)
-            {
-              data += response;
-              data += "\n";
-            }
-            memset(response,'\0',MaxBufferSize);
-          }
-          Debug.log("L: Response Received: " + data);
-
-          /* Reset directory to "root" directory upon successful delete Tag command */
-          std::size_t found = data.find("Successfully");
-          if(command_id == DEL_TS && found != std::string::npos && cwd != "/")
-          {
-            cwd = "/";
-            Parser->set_cwd(cwd); 
-          }
-          data = pad_string(data, MaxBufferSize - data.length(), '\0');
-
-          Debug.log("L: Sending Repsponse to Command Line...");
-          send_response(client_sock,data.c_str(),MaxBufferSize,Flag,
-                        liaison_sock,liaison_sockpath,client_sockpath);
-          Debug.log("Success");
+          vec[i] = pad_string(vec[i], MaxBufferSize - vec[i].length(), '\0');
+          Debug.log("L: Sending [" + vec[i] + "]");
+          rval = send(liaison_fid,vec[i].c_str(),MaxBufferSize,Flag);
         }
-        else
-        {
-          Debug.log("L: Sending Parsed Data To File System...");
-          for(unsigned int i = 0; i < vec.size(); i++)
-          {
-            std::string command = pad_string(vec[i],(MaxBufferSize - vec[i].length()),'\0');
-            send(liaison_fid,command.c_str(),MaxBufferSize,Flag);
-          }
-          Debug.log("Success");
-
-          std::string data = "\n";
-          std::string stemp;
-          char response[MaxBufferSize];
-          memset(response,'\0',MaxBufferSize);
-
-          Debug.log("L: Awaiting Response...");
-
-          /* Continue reading in data until File System tells you it's done */
-          while(stemp != "DONE")
-          {
-            data += (stemp + "\n");
-            stemp = "";
-            int rval = recv(liaison_fid,response,MaxBufferSize,Flag);
-            std::string r = response;
-            if(r == "Command Accepted"){continue;}
-            if(rval > 0){stemp = response;}
-          }
-          Debug.log("L: Response Recieved: " + data);
-
-          /* Signal Command Line that it needs to wait for more data */
-          std::string wait = "WAIT";
-          wait = pad_string(wait, MaxBufferSize - wait.length(), '\0');
-          send_response(client_sock,wait.c_str(),MaxBufferSize,Flag,
-                        liaison_sock,liaison_sockpath,client_sockpath);
+        /***************************************************************************************/
 
 
-          /* Tell Command Line how much data it will need to receive */
-          char read_size[MaxBufferSize];
-          int r_size = data.length();
+        Debug.log("L: Waiting For Read Size...");
+        char read_size_buf[MaxBufferSize];
+        memset(read_size_buf,'\0',MaxBufferSize);
+        rval = recv(liaison_fid,read_size_buf,MaxBufferSize,Flag);
 
-          memset(read_size, '\0', MaxBufferSize);
-          memcpy(read_size, &r_size, sizeof(int));
-
-          send_response(client_sock, read_size, MaxBufferSize, Flag,
-                        liaison_sock,liaison_sockpath, client_sockpath);
+        int read_size = get_cmnd_id(read_size_buf);
+        Debug.log("L: Read Size Received [" + std::to_string(read_size) + "]");
+        /***************************************************************************************/
 
 
-          Debug.log("L: Sending Response To Command Line...");
-          send_response(client_sock, data.c_str(), r_size, Flag,
-                        liaison_sock,liaison_sockpath, client_sockpath);
-          Debug.log("L: Success");
-        }
+        Debug.log("L: Receiving Data...");
+        char data[read_size];
+        memset(data,'\0',read_size);
+        rval = recv(liaison_fid,data,read_size,Flag);
+
+        std::string debug_print;
+
+        for(unsigned int i = 0; i < read_size - 1; i++){debug_print += data[i];}
+        Debug.log("L: Received :\n" + debug_print);
+
+        std::cout << std::endl;
+        std::cout << debug_print << std::endl;
+        /***************************************************************************************/
+
+
+        Debug.log("L: Sending Confirmation To Command Line");
+        std::string success = "Success";
+        send_response(client_sock,success.c_str(),MaxBufferSize,Flag,
+                      liaison_sock,liaison_sockpath,client_sockpath);
+        Debug.log("L: Return Value [" + std::to_string(rval) + "]");
+
       }
     }while(true);
 
+    /* Quit Liaison Process (This is good quit) */
     shutdown(liaison_fid, client_sock, client_sockpath, liaison_sock, liaison_sockpath);
 
-  } // End try{}
+  } /* End try{} */
   catch(arboreal_liaison_error e)
   {
+    /* Quit Liaison Process (This is bad quit) */
     std::cerr << e.where() << e.what() << std::endl;
     shutdown(liaison_fid, client_sock, client_sockpath, liaison_sock, liaison_sockpath);
   }

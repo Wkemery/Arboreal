@@ -15,10 +15,14 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <mutex>
 
 
 #ifndef DEBUG_H
 #define DEBUG_H
+
+std::mutex m;
+std::unique_lock<std::mutex> lk(m);
 
 class DebugMessages
 {
@@ -118,7 +122,7 @@ public:
   //===============================================================================================
   /*!
    * Template function for writing debug information to 
-   * std::cout ONLY.
+   * std::fstream ONLY.
    * 
    * @param data: The data to be written to a file.  If the type of data
    * passed is not supported by outstream operators, behavior is undefined.
@@ -132,12 +136,15 @@ public:
   {
     if(!_DEBUG && !force){return;}
 
+
+    //lock();
     _logfile.open(_logfile_name, std::ios_base::app);
     _logfile << data << std::endl;
 
     _logfile << "---------------------------------------------------------------------------------" 
     << std::endl;
     _logfile.close(); 
+    //unlock();
   }
   
 
@@ -145,7 +152,7 @@ public:
   //===============================================================================================
   /*!
    * Template function for writing debug information to 
-   * std::cout ONLY.
+   * std::cout AND std::fstream.
    * 
    * @param data: The data to be written to std::cout and a file.  If the type of data
    * passed is not supported by std::cout or outstream operators, behavior is undefined.
@@ -170,6 +177,9 @@ public:
 
     _logfile.close();
   }
+
+  void lock(){lk.try_lock();}
+  void unlock(){lk.unlock();}
 
 private:
   bool _DEBUG;

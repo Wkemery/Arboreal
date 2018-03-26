@@ -149,7 +149,8 @@ public:
 private:
 
     /* Wether or not the input is coming from a file */
-    std::string _is_script;
+    bool _is_script;
+    bool _script_print;
 
     std::string _my_pid;
     std::string _client_sockpath;

@@ -111,15 +111,15 @@ std::regex untag_files ("untag \\[([0-9a-zA-Z_]+)(\\.[a-zA-Z]+)?(,([0-9a-zA-Z_]+
 //[================================================================================================-->]
 //[    Regex for "read" Commands  ]
 //[================================================================================================-->]
-std::regex read_x_path("");
-std::regex read_x_cwd("");
-std::regex read_path("");
-std::regex read_cwd("");
+std::regex read_x_path("read (/[0-9a-zA-Z_]+)+[0-9a-zA-Z_]+((\\.)[a-zA-Z_]+)? -b [0-9]+");
+std::regex read_x_cwd("read [0-9a-zA-Z_]+((\\.)[a-zA-Z_]+)? -b [0-9]+");
+std::regex read_path("read (/[0-9a-zA-Z_]+)+[0-9a-zA-Z_]+((\\.)[a-zA-Z_]+)?");
+std::regex read_cwd("read [0-9a-zA-Z_]+((\\.)[a-zA-Z_]+)?");
 //[================================================================================================-->]
 //[    Regex for "write" Commands  ]
 //[================================================================================================-->]
-std::regex write_x_path("");
-std::regex write_x_cwd("");
+std::regex write_x_path("write (/[0-9a-zA-Z_]+)+[0-9a-zA-Z_]+((\\.)[a-zA-Z_]+) -b [0-9]+");
+std::regex write_x_cwd("write [0-9a-zA-Z_]+((\\.)[a-zA-Z_]+)? -b [0-9]");
 std::regex write_path("");
 std::regex write_cwd("");
 std::regex append_path("");

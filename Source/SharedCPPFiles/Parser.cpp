@@ -476,7 +476,7 @@ std::vector<std::string> Parser::lintersect(std::string string)
             if(string[index] != '{') temp += string[index];
             if(temp.length() > _max_name_size)
             {
-              throw ParseError("[Error]: File or Tag Name Size Exceeds Maximum Allowed Size","[Parser.cpp::lunion()]: ");
+              throw ParseError("[Error]: File or Tag Name Size Exceeds Maximum Allowed Size","[Parser.cpp::lintersect()]: ");
             }
             index += 1;
         }

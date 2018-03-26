@@ -1,38 +1,69 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// daemon.h
+//
+// Defines functions and values used by daemon.cpp
+//
+// Author:    Adrian Barberis
+// For:       Arboreal Project
+// Dated:     March | 3rd | 2018
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 #include "../../SharedHeaders/Parser.h"
-
-#define BACKLOG 10                  /* Number of Connection Requests that the Server Can Queue */
-#define FLAG 0                      /* Flag for recv() */
-#define TIMEOUT 10
-#define TRUE 1
-#define FALSE 0
-#define PORT 70777
-#define MAX_COMMAND_SIZE 4096
-
-bool DEBUG = false;
-
-fd_set master_set;
-int my_fid = 999;
-int max_fid = 0;
-int current_command_id = 0;
-
-std::map<int, FileSystem*> fd_fs_map;
-std::map<std::string,FileSystem*> part_fs_map;
-std::map<std::string, unsigned int> path_filedesc_map;
-
-Disk* d = 0;
-DiskManager* dm = 0;
+#include "../../SharedHeaders/DebugMessages.hpp"
+/*************************************************************************************************/
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////
-//---------------- BEGIN FUNCTION DEFINITIONS ------------------------------------------------
-//////////////////////////////////////////////////////////////////////////////////////////////
-///
-///
+static const int BACKLOG = 10;              /* Number of Connection Requests that the Server Can Queue */
+static const int FLAG = 0;                  /* Flag for recv() */
+static const int TIMEOUT = 10;              /* How Long Retries Should Take */
+static const int TRUE = 1;                  /* Integer Boolean True */
+static const int FALSE = 0;                 /* Integer Boolean False */
+static const int PORT = 70777;              /* File System Port Number */
+static const int MAX_COMMAND_SIZE = 4096;   /* Maximum Buffer Size */
+static const int WRITE_CHANGES_WAIT = 1;    /* How Long To Wait Before Writing Changes */
+
+DebugMessages Debug;                       /* For Debugging */
+
+fd_set master_set;                         /* Used for call to select() holds file descriptors */
+int my_fid = 999;                          /* File system socket ID */
+int max_fid = 0;                           /* Used by call to select() max_fid == 0 is FS socket */
+int current_command_id = 0;                /* The Command Being Operated On's ID */
+bool quit_signaled = false;
+bool quit_writing = false;
+bool verbose = false;
+std::vector<std::string> data;
+
+std::map<int, FileSystem*> fd_fs_map;                   /* Maps a file descriptor (socket) to a Partition */
+std::map<std::string,FileSystem*> part_fs_map;          /* Maps a partition name to and FS object */
+std::map<std::string, unsigned int> path_filedesc_map;  /* Maps a pathname to a file descriptor (socket) */
+
+Disk* d = 0;               /* Disk Object */
+DiskManager* dm = 0;       /* Disk Manager */
+/*************************************************************************************************/
+
+
+
+//[================================================================================================]
+/*!
+ * Catch either a user generated or system generated termination signal
+ * 
+ * @param sig The generated signals ID, passed to the function by the call
+ *            to signal(), DO NOT supply this yourself, it is supplied
+ *            automatically by the system.
+ *            
+ * @return VOID
+ */
+//[================================================================================================]
 void sig_caught(int sig)
 {
+  quit_writing = true;
   printf("\nD: [Fatal Error] Daemon Received Signal - %s\n", strsignal(sig));
+  for(auto it = begin(fd_fs_map); it != end(fd_fs_map); ++it)
+  {
+    it->second->write_changes();
+  }
   for (int i=0; i <= max_fid; ++i)
   {
     if (FD_ISSET(i, &master_set)) close(i);
@@ -43,32 +74,99 @@ void sig_caught(int sig)
   }
   exit(-1);
 }
-//--------------------------------------------------------------------------------------------
-
-
-
-void quit_fs(void)
+//[================================================================================================]
+//[================================================================================================]
+/*!
+ * Quit the Daemon;
+ * Delete data properly and signal
+ * other processes that need to be aware of the quit
+ * 
+ * This function is run by a thread that is detatched from the main process
+ * 
+ * @return VOID
+ */
+//[================================================================================================]
+// void quit_fs(void)
+// {
+//   std::string input;
+//   quit_writing = true;
+//   quit_signaled = true;
+//   while(true)
+//   {
+//     std::cin >> input;
+//     if(input == "Q" || input == "q" || input == "quit") break;
+//   }
+//   for(auto it = begin(fd_fs_map); it != end(fd_fs_map); ++it)
+//   {
+//     it->second->write_changes();
+//   }
+//   for (int i=0; i <= max_fid; ++i)
+//   {
+//     if (FD_ISSET(i, &master_set)) close(i);
+//   }
+//   for(auto it = begin(part_fs_map); it != end(part_fs_map); ++it)
+//   {
+//     delete it->second;
+//   }
+//   return;
+// }
+//[================================================================================================]
+//[================================================================================================]
+/*!
+ * Periodically write all changes to disk
+ * Interval in between writes can be adjusted by changing the value of WRITE_CHANGES_WAIT
+ * 
+ * This function is run by a thread that is detatched from the main process
+ *  
+ * @return VOID
+ */
+void save_to_disk(void)
 {
-  std::string input;
-  while(true)
+  while(!quit_writing)
   {
-    std::cin >> input;
-    if(input == "Q" || input == "q" || input == "quit") break;
+    sleep(WRITE_CHANGES_WAIT);
+    std::cout << "Wrote Changes" <<std::endl;
+    for(auto it = begin(fd_fs_map); it != end(fd_fs_map); ++it)
+    {
+      it->second->write_changes();
+    }
   }
-  for (int i=0; i <= max_fid; ++i)
-  {
-    if (FD_ISSET(i, &master_set)) close(i);
-  }
-  for(auto it = begin(part_fs_map); it != end(part_fs_map); ++it)
-  {
-    delete it->second;
-  }
+  std::cout << "QUIT SUCCESS" << std::endl;
   return;
 }
-//--------------------------------------------------------------------------------------------
+//[================================================================================================]
+//[================================================================================================]
+/*!
+ * Convert a command line interface command buffer into a string
+ * Used only for debugging puposes
+ * 
+ * @param  cmnd The command to be converted
+ * @param  size The size of the command buffer
+ * 
+ * @return      A std::string of the data within the buffer minus the first X bytes where
+ *              X is the size of an integer
+ */
+//[================================================================================================]
+std::string command_to_string(char* cmnd, int size)
+{
+  std::string s;
+  int index = 0;
 
-
-
+  while(index < size){s += cmnd[index]; index += 1;}
+  return s;
+}
+//[================================================================================================]
+//[================================================================================================]
+/*!
+ * Create the daemon socket
+ * If socket creation fails, keep trying until you hit TIMEOUT
+ * 
+ * @param  timeout Length of time in seconds which the function
+ *                 should attempt to create socket in the case of failure
+ *                 
+ * @return         An integer, socket ID
+ */
+//[================================================================================================]
 int create_sock(int timeout)
 {
   int daemon_sock = 0;
@@ -108,10 +206,20 @@ int create_sock(int timeout)
   }
   return daemon_sock;
 }
-//--------------------------------------------------------------------------------------------
-
-
-
+//[================================================================================================]
+//[================================================================================================]
+/*!
+ * Set socket options, this mainly allows the same socket address to be reused by the program
+ * when it starts up again.  Normally socket addresses are one time use, this causes issues
+ * if you would like to quit the FS and then begin it again, so we must force a reuse
+ * 
+ * @param daemon_sock Daemon socket ID
+ * @param sock_opt    Used by setsockopt() see man pages
+ * @param timeout     Time in seconds the function should retry for if seet options fails
+ * 
+ * @return VOID
+ */
+//[================================================================================================]
 void set_socket_opt(int daemon_sock, int sock_opt, int timeout)
 {
   int timer = 0;
@@ -151,10 +259,18 @@ void set_socket_opt(int daemon_sock, int sock_opt, int timeout)
   }
   return;
 }
-//--------------------------------------------------------------------------------------------
-
-
-
+//[================================================================================================]
+//[================================================================================================]
+/*!
+ * Set socket to nonblocking mode in order to have continuous data streams
+ * this will also set any connecting sockets to nonblocking
+ * 
+ * @param daemon_sock Daemon socket ID
+ * @param is_on       Wether nonblocking mode should be turned on or off (1 == ON | 0 == OFF)
+ * 
+ * @return VOID
+ */
+//[================================================================================================]
 void set_nonblocking(int daemon_sock, int is_on)
 {
   int rval = ioctl(daemon_sock,FIONBIO,(char*)&is_on);
@@ -167,10 +283,18 @@ void set_nonblocking(int daemon_sock, int is_on)
     throw arboreal_daemon_error(where,what);
   }
 }
-//--------------------------------------------------------------------------------------------
-
-
-
+//[================================================================================================]
+//[================================================================================================]
+/*!
+ * Bind socket to Port number
+ * 
+ * @param daemon_sock     Daemon socket ID
+ * @param daemon_sockaddr Daemon socket address
+ * @param timeout         Retry time length
+ * 
+ * @return VOID
+ */
+//[================================================================================================]
 void bind_socket(int daemon_sock, struct sockaddr_in daemon_sockaddr, int timeout)
 {
   int timer = 0;
@@ -211,10 +335,18 @@ void bind_socket(int daemon_sock, struct sockaddr_in daemon_sockaddr, int timeou
   }
   return;
 }
-//--------------------------------------------------------------------------------------------
-
-
-
+//[================================================================================================]
+//[================================================================================================]
+/*!
+ * Mark socket as open for receiving connections
+ * 
+ * @param daemon_sock Daemon socket ID
+ * @param backlog     Number of connections that listen can queue up
+ * @param timeout     Retry time length
+ * 
+ * @return VOID
+ */
+//[================================================================================================]
 void listen_on_socket(int daemon_sock,int backlog,int timeout)
 {
   int timer = 0;
@@ -254,13 +386,14 @@ void listen_on_socket(int daemon_sock,int backlog,int timeout)
   }
   return;
 }
-//--------------------------------------------------------------------------------------------
-
 //[================================================================================================]
-// Convert the first X characters in a 'Command Buffer' to an integer value
-// X is the size of an integer
-//
-// @ cmnd : The command buffer
+//[================================================================================================]
+/*!
+ * Convert the first X characters in a 'Command Buffer' to an integer value
+ * X is the size of an integer
+ *
+ * @param cmnd : The command buffer
+ */ 
 //[================================================================================================]
 int get_cmnd_id(char* cmnd)
 {
@@ -273,8 +406,17 @@ int get_cmnd_id(char* cmnd)
     int* id = (int*)temp;
     return *id;
 }
-//--------------------------------------------------------------------------------------------
-
+//[================================================================================================]
+//[================================================================================================]
+/*!
+ * Get the partition a Command Line would like to connect to as a std::string rather than char*
+ * 
+ * @param  cmnd Command Line command buffer SPECIFICALLY, the one sent by start() in order
+ *              to initiate the handshake process
+ * 
+ * @return      The partition name as a std::string
+ */
+//[================================================================================================]
 std::string get_partition(char* cmnd)
 {
   std::string temp = "";
@@ -288,14 +430,41 @@ std::string get_partition(char* cmnd)
   }
   return temp;
 }
-
+//[================================================================================================]
+//[================================================================================================]
+/*!
+ * Returns true if a buffer sent by the Liaison process is a number or not
+ * Used to check when the Liaison has issued a new command rather than just 
+ * more data for the previous command
+ * The buffer must first be converted into a string
+ * This function will only work with strings sent by the Liaison AFTER having completed
+ * a handshake, that is it is only valid for string constructed using the Parser and should NOT
+ * contain byte representations of numbers
+ * 
+ * @param  str A string litteral
+ * 
+ * @return     TRUE if the string is a number | FALSE otherwise
+ */
+//[================================================================================================]
 bool is_number(const char* str)
 {
   char* ptr;
   strtol(str, &ptr, 10);
   return *ptr == '\0';
 }
-
+//[================================================================================================]
+//[================================================================================================]
+/*!
+ * Pad a std::string with a certain character to a certain length
+ * Pads from the back only
+ * 
+ * @param  string String to be padded
+ * @param  size   Number of characters to append
+ * @param  value  Which charachter to pad the string with
+ * 
+ * @return        The padded string
+ */
+//[================================================================================================]
 std::string pad_string(std::string string, int size, char value)
 {
     std::string padded = string;
@@ -305,8 +474,22 @@ std::string pad_string(std::string string, int size, char value)
   }
   return padded;
 }
-
-
+//[================================================================================================]
+//[================================================================================================]
+/*!
+ * Return a set representation of the data within a buffer sent by the Liaison process
+ * This is most commonly used in order to b reak down a string such as a path
+ * into its constituent parts using a charcter delimeter.  For example,
+ * sending /tag1/tag2/tag3 to this function will return an unordered set containing
+ * [tag1,tag2,tag3]
+ * 
+ * @param command The command that needs to be split into parts
+ * @param delim   The charchter that will be used as the delimeter marking where the function
+ *                needs to split the command
+ * 
+ * @return An unordered set of the command contents minus the delimiting charachters
+ */
+//[================================================================================================]
 std::unordered_set<std::string> get_set(char* command, char delim)
 {
   std::string exec = command;
@@ -319,7 +502,19 @@ std::unordered_set<std::string> get_set(char* command, char delim)
   }
   return tags;
 }
-
+//[================================================================================================]
+//[================================================================================================]
+/*!
+ * Overloaded version of get_set() which takes as its parameter a vector
+ * This function does not require a delimiter instead it just pushes the items from
+ * the vector into an unordered_set
+ * 
+ * @param vec The vector that needs to be converted into an unordered_set
+ * 
+ * @return A std::unordered_set containing the vector's contents
+ * 
+ */
+//[================================================================================================]
 std::unordered_set<std::string> get_set(std::vector<std::string> vec)
 {
     std::unordered_set<std::string> set;
@@ -329,7 +524,16 @@ std::unordered_set<std::string> get_set(std::vector<std::string> vec)
     }
     return set;
 }
-
+//[================================================================================================]
+//[================================================================================================]
+/*!
+ * Returns a string containing some of a Files attributes
+ * 
+ * @param  file A pointer to a File object containing the file's attributes
+ * 
+ * @return      A std::string containing some of the file's attributes
+ */
+//[================================================================================================]
 std::string get_file_info(File* file)
 {
   std::string file_info = ("[ " + file->get_name() + " | ");
@@ -376,8 +580,16 @@ std::string get_file_info(File* file)
 
   return file_info;
 }
-
-
+//[================================================================================================]
+//[================================================================================================]
+/*!
+ * Overloaded version of get_file_info() which takes as a parameter a pointer to a 
+ * FileInfo object rather than a File object
+ * 
+ * @param  file A pointer to a FileInfo object containing the file's attributes
+ * @return      A std::string containing some of the file's attributes
+ */
+//[================================================================================================]
 std::string get_file_info(FileInfo* file)
 {
   std::string file_info = ("[ " + file->get_name() + " | ");
@@ -424,8 +636,72 @@ std::string get_file_info(FileInfo* file)
   
   return file_info;
 }
+//[================================================================================================]
+//[================================================================================================]
+/*!
+ * Get A shortened version of the file information
+ * The shortened file info conatains the file name, 
+ * the first X tags were X = num_tags and the creation timestamp
+ * The number os tags is less than the value for num_tags, the actual number of tags
+ * will be used instead
+ * 
+ * @param  file     The file who's info we want
+ * @param  num_tags Number of tags to display
+ * 
+ * @return          A std::string containing the file information
+ * 
+ */
+//[================================================================================================]
+std::string get_short_file_info(FileInfo* file, int num_tags)
+{
+  std::string file_info = ("[ " + file->get_name() + " | ");
+  std::vector<std::string> tags = file->get_vec_tags();
 
+  if(tags.size() > num_tags)
+  {
+    for(unsigned int i = 0; i < num_tags; i++){file_info += (tags[i] + ",");}
+    file_info += "... | ";
+  }
+  else
+  {
+    for(unsigned int i = 0; i < tags.size(); i++)
+    {
+      if(i + 1 >= tags.size()){file_info += tags[i];}
+      else{file_info += (tags[i] + ",");}
+    }
+    file_info += " | ";
+  }
 
+  FileAttributes attr = file->get_file_attributes();
+  
+  std::tm * ptm = std::localtime(&attr.creationTime);
+  char buffer[32];
+  memset(buffer,'\0',32);
+  // Format: Mo, 15.06.2009 20:20:00
+  std::strftime(buffer, 32, "%a, %d.%m.%Y %H:%M:%S", ptm); 
+  
+  file_info += "Created @ ";
+  file_info += buffer;
+  
+  file_info += "]";
+
+  return file_info;
+  
+}
+//[================================================================================================]
+//[================================================================================================]
+/*!
+ * Uses get_file_info() to return a vector of file info strings 
+ * The File System functions which return file attributes, can return as many
+ * file attributes as there are files, typically this means that a vector of FileInfo pointers
+ * is returned, this function converts all of those FileInfo pointers into
+ * strings containing the respective file information
+ * 
+ * @param fileinfo A std::vector of FileInfo pointers
+ * 
+ * @return A std::vector of std::string's returned from get_file_info()
+ */
+//[================================================================================================]
 std::vector<std::string> serialize_fileinfo(std::vector<FileInfo*>* fileinfo)
 {
   std::vector<std::string> data;
@@ -435,8 +711,12 @@ std::vector<std::string> serialize_fileinfo(std::vector<FileInfo*>* fileinfo)
     {
       if(fileinfo->at(i) != 0)
       {
-//         File* info = File::read_buff(const_cast<char*>(FileInfo::serialize(fileinfo->at(i))->c_str()));
-        data.push_back(get_file_info(fileinfo->at(i)));
+        /* Uncommenting this line can cause Segfaults */
+        /* This is because the FileInfo pointers are lost after deserialization */
+        /* Future versions may keep the deserialization and attempt to eliminate this problem */
+        //File* info = File::read_buff(const_cast<char*>(FileInfo::serialize(fileinfo->at(i))->c_str()));
+        if(verbose){ data.push_back(get_file_info(fileinfo->at(i))); }
+        else {data .push_back(get_short_file_info(fileinfo->at(i), 3)); }
       }
       else{continue;}
     }
@@ -449,13 +729,26 @@ std::vector<std::string> serialize_fileinfo(std::vector<FileInfo*>* fileinfo)
 
   return data;
 }
-
-
-
-
-std::vector<std::string> execute(int id, char* command, int fd)
+//[================================================================================================]
+//[================================================================================================]
+/*!
+ * Execute the proper File System action based on a command id and command data
+ * Apply those actions to the correct FS object by using the fd_fs_map and the 
+ * file descriptor passed
+ * 
+ * @param id      The command to be executed's ID
+ * @param command The command to be executed's data
+ * @param fd      The file descriptor that requested this command, 
+ *                the resulting data will be passed back to it and the changes
+ *                will occure on the FS object that it is tied to
+ *                
+ * @return A std::vector of std::string's comprising the data returned by the command 
+ *         execution, this could be anything from an error mesage, to a success message, 
+ *         to a bunch of file information  
+ */
+//[================================================================================================]
+void execute(int id, char* command, int fd, std::vector<std::string>& data)
 {
-  std::vector<std::string> data;
   switch(id)
   {
     case(FIND_TS): // find tag
@@ -465,20 +758,38 @@ std::vector<std::string> execute(int id, char* command, int fd)
       try
       {
         rval = fd_fs_map[fd]->tag_search(tags);
-        data = serialize_fileinfo(rval);
-        if(data.size() == 0)
+        std::vector<std::string> temp = serialize_fileinfo(rval);
+        if(temp.size() == 0)
         {
-          data.push_back("Tag Exists But Has No Associated Files");
+          if(tags.size() == 1)
+          {
+            data.push_back("Tag [" + *begin(tags) +"] Exists But Contains No Files");
+          }
+          else
+          {
+            std::string temp;
+            for(auto it = begin(tags); it != end(tags); ++it)
+            {
+              if(std::next(it,1) == end(tags)){temp += *it;}
+              else{temp += (*it + ",");}
+            }
+            data.push_back("Tags [" + temp + "] Exist But Contain No Files");
+          }
+        }
+        else
+        {
+          data.push_back("Search Found [" + std::to_string(rval->size()) + "] Files");
+          for(unsigned int i = 0; i < temp.size(); i++){data.push_back(temp[i]);}
         }
       }
       catch(arboreal_exception& e)
       {
         data.push_back(e.what());
-        return data;
+        break;
       }
 
       delete rval;
-      return data;
+      break;
     }
     case(FIND_FS): //find file
     { 
@@ -487,16 +798,20 @@ std::vector<std::string> execute(int id, char* command, int fd)
       try
       {
         rval = fd_fs_map[fd]->file_search(file);
-        data = serialize_fileinfo(rval);
+        std::vector<std::string> temp = serialize_fileinfo(rval);
+
+        data.push_back("Search Found [" + std::to_string(rval->size()) + "] Files");
+        for(unsigned int i = 0; i < temp.size(); i++){data.push_back(temp[i]);}
+
       }
       catch(arboreal_exception& e)
       {
         data.push_back(e.what());
-        return data;
+        break;
       }
 
       delete rval;
-      return data;
+      break;
     }
     case(NEW_TS): // Create Tag
     {
@@ -511,10 +826,10 @@ std::vector<std::string> execute(int id, char* command, int fd)
       catch(arboreal_exception& e)
       {
         data.push_back(e.what());
-        return data;
+        break;
       }
       fd_fs_map[fd]->write_changes();
-      return data;
+      break;
     }
     case(NEW_FS): //create file in CWD
     {
@@ -524,7 +839,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
       memset(tag,'\0',MAX_COMMAND_SIZE);
       int index = 0;
       while(command[index] != '-'){filename += command[index]; index += 1;}
-      printf("Filename: %s\n",filename.c_str());
+      //printf("Filename: %s\n",filename.c_str());
       memcpy(tag,(command + filename.length() + 1), MAX_COMMAND_SIZE - (filename.length() + 1));
       tags = get_set(tag,'-');
 
@@ -540,10 +855,10 @@ std::vector<std::string> execute(int id, char* command, int fd)
       catch(arboreal_exception& e)
       {
         data.push_back(e.what());
-        return data;
+        break;
       }
       fd_fs_map[fd]->write_changes();
-      return data;
+      break;
     }
     case(NEW_FP): // create file anywhere
     {
@@ -569,10 +884,10 @@ std::vector<std::string> execute(int id, char* command, int fd)
       catch(arboreal_exception& e)
       {
         data.push_back(e.what());
-        return data;
+        break;
       }
       fd_fs_map[fd]->write_changes();
-      return data;
+      break;
     }
     case(DEL_TS): // delete tag(s)
     {
@@ -587,10 +902,10 @@ std::vector<std::string> execute(int id, char* command, int fd)
       catch(arboreal_exception& e)
       {
         data.push_back(e.what());
-        return data;
+        break;
       }
       fd_fs_map[fd]->write_changes();
-      return data;
+      break;
     }
     case(DEL_FS): // delete files from CWD
     {
@@ -606,10 +921,10 @@ std::vector<std::string> execute(int id, char* command, int fd)
       catch(arboreal_exception& e)
       {
         data.push_back(e.what());
-        return data;
+        break;
       }
       fd_fs_map[fd]->write_changes();
-      return data;
+      break;
     }
     case(DEL_FP): // delete file from anywhere
     {
@@ -628,10 +943,10 @@ std::vector<std::string> execute(int id, char* command, int fd)
       catch(arboreal_exception& e)
       {
         data.push_back(e.what());
-        return data;
+        break;
       }
       fd_fs_map[fd]->write_changes();
-      return data;
+      break;
     }
     case(OPEN_FP): // Open file
     {
@@ -663,16 +978,16 @@ std::vector<std::string> execute(int id, char* command, int fd)
       catch(arboreal_exception& e)
       {
         data.push_back(e.what());
-        return data;
+        break;
       }
 
-      return data;
+      break;
     }
     case(OPEN_F):
     {
       std::string s = command;
       data.push_back(command);
-      return data;
+      break;
     }
     case(CLOSE_FP): // close file
     {
@@ -689,15 +1004,15 @@ std::vector<std::string> execute(int id, char* command, int fd)
       catch(arboreal_exception& e)
       {
         data.push_back(e.what());
-        return data;
+        break;
       }
-      return data;
+      break;
     }
-    case(CLOSE_F):
+    case(CLOSE_F): //close file (cwd)
     {
       std::string s = command;
       data.push_back(command);
-      return data;
+      break;
     }
     case(RNAME_TS): // Rename tag
     {
@@ -716,18 +1031,16 @@ std::vector<std::string> execute(int id, char* command, int fd)
       catch(arboreal_exception& e)
       {
         data.push_back(e.what());
-        return data;
+        break;
       }
       fd_fs_map[fd]->write_changes();
-      return data;
+      break;
     }
     case(RNAME_FP): // rename file
     {
       std::string to_split = command;
       std::vector<std::string> split = Parser::split_on_delim(to_split,'/');
       std::string new_name = split[split.size() - 1];
-      std::cout << new_name << std::endl;
-      std::cout << split.size() << std::endl;
       split.erase(end(split) - 1);
       std::cout << split.size() << std::endl;
 
@@ -740,16 +1053,16 @@ std::vector<std::string> execute(int id, char* command, int fd)
       catch(arboreal_exception& e)
       {
         data.push_back(e.what());
-        return data;
+        break;
       }
       fd_fs_map[fd]->write_changes();
-      return data;
+      break;
     }
-    case(RNAME_FS):
+    case(RNAME_FS): // rename files
     {
       std::string s = command;
       data.push_back(command);
-      return data;
+      break;
     }
     case(ATTR_FP): //get file attr
     {
@@ -806,25 +1119,25 @@ std::vector<std::string> execute(int id, char* command, int fd)
       catch(arboreal_exception& e)
       {
         data.push_back(e.what());
-        return data;
+        break;
       }
-      return data;
+      break;
     }
-    case(ATTR_FS):
+    case(ATTR_FS): // get file attrs
     {
       std::string s = command;
       data.push_back(command);
-      return data;
+      break;
     }
     case(MERG_1_1): // merge 1:1
     {
       data.push_back("Building in Progress...");
-      return data;
+      break;
     }
     case(MERG_M_1): // merge many:1
     {
       data.push_back("Building in Progress...");
-      return data;
+      break;
     }
     case(TAG_FP): // tag single file from anywhere
     {
@@ -854,10 +1167,10 @@ std::vector<std::string> execute(int id, char* command, int fd)
         catch(arboreal_exception& e)
         {
             data.push_back(e.what());
-            return data;
+            break;
         }
         fd_fs_map[fd]->write_changes();
-        return data;
+        break;
     }
     case(TAG_FS): // tag files within CWD
     {
@@ -887,12 +1200,12 @@ std::vector<std::string> execute(int id, char* command, int fd)
         catch(arboreal_exception& e)
         {
             data.push_back(e.what());
-            return data;
+            break;
         }
         fd_fs_map[fd]->write_changes();
-        return data;
+        break;
     }
-    case(UTAG_FP):
+    case(UTAG_FP): // untag file
     {
         std::string temp1 = command;
         int index = 0;
@@ -919,12 +1232,12 @@ std::vector<std::string> execute(int id, char* command, int fd)
         catch(arboreal_exception& e)
         {
             data.push_back(e.what());
-            return data;
+            break;
         }
         fd_fs_map[fd]->write_changes();
-        return data;
+        break;
     }
-    case(UTAG_FS):
+    case(UTAG_FS): // untag files (cwd)
     {
         std::string temp1 = command;
         int index = 0;
@@ -951,78 +1264,81 @@ std::vector<std::string> execute(int id, char* command, int fd)
         catch(arboreal_exception& e)
         {
             data.push_back(e.what());
-            return data;
+            break;
         }
         fd_fs_map[fd]->write_changes();
-        return data;
+        break;
     }
-    case(READ_XP):
+    case(READ_XP): // read x bytes
     {
       std::string s = command;
       data.push_back(command);
-      return data;
+      break;
     }
-    case(READ_XCWD):
+    case(READ_XCWD): // read x bytes (cwd)
     {
       std::string s = command;
       data.push_back(command);
-      return data;
+      break;
     }
-    case(READ_FP):
+    case(READ_FP): // read all
     {
       std::string s = command;
       data.push_back(command);
-      return data;
+      break;
     }
-    case(READ_FCWD):
+    case(READ_FCWD): // read all (cwd)
     {
       std::string s = command;
       data.push_back(command);
-      return data;
+      break;
     }
-    case(WRITE_FP):
+    case(WRITE_FP): // write all to file
     {
       std::string s = command;
       data.push_back(command);
-      return data;
+      break;
     }
-    case(WRITE_FCWD):
+    case(WRITE_FCWD): // write all (cwd)
     {
       std::string s = command;
       data.push_back(command);
-      return data;
+      break;
     }
-    case(WRITE_XFPF):
+    case(WRITE_XFPF): // write x from f1 to f2
     {
       std::string s = command;
       data.push_back(command);
-      return data;
+      break;
     }
-    case(WRITE_XFCWDF):
+    case(WRITE_XFCWDF): // write x from f1 to f2 (cwd)
     {
       std::string s = command;
       data.push_back(command);
-      return data;
+      break;
     }
-    case(CPY_FP):
+    case(CPY_FP): // copy f1 to f2
     {
       std::string s = command;
       data.push_back(command);
-      return data;
+      break;
     }
-    case(CPY_FCWD):
+    case(CPY_FCWD): // copy f1 to f2 (cwd)
     {
       std::string s = command;
       data.push_back(command);
-      return data;
+      break;
     }
     default:
     {
         data.push_back("Unrecognized Command");
-        return data;
+        break;
     }
     //case(23) switch directories is handled by the liaison process
   }
 
 }
+//[================================================================================================]
+//[================================================================================================]
+
 
