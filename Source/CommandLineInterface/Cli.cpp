@@ -5,7 +5,7 @@
 // Primary Author: Adrian Barberis
 // For "Arboreal" Senior Design Project
 //
-//  Tue. | Mar. 20th | 2018 | 10:50 PM | Stable | Documented 
+//  Tue. | Mar. 20th | 2018 | 10:50 PM | Stable | Documented
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -15,23 +15,23 @@
 //[===============================================================================================]
 /*!
  * The Command Line has several different modes of execution
- * 
+ *
  * Mode 1:
  *   The most standard mode requires that a partition name be passed
- *   as an argument. The partition name must exist on the filesystem 
+ *   as an argument. The partition name must exist on the filesystem
  *   if it does not, the commandline will quit. This mode expects the user
  *   to manually type commands into the command line interface.
  *   This mode's run command looks like:
  *     './commandline PartitionName'
- *   
+ *
  * Mode 2:
  *   The second mode adds debugging information to Mode 1
  *   The flag that must be passed to enable this mode is '-d'
  *   This mode's run command looks like:
  *     './commandline PartitionName -d'
- * 
+ *
  * Mode 3:
- *   The third mode operates simmilar to Mode 1 except that rather than 
+ *   The third mode operates simmilar to Mode 1 except that rather than
  *   expecting users to manually type commands in, it expects a file
  *   containing all of the commands that will be executed, to be piped to it.
  *   This mode still requires that a legal partition be passed.
@@ -44,7 +44,7 @@
  *   The flag that must be passed to enable this mode is '-d'
  *   This mode's run command looks like:
  *     './commandline PartitionName -s -d'
- *   
+ *
  * @param  argc The argument count (Not passed by user)
  * @param  argv The argument values (Passed by user)
  * @return      An integer always equal to 0
@@ -273,7 +273,7 @@ CLI::CLI(char** partition, char* isScript, bool debug)
   Debug.log(_my_pid);
   Debug.log(_client_sockpath);
   Debug.log(_server_sockpath);
-  Debug.log("C: Running Start()..."); 
+  Debug.log("C: Running Start()...");
   start();
 }
 //[================================================================================================]
@@ -297,17 +297,17 @@ CLI::~CLI(){}
 //[===============================================================================================]
 /*!
  * Run initial Command Line Interface setup operations:
- * 
+ *
  * 1) Generate Shared Memory Segment For Process Synchronization
  * 2) Fork And Run A Liaison Process
  * 3) Create Sockets For Connection To Liaison
  * 4) Send Handshake Command To File System
  * 5) Run The Command Line
- * 
+ *
  */
 //[===============================================================================================]
 void CLI::start()
-{  
+{
 
   Debug.log("C: Beginning Initial Setup");
   key_t shm_key;
@@ -369,7 +369,7 @@ void CLI::start()
     _client_sock = set_up_socket(_client_sockpath,_client_sockaddr);
     /**********************************************************************************************/
 
-     
+
     Debug.log("C: Signal Liaison: [Command Line --> Liaison] Socket Setup Completed");
     shm[0] = 2;
     /**********************************************************************************************/
@@ -384,16 +384,16 @@ void CLI::start()
     socklen_t length = sizeof(_client_sockaddr);
     connect_to_server(_client_sock,_client_sockpath,_server_sockpath,_server_sockaddr,length);
     /**********************************************************************************************/
-     
-     
+
+
     Debug.log("C: Building Handshake Message");
     char* cmnd = new char[MaxBufferSize];
     int cmnd_id = HANDSHK;
     memset(cmnd,'\0',MaxBufferSize); /* Get rid of junk data in buffer */
     memcpy(cmnd,&cmnd_id,sizeof(int));
     memcpy(cmnd + sizeof(int), "HANDSHAKE-", sizeof("HANDSHAKE-"));
-    memcpy(cmnd + (sizeof(int) + sizeof("HANDSHAKE-")) - 1, 
-           const_cast<char*>(_my_partition.c_str()), 
+    memcpy(cmnd + (sizeof(int) + sizeof("HANDSHAKE-")) - 1,
+           const_cast<char*>(_my_partition.c_str()),
            _my_partition.length());
     /**********************************************************************************************/
 
@@ -402,7 +402,7 @@ void CLI::start()
     Debug.log(("C: Sending Handshake Message To: " + send_to));
     send_to_server(_client_sock,_client_sockpath,cmnd,MaxBufferSize,Flag);
     /**********************************************************************************************/
-    
+
 
     Debug.log("C: Attempting To Receive Response From Liaison Process");
     char* data = receive_from_server(_client_sock,_client_sockpath,MaxBufferSize,Flag);
@@ -414,7 +414,7 @@ void CLI::start()
     {
       Debug.log("C: Error While Connecting To Filesystem; Exiting...");
       perror("C: Error While Connecting To Filesystem; Exiting...");
-      
+
       if(close(_client_sock) < 0)
       {
         std::string where = "[cli.cpp::start()]: ";
@@ -447,7 +447,7 @@ void CLI::start()
     std::string dta = data;
     _max_string_size = get_cmnd_id(data);
     Debug.log(("C: Maximum Filename/Tagname Size: " + std::to_string(_max_string_size)));
-  
+
     Debug.log("C: Removing Potential Memory Leaks");
     delete[] cmnd;
     delete[] data;
@@ -455,7 +455,7 @@ void CLI::start()
     Debug.log("C: Setup Completed Successfully");
     Debug.log("C: Running Command Line");
     run();
-    
+
     Debug.log("C: User Initiated Exit Procedure...");
     if(close(_client_sock) < 0)
     {
@@ -471,7 +471,7 @@ void CLI::start()
       what += strerror(errno);
       throw arboreal_cli_error(what,where);
     }
-  
+
     Debug.log("C: Waiting For Child Process To Complete...");
     int status;
     waitpid(pid,&status,0);
@@ -536,9 +536,9 @@ void CLI::run()
     /*********************************************************************************************/
     else
     {
-      /* 
+      /*
        * Since we read one chrachter in to make sure we did not press ENTER,
-       * Need to put that charcter back or else commands will be short by 1 charachter  
+       * Need to put that charcter back or else commands will be short by 1 charachter
        */
       std::cin.putback(c);
       /* Get the command */
@@ -552,7 +552,7 @@ void CLI::run()
         std::cin >> input;
         if(input == "Y" || input == "y")
         {
-          
+
           Debug.log("C: Notifying Liaison Process Of Program Termination");
           char* quit = new char[MaxBufferSize];
           int val = QUIT;
@@ -611,7 +611,7 @@ void CLI::run()
       }
       /*******************************************************************************************/
       else
-      {     
+      {
         Debug.log("C: Validating Input...");
         int rtrn = check_command(input);
 
@@ -665,9 +665,9 @@ void CLI::run()
  */
 //[================================================================================================]
 void CLI::send_cmnd(const char* cmnd)
-{ 
+{
   std::string t1 = cmnd;
-  Debug.log(("C: Sending " + t1 + "To " + _client_sockpath + 
+  Debug.log(("C: Sending " + t1 + "To " + _client_sockpath +
              " @ Socket ID: " + std::to_string(_client_sock)));
   send_to_server(_client_sock,_client_sockpath,cmnd,MaxBufferSize,Flag);
   return;
@@ -680,19 +680,19 @@ void CLI::send_cmnd(const char* cmnd)
 
 //[===============================================================================================]
 /*! \brief Block while waiting for response from filesystem
- * 
+ *
  * Most filesystem commands operate on a 1:1 ratio, that is,
- * sending one command will generate one response.  However, 
+ * sending one command will generate one response.  However,
  * some commands (most notably 'find' & 'read') may have a ratio
  * of 1:Many (For example 'find -t [tag1]' may return any number of files
  * but it is only a single command).  In situations such as these it is necssary
  * to tell the Command Line to wait until the filesystem has sent all data.
  * Thus, if the Command Line receives "WAIT" it will know to continue to block on
  * a call to receive until the Liaison has gathered all of the nescessary data.
- * However this is still not enough and it is also nescessary to tell the 
+ * However this is still not enough and it is also nescessary to tell the
  * Command Line how much data it must read, for this reason, the first piece of
  * data that the Liaison will send, will be the number of bytes the Command Line
- * needs to read.  After this value is received the actual data is sent. 
+ * needs to read.  After this value is received the actual data is sent.
  */
 //[===============================================================================================]
 void CLI::await_response()
@@ -700,7 +700,7 @@ void CLI::await_response()
 
   Debug.log("C: Receiving Data From File System...");
   char* temp2 = receive_from_server(_client_sock, _client_sockpath, MaxBufferSize, Flag);
-  
+
   std::string temp3 = temp2;
   Debug.log("C: Received: \n" + temp3);
   delete temp2;
@@ -715,11 +715,11 @@ void CLI::await_response()
 //[===============================================================================================]
 /*!
  * Format user input for use by Liaison process:
- * 
+ *
  * 1) Prepend a byte representation of the command ID to the array
  * 2) Copy the user input into the the array (skip the first X indecies
  *    were X is the size of an integer (we don't want to overwrite the command ID))
- *    
+ *
  * @param  id    Comand ID
  * @param  input User input string
  * @return       A pointer to a charachter array
@@ -740,8 +740,3 @@ char* CLI::build(const int id, const std::string input)
 //[================================================================================================]
 //                                         [END Cli.cpp]
 //[================================================================================================]
-
-
-
-
-
