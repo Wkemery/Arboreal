@@ -41,8 +41,18 @@ int main(int argc, char** argv)
   signal(SIGSEGV,sig_caught);
 
   std::string arg;
-  if(argc == 2) arg = argv[1];
-  if(arg == "-d") Debug.ON();
+  if(argc == 2)
+  {
+    arg = argv[1];
+    if(arg == "-d") Debug.ON();
+    else if(arg == "-v") verbose = true;
+  }
+  else if(argc == 3)
+  {
+    Debug.ON();
+    verbose = true;
+  }
+
 
 //---------------- INITIALIZATIONS ----------------------------------------------------------------
 //
@@ -146,20 +156,21 @@ int main(int argc, char** argv)
   //
   //
     
-    Debug.log("D: Launching [Quit] Thread...");
-    // Listens for "Q"/"q"/"quit" and quits daemon (for testing only)
-    std::thread quit(quit_fs);
-    quit.detach();
+    /* Unsafe */
+    // Debug.log("D: Launching [Quit] Thread...");
+    // // Listens for "Q"/"q"/"quit" and quits daemon (for testing only)
+    // std::thread quit(quit_fs);
+    // quit.detach();
 
-    Debug.log("D: [Quit] Thread Started and Detatched From Main Process");
+    // Debug.log("D: [Quit] Thread Started and Detatched From Main Process");
     /*********************************************************************************************/
 
+    /* Unsafe */
+    // Debug.log("D: Launching [Write Changes] Thread...");
+    // std::thread write(save_to_disk);
+    // write.detach();
 
-    Debug.log("D: Launching [Write Changes] Thread...");
-    std::thread write(save_to_disk);
-    write.detach();
-
-    Debug.log("D: [Write Changes] Thread Started and Detatched From Main Process");
+    // Debug.log("D: [Write Changes] Thread Started and Detatched From Main Process");
   //
   //
   //-----------------------------------------------------------------------------------------------
@@ -496,6 +507,11 @@ int main(int argc, char** argv)
     Debug.log("D: Closing All Open Connections and Exiting");
     printf("D: Closing All Open Connections and Exiting...\n");
 
+    for(auto it = begin(fd_fs_map); it != end(fd_fs_map); ++it)
+    {
+      it->second->write_changes();
+    }
+
     quit_writing = true;
 
     /* 
@@ -537,6 +553,11 @@ int main(int argc, char** argv)
   Debug.log("D: Closing All Open Connections and Exiting");
   printf("D: Closing All Open Connections and Exiting...\n");
   /************************************************************************************************/
+
+  for(auto it = begin(fd_fs_map); it != end(fd_fs_map); ++it)
+  {
+    it->second->write_changes();
+  }
 
   quit_writing = true;
   for (int i=0; i <= max_fid; ++i)

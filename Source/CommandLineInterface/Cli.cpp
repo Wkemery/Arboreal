@@ -657,11 +657,12 @@ void CLI::run()
 
 
 
-
+//[================================================================================================]
 /*!
  * Send user input (A filesystem command) to the Liaison Process
  * @param cmnd The input to send
  */
+//[================================================================================================]
 void CLI::send_cmnd(const char* cmnd)
 { 
   std::string t1 = cmnd;
@@ -704,13 +705,18 @@ void CLI::await_response()
   if(data == "WAIT")
   {
     int read_size = 0;
+    Debug.log("C: Receiving Data From File System...");
     char* temp = receive_from_server(_client_sock,_client_sockpath, MaxBufferSize, Flag);
+    data = temp;
+    Debug.log(("C: Received: " + data));
     read_size = get_cmnd_id(temp);
 
     if(read_size != 0)
     {
+      Debug.log("C: Receiving Data From File System...");
       char* data = receive_from_server(_client_sock,_client_sockpath, read_size, Flag);
       std::string to_print = data;
+      Debug.log(("C: Received: " + to_print));
       std::cout << to_print << std::endl;
       delete[] data;
     }

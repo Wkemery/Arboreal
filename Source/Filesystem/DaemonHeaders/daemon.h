@@ -22,7 +22,7 @@ static const int TRUE = 1;                  /* Integer Boolean True */
 static const int FALSE = 0;                 /* Integer Boolean False */
 static const int PORT = 70777;              /* File System Port Number */
 static const int MAX_COMMAND_SIZE = 4096;   /* Maximum Buffer Size */
-static const int WRITE_CHANGES_WAIT = 5;    /* How Long To Wait Before Writing Changes */
+static const int WRITE_CHANGES_WAIT = 1;    /* How Long To Wait Before Writing Changes */
 
 DebugMessages Debug;                       /* For Debugging */
 
@@ -32,6 +32,7 @@ int max_fid = 0;                           /* Used by call to select() max_fid =
 int current_command_id = 0;                /* The Command Being Operated On's ID */
 bool quit_signaled = false;
 bool quit_writing = false;
+bool verbose = false;
 
 std::map<int, FileSystem*> fd_fs_map;                   /* Maps a file descriptor (socket) to a Partition */
 std::map<std::string,FileSystem*> part_fs_map;          /* Maps a partition name to and FS object */
@@ -56,7 +57,12 @@ DiskManager* dm = 0;       /* Disk Manager */
 //[================================================================================================]
 void sig_caught(int sig)
 {
+  quit_writing = true;
   printf("\nD: [Fatal Error] Daemon Received Signal - %s\n", strsignal(sig));
+  for(auto it = begin(fd_fs_map); it != end(fd_fs_map); ++it)
+  {
+    it->second->write_changes();
+  }
   for (int i=0; i <= max_fid; ++i)
   {
     if (FD_ISSET(i, &master_set)) close(i);
@@ -79,26 +85,30 @@ void sig_caught(int sig)
  * @return VOID
  */
 //[================================================================================================]
-void quit_fs(void)
-{
-  std::string input;
-  quit_writing = true;
-  quit_signaled = true;
-  while(true)
-  {
-    std::cin >> input;
-    if(input == "Q" || input == "q" || input == "quit") break;
-  }
-  for (int i=0; i <= max_fid; ++i)
-  {
-    if (FD_ISSET(i, &master_set)) close(i);
-  }
-  for(auto it = begin(part_fs_map); it != end(part_fs_map); ++it)
-  {
-    delete it->second;
-  }
-  return;
-}
+// void quit_fs(void)
+// {
+//   std::string input;
+//   quit_writing = true;
+//   quit_signaled = true;
+//   while(true)
+//   {
+//     std::cin >> input;
+//     if(input == "Q" || input == "q" || input == "quit") break;
+//   }
+//   for(auto it = begin(fd_fs_map); it != end(fd_fs_map); ++it)
+//   {
+//     it->second->write_changes();
+//   }
+//   for (int i=0; i <= max_fid; ++i)
+//   {
+//     if (FD_ISSET(i, &master_set)) close(i);
+//   }
+//   for(auto it = begin(part_fs_map); it != end(part_fs_map); ++it)
+//   {
+//     delete it->second;
+//   }
+//   return;
+// }
 //[================================================================================================]
 //[================================================================================================]
 /*!
@@ -114,11 +124,13 @@ void save_to_disk(void)
   while(!quit_writing)
   {
     sleep(WRITE_CHANGES_WAIT);
+    std::cout << "Wrote Changes" <<std::endl;
     for(auto it = begin(fd_fs_map); it != end(fd_fs_map); ++it)
     {
       it->second->write_changes();
     }
   }
+  std::cout << "QUIT SUCCESS" << std::endl;
   return;
 }
 //[================================================================================================]
@@ -624,6 +636,59 @@ std::string get_file_info(FileInfo* file)
   return file_info;
 }
 //[================================================================================================]
+//[================================================================================================]
+/*!
+ * Get A shortened version of the file information
+ * The shortened file info conatains the file name, 
+ * the first X tags were X = num_tags and the creation timestamp
+ * The number os tags is less than the value for num_tags, the actual number of tags
+ * will be used instead
+ * 
+ * @param  file     The file who's info we want
+ * @param  num_tags Number of tags to display
+ * 
+ * @return          A std::string containing the file information
+ * 
+ */
+//[================================================================================================]
+std::string get_short_file_info(FileInfo* file, int num_tags)
+{
+  std::string file_info = ("[ " + file->get_name() + " | ");
+  std::vector<std::string> tags = file->get_vec_tags();
+
+  if(tags.size() > num_tags)
+  {
+    for(unsigned int i = 0; i < num_tags; i++){file_info += (tags[i] + ",");}
+    file_info += "... | ";
+  }
+  else
+  {
+    for(unsigned int i = 0; i < tags.size(); i++)
+    {
+      if(i + 1 >= tags.size()){file_info += tags[i];}
+      else{file_info += (tags[i] + ",");}
+    }
+    file_info += " | ";
+  }
+
+  FileAttributes attr = file->get_file_attributes();
+  
+  std::tm * ptm = std::localtime(&attr.creationTime);
+  char buffer[32];
+  memset(buffer,'\0',32);
+  // Format: Mo, 15.06.2009 20:20:00
+  std::strftime(buffer, 32, "%a, %d.%m.%Y %H:%M:%S", ptm); 
+  
+  file_info += "Created @ ";
+  file_info += buffer;
+  
+  file_info += "]";
+
+  return file_info;
+  
+}
+//[================================================================================================]
+//[================================================================================================]
 /*!
  * Uses get_file_info() to return a vector of file info strings 
  * The File System functions which return file attributes, can return as many
@@ -647,8 +712,10 @@ std::vector<std::string> serialize_fileinfo(std::vector<FileInfo*>* fileinfo)
       {
         /* Uncommenting this line can cause Segfaults */
         /* This is because the FileInfo pointers are lost after deserialization */
+        /* Future versions may keep the deserialization and attempt to eliminate this problem */
         //File* info = File::read_buff(const_cast<char*>(FileInfo::serialize(fileinfo->at(i))->c_str()));
-        data.push_back(get_file_info(fileinfo->at(i)));
+        if(verbose){ data.push_back(get_file_info(fileinfo->at(i))); }
+        else {data .push_back(get_short_file_info(fileinfo->at(i), 3)); }
       }
       else{continue;}
     }
@@ -739,7 +806,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
         data.push_back(e.what());
         return data;
       }
-      //fd_fs_map[fd]->write_changes();
+      fd_fs_map[fd]->write_changes();
       return data;
     }
     case(NEW_FS): //create file in CWD
@@ -797,7 +864,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
         data.push_back(e.what());
         return data;
       }
-      //fd_fs_map[fd]->write_changes();
+      fd_fs_map[fd]->write_changes();
       return data;
     }
     case(DEL_TS): // delete tag(s)
@@ -815,7 +882,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
         data.push_back(e.what());
         return data;
       }
-      //fd_fs_map[fd]->write_changes();
+      fd_fs_map[fd]->write_changes();
       return data;
     }
     case(DEL_FS): // delete files from CWD
@@ -834,7 +901,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
         data.push_back(e.what());
         return data;
       }
-      //fd_fs_map[fd]->write_changes();
+      fd_fs_map[fd]->write_changes();
       return data;
     }
     case(DEL_FP): // delete file from anywhere
@@ -856,7 +923,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
         data.push_back(e.what());
         return data;
       }
-      //fd_fs_map[fd]->write_changes();
+      fd_fs_map[fd]->write_changes();
       return data;
     }
     case(OPEN_FP): // Open file
@@ -944,7 +1011,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
         data.push_back(e.what());
         return data;
       }
-      //fd_fs_map[fd]->write_changes();
+      fd_fs_map[fd]->write_changes();
       return data;
     }
     case(RNAME_FP): // rename file
@@ -968,7 +1035,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
         data.push_back(e.what());
         return data;
       }
-      //fd_fs_map[fd]->write_changes();
+      fd_fs_map[fd]->write_changes();
       return data;
     }
     case(RNAME_FS):
@@ -1082,7 +1149,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
             data.push_back(e.what());
             return data;
         }
-        //fd_fs_map[fd]->write_changes();
+        fd_fs_map[fd]->write_changes();
         return data;
     }
     case(TAG_FS): // tag files within CWD
@@ -1115,7 +1182,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
             data.push_back(e.what());
             return data;
         }
-        //fd_fs_map[fd]->write_changes();
+        fd_fs_map[fd]->write_changes();
         return data;
     }
     case(UTAG_FP):
@@ -1147,7 +1214,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
             data.push_back(e.what());
             return data;
         }
-        //fd_fs_map[fd]->write_changes();
+        fd_fs_map[fd]->write_changes();
         return data;
     }
     case(UTAG_FS):
@@ -1179,7 +1246,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
             data.push_back(e.what());
             return data;
         }
-        //fd_fs_map[fd]->write_changes();
+        fd_fs_map[fd]->write_changes();
         return data;
     }
     case(READ_XP):
@@ -1251,6 +1318,7 @@ std::vector<std::string> execute(int id, char* command, int fd)
   }
 
 }
+//[================================================================================================]
 //[================================================================================================]
 
 

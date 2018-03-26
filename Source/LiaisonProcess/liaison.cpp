@@ -323,7 +323,7 @@ int main(int argc, char** argv)
         }
         /*****************************************************************************************/
 
-
+        print_vector(vec);
         Debug.log("Parsed Data Follows: ");
         for(unsigned int i = 0; i < vec.size(); i++){Debug.log((vec[i] + " "));}
         /*****************************************************************************************/
@@ -406,13 +406,17 @@ int main(int argc, char** argv)
 
 
           /* Continue reading in data until File System tells you it's done */
+          int files_found = 0;
           while(stemp != "DONE")
           {
-            data += (stemp + "\n");
+            if(stemp != "DONE") data += (stemp + "\n");
             stemp = "";
 
             int rval = recv(liaison_fid,response,MaxBufferSize,Flag);
             std::string r = response;
+
+            /* Really hacky way to get file found count but hey it works and it's easy */
+            if(response[0] == '[') files_found += 1;
 
             /* Ignore the "I got your command" response */
             if(r == "Command Accepted"){continue;}
@@ -421,8 +425,10 @@ int main(int argc, char** argv)
           Debug.log("L: Response Recieved: " + data);
           /***************************************************************************************/
 
+          std::cout << "Search Returned [" << files_found << "] Files!";
 
           /* Signal Command Line that it needs to wait for more data */
+          Debug.log("L: Signaling Command Line That It Needs to Wait");
           std::string wait = "WAIT";
           wait = pad_string(wait, MaxBufferSize - wait.length(), '\0');
           send_response(client_sock,wait.c_str(),MaxBufferSize,Flag,
