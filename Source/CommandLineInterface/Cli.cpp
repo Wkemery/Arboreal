@@ -648,7 +648,7 @@ void CLI::run()
         if(!_is_script){std::cout << "Arboreal >> ";}
       }
       /*******************************************************************************************/
-      if(_is_script) sleep(1);
+      //if(_is_script) sleep(1);
     }
   }
   return;
@@ -697,7 +697,6 @@ void CLI::send_cmnd(const char* cmnd)
 //[===============================================================================================]
 void CLI::await_response()
 {
-  if(_is_script && !_script_print) return;
 
   Debug.log("C: Receiving Data From File System...");
   char* temp2 = receive_from_server(_client_sock, _client_sockpath, MaxBufferSize, Flag);
