@@ -699,38 +699,11 @@ void CLI::await_response()
   if(_is_script && !_script_print) return;
 
   Debug.log("C: Receiving Data From File System...");
-  std::string data = receive_from_server(_client_sock,_client_sockpath);
-  Debug.log(("C: Received: " + data));
-
-  if(data == "WAIT")
-  {
-    int read_size = 0;
-    Debug.log("C: Receiving Data From File System...");
-    char* temp = receive_from_server(_client_sock,_client_sockpath, MaxBufferSize, Flag);
-    data = temp;
-    Debug.log(("C: Received: " + data));
-    read_size = get_cmnd_id(temp);
-
-    if(read_size != 0)
-    {
-      Debug.log("C: Receiving Data From File System...");
-      char* data = receive_from_server(_client_sock,_client_sockpath, read_size, Flag);
-      std::string to_print = data;
-      Debug.log(("C: Received: " + to_print));
-      std::cout << to_print << std::endl;
-      delete[] data;
-    }
-    else
-    {
-      delete[] temp;
-      throw arboreal_cli_error("Received WAIT With Read Size Of Zero", 
-                               "[Cli.cpp::await_response()]");
-    }
-  }
-  else
-  {
-    std::cout << data << std::endl;
-  }
+  char* temp2 = receive_from_server(_client_sock, _client_sockpath, MaxBufferSize, Flag);
+  
+  std::string temp3 = temp2;
+  Debug.log("C: Received: \n" + temp3);
+  delete temp2;
   return;
 }
 //[================================================================================================]

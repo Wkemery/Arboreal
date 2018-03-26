@@ -33,6 +33,7 @@ int current_command_id = 0;                /* The Command Being Operated On's ID
 bool quit_signaled = false;
 bool quit_writing = false;
 bool verbose = false;
+std::vector<std::string> data;
 
 std::map<int, FileSystem*> fd_fs_map;                   /* Maps a file descriptor (socket) to a Partition */
 std::map<std::string,FileSystem*> part_fs_map;          /* Maps a partition name to and FS object */
@@ -149,7 +150,7 @@ void save_to_disk(void)
 std::string command_to_string(char* cmnd, int size)
 {
   std::string s;
-  int index = sizeof(int);
+  int index = 0;
 
   while(index < size){s += cmnd[index]; index += 1;}
   return s;
@@ -746,9 +747,8 @@ std::vector<std::string> serialize_fileinfo(std::vector<FileInfo*>* fileinfo)
  *         to a bunch of file information  
  */
 //[================================================================================================]
-std::vector<std::string> execute(int id, char* command, int fd)
+void execute(int id, char* command, int fd, std::vector<std::string>& data)
 {
-  std::vector<std::string> data;
   switch(id)
   {
     case(FIND_TS): // find tag
@@ -758,20 +758,37 @@ std::vector<std::string> execute(int id, char* command, int fd)
       try
       {
         rval = fd_fs_map[fd]->tag_search(tags);
-        data = serialize_fileinfo(rval);
-        if(data.size() == 0)
+        std::vector<std::string> temp = serialize_fileinfo(rval);
+        if(temp.size() == 0)
         {
-          data.push_back("Tag Exists But Has No Associated Files");
+          if(tags.size() == 1)
+          {
+            data.push_back("Tag [" + *begin(tags) +"] Exists But Contains No Files");
+          }
+          else
+          {
+            std::string temp;
+            for(auto it = begin(tags); it != end(tags); ++it)
+            {
+              if(std::next(it,1) == end(tags)){temp += *it;}
+              else{temp += (*it + ",");}
+            }
+            data.push_back("Tags [" + temp + "] Exist But Contain No Files");
+          }
+        }
+        else
+        {
+          for(unsigned int i = 0; i < temp.size(); i++){data.push_back(temp[i]);}
         }
       }
       catch(arboreal_exception& e)
       {
         data.push_back(e.what());
-        return data;
+        break;
       }
 
       delete rval;
-      return data;
+      break;
     }
     case(FIND_FS): //find file
     { 
@@ -780,16 +797,18 @@ std::vector<std::string> execute(int id, char* command, int fd)
       try
       {
         rval = fd_fs_map[fd]->file_search(file);
-        data = serialize_fileinfo(rval);
+        std::vector<std::string> temp = serialize_fileinfo(rval);
+        for(unsigned int i = 0; i < temp.size(); i++){data.push_back(temp[i]);}
+
       }
       catch(arboreal_exception& e)
       {
         data.push_back(e.what());
-        return data;
+        break;
       }
 
       delete rval;
-      return data;
+      break;
     }
     case(NEW_TS): // Create Tag
     {
@@ -804,10 +823,10 @@ std::vector<std::string> execute(int id, char* command, int fd)
       catch(arboreal_exception& e)
       {
         data.push_back(e.what());
-        return data;
+        break;
       }
       fd_fs_map[fd]->write_changes();
-      return data;
+      break;
     }
     case(NEW_FS): //create file in CWD
     {
@@ -833,10 +852,10 @@ std::vector<std::string> execute(int id, char* command, int fd)
       catch(arboreal_exception& e)
       {
         data.push_back(e.what());
-        return data;
+        break;
       }
       fd_fs_map[fd]->write_changes();
-      return data;
+      break;
     }
     case(NEW_FP): // create file anywhere
     {
@@ -862,10 +881,10 @@ std::vector<std::string> execute(int id, char* command, int fd)
       catch(arboreal_exception& e)
       {
         data.push_back(e.what());
-        return data;
+        break;
       }
       fd_fs_map[fd]->write_changes();
-      return data;
+      break;
     }
     case(DEL_TS): // delete tag(s)
     {
@@ -880,10 +899,10 @@ std::vector<std::string> execute(int id, char* command, int fd)
       catch(arboreal_exception& e)
       {
         data.push_back(e.what());
-        return data;
+        break;
       }
       fd_fs_map[fd]->write_changes();
-      return data;
+      break;
     }
     case(DEL_FS): // delete files from CWD
     {
@@ -899,10 +918,10 @@ std::vector<std::string> execute(int id, char* command, int fd)
       catch(arboreal_exception& e)
       {
         data.push_back(e.what());
-        return data;
+        break;
       }
       fd_fs_map[fd]->write_changes();
-      return data;
+      break;
     }
     case(DEL_FP): // delete file from anywhere
     {
@@ -921,10 +940,10 @@ std::vector<std::string> execute(int id, char* command, int fd)
       catch(arboreal_exception& e)
       {
         data.push_back(e.what());
-        return data;
+        break;
       }
       fd_fs_map[fd]->write_changes();
-      return data;
+      break;
     }
     case(OPEN_FP): // Open file
     {
@@ -956,16 +975,16 @@ std::vector<std::string> execute(int id, char* command, int fd)
       catch(arboreal_exception& e)
       {
         data.push_back(e.what());
-        return data;
+        break;
       }
 
-      return data;
+      break;
     }
     case(OPEN_F):
     {
       std::string s = command;
       data.push_back(command);
-      return data;
+      break;
     }
     case(CLOSE_FP): // close file
     {
@@ -982,15 +1001,15 @@ std::vector<std::string> execute(int id, char* command, int fd)
       catch(arboreal_exception& e)
       {
         data.push_back(e.what());
-        return data;
+        break;
       }
-      return data;
+      break;
     }
-    case(CLOSE_F):
+    case(CLOSE_F): //close file (cwd)
     {
       std::string s = command;
       data.push_back(command);
-      return data;
+      break;
     }
     case(RNAME_TS): // Rename tag
     {
@@ -1009,18 +1028,16 @@ std::vector<std::string> execute(int id, char* command, int fd)
       catch(arboreal_exception& e)
       {
         data.push_back(e.what());
-        return data;
+        break;
       }
       fd_fs_map[fd]->write_changes();
-      return data;
+      break;
     }
     case(RNAME_FP): // rename file
     {
       std::string to_split = command;
       std::vector<std::string> split = Parser::split_on_delim(to_split,'/');
       std::string new_name = split[split.size() - 1];
-      std::cout << new_name << std::endl;
-      std::cout << split.size() << std::endl;
       split.erase(end(split) - 1);
       std::cout << split.size() << std::endl;
 
@@ -1033,16 +1050,16 @@ std::vector<std::string> execute(int id, char* command, int fd)
       catch(arboreal_exception& e)
       {
         data.push_back(e.what());
-        return data;
+        break;
       }
       fd_fs_map[fd]->write_changes();
-      return data;
+      break;
     }
-    case(RNAME_FS):
+    case(RNAME_FS): // rename files
     {
       std::string s = command;
       data.push_back(command);
-      return data;
+      break;
     }
     case(ATTR_FP): //get file attr
     {
@@ -1099,25 +1116,25 @@ std::vector<std::string> execute(int id, char* command, int fd)
       catch(arboreal_exception& e)
       {
         data.push_back(e.what());
-        return data;
+        break;
       }
-      return data;
+      break;
     }
-    case(ATTR_FS):
+    case(ATTR_FS): // get file attrs
     {
       std::string s = command;
       data.push_back(command);
-      return data;
+      break;
     }
     case(MERG_1_1): // merge 1:1
     {
       data.push_back("Building in Progress...");
-      return data;
+      break;
     }
     case(MERG_M_1): // merge many:1
     {
       data.push_back("Building in Progress...");
-      return data;
+      break;
     }
     case(TAG_FP): // tag single file from anywhere
     {
@@ -1147,10 +1164,10 @@ std::vector<std::string> execute(int id, char* command, int fd)
         catch(arboreal_exception& e)
         {
             data.push_back(e.what());
-            return data;
+            break;
         }
         fd_fs_map[fd]->write_changes();
-        return data;
+        break;
     }
     case(TAG_FS): // tag files within CWD
     {
@@ -1180,12 +1197,12 @@ std::vector<std::string> execute(int id, char* command, int fd)
         catch(arboreal_exception& e)
         {
             data.push_back(e.what());
-            return data;
+            break;
         }
         fd_fs_map[fd]->write_changes();
-        return data;
+        break;
     }
-    case(UTAG_FP):
+    case(UTAG_FP): // untag file
     {
         std::string temp1 = command;
         int index = 0;
@@ -1212,12 +1229,12 @@ std::vector<std::string> execute(int id, char* command, int fd)
         catch(arboreal_exception& e)
         {
             data.push_back(e.what());
-            return data;
+            break;
         }
         fd_fs_map[fd]->write_changes();
-        return data;
+        break;
     }
-    case(UTAG_FS):
+    case(UTAG_FS): // untag files (cwd)
     {
         std::string temp1 = command;
         int index = 0;
@@ -1244,75 +1261,75 @@ std::vector<std::string> execute(int id, char* command, int fd)
         catch(arboreal_exception& e)
         {
             data.push_back(e.what());
-            return data;
+            break;
         }
         fd_fs_map[fd]->write_changes();
-        return data;
+        break;
     }
-    case(READ_XP):
+    case(READ_XP): // read x bytes
     {
       std::string s = command;
       data.push_back(command);
-      return data;
+      break;
     }
-    case(READ_XCWD):
+    case(READ_XCWD): // read x bytes (cwd)
     {
       std::string s = command;
       data.push_back(command);
-      return data;
+      break;
     }
-    case(READ_FP):
+    case(READ_FP): // read all
     {
       std::string s = command;
       data.push_back(command);
-      return data;
+      break;
     }
-    case(READ_FCWD):
+    case(READ_FCWD): // read all (cwd)
     {
       std::string s = command;
       data.push_back(command);
-      return data;
+      break;
     }
-    case(WRITE_FP):
+    case(WRITE_FP): // write all to file
     {
       std::string s = command;
       data.push_back(command);
-      return data;
+      break;
     }
-    case(WRITE_FCWD):
+    case(WRITE_FCWD): // write all (cwd)
     {
       std::string s = command;
       data.push_back(command);
-      return data;
+      break;
     }
-    case(WRITE_XFPF):
+    case(WRITE_XFPF): // write x from f1 to f2
     {
       std::string s = command;
       data.push_back(command);
-      return data;
+      break;
     }
-    case(WRITE_XFCWDF):
+    case(WRITE_XFCWDF): // write x from f1 to f2 (cwd)
     {
       std::string s = command;
       data.push_back(command);
-      return data;
+      break;
     }
-    case(CPY_FP):
+    case(CPY_FP): // copy f1 to f2
     {
       std::string s = command;
       data.push_back(command);
-      return data;
+      break;
     }
-    case(CPY_FCWD):
+    case(CPY_FCWD): // copy f1 to f2 (cwd)
     {
       std::string s = command;
       data.push_back(command);
-      return data;
+      break;
     }
     default:
     {
         data.push_back("Unrecognized Command");
-        return data;
+        break;
     }
     //case(23) switch directories is handled by the liaison process
   }

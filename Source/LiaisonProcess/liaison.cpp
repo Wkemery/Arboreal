@@ -308,6 +308,7 @@ int main(int argc, char** argv)
         try
         {
           vec = Parser->parse(command_id);
+          vec.push_back("$");
         }
         catch(ParseError& e)
         {
@@ -323,139 +324,50 @@ int main(int argc, char** argv)
         }
         /*****************************************************************************************/
 
-        print_vector(vec);
+        //print_vector(vec);
         Debug.log("Parsed Data Follows: ");
         for(unsigned int i = 0; i < vec.size(); i++){Debug.log((vec[i] + " "));}
         /*****************************************************************************************/
 
 
-        if(command_id != FIND_TS && command_id != FIND_FS)
+        
+        Debug.log("L: Sending Parsed Data To File System...");
+        /***************************************************************************************/
+
+        int rval = 0;
+        for(unsigned int i = 0; i < vec.size(); i++)
         {
-          Debug.log("L: Sending Parsed Data To File System...");
-          std::string data = "\n";
-          /***************************************************************************************/
-
-
-          for(unsigned int i = 0; i < vec.size(); i++)
-          {
-            std::string command = pad_string(vec[i],(MaxBufferSize - vec[i].length()),'\0');
-            int rval = send(liaison_fid,command.c_str(),MaxBufferSize,Flag);
-  
-            char response[MaxBufferSize];
-            memset(response,'\0',MaxBufferSize);
-
-            Debug.log("L: Awaiting Response...");
-            rval = recv(liaison_fid,response,MaxBufferSize,Flag);
-            std::string r = response;
-            if(r == "Command Accepted"){continue;}
-            if(rval > 0)
-            {
-              data += response;
-              data += "\n";
-            }
-            memset(response,'\0',MaxBufferSize);
-          }
-          Debug.log("L: Response Received: " + data);
-          /***************************************************************************************/
-          
-
-          /* Reset directory to "root" directory upon successful delete Tag command */
-          std::size_t found = data.find("Successfully");
-          if(command_id == DEL_TS && found != std::string::npos && cwd != "/")
-          {
-            cwd = "/";
-            Parser->set_cwd(cwd); 
-          }
-          /***************************************************************************************/
-
-
-          /* Pad data to MaxBufferSize */
-          data = pad_string(data, MaxBufferSize - data.length(), '\0');
-
-          Debug.log("L: Sending Repsponse to Command Line...");
-          send_response(client_sock,data.c_str(),MaxBufferSize,Flag,
-                        liaison_sock,liaison_sockpath,client_sockpath);
-
-          Debug.log("Success");
-          /***************************************************************************************/
-
+          vec[i] = pad_string(vec[i], MaxBufferSize - vec[i].length(), '\0');
+          Debug.log("L: Sending [" + vec[i] + "]");
+          rval = send(liaison_fid,vec[i].c_str(),MaxBufferSize,Flag);
         }
-        else
-        {
-          /* 
-           * Find Tags and Find Files are a bit special since they are single commands
-           *  but may return any amount of data 
-           */
 
-          Debug.log("L: Sending Parsed Data To File System...");
-          for(unsigned int i = 0; i < vec.size(); i++)
-          {
-            std::string command = pad_string(vec[i],(MaxBufferSize - vec[i].length()),'\0');
-            send(liaison_fid,command.c_str(),MaxBufferSize,Flag);
-          }
-          Debug.log("Success");
-          /***************************************************************************************/
+        Debug.log("L: Waiting For Read Size...");
+        char read_size_buf[MaxBufferSize];
+        memset(read_size_buf,'\0',MaxBufferSize);
+        rval = recv(liaison_fid,read_size_buf,MaxBufferSize,Flag);
 
-          std::string data = "\n";
-          std::string stemp;
-          char response[MaxBufferSize];
-          memset(response,'\0',MaxBufferSize);
+        int read_size = get_cmnd_id(read_size_buf);
+        Debug.log("L: Read Size Received [" + std::to_string(read_size) + "]");
 
-          Debug.log("L: Awaiting Response...");
-          /***************************************************************************************/
+        Debug.log("L: Receiving Data...");
+        char data[read_size];
+        memset(data,'\0',read_size);
+        rval = recv(liaison_fid,data,read_size,Flag);
 
+        std::string debug_print;
+        for(unsigned int i = 0; i < read_size - 1; i++){debug_print += data[i];}
+        Debug.log("L: Received :\n" + debug_print);
+      
+        std::cout << std::endl;
+        std::cout << debug_print << std::endl;
 
-          /* Continue reading in data until File System tells you it's done */
-          int files_found = 0;
-          while(stemp != "DONE")
-          {
-            if(stemp != "DONE") data += (stemp + "\n");
-            stemp = "";
+        Debug.log("L: Sending Confirmation To Command Line");
+        std::string success = "Success";
+        send_response(client_sock,success.c_str(),MaxBufferSize,Flag,
+                      liaison_sock,liaison_sockpath,client_sockpath);
+        Debug.log("L: Return Value [" + std::to_string(rval) + "]");
 
-            int rval = recv(liaison_fid,response,MaxBufferSize,Flag);
-            std::string r = response;
-
-            /* Really hacky way to get file found count but hey it works and it's easy */
-            if(response[0] == '[') files_found += 1;
-
-            /* Ignore the "I got your command" response */
-            if(r == "Command Accepted"){continue;}
-            if(rval > 0){stemp = response;}
-          }
-          Debug.log("L: Response Recieved: " + data);
-          /***************************************************************************************/
-
-          std::cout << "Search Returned [" << files_found << "] Files!";
-
-          /* Signal Command Line that it needs to wait for more data */
-          Debug.log("L: Signaling Command Line That It Needs to Wait");
-          std::string wait = "WAIT";
-          wait = pad_string(wait, MaxBufferSize - wait.length(), '\0');
-          send_response(client_sock,wait.c_str(),MaxBufferSize,Flag,
-                        liaison_sock,liaison_sockpath,client_sockpath);
-          /***************************************************************************************/
-
-
-          /* Tell Command Line how much data it will need to receive */
-          char read_size[MaxBufferSize];
-          int r_size = data.length();
-
-          memset(read_size, '\0', MaxBufferSize);
-          memcpy(read_size, &r_size, sizeof(int));
-
-          send_response(client_sock, read_size, MaxBufferSize, Flag,
-                        liaison_sock,liaison_sockpath, client_sockpath);
-          /***************************************************************************************/
-
-
-          /* Send Data To The Command Line */
-          Debug.log("L: Sending Response To Command Line...");
-          send_response(client_sock, data.c_str(), r_size, Flag,
-                        liaison_sock,liaison_sockpath, client_sockpath);
-          Debug.log("L: Success");
-          /***************************************************************************************/
-
-        }
       }
     }while(true);
 

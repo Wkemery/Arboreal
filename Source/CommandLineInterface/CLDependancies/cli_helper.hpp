@@ -356,7 +356,13 @@ char* receive_from_server(int client_sock, std::string client_sockpath, int size
   char* data = new char[size];
   memset(data, '\0', size);
 
-  if(recv(client_sock, data, size, flag) < 0)
+  int rval = 0;
+  while(rval == 0)
+  {
+    rval = recv(client_sock, data, size, flag);
+  }
+
+  if(rval < 0)
   {
     if(close(client_sock) < 0)
     {
@@ -384,53 +390,6 @@ char* receive_from_server(int client_sock, std::string client_sockpath, int size
 }
 //[===============================================================================================]
 //[===============================================================================================]
-
-
-
-
-
-
-//[===============================================================================================]
-/*! Receive data from File System, returns a std::string containing the Data
- *
- * @param client_sock:     Client socket identification number
- * @param client_sockpath: Client socket pathname
- * @param size:            Size of command to be recieved
- * @param flag:            Flag for 'recv()' call (see 'man recv')
- */
-//[===============================================================================================]
-std::string receive_from_server(int client_sock, std::string client_sockpath)
-{
-  char data[MaxBufferSize];
-  memset(data, '\0', MaxBufferSize);
-
-  if(recv(client_sock, data, MaxBufferSize, 0) < 0)
-  {
-    if(close(client_sock) < 0)
-    {
-      /* Something whent wrong */
-      std::string where = "[cli_helper.hpp::receive_from_server()]: ";
-      std::string what = "Client Socket Close Failed -- ";
-      what += strerror(errno);
-      throw arboreal_cli_error(what,where);
-    }
-    if(unlink(client_sockpath.c_str()) < 0)
-    {
-      /* Something whent wrong */
-      std::string where = "[cli_helper.hpp::receive_from_server()]: ";
-      std::string what = "Client Socket Unlink Failed -- ";
-      what += strerror(errno);
-      throw arboreal_cli_error(what,where);
-    }
-    /* Something whent wrong */
-    std::string where = "[cli_helper.hpp::receive_from_server()]: ";
-    std::string what = "Receive From Server Failed -- ";
-    what += strerror(errno);
-    throw arboreal_cli_error(what,where);
-  }
-  std::string rval = data;
-  return rval;
-}
 //[===============================================================================================]
 //                                     END cli_helper.hpp
 //[===============================================================================================]

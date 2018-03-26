@@ -26,6 +26,7 @@
 #include "DaemonDependancies/FileSystem/FileSystem.h"
 #include "DaemonDependancies/File/File.h"
 #include "DaemonHeaders/daemon.h"
+#include "../SharedHeaders/Print.h"
 /*************************************************************************************************/
 
 
@@ -307,7 +308,6 @@ int main(int argc, char** argv)
               int bytes_received = rval;
 
               Debug.log("D: Bytes Received [" + std::to_string(bytes_received) + "]");
-              Debug.log("D: Command Received: " + command_to_string(buffer, MAX_COMMAND_SIZE));
               /***********************************************************************************/
 
 
@@ -398,6 +398,9 @@ int main(int argc, char** argv)
               }
               else
               {
+                std::string end_check = buffer;
+                Debug.log("D: Command Received: " + end_check);
+
                 if(is_number(buffer))
                 {
                   /* Send command acceptance conformation and set current command ID */
@@ -415,10 +418,50 @@ int main(int argc, char** argv)
 
                   Debug.log("D: Current Command ID Set To [" + 
                              std::to_string(current_command_id) + "]");
+                }
+                else if(end_check == "$")
+                {
+                  Debug.log("D: Preparing Data For Sending...");
+                  for(unsigned int i = 0; i < data.size(); i++)
+                  {
+                    data[i] += "\n";
+                    data[i] = pad_string(data[i], MAX_COMMAND_SIZE - data[i].length(), '\0');
+                  }
+                  /*******************************************************************************/
 
-                  std::string response = "Command Accepted";
-                  response = pad_string(response,MAX_COMMAND_SIZE - response.length(), '\0');
-                  rval = send(i,response.c_str(),MAX_COMMAND_SIZE,FLAG);
+
+                  int send_size = (data.size() * MAX_COMMAND_SIZE) + 1;
+                  char send_size_buf[MAX_COMMAND_SIZE];
+                  memset(send_size_buf,'\0',MAX_COMMAND_SIZE);
+                  memcpy(send_size_buf,&send_size,sizeof(int));
+
+                  Debug.log("D: Sending Read Amount [" + std::to_string(send_size) + "]");
+
+                  rval = send(i, send_size_buf, MAX_COMMAND_SIZE, FLAG);
+                  /*******************************************************************************/
+
+
+                  char data_buf[send_size];
+                  memset(data_buf,'\0',send_size);
+                  int index = 0;
+                  for(unsigned int i = 0; i < data.size(); i++)
+                  {
+                    for(unsigned int j = 0; j < data[i].size(); j++)
+                    {
+                      data_buf[index] = data[i][j];
+                      index += 1;
+                    }
+                  }
+
+                  std::string temp_string;
+                  for(unsigned int i = 0; i < send_size; i++){temp_string += data_buf[i];}
+                  Debug.log("D: Sending Data: \n" + temp_string);
+
+                  rval = send(i, data_buf, send_size, FLAG);
+
+                  data.erase(begin(data),end(data));
+                  /*******************************************************************************/
+
                 }
                 else
                 {
@@ -430,27 +473,9 @@ int main(int argc, char** argv)
                   }
                   /*******************************************************************************/
 
-
                   /* Execute the command */
-                  std::vector<std::string> data = execute(current_command_id, buffer,i);
+                  execute(current_command_id, buffer, i, data);
                   /*******************************************************************************/
-
-                  
-                  /* Send Response */
-                  for(unsigned int j = 0; j < data.size(); j++)
-                  {
-                    std::string temp = pad_string(data[j],(MAX_COMMAND_SIZE-data[j].length()),'\0');
-                    rval = send(i, temp.c_str(), MAX_COMMAND_SIZE, FLAG);
-                  }
-                  if(current_command_id == FIND_TS || current_command_id == FIND_FS)
-                  {
-                    /* If Command is a find command send DONE after sending main data */
-                    std::string done = "DONE";
-                    done = pad_string(done, MAX_COMMAND_SIZE - done.length(), '\0');
-                    rval = send(i, done.c_str(), MAX_COMMAND_SIZE, FLAG);
-                  }
-                  /*******************************************************************************/
-
                 }
               }
 
