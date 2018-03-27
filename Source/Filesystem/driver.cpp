@@ -1025,16 +1025,16 @@ int main(int argc, char** argv)
       fullPath.push_back("Tag0"); fullPath.push_back("Tag2"); fullPath.push_back("Tag5"); fullPath.push_back("Tag6");
       fullPath.push_back("File4");
       int fd3 = fs1->open_file(fullPath, 'x');
-      
+
       int bufferSize = 512;
       char* buff = new char[bufferSize];
       memset(buff, 0, bufferSize);
-      
+
       int bytes = 10;
       char symbol = '@';
       memset(buff, symbol, bytes);
       fs1->write_file(fd3, buff, bytes);
-      
+
       memset(buff, 0, bufferSize);
       bytes = 1;
       symbol = '!';
@@ -1050,15 +1050,15 @@ int main(int argc, char** argv)
       fs1->create_tag("NewTag3");
       fs1->create_tag("NewTag4");
       fs1->write_changes();
-      
+
       fs1->delete_tag("NewTag2");
       fs1->delete_tag("NewTag3");
       fs1->write_changes();
-      
+
       fs1->create_tag("NewTag5");
       fs1->create_tag("NewTag6");
       fs1->write_changes();
-      
+
       break;
     }
     case 15:
@@ -1068,12 +1068,12 @@ int main(int argc, char** argv)
       fs1->create_file("defaultFIle2", tags);
       fs1->create_file("defaultFIle3", tags);
       fs1->create_file("defaultFIle4", tags);
-      
+
       fs1->write_changes();
-      
+
       vector<string> filePath;
       filePath.push_back("defaultFIle1");
-      
+
       fs1->delete_file(filePath);
       fs1->write_changes();
       break;
@@ -1089,17 +1089,17 @@ int main(int argc, char** argv)
     }
     case 17:
     {
-      unordered_set<string> tagSet; 
+      unordered_set<string> tagSet;
       tagSet.insert("Tag1");
       vector<string> fullPath;
       fullPath.push_back("Tag0"); fullPath.push_back("Tag1"); fullPath.push_back("File1");
-      
+
       fs1->untag_file(fullPath, tagSet);
-      
+
       tagSet.clear();
       tagSet.insert("Tag0");
       fs1->create_file("File1", tagSet);
-      
+
       break;
     }
     default:

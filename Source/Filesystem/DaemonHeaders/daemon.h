@@ -770,7 +770,8 @@ void execute(int id, char* command, int fd, std::vector<std::string>& data)
           rval = fd_fs_map[fd]->tag_search(tags);
           auto t_end = std::chrono::high_resolution_clock::now();
           outfile << std::chrono::duration<double, std::milli>(t_end-t_start).count() << " "
-                  << fd_fs_map[fd]->num_of_files() << " " << " " << fd_fs_map[fd]->num_of_tags() <<endl;
+                  << fd_fs_map[fd]->num_of_files() << " " << " " << fd_fs_map[fd]->num_of_tags()
+                  << " " << rval->size() << endl;
           outfile.close();
         }
         else{rval = fd_fs_map[fd]->tag_search(tags);}
@@ -823,7 +824,8 @@ void execute(int id, char* command, int fd, std::vector<std::string>& data)
           rval = fd_fs_map[fd]->file_search(file);
           auto t_end = std::chrono::high_resolution_clock::now();
           outfile << std::chrono::duration<double, std::milli>(t_end-t_start).count() << " "
-                  << fd_fs_map[fd]->num_of_files() << " " << " " << fd_fs_map[fd]->num_of_tags() <<endl;
+                  << fd_fs_map[fd]->num_of_files() << " " << fd_fs_map[fd]->num_of_tags()
+                  << " " << rval->size() << endl;
           outfile.close();
         }
         else{rval = fd_fs_map[fd]->file_search(file);}

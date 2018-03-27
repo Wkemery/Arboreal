@@ -683,7 +683,7 @@ void FileSystem::tag_file(FileInfo* file, unordered_set<string> tags)
     tagTree = _RootTree->find(tag);
     if(tagTree == 0)
     {
-      throw tag_error (" Does Not Exist: Not added to file tag set", "FileSystem::tag_file");
+      throw tag_error (tag + " Does Not Exist: Not added to file tag set", "FileSystem::tag_file");
       tagsToAdd.erase(tag);
     }
     else

@@ -42,6 +42,7 @@ CLI_H=$(CLI_PATH)/CLHeaders/Cli.h $(CLI_PATH)/CLDependancies/cli_helper.hpp \
 	  $(SHARED_HPATH)/CommandCodes.h $(SHARED_HPATH)/Print.h $(SHARED_HPATH)/DebugMessages.hpp
 CLI_CPP=$(CLI_PATH)/Cli.cpp $(SHARED_CPPATH)/Arboreal_Exceptions.cpp \
 
+TIMING_CPP=Filesystem/timing.cpp
 
 LIAISON_H=$(LIAISON_PATH)/LiaisonDependancies/liason_helper.hpp \
 	      $(SHARED_HPATH)/Arboreal_Exceptions.h $(SHARED_HPATH)/Print.h \
@@ -64,7 +65,7 @@ RUN_FORMAT= ./format
 
 all: commandline liaison format daemon runformat
 
-daemon: $(DAEMON_H) $(DAEMON_PATH)
+daemon: $(DAEMON_H) $(DAEMON_PATH) $(DAEMON_CPP)
 	$(CXX) $(XXFLAGS) -o daemon $(DAEMON_CPP)
 
 commandline: $(CLI_H) $(CLI_CPP)
@@ -75,6 +76,10 @@ liaison: $(LIAISON_H) $(LIAISON_CPP)
 
 format: $(FORMAT_PATH)/format.cpp
 	$(CXX) $(XXFLAGS) -o format $(FORMAT_PATH)/format.cpp
+
+timer: $(BACKEND_CPP) $(BACKEND_H) $(SHARED_HPATH)/Arboreal_Exceptions.h $(TIMING_CPP) \
+		$(SHARED_CPPATH)/Arboreal_Exceptions.cpp
+	$(CXX) $(XXFLAGS) -o timer2 $(TIMING_CPP) $(BACKEND_CPP) $(SHARED_CPPATH)/Arboreal_Exceptions.cpp
 
 runformat: format
 	./format diskInfo.d
