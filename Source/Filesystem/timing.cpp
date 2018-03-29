@@ -8,6 +8,9 @@
  #include<string>
  #include <stdlib.h>
  #include<vector>
+#include <random>
+#include <math.h>       /* round, floor, ceil, trunc */
+
 #include "DaemonDependancies/FileSystem/FileSystem.h"
 
 #define CREATEFILEDATA "Data/create_file_time.txt"
@@ -19,9 +22,6 @@
 #define STARTTUPDATA "Data/startup_time.txt"
 
 using namespace std;
-
-
-
 
 
 int main(int argc, char** argv)
@@ -52,7 +52,7 @@ int main(int argc, char** argv)
 
   try
   {
-    d = new Disk(10000, 4096, const_cast<char *>("DISK1"));
+    d = new Disk(300000, 4096, const_cast<char *>("DISK1"));
     dm = new DiskManager(d);
 
     std::ofstream outfile;
@@ -76,9 +76,14 @@ int main(int argc, char** argv)
   {
     case(0):
     {
+      srand (time(NULL));
+
+      std::default_random_engine generator;
+      std::normal_distribution<double> distribution(8.0,3.0);
+
       cout << "doing a startup timing test" << endl;
-      size_t numTags = 10;
-      size_t numFiles = 900;
+      size_t numTags = 125;
+      size_t numFiles = 1000;
       string tagName = "tag_";
       unordered_set<string> tagSet;
       string fileName = "file_";
@@ -93,11 +98,10 @@ int main(int argc, char** argv)
 
       for(int i = 0; i < numFiles; ++i){
 
-        int tags_in_file = rand() % 30;
+         int tags_in_file = (int) round(distribution(generator));
+         // if(tags_in_file < 0) tags_in_file = 0;
         for(int k = 0; k < tags_in_file; ++k){
-          tagName.append(to_string(rand() % numTags));
-          tagSet.insert(tagName);
-          tagName = "tag_";
+          tagSet.insert(tagName + to_string(rand() % numTags));
         }
 
         try{
@@ -110,7 +114,7 @@ int main(int argc, char** argv)
         }
         fs1->write_changes();
 
-        if(i % 10 == 0){
+        if(rand() % 100 == 0){
           cout << "REstarting Filesystem" << endl;
           delete fs1; cout << "Filesystem Deleted"<< endl;
           std::ofstream outfile;
@@ -143,6 +147,7 @@ int main(int argc, char** argv)
     case (1):
     {
       srand (time(NULL));
+
       vector<string> duplicate_files;
       int file_dup_count = 0;
       int file_dup_num = 0;
@@ -151,6 +156,8 @@ int main(int argc, char** argv)
       size_t numTags = 500;
       string fileName = "file_";
       string tagName = "tag_";
+      std::default_random_engine generator;
+      std::normal_distribution<double> distribution(8.0,5.0);
 
       /*Create Tags*/
       for(size_t i = 0; i < numTags; ++i){
@@ -163,11 +170,12 @@ int main(int argc, char** argv)
       int file_number = 0;
       for(size_t i = 0; i < numFiles; ++i){
 
-        if((i % 5000 == 0) && (i != 0)){cout << "5000 files down" << endl;}
+        if((i % 5000 == 0) && (i != 0)){cout << i << " files down" << endl;}
         unordered_set<string> tagSet;
 
         /*Insert and random number of random tags to this tagset*/
-        int tags_in_file = rand() % 30;
+        int tags_in_file = (int) round(distribution(generator));
+        // if(tags_in_file < 0) tags_in_file = 0;
         for(int k = 0; k < tags_in_file; ++k){
           tagName.append(to_string(rand() % numTags));
           tagSet.insert(tagName);
@@ -181,9 +189,9 @@ int main(int argc, char** argv)
           vector<FileInfo*>* rval2 = 0;
           try{
             outfile.open(CREATEFILEDATA, std::ofstream::out | std::ofstream::app);
+            string file_to_create = fileName; file_to_create.append(to_string(file_number));
 
             auto t_start = std::chrono::high_resolution_clock::now();
-            string file_to_create = fileName; file_to_create.append(to_string(file_number));
             fs1->create_file(file_to_create, tagSet);
             auto t_end = std::chrono::high_resolution_clock::now();
 
@@ -197,8 +205,9 @@ int main(int argc, char** argv)
 
           try{
             outfile.open(CREATETAGDATA, std::ofstream::out | std::ofstream::app);
-            auto t_start = std::chrono::high_resolution_clock::now();
             string tag_to_create = tagName; tag_to_create.append(to_string(numTags));
+
+            auto t_start = std::chrono::high_resolution_clock::now();
             fs1->create_tag(tag_to_create);
             auto t_end = std::chrono::high_resolution_clock::now();
 
@@ -212,7 +221,9 @@ int main(int argc, char** argv)
 
           try{
             outfile.open(TAGSEARCHDATA, std::ofstream::out | std::ofstream::app);
-            int number_tags_to_search_for = rand() % numTags;
+            int distribution_num = (int) round(distribution(generator));
+            if(distribution_num < 1) distribution_num = 1;
+            int number_tags_to_search_for = rand() % distribution_num;
             unordered_set<string> tags_to_search_for;
             for(int k = 0; k < number_tags_to_search_for; ++k){
               string tempTag = tagName; tempTag.append(to_string(rand() % numTags));
@@ -234,7 +245,8 @@ int main(int argc, char** argv)
             outfile.open(FILESEARCHDATA, std::ofstream::out | std::ofstream::app);
             string file_to_search_for;
             if((rand() % 2 == 0) && (duplicate_files.size() > 0)){
-              file_to_search_for = duplicate_files.at(rand() % duplicate_files.size());
+              cout << "choosign from duplicate_files" << endl;
+              file_to_search_for = duplicate_files.at(0);
             }
             else{
               file_to_search_for = fileName; file_to_search_for.append(to_string(rand() % file_number));
@@ -246,12 +258,14 @@ int main(int argc, char** argv)
             outfile << std::chrono::duration<double, std::milli>(t_end-t_start).count() << " "
                     << fs1->num_of_files() << " " << fs1->num_of_tags() << " " << rval2->size() << endl;
             outfile.close();
+            if(duplicate_files.size() > 0) duplicate_files.erase(duplicate_files.begin());
           }
           catch(arboreal_exception&e){cerr <<" Error Occured: " << e.what() << " " << e.where();}
 
           try{
             outfile.open(TAGFILEDATA, std::ofstream::out | std::ofstream::app);
-            int number_tags_tag_file_with = rand() % numTags;
+            int number_tags_tag_file_with = (int) round(distribution(generator));
+            // if (number_tags_tag_file_with < 0) number_tags_tag_file_with = 0;
             unordered_set<string> tags_tag_file_with;
             for(int k = 0; k < number_tags_tag_file_with; ++k){
               string tempTag = tagName; tempTag.append(to_string(rand() % numTags));
@@ -260,8 +274,8 @@ int main(int argc, char** argv)
 
             auto t_start = std::chrono::high_resolution_clock::now();
             fs1->tag_file(rval2->at(0), tags_tag_file_with);
-
             auto t_end = std::chrono::high_resolution_clock::now();
+
             outfile << std::chrono::duration<double, std::milli>(t_end-t_start).count() << " "
                     << fs1->num_of_files() << " " << fs1->num_of_tags() << " " << tags_tag_file_with.size() << endl;
             outfile.close();
@@ -269,10 +283,10 @@ int main(int argc, char** argv)
           catch(arboreal_exception&e){cerr <<" Error Occured: " << e.what() << " " << e.where();}
 
           try{
-            if(rand() % 8 == 0){
+            // if(rand() % 8 == 0){
               outfile.open(RENAMETAGDATA, std::ofstream::out | std::ofstream::app);
               /*Pick a tag to rename*/
-              string newTagName = "myNewTAgName" + to_string(rand()) + to_string(rand());
+              string newTagName = "myNewTAgName";
               string oldTagName = tagName + to_string(rand() % numTags);
               unordered_set<string> tag_to_find_size_of; tag_to_find_size_of.insert(oldTagName);
               vector<FileInfo*>* tagSize = fs1->tag_search(tag_to_find_size_of);
@@ -286,7 +300,7 @@ int main(int argc, char** argv)
               outfile.close();
               /*Name it back*/
               fs1->rename_tag(newTagName, oldTagName);
-            }
+            // }
           }
           catch(arboreal_exception&e){cerr <<" Error Occured: " << e.what() << " " << e.where();}
 
@@ -301,15 +315,11 @@ int main(int argc, char** argv)
             }
           catch(arboreal_exception&e){cerr << "There was an error!" << e.what() << e.where() <<endl ;
             cerr << fileName << " The file number is: " << file_number << endl;
-            for(auto it = tagSet.begin(); it != tagSet.end(); it++)
-            {
-              cout << "TagSet value is " << *it << endl;
-            }
           }
         }
 
         try{
-          if(rand() % 750 == 0){
+          if(rand() % 200 == 0){
             string tempTag = tagName; tempTag.append(to_string(numTags));
             fs1->create_tag(tempTag);
             ++numTags;
@@ -325,14 +335,15 @@ int main(int argc, char** argv)
           } //get some duplicate file names
         }
         else{
-          if(rand() % 10 ) ++file_number;
+          if(rand() % 10 != 0 ) ++file_number;
         }
 
-        if(((rand() % 5000) == 0) && !duplicating) {
+        if(((rand() % 1000) == 0) && !duplicating) {
           //duplicate filname x times
           duplicating = true;
+          file_dup_num = 0;
           duplicate_files.push_back(fileName + to_string(file_number));
-          file_dup_count = rand() % (int)((file_number/450) + 1);
+          file_dup_count = (int) round(((i/450) + 1));
         }
 
       }

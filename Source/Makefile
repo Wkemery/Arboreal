@@ -79,7 +79,7 @@ format: $(FORMAT_PATH)/format.cpp
 
 timer: $(BACKEND_CPP) $(BACKEND_H) $(SHARED_HPATH)/Arboreal_Exceptions.h $(TIMING_CPP) \
 		$(SHARED_CPPATH)/Arboreal_Exceptions.cpp
-	$(CXX) $(XXFLAGS) -o timer2 $(TIMING_CPP) $(BACKEND_CPP) $(SHARED_CPPATH)/Arboreal_Exceptions.cpp
+	$(CXX) $(XXFLAGS) -o timer $(TIMING_CPP) $(BACKEND_CPP) $(SHARED_CPPATH)/Arboreal_Exceptions.cpp
 
 runformat: format
 	./format diskInfo.d

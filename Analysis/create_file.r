@@ -1,12 +1,13 @@
-startup<-read.table("/home/wyatt/Documents/Arboreal/Source/DataDone/create_file_time.txt", header = TRUE)
+startup<-read.table("/home/wyatt/Documents/Arboreal/Source/DataNormal/create_file_time.txt", header = TRUE)
 
 
+startup<-startup[startup$time < 1,]
 plot(log(time)~files, data = startup)
 plot(log(time)~tags, data = startup)
 plot(log(time)~numtags, data = startup)
 
 
-fit<-lm(log(time)~numtags, data = startup)
+fit<-lm(log(time)~numtags + log(tags) + tags, data = startup)
 summary(fit)
 plot(fit)
 
