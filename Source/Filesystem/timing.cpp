@@ -157,7 +157,7 @@ int main(int argc, char** argv)
       string fileName = "file_";
       string tagName = "tag_";
       std::default_random_engine generator;
-      std::normal_distribution<double> distribution(8.0,5.0);
+      std::chi_squared_distribution<double> x_distribution(4.0);
 
       /*Create Tags*/
       for(size_t i = 0; i < numTags; ++i){
@@ -174,7 +174,7 @@ int main(int argc, char** argv)
         unordered_set<string> tagSet;
 
         /*Insert and random number of random tags to this tagset*/
-        int tags_in_file = (int) round(distribution(generator));
+        int tags_in_file = (int) round(x_distribution(generator));
         // if(tags_in_file < 0) tags_in_file = 0;
         for(int k = 0; k < tags_in_file; ++k){
           tagName.append(to_string(rand() % numTags));
@@ -221,7 +221,7 @@ int main(int argc, char** argv)
 
           try{
             outfile.open(TAGSEARCHDATA, std::ofstream::out | std::ofstream::app);
-            int distribution_num = (int) round(distribution(generator));
+            int distribution_num = (int) round(x_distribution(generator));
             if(distribution_num < 1) distribution_num = 1;
             int number_tags_to_search_for = rand() % distribution_num;
             unordered_set<string> tags_to_search_for;
@@ -264,7 +264,7 @@ int main(int argc, char** argv)
 
           try{
             outfile.open(TAGFILEDATA, std::ofstream::out | std::ofstream::app);
-            int number_tags_tag_file_with = (int) round(distribution(generator));
+            int number_tags_tag_file_with = (int) round(x_distribution(generator));
             // if (number_tags_tag_file_with < 0) number_tags_tag_file_with = 0;
             unordered_set<string> tags_tag_file_with;
             for(int k = 0; k < number_tags_tag_file_with; ++k){
@@ -319,7 +319,7 @@ int main(int argc, char** argv)
         }
 
         try{
-          if(rand() % 200 == 0){
+          if(ri % 200 == 0){
             string tempTag = tagName; tempTag.append(to_string(numTags));
             fs1->create_tag(tempTag);
             ++numTags;
@@ -338,14 +338,39 @@ int main(int argc, char** argv)
           if(rand() % 10 != 0 ) ++file_number;
         }
 
-        if(((rand() % 1000) == 0) && !duplicating) {
-          //duplicate filname x times
+        if(((i % 1000) == 0) && !duplicating) {
+          //duplicate filename x times
           duplicating = true;
           file_dup_num = 0;
           duplicate_files.push_back(fileName + to_string(file_number));
           file_dup_count = (int) round(((i/450) + 1));
         }
 
+      }
+      break;
+    }
+    case (3):
+    {
+      const int nrolls=20000;  // number of experiments
+      const int nstars=200;    // maximum number of stars to distribute
+      unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+        std::default_random_engine generator (seed);
+      std::lognormal_distribution<double> distribution(2.0,4.0); // looks like 2 and 4 is the best bet
+
+      int p[20]={};
+
+      for (int i=0; i<nrolls; ++i) {
+        double number = distribution(generator);
+        if(number < 0.0) number = 0.0;
+        if(number > 20) number = 20;
+        ++p[int(number)];
+      }
+
+      std::cout << "lognormal_distribution (0.0,1.0):" << std::endl;
+
+      for (int i=0; i<20; ++i) {
+        std::cout << i << "-" << (i+1) << ": ";
+        std::cout << std::string(p[i]*nstars/nrolls,'*') << std::endl;
       }
       break;
     }
