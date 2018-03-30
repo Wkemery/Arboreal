@@ -21,8 +21,7 @@
 #define RENAMETAGDATA "Data/rename_tag_time.txt"
 #define STARTTUPDATA "Data/startup_time.txt"
 
-using namespace std;
-
+using namespace std;  
 
 int main(int argc, char** argv)
 {
@@ -146,7 +145,7 @@ int main(int argc, char** argv)
     }
     case (1):
     {
-      srand (time(NULL));
+      srand (std::chrono::system_clock::now().time_since_epoch().count());
 
       vector<string> duplicate_files;
       int file_dup_count = 0;
@@ -154,10 +153,13 @@ int main(int argc, char** argv)
       bool duplicating = false;
       size_t numFiles = 100000;
       size_t numTags = 500;
+      size_t maxTags = 5000;
       string fileName = "file_";
       string tagName = "tag_";
-      std::default_random_engine generator;
+      unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+      std::default_random_engine generator (seed);      
       std::chi_squared_distribution<double> x_distribution(4.0);
+      std::lognormal_distribution<double> log_distribution(2.0,4.0);
 
       /*Create Tags*/
       for(size_t i = 0; i < numTags; ++i){
@@ -173,13 +175,22 @@ int main(int argc, char** argv)
         if((i % 5000 == 0) && (i != 0)){cout << i << " files down" << endl;}
         unordered_set<string> tagSet;
 
-        /*Insert and random number of random tags to this tagset*/
+        /*Insert and (normally distributed) random number of random tags to this tagset*/
         int tags_in_file = (int) round(x_distribution(generator));
         // if(tags_in_file < 0) tags_in_file = 0;
         for(int k = 0; k < tags_in_file; ++k){
-          tagName.append(to_string(rand() % numTags));
-          tagSet.insert(tagName);
-          tagName = "tag_";
+          /*Pick tag to append from log_distribution*/
+          int chosenTag = numTags;
+          while(chosenTag >= numTags)
+          {
+            int tag_representative = int(log_distribution(generator));
+            if(tag_representative < 1) tag_representative = 1;
+            if(tag_representative > 20) tag_representative = 20;
+            int lowerbound = (tag_representative - 1) * (maxTags / 20);
+            int upperbound = tag_representative * (maxTags / 20);
+            chosenTag = (rand() % upperbound) + lowerbound;
+          }
+          tagSet.insert(tagName + to_string(chosenTag));
         }
 
         if(rand() % 1000 == 0){
@@ -264,20 +275,12 @@ int main(int argc, char** argv)
 
           try{
             outfile.open(TAGFILEDATA, std::ofstream::out | std::ofstream::app);
-            int number_tags_tag_file_with = (int) round(x_distribution(generator));
-            // if (number_tags_tag_file_with < 0) number_tags_tag_file_with = 0;
-            unordered_set<string> tags_tag_file_with;
-            for(int k = 0; k < number_tags_tag_file_with; ++k){
-              string tempTag = tagName; tempTag.append(to_string(rand() % numTags));
-              tags_tag_file_with.insert(tempTag);
-            }
-
             auto t_start = std::chrono::high_resolution_clock::now();
-            fs1->tag_file(rval2->at(0), tags_tag_file_with);
+            fs1->tag_file(rval2->at(0), tagSet);
             auto t_end = std::chrono::high_resolution_clock::now();
 
             outfile << std::chrono::duration<double, std::milli>(t_end-t_start).count() << " "
-                    << fs1->num_of_files() << " " << fs1->num_of_tags() << " " << tags_tag_file_with.size() << endl;
+                    << fs1->num_of_files() << " " << fs1->num_of_tags() << " " << tagSet.size() << endl;
             outfile.close();
           }
           catch(arboreal_exception&e){cerr <<" Error Occured: " << e.what() << " " << e.where();}
@@ -319,9 +322,8 @@ int main(int argc, char** argv)
         }
 
         try{
-          if(ri % 200 == 0){
-            string tempTag = tagName; tempTag.append(to_string(numTags));
-            fs1->create_tag(tempTag);
+          if((numTags < maxTags) && (i % 200 == 0)){
+            fs1->create_tag(tagName + to_string(numTags));
             ++numTags;
           }
         }
@@ -338,7 +340,7 @@ int main(int argc, char** argv)
           if(rand() % 10 != 0 ) ++file_number;
         }
 
-        if(((i % 1000) == 0) && !duplicating) {
+        if(!duplicating && ((i % 1000) == 0)) {
           //duplicate filename x times
           duplicating = true;
           file_dup_num = 0;
@@ -354,8 +356,10 @@ int main(int argc, char** argv)
       const int nrolls=20000;  // number of experiments
       const int nstars=200;    // maximum number of stars to distribute
       unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-        std::default_random_engine generator (seed);
-      std::lognormal_distribution<double> distribution(2.0,4.0); // looks like 2 and 4 is the best bet
+      std::default_random_engine generator (seed);      
+      std::lognormal_distribution<double> distribution(2.0,4.0);
+      
+       // looks like 2 and 4 is the best bet
 
       int p[20]={};
 
