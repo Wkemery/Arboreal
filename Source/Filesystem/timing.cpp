@@ -21,7 +21,7 @@
 #define RENAMETAGDATA "Data/rename_tag_time.txt"
 #define STARTTUPDATA "Data/startup_time.txt"
 
-using namespace std;  
+using namespace std;
 
 int main(int argc, char** argv)
 {
@@ -51,7 +51,7 @@ int main(int argc, char** argv)
 
   try
   {
-    d = new Disk(300000, 4096, const_cast<char *>("DISK1"));
+    d = new Disk(1000000, 4096, const_cast<char *>("DISK1"));
     dm = new DiskManager(d);
 
     std::ofstream outfile;
@@ -151,13 +151,13 @@ int main(int argc, char** argv)
       int file_dup_count = 0;
       int file_dup_num = 0;
       bool duplicating = false;
-      size_t numFiles = 100000;
+      size_t numFiles = 300000;
       size_t numTags = 500;
       size_t maxTags = 5000;
       string fileName = "file_";
       string tagName = "tag_";
       unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-      std::default_random_engine generator (seed);      
+      std::default_random_engine generator (seed);
       std::chi_squared_distribution<double> x_distribution(4.0);
       std::lognormal_distribution<double> log_distribution(2.0,4.0);
 
@@ -168,7 +168,7 @@ int main(int argc, char** argv)
       }
 
       fs1->write_changes();
-      /*Create 100000 Files*/
+      /*Create 300000 Files*/
       int file_number = 0;
       for(size_t i = 0; i < numFiles; ++i){
 
@@ -226,7 +226,8 @@ int main(int argc, char** argv)
                     << fs1->num_of_files() << " " << fs1->num_of_tags()
                     << " " << endl;
             outfile.close();
-            ++numTags;
+            /*Delete that tag*/
+            fs1->delete_tag(tag_to_create);
           }
           catch(arboreal_exception&e){cerr <<" Error Occured: " << e.what() << " " << e.where();}
 
@@ -270,14 +271,12 @@ int main(int argc, char** argv)
                     << fs1->num_of_files() << " " << fs1->num_of_tags() << " " << rval2->size() << endl;
             outfile.close();
             if(duplicate_files.size() > 0) duplicate_files.erase(duplicate_files.begin());
-          }
-          catch(arboreal_exception&e){cerr <<" Error Occured: " << e.what() << " " << e.where();}
 
-          try{
+
             outfile.open(TAGFILEDATA, std::ofstream::out | std::ofstream::app);
-            auto t_start = std::chrono::high_resolution_clock::now();
+            t_start = std::chrono::high_resolution_clock::now();
             fs1->tag_file(rval2->at(0), tagSet);
-            auto t_end = std::chrono::high_resolution_clock::now();
+            t_end = std::chrono::high_resolution_clock::now();
 
             outfile << std::chrono::duration<double, std::milli>(t_end-t_start).count() << " "
                     << fs1->num_of_files() << " " << fs1->num_of_tags() << " " << tagSet.size() << endl;
@@ -322,7 +321,7 @@ int main(int argc, char** argv)
         }
 
         try{
-          if((numTags < maxTags) && (i % 200 == 0)){
+          if((numTags < maxTags) && (i % 35 == 0)){
             fs1->create_tag(tagName + to_string(numTags));
             ++numTags;
           }
@@ -356,9 +355,9 @@ int main(int argc, char** argv)
       const int nrolls=20000;  // number of experiments
       const int nstars=200;    // maximum number of stars to distribute
       unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-      std::default_random_engine generator (seed);      
+      std::default_random_engine generator (seed);
       std::lognormal_distribution<double> distribution(2.0,4.0);
-      
+
        // looks like 2 and 4 is the best bet
 
       int p[20]={};
