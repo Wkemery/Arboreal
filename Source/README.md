@@ -1,6 +1,6 @@
-#Arboreal User Guide
----
-###Table of Contents
+# Arboreal User Guide
+
+### Table of Contents
 
 
 * **Installing Arboreal**
@@ -25,8 +25,8 @@
 * **The Graphical User Interface (GUI)**
 * **Troubleshooting**  
 
----  
-##Installing Arboreal
+ 
+## Installing Arboreal
 Arboreal is currently not integrated with the kernel and as such runs similarly to a virtual file system albeit with a more experimental structure.  Future work will be focused on direct integration with the kernal in order to provide more traditional  usability.  In the meantime playing around with and testing the file system can be achived through a few easy steps:   
 
 1.  **Download the project**  
@@ -81,9 +81,9 @@ At this point you should see the arboreal header and `Arboreal >>` indicating th
 **Note**  
 If you chose to enable debugging for the command line, all debug output will be written to a file named `Arboreal.log`.  Do not worry if this file does not yet exist, it will be created for you on startup.
 
-##Valid Commands And Their Syntax
+## Valid Commands And Their Syntax
 
-###Help Commands
+### Help Commands
 	Arboreal >> help
 	Arboreal >> h
 **These two commands will bring up a helper subprocess which will display a list of the command archetypes and show the user the specific commands (and their syntax) that are housed under each archetype.** The helper subprocess continues running until the user decides to quit it.
@@ -94,16 +94,14 @@ If you chose to enable debugging for the command line, all debug output will be 
 	Arboreal >> -h --find	
 **This version of the help command will show the usage for a single command archetype.**  (Unlike the `help` or `h` commands it will not start a  "helper" subprocess but will simply display the usage for the particular archetype and await the next file system command)  
   
-  ----------------------------------
 
-###Quit Commands
+### Quit Commands
 	Arboreal >> quit
 	Arboreal >> q
 	Arboreal >> Q
 **All of these will attempt to terminate the current command line process.**  This command does not affect other concurrently running command lines it will only quit the currently active command line process.  The user must confirm the quit before the command will actually be executed.  this is to prevent accidental quits.  The quit commands are built with proper cleanup in mind and should not leave any junk behind.  
   
-  ---
-###Find Commands
+### Find Commands
 	Arboreal >> find -t [tagname1,tagname2,...]
 	Arboreal >> find -t {tagname1,tagname2,...}
 	Arboreal >> find -t [tagname1,{tagname2,tagname7,...},tagname10,...]
@@ -112,12 +110,10 @@ If you chose to enable debugging for the command line, all debug output will be 
 
 `{ this tag, and this tag, and this tag, ... etc}`  
 
--
 Commands that use `[]` are called `lists` and will tell the system to **search for ANY file which is tagged with ANY of the tags specified.**  You can think of this as a bunch of `||` operations, that is, you want a file tagged with:  
 
 `[this tag, or this tag, or this tag, ... etc]`  
 
--
   **What's great is that you can actually nest any of these within one another!** Although nesting a bunch of `sets` or `lists` won't be any diffferent from simply using one big list or set (i.e. `[t1,[t2,t3,t4]]` is the exact same as `[t1,t2,t3,t4]` this goes for `sets` as well).  However, tings get interesting when you pass a command such as:
     
   `find -t [tag1,tag2,{tag45,tag78,[tag9,tag10],tag5},tag100]`  
@@ -136,10 +132,9 @@ Commands that use `[]` are called `lists` and will tell the system to **search f
    	
    (*Of course you accomplish similar things even with a command that is a `list` nested within a `set` rather than this example which is a `set` nested within a `list`*)
    
--
    
    As you can see, nesting these operations creates some really powerful search options!  
-###Important! DO NOT put spaces in between the `list` or `set` items!!  
+### Important! DO NOT put spaces in between the `list` or `set` items!!  
 -
 ~~~
 Arboreal >> find -f [file1,file2,...]
