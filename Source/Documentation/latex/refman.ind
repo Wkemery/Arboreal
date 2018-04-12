@@ -1,0 +1,1625 @@
+\begin{theindex}
+
+  \item {\+\_\+block\+Number}
+    \subitem {Tree\+Object}, \hyperpage{96}
+  \item {\+\_\+ecode}
+    \subitem {arboreal\+\_\+exception}, \hyperpage{15}
+    \subitem {arboreal\+\_\+runtime\+\_\+error}, \hyperpage{20}
+  \item {\+\_\+free\+Spots}
+    \subitem {Tree\+Object}, \hyperpage{96}
+  \item {\+\_\+indeces}
+    \subitem {Tree\+Object}, \hyperpage{97}
+  \item {\+\_\+last\+Entry}
+    \subitem {Tree\+Object}, \hyperpage{97}
+  \item {\+\_\+mod}
+    \subitem {Modification}, \hyperpage{71}
+  \item {\+\_\+modifications}
+    \subitem {Tree\+Object}, \hyperpage{97}
+  \item {\+\_\+my\+Partition\+Manager}
+    \subitem {Tree\+Object}, \hyperpage{97}
+  \item {\+\_\+my\+Tree}
+    \subitem {Tree\+Object}, \hyperpage{97}
+  \item {\+\_\+name}
+    \subitem {Tree\+Object}, \hyperpage{97}
+  \item {\+\_\+parent}
+    \subitem {Modification}, \hyperpage{71}
+  \item {\+\_\+start\+Block}
+    \subitem {Tree\+Object}, \hyperpage{97}
+  \item {\+\_\+where}
+    \subitem {arboreal\+\_\+exception}, \hyperpage{15}
+    \subitem {arboreal\+\_\+runtime\+\_\+error}, \hyperpage{20}
+  \item {$\sim$\+Addition}
+    \subitem {Addition}, \hyperpage{9}
+  \item {$\sim$\+C\+LI}
+    \subitem {C\+LI}, \hyperpage{26}
+  \item {$\sim$\+Debug\+Messages}
+    \subitem {Debug\+Messages}, \hyperpage{29}
+  \item {$\sim$\+Deletion}
+    \subitem {Deletion}, \hyperpage{32}
+  \item {$\sim$\+Disk}
+    \subitem {Disk}, \hyperpage{34}
+  \item {$\sim$\+Disk\+Manager}
+    \subitem {Disk\+Manager}, \hyperpage{37}
+  \item {$\sim$\+File\+Info}
+    \subitem {File\+Info}, \hyperpage{46}
+  \item {$\sim$\+File\+System}
+    \subitem {File\+System}, \hyperpage{57}
+  \item {$\sim$\+Modification}
+    \subitem {Modification}, \hyperpage{70}
+  \item {$\sim$\+Parser}
+    \subitem {Parser}, \hyperpage{74}
+  \item {$\sim$\+Partition\+Manager}
+    \subitem {Partition\+Manager}, \hyperpage{79}
+  \item {$\sim$\+Root\+Tree}
+    \subitem {Root\+Tree}, \hyperpage{82}
+  \item {$\sim$\+Tag\+Tree}
+    \subitem {Tag\+Tree}, \hyperpage{86}
+  \item {$\sim$\+Tree\+Object}
+    \subitem {Tree\+Object}, \hyperpage{89}
+  \item {$\sim$arboreal\+\_\+cli\+\_\+error}
+    \subitem {arboreal\+\_\+cli\+\_\+error}, \hyperpage{11}
+  \item {$\sim$arboreal\+\_\+daemon\+\_\+error}
+    \subitem {arboreal\+\_\+daemon\+\_\+error}, \hyperpage{13}
+  \item {$\sim$arboreal\+\_\+exception}
+    \subitem {arboreal\+\_\+exception}, \hyperpage{14}
+  \item {$\sim$arboreal\+\_\+liaison\+\_\+error}
+    \subitem {arboreal\+\_\+liaison\+\_\+error}, \hyperpage{16}
+  \item {$\sim$arboreal\+\_\+logic\+\_\+error}
+    \subitem {arboreal\+\_\+logic\+\_\+error}, \hyperpage{18}
+  \item {$\sim$arboreal\+\_\+runtime\+\_\+error}
+    \subitem {arboreal\+\_\+runtime\+\_\+error}, \hyperpage{20}
+  \item {$\sim$disk\+\_\+error}
+    \subitem {disk\+\_\+error}, \hyperpage{36}
+  \item {$\sim$file\+\_\+error}
+    \subitem {file\+\_\+error}, \hyperpage{44}
+  \item {$\sim$invalid\+\_\+arg}
+    \subitem {invalid\+\_\+arg}, \hyperpage{69}
+  \item {$\sim$tag\+\_\+error}
+    \subitem {tag\+\_\+error}, \hyperpage{85}
+
+  \indexspace
+
+  \item {A\+P\+P\+N\+D\+\_\+\+F\+C\+WD}
+    \subitem {Command\+Codes.\+h}, \hyperpage{144}
+  \item {A\+P\+P\+N\+D\+\_\+\+FP}
+    \subitem {Command\+Codes.\+h}, \hyperpage{144}
+  \item {A\+P\+P\+N\+D\+\_\+\+X\+F\+C\+W\+DF}
+    \subitem {Command\+Codes.\+h}, \hyperpage{145}
+  \item {A\+P\+P\+N\+D\+\_\+\+X\+F\+PF}
+    \subitem {Command\+Codes.\+h}, \hyperpage{145}
+  \item {A\+T\+T\+R\+\_\+\+FP}
+    \subitem {Command\+Codes.\+h}, \hyperpage{145}
+  \item {A\+T\+T\+R\+\_\+\+FS}
+    \subitem {Command\+Codes.\+h}, \hyperpage{145}
+  \item {accept\+\_\+client}
+    \subitem {liason\+\_\+helper.\+hpp}, \hyperpage{134}
+  \item {add\+\_\+direct\+\_\+block}
+    \subitem {File\+Info}, \hyperpage{46}
+  \item {add\+\_\+index}
+    \subitem {Tree\+Object}, \hyperpage{90}
+  \item {add\+\_\+indirect\+\_\+block}
+    \subitem {File\+Info}, \hyperpage{47}
+  \item {add\+\_\+tags}
+    \subitem {Command\+Validation.\+h}, \hyperpage{153}
+  \item {Addition}, \hyperpage{9}
+    \subitem {$\sim$\+Addition}, \hyperpage{9}
+    \subitem {Addition}, \hyperpage{9}
+    \subitem {write\+\_\+out}, \hyperpage{10}
+  \item {append\+\_\+cwd}
+    \subitem {Command\+Validation.\+h}, \hyperpage{153}
+  \item {append\+\_\+file}
+    \subitem {File\+System}, \hyperpage{57}
+  \item {append\+\_\+path}
+    \subitem {Command\+Validation.\+h}, \hyperpage{154}
+  \item {append\+\_\+x\+\_\+cwd}
+    \subitem {Command\+Validation.\+h}, \hyperpage{154}
+  \item {append\+\_\+x\+\_\+path}
+    \subitem {Command\+Validation.\+h}, \hyperpage{154}
+  \item {arboreal\+\_\+cli\+\_\+error}, \hyperpage{10}
+    \subitem {$\sim$arboreal\+\_\+cli\+\_\+error}, \hyperpage{11}
+    \subitem {arboreal\+\_\+cli\+\_\+error}, \hyperpage{10, 11}
+  \item {arboreal\+\_\+daemon\+\_\+error}, \hyperpage{12}
+    \subitem {$\sim$arboreal\+\_\+daemon\+\_\+error}, \hyperpage{13}
+    \subitem {arboreal\+\_\+daemon\+\_\+error}, \hyperpage{12, 13}
+  \item {arboreal\+\_\+exception}, \hyperpage{13}
+    \subitem {\+\_\+ecode}, \hyperpage{15}
+    \subitem {\+\_\+where}, \hyperpage{15}
+    \subitem {$\sim$arboreal\+\_\+exception}, \hyperpage{14}
+    \subitem {arboreal\+\_\+exception}, \hyperpage{14}
+    \subitem {ecode}, \hyperpage{15}
+    \subitem {where}, \hyperpage{15}
+  \item {arboreal\+\_\+liaison\+\_\+error}, \hyperpage{15}
+    \subitem {$\sim$arboreal\+\_\+liaison\+\_\+error}, \hyperpage{16}
+    \subitem {arboreal\+\_\+liaison\+\_\+error}, \hyperpage{16}
+  \item {arboreal\+\_\+logic\+\_\+error}, \hyperpage{17}
+    \subitem {$\sim$arboreal\+\_\+logic\+\_\+error}, \hyperpage{18}
+    \subitem {arboreal\+\_\+logic\+\_\+error}, \hyperpage{17, 18}
+  \item {arboreal\+\_\+runtime\+\_\+error}, \hyperpage{18}
+    \subitem {\+\_\+ecode}, \hyperpage{20}
+    \subitem {\+\_\+where}, \hyperpage{20}
+    \subitem {$\sim$arboreal\+\_\+runtime\+\_\+error}, \hyperpage{20}
+    \subitem {arboreal\+\_\+runtime\+\_\+error}, \hyperpage{19}
+  \item {Attributes}, \hyperpage{20}
+    \subitem {Attributes}, \hyperpage{21}
+    \subitem {del}, \hyperpage{21}
+    \subitem {get\+\_\+access}, \hyperpage{21}
+    \subitem {get\+\_\+creation\+\_\+time}, \hyperpage{22}
+    \subitem {get\+\_\+edit}, \hyperpage{22}
+    \subitem {get\+\_\+file\+\_\+attributes}, \hyperpage{22}
+    \subitem {get\+\_\+owner}, \hyperpage{22}
+    \subitem {get\+\_\+permissions}, \hyperpage{22}
+    \subitem {get\+\_\+size}, \hyperpage{23}
+    \subitem {read\+\_\+in}, \hyperpage{23}
+    \subitem {set\+\_\+access}, \hyperpage{23}
+    \subitem {set\+\_\+creation\+\_\+time}, \hyperpage{23}
+    \subitem {set\+\_\+edit}, \hyperpage{23}
+    \subitem {set\+\_\+owner}, \hyperpage{23}
+    \subitem {set\+\_\+permissions}, \hyperpage{24}
+    \subitem {update\+\_\+size}, \hyperpage{24}
+    \subitem {write\+\_\+out}, \hyperpage{24}
+  \item {attributes}
+    \subitem {finode}, \hyperpage{67}
+  \item {await\+\_\+response}
+    \subitem {C\+LI}, \hyperpage{26}
+
+  \indexspace
+
+  \item {B\+A\+C\+K\+L\+OG}
+    \subitem {daemon.\+h}, \hyperpage{125}
+  \item {Backlog}
+    \subitem {liaison.\+cpp}, \hyperpage{132}
+  \item {bad\+\_\+clean}
+    \subitem {cli\+\_\+helper.\+hpp}, \hyperpage{101}
+    \subitem {liason\+\_\+helper.\+hpp}, \hyperpage{134}
+  \item {begin}
+    \subitem {Tree\+Object}, \hyperpage{90}
+  \item {bind\+\_\+socket}
+    \subitem {daemon.\+h}, \hyperpage{117}
+  \item {Blk\+Num\+Type}
+    \subitem {types.\+h}, \hyperpage{114}
+  \item {blknum}
+    \subitem {index}, \hyperpage{68}
+  \item {build}
+    \subitem {C\+LI}, \hyperpage{26}
+  \item {byte\+\_\+to\+\_\+index}
+    \subitem {File\+Open}, \hyperpage{54}
+
+  \indexspace
+
+  \item {C\+D\+\_\+\+A\+BS}
+    \subitem {Command\+Codes.\+h}, \hyperpage{145}
+  \item {C\+D\+\_\+\+R\+LP}
+    \subitem {Command\+Codes.\+h}, \hyperpage{145}
+  \item {C\+L\+O\+S\+E\+\_\+\+FP}
+    \subitem {Command\+Codes.\+h}, \hyperpage{145}
+  \item {C\+L\+O\+S\+E\+\_\+F}
+    \subitem {Command\+Codes.\+h}, \hyperpage{145}
+  \item {C\+LI}, \hyperpage{24}
+    \subitem {$\sim$\+C\+LI}, \hyperpage{26}
+    \subitem {await\+\_\+response}, \hyperpage{26}
+    \subitem {build}, \hyperpage{26}
+    \subitem {C\+LI}, \hyperpage{25, 26}
+    \subitem {run}, \hyperpage{27, 28}
+    \subitem {send\+\_\+cmnd}, \hyperpage{28}
+    \subitem {start}, \hyperpage{28}
+  \item {C\+P\+Y\+\_\+\+F\+C\+WD}
+    \subitem {Command\+Codes.\+h}, \hyperpage{146}
+  \item {C\+P\+Y\+\_\+\+FP}
+    \subitem {Command\+Codes.\+h}, \hyperpage{146}
+  \item {C\+R\+E\+A\+T\+E\+F\+I\+L\+E\+D\+A\+TA}
+    \subitem {daemon.\+h}, \hyperpage{116}
+    \subitem {timing.\+cpp}, \hyperpage{129}
+  \item {C\+R\+E\+A\+T\+E\+T\+A\+G\+D\+A\+TA}
+    \subitem {daemon.\+h}, \hyperpage{117}
+    \subitem {timing.\+cpp}, \hyperpage{129}
+  \item {change\+\_\+dir}
+    \subitem {Command\+Validation.\+h}, \hyperpage{154}
+  \item {change\+\_\+dir\+\_\+rl}
+    \subitem {Command\+Validation.\+h}, \hyperpage{154}
+  \item {check\+\_\+command}
+    \subitem {Command\+Validation.\+h}, \hyperpage{154}
+  \item {check\+\_\+help}
+    \subitem {Command\+Validation.\+h}, \hyperpage{155}
+  \item {check\+\_\+usage}
+    \subitem {Command\+Validation.\+h}, \hyperpage{155}
+  \item {clean}
+    \subitem {cli\+\_\+helper.\+hpp}, \hyperpage{101}
+    \subitem {liason\+\_\+helper.\+hpp}, \hyperpage{135}
+  \item {Cli.\+cpp}
+    \subitem {main}, \hyperpage{107}
+  \item {Cli.\+h}
+    \subitem {Debug}, \hyperpage{104}
+    \subitem {Flag}, \hyperpage{105}
+    \subitem {Max\+Buffer\+Size}, \hyperpage{105}
+    \subitem {Permissions}, \hyperpage{106}
+    \subitem {Shared\+Memory\+Size}, \hyperpage{106}
+  \item {cli\+\_\+helper.\+hpp}
+    \subitem {bad\+\_\+clean}, \hyperpage{101}
+    \subitem {clean}, \hyperpage{101}
+    \subitem {connect\+\_\+to\+\_\+server}, \hyperpage{101}
+    \subitem {create\+\_\+shm\+\_\+seg}, \hyperpage{102}
+    \subitem {delete\+\_\+shm}, \hyperpage{102}
+    \subitem {E\+X\+C\+L\+U\+S\+I\+VE}, \hyperpage{99}
+    \subitem {get\+\_\+cmnd\+\_\+id}, \hyperpage{102}
+    \subitem {I\+N\+C\+L\+U\+S\+I\+VE}, \hyperpage{100}
+    \subitem {M\+E\+R\+G\+E\+\_\+1}, \hyperpage{100}
+    \subitem {M\+E\+R\+G\+E\+\_\+2}, \hyperpage{100}
+    \subitem {N\+E\+W\+\_\+\+A\+N\+D\+\_\+\+T\+A\+G\+\_\+\+E\+XC}, 
+		\hyperpage{100}
+    \subitem {N\+E\+W\+\_\+\+A\+N\+D\+\_\+\+T\+AG}, \hyperpage{100}
+    \subitem {O\+P\+EN}, \hyperpage{100}
+    \subitem {receive\+\_\+from\+\_\+server}, \hyperpage{103}
+    \subitem {send\+\_\+to\+\_\+server}, \hyperpage{103}
+    \subitem {set\+\_\+up\+\_\+socket}, \hyperpage{103}
+    \subitem {T\+A\+G\+\_\+1}, \hyperpage{100}
+    \subitem {T\+A\+G\+\_\+2}, \hyperpage{100}
+    \subitem {T\+A\+G\+\_\+3}, \hyperpage{101}
+  \item {close\+\_\+file}
+    \subitem {File\+System}, \hyperpage{57}
+  \item {close\+\_\+file\+\_\+cd}
+    \subitem {Command\+Validation.\+h}, \hyperpage{155}
+  \item {close\+\_\+files}
+    \subitem {Command\+Validation.\+h}, \hyperpage{155}
+  \item {command\+\_\+to\+\_\+string}
+    \subitem {daemon.\+h}, \hyperpage{118}
+  \item {Command\+Codes.\+h}
+    \subitem {A\+P\+P\+N\+D\+\_\+\+F\+C\+WD}, \hyperpage{144}
+    \subitem {A\+P\+P\+N\+D\+\_\+\+FP}, \hyperpage{144}
+    \subitem {A\+P\+P\+N\+D\+\_\+\+X\+F\+C\+W\+DF}, \hyperpage{145}
+    \subitem {A\+P\+P\+N\+D\+\_\+\+X\+F\+PF}, \hyperpage{145}
+    \subitem {A\+T\+T\+R\+\_\+\+FP}, \hyperpage{145}
+    \subitem {A\+T\+T\+R\+\_\+\+FS}, \hyperpage{145}
+    \subitem {C\+D\+\_\+\+A\+BS}, \hyperpage{145}
+    \subitem {C\+D\+\_\+\+R\+LP}, \hyperpage{145}
+    \subitem {C\+L\+O\+S\+E\+\_\+\+FP}, \hyperpage{145}
+    \subitem {C\+L\+O\+S\+E\+\_\+F}, \hyperpage{145}
+    \subitem {C\+P\+Y\+\_\+\+F\+C\+WD}, \hyperpage{146}
+    \subitem {C\+P\+Y\+\_\+\+FP}, \hyperpage{146}
+    \subitem {D\+E\+L\+\_\+\+FP}, \hyperpage{146}
+    \subitem {D\+E\+L\+\_\+\+FS}, \hyperpage{146}
+    \subitem {D\+E\+L\+\_\+\+TS}, \hyperpage{146}
+    \subitem {F\+I\+N\+D\+\_\+\+FS}, \hyperpage{146}
+    \subitem {F\+I\+N\+D\+\_\+\+TS}, \hyperpage{146}
+    \subitem {F\+T\+L\+\_\+\+E\+RR}, \hyperpage{146}
+    \subitem {H\+A\+N\+D\+S\+HK}, \hyperpage{147}
+    \subitem {M\+E\+R\+G\+\_\+1\+\_\+1}, \hyperpage{147}
+    \subitem {M\+E\+R\+G\+\_\+\+M\+\_\+1}, \hyperpage{147}
+    \subitem {N\+E\+W\+\_\+\+FP}, \hyperpage{147}
+    \subitem {N\+E\+W\+\_\+\+FS}, \hyperpage{147}
+    \subitem {N\+E\+W\+\_\+\+TS}, \hyperpage{147}
+    \subitem {O\+P\+E\+N\+\_\+\+FP}, \hyperpage{147}
+    \subitem {O\+P\+E\+N\+\_\+F}, \hyperpage{147}
+    \subitem {Q\+U\+IT}, \hyperpage{148}
+    \subitem {R\+E\+A\+D\+\_\+\+F\+C\+WD}, \hyperpage{148}
+    \subitem {R\+E\+A\+D\+\_\+\+FP}, \hyperpage{148}
+    \subitem {R\+E\+A\+D\+\_\+\+X\+C\+WD}, \hyperpage{148}
+    \subitem {R\+E\+A\+D\+\_\+\+XP}, \hyperpage{148}
+    \subitem {R\+N\+A\+M\+E\+\_\+\+FP}, \hyperpage{148}
+    \subitem {R\+N\+A\+M\+E\+\_\+\+FS}, \hyperpage{148}
+    \subitem {R\+N\+A\+M\+E\+\_\+\+TS}, \hyperpage{148}
+    \subitem {T\+A\+G\+\_\+\+FP}, \hyperpage{149}
+    \subitem {T\+A\+G\+\_\+\+FS}, \hyperpage{149}
+    \subitem {U\+A\+T\+TR}, \hyperpage{149}
+    \subitem {U\+C\+L\+O\+SE}, \hyperpage{149}
+    \subitem {U\+C\+O\+PY}, \hyperpage{149}
+    \subitem {U\+CD}, \hyperpage{149}
+    \subitem {U\+D\+EL}, \hyperpage{149}
+    \subitem {U\+F\+I\+ND}, \hyperpage{149}
+    \subitem {U\+H\+E\+LP}, \hyperpage{150}
+    \subitem {U\+M\+E\+RG}, \hyperpage{150}
+    \subitem {U\+N\+EW}, \hyperpage{150}
+    \subitem {U\+O\+P\+EN}, \hyperpage{150}
+    \subitem {U\+Q\+U\+IT}, \hyperpage{150}
+    \subitem {U\+R\+E\+AD}, \hyperpage{150}
+    \subitem {U\+R\+N\+A\+ME}, \hyperpage{150}
+    \subitem {U\+T\+A\+G\+\_\+\+FP}, \hyperpage{151}
+    \subitem {U\+T\+A\+G\+\_\+\+FS}, \hyperpage{151}
+    \subitem {U\+T\+AG}, \hyperpage{150}
+    \subitem {U\+U\+T\+AG}, \hyperpage{151}
+    \subitem {U\+W\+R\+I\+TE}, \hyperpage{151}
+    \subitem {W\+R\+I\+T\+E\+\_\+\+F\+C\+WD}, \hyperpage{151}
+    \subitem {W\+R\+I\+T\+E\+\_\+\+FP}, \hyperpage{151}
+    \subitem {W\+R\+I\+T\+E\+\_\+\+X\+F\+C\+W\+DF}, \hyperpage{151}
+    \subitem {W\+R\+I\+T\+E\+\_\+\+X\+F\+PF}, \hyperpage{151}
+  \item {Command\+Line\+Interface/\+C\+L\+Dependancies/cli\+\_\+helper.\+hpp}, 
+		\hyperpage{99}
+  \item {Command\+Line\+Interface/\+C\+L\+Headers/\+Cli.\+h}, 
+		\hyperpage{104}
+  \item {Command\+Line\+Interface/\+Cli.\+cpp}, \hyperpage{106}
+  \item {Command\+Validation.\+h}
+    \subitem {add\+\_\+tags}, \hyperpage{153}
+    \subitem {append\+\_\+cwd}, \hyperpage{153}
+    \subitem {append\+\_\+path}, \hyperpage{154}
+    \subitem {append\+\_\+x\+\_\+cwd}, \hyperpage{154}
+    \subitem {append\+\_\+x\+\_\+path}, \hyperpage{154}
+    \subitem {change\+\_\+dir}, \hyperpage{154}
+    \subitem {change\+\_\+dir\+\_\+rl}, \hyperpage{154}
+    \subitem {check\+\_\+command}, \hyperpage{154}
+    \subitem {check\+\_\+help}, \hyperpage{155}
+    \subitem {check\+\_\+usage}, \hyperpage{155}
+    \subitem {close\+\_\+file\+\_\+cd}, \hyperpage{155}
+    \subitem {close\+\_\+files}, \hyperpage{155}
+    \subitem {copy\+\_\+cwd}, \hyperpage{155}
+    \subitem {copy\+\_\+path}, \hyperpage{155}
+    \subitem {del\+\_\+file}, \hyperpage{155}
+    \subitem {del\+\_\+files}, \hyperpage{156}
+    \subitem {del\+\_\+tags}, \hyperpage{156}
+    \subitem {find\+\_\+files}, \hyperpage{156}
+    \subitem {find\+\_\+tags}, \hyperpage{156}
+    \subitem {get\+\_\+attr\+\_\+cd}, \hyperpage{156}
+    \subitem {get\+\_\+attrs}, \hyperpage{156}
+    \subitem {help\+\_\+1}, \hyperpage{156}
+    \subitem {help\+\_\+10}, \hyperpage{157}
+    \subitem {help\+\_\+11}, \hyperpage{157}
+    \subitem {help\+\_\+12}, \hyperpage{157}
+    \subitem {help\+\_\+13}, \hyperpage{157}
+    \subitem {help\+\_\+14}, \hyperpage{157}
+    \subitem {help\+\_\+15}, \hyperpage{157}
+    \subitem {help\+\_\+16}, \hyperpage{157}
+    \subitem {help\+\_\+2}, \hyperpage{158}
+    \subitem {help\+\_\+3}, \hyperpage{158}
+    \subitem {help\+\_\+4}, \hyperpage{158}
+    \subitem {help\+\_\+5}, \hyperpage{158}
+    \subitem {help\+\_\+6}, \hyperpage{158}
+    \subitem {help\+\_\+7}, \hyperpage{158}
+    \subitem {help\+\_\+8}, \hyperpage{158}
+    \subitem {help\+\_\+9}, \hyperpage{159}
+    \subitem {merge\+\_\+1\+\_\+1}, \hyperpage{159}
+    \subitem {merge\+\_\+m\+\_\+1}, \hyperpage{159}
+    \subitem {new\+\_\+file}, \hyperpage{159}
+    \subitem {new\+\_\+files}, \hyperpage{159}
+    \subitem {new\+\_\+tags}, \hyperpage{159}
+    \subitem {open\+\_\+file\+\_\+cd}, \hyperpage{159}
+    \subitem {open\+\_\+files}, \hyperpage{160}
+    \subitem {read\+\_\+cwd}, \hyperpage{160}
+    \subitem {read\+\_\+path}, \hyperpage{160}
+    \subitem {read\+\_\+x\+\_\+cwd}, \hyperpage{160}
+    \subitem {read\+\_\+x\+\_\+path}, \hyperpage{160}
+    \subitem {rename\+\_\+file\+\_\+cd}, \hyperpage{160}
+    \subitem {rename\+\_\+files}, \hyperpage{160}
+    \subitem {rename\+\_\+tags}, \hyperpage{161}
+    \subitem {tag\+\_\+files}, \hyperpage{161}
+    \subitem {untag\+\_\+file}, \hyperpage{161}
+    \subitem {untag\+\_\+files}, \hyperpage{161}
+    \subitem {usage\+\_\+attr}, \hyperpage{161}
+    \subitem {usage\+\_\+cd}, \hyperpage{161}
+    \subitem {usage\+\_\+close}, \hyperpage{162}
+    \subitem {usage\+\_\+copy}, \hyperpage{162}
+    \subitem {usage\+\_\+delete}, \hyperpage{162}
+    \subitem {usage\+\_\+find}, \hyperpage{162}
+    \subitem {usage\+\_\+help}, \hyperpage{162}
+    \subitem {usage\+\_\+merge}, \hyperpage{162}
+    \subitem {usage\+\_\+new}, \hyperpage{162}
+    \subitem {usage\+\_\+open}, \hyperpage{163}
+    \subitem {usage\+\_\+quit}, \hyperpage{163}
+    \subitem {usage\+\_\+read}, \hyperpage{163}
+    \subitem {usage\+\_\+rename}, \hyperpage{163}
+    \subitem {usage\+\_\+tag}, \hyperpage{163}
+    \subitem {usage\+\_\+untag}, \hyperpage{163}
+    \subitem {usage\+\_\+write}, \hyperpage{163}
+    \subitem {write\+\_\+cwd}, \hyperpage{164}
+    \subitem {write\+\_\+path}, \hyperpage{164}
+    \subitem {write\+\_\+x\+\_\+cwd}, \hyperpage{164}
+    \subitem {write\+\_\+x\+\_\+path}, \hyperpage{164}
+  \item {connect\+\_\+to\+\_\+daemon}
+    \subitem {liason\+\_\+helper.\+hpp}, \hyperpage{135}
+  \item {connect\+\_\+to\+\_\+server}
+    \subitem {cli\+\_\+helper.\+hpp}, \hyperpage{101}
+  \item {copy\+\_\+cwd}
+    \subitem {Command\+Validation.\+h}, \hyperpage{155}
+  \item {copy\+\_\+path}
+    \subitem {Command\+Validation.\+h}, \hyperpage{155}
+  \item {create\+\_\+daemon\+\_\+sock}
+    \subitem {liason\+\_\+helper.\+hpp}, \hyperpage{136}
+  \item {create\+\_\+file}
+    \subitem {File\+System}, \hyperpage{57}
+  \item {create\+\_\+shm\+\_\+seg}
+    \subitem {cli\+\_\+helper.\+hpp}, \hyperpage{102}
+  \item {create\+\_\+sock}
+    \subitem {daemon.\+h}, \hyperpage{118}
+  \item {create\+\_\+tag}
+    \subitem {File\+System}, \hyperpage{58}
+  \item {creation\+Time}
+    \subitem {file\+\_\+attributes}, \hyperpage{42}
+  \item {current\+\_\+command\+\_\+id}
+    \subitem {daemon.\+h}, \hyperpage{125}
+
+  \indexspace
+
+  \item {d}
+    \subitem {daemon.\+h}, \hyperpage{125}
+  \item {D\+E\+B\+UG}
+    \subitem {driver.\+cpp}, \hyperpage{128}
+    \subitem {Partition\+Manager.\+cpp}, \hyperpage{111}
+    \subitem {types.\+h}, \hyperpage{115}
+  \item {D\+E\+F\+A\+U\+L\+T\+O\+W\+N\+ER}
+    \subitem {Trees.\+h}, \hyperpage{113}
+  \item {D\+E\+F\+A\+U\+L\+T\+P\+E\+R\+M\+I\+S\+S\+I\+O\+NS}
+    \subitem {Trees.\+h}, \hyperpage{113}
+  \item {D\+E\+L\+\_\+\+FP}
+    \subitem {Command\+Codes.\+h}, \hyperpage{146}
+  \item {D\+E\+L\+\_\+\+FS}
+    \subitem {Command\+Codes.\+h}, \hyperpage{146}
+  \item {D\+E\+L\+\_\+\+TS}
+    \subitem {Command\+Codes.\+h}, \hyperpage{146}
+  \item {daemon.\+cpp}
+    \subitem {main}, \hyperpage{108}
+    \subitem {S\+T\+A\+R\+T\+T\+U\+P\+D\+A\+TA}, \hyperpage{108}
+  \item {daemon.\+h}
+    \subitem {B\+A\+C\+K\+L\+OG}, \hyperpage{125}
+    \subitem {bind\+\_\+socket}, \hyperpage{117}
+    \subitem {C\+R\+E\+A\+T\+E\+F\+I\+L\+E\+D\+A\+TA}, \hyperpage{116}
+    \subitem {C\+R\+E\+A\+T\+E\+T\+A\+G\+D\+A\+TA}, \hyperpage{117}
+    \subitem {command\+\_\+to\+\_\+string}, \hyperpage{118}
+    \subitem {create\+\_\+sock}, \hyperpage{118}
+    \subitem {current\+\_\+command\+\_\+id}, \hyperpage{125}
+    \subitem {d}, \hyperpage{125}
+    \subitem {data}, \hyperpage{125}
+    \subitem {Debug}, \hyperpage{125}
+    \subitem {dm}, \hyperpage{126}
+    \subitem {execute}, \hyperpage{118}
+    \subitem {F\+A\+L\+SE}, \hyperpage{126}
+    \subitem {F\+I\+L\+E\+S\+E\+A\+R\+C\+H\+D\+A\+TA}, \hyperpage{117}
+    \subitem {F\+L\+AG}, \hyperpage{126}
+    \subitem {fd\+\_\+fs\+\_\+map}, \hyperpage{126}
+    \subitem {get\+\_\+cmnd\+\_\+id}, \hyperpage{119}
+    \subitem {get\+\_\+file\+\_\+info}, \hyperpage{119, 120}
+    \subitem {get\+\_\+partition}, \hyperpage{120}
+    \subitem {get\+\_\+set}, \hyperpage{120, 121}
+    \subitem {get\+\_\+short\+\_\+file\+\_\+info}, \hyperpage{121}
+    \subitem {is\+\_\+number}, \hyperpage{121}
+    \subitem {listen\+\_\+on\+\_\+socket}, \hyperpage{122}
+    \subitem {M\+A\+X\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+S\+I\+ZE}, 
+		\hyperpage{126}
+    \subitem {master\+\_\+set}, \hyperpage{126}
+    \subitem {max\+\_\+fid}, \hyperpage{126}
+    \subitem {my\+\_\+fid}, \hyperpage{126}
+    \subitem {P\+O\+RT}, \hyperpage{127}
+    \subitem {pad\+\_\+string}, \hyperpage{122}
+    \subitem {part\+\_\+fs\+\_\+map}, \hyperpage{127}
+    \subitem {path\+\_\+filedesc\+\_\+map}, \hyperpage{127}
+    \subitem {R\+E\+N\+A\+M\+E\+T\+A\+G\+D\+A\+TA}, \hyperpage{117}
+    \subitem {save\+\_\+to\+\_\+disk}, \hyperpage{123}
+    \subitem {serialize\+\_\+fileinfo}, \hyperpage{123}
+    \subitem {set\+\_\+nonblocking}, \hyperpage{124}
+    \subitem {set\+\_\+socket\+\_\+opt}, \hyperpage{124}
+    \subitem {sig\+\_\+caught}, \hyperpage{124}
+    \subitem {T\+A\+G\+F\+I\+L\+E\+D\+A\+TA}, \hyperpage{117}
+    \subitem {T\+A\+G\+S\+E\+A\+R\+C\+H\+D\+A\+TA}, \hyperpage{117}
+    \subitem {T\+I\+M\+E\+O\+UT}, \hyperpage{127}
+    \subitem {T\+R\+UE}, \hyperpage{127}
+    \subitem {verbose}, \hyperpage{127}
+    \subitem {W\+I\+L\+L\+\_\+\+T\+I\+ME}, \hyperpage{127}
+    \subitem {W\+R\+I\+T\+E\+\_\+\+C\+H\+A\+N\+G\+E\+S\+\_\+\+W\+A\+IT}, 
+		\hyperpage{128}
+  \item {Daemon\+Port}
+    \subitem {liaison.\+cpp}, \hyperpage{132}
+  \item {data}
+    \subitem {daemon.\+h}, \hyperpage{125}
+  \item {Debug}
+    \subitem {Cli.\+h}, \hyperpage{104}
+    \subitem {daemon.\+h}, \hyperpage{125}
+    \subitem {liaison.\+cpp}, \hyperpage{132}
+  \item {debug}
+    \subitem {Debug\+Messages}, \hyperpage{30}
+  \item {Debug\+Messages}, \hyperpage{29}
+    \subitem {$\sim$\+Debug\+Messages}, \hyperpage{29}
+    \subitem {debug}, \hyperpage{30}
+    \subitem {Debug\+Messages}, \hyperpage{29}
+    \subitem {display}, \hyperpage{30}
+    \subitem {lock}, \hyperpage{30}
+    \subitem {log}, \hyperpage{31}
+    \subitem {O\+FF}, \hyperpage{31}
+    \subitem {ON}, \hyperpage{31}
+    \subitem {unlock}, \hyperpage{31}
+  \item {Debug\+Messages.\+hpp}
+    \subitem {lk}, \hyperpage{165}
+    \subitem {m}, \hyperpage{165}
+  \item {decrement\+\_\+seek}
+    \subitem {File\+Open}, \hyperpage{54}
+  \item {del}
+    \subitem {Attributes}, \hyperpage{21}
+    \subitem {File\+Info}, \hyperpage{47}
+    \subitem {Root\+Tree}, \hyperpage{83}
+    \subitem {Tag\+Tree}, \hyperpage{86}
+    \subitem {Tree\+Object}, \hyperpage{90}
+  \item {del\+\_\+file}
+    \subitem {Command\+Validation.\+h}, \hyperpage{155}
+  \item {del\+\_\+files}
+    \subitem {Command\+Validation.\+h}, \hyperpage{156}
+  \item {del\+\_\+tags}
+    \subitem {Command\+Validation.\+h}, \hyperpage{156}
+  \item {delete\+\_\+cont\+\_\+blocks}
+    \subitem {File\+Info}, \hyperpage{47}
+    \subitem {Tree\+Object}, \hyperpage{90}
+  \item {delete\+\_\+file}
+    \subitem {File\+System}, \hyperpage{58}
+  \item {delete\+\_\+shm}
+    \subitem {cli\+\_\+helper.\+hpp}, \hyperpage{102}
+  \item {delete\+\_\+tag}
+    \subitem {File\+System}, \hyperpage{59}
+  \item {Deletion}, \hyperpage{32}
+    \subitem {$\sim$\+Deletion}, \hyperpage{32}
+    \subitem {Deletion}, \hyperpage{32}
+    \subitem {write\+\_\+out}, \hyperpage{32}
+  \item {direct\+Blocks}
+    \subitem {finode}, \hyperpage{67}
+  \item {Disk}, \hyperpage{33}
+    \subitem {$\sim$\+Disk}, \hyperpage{34}
+    \subitem {Disk}, \hyperpage{33}
+    \subitem {get\+Block\+Count}, \hyperpage{34}
+    \subitem {get\+Block\+Size}, \hyperpage{34}
+    \subitem {read\+Disk\+Block}, \hyperpage{34}
+    \subitem {write\+Disk\+Block}, \hyperpage{35}
+  \item {disk\+\_\+error}, \hyperpage{35}
+    \subitem {$\sim$disk\+\_\+error}, \hyperpage{36}
+    \subitem {disk\+\_\+error}, \hyperpage{36}
+  \item {disk\+Info.\+d}, \hyperpage{107}
+  \item {Disk\+Manager}, \hyperpage{37}
+    \subitem {$\sim$\+Disk\+Manager}, \hyperpage{37}
+    \subitem {Disk\+Manager}, \hyperpage{37}
+    \subitem {find\+Part}, \hyperpage{37}
+    \subitem {get\+Block\+Size}, \hyperpage{38}
+    \subitem {get\+Partition\+Size}, \hyperpage{38}
+    \subitem {read\+Disk\+Block}, \hyperpage{38}
+    \subitem {write\+Disk\+Block}, \hyperpage{39}
+  \item {Disk\+Manager.\+cpp}
+    \subitem {operator==}, \hyperpage{109}
+  \item {Disk\+Manager.\+h}
+    \subitem {operator==}, \hyperpage{110}
+  \item {Disk\+Partition}, \hyperpage{39}
+    \subitem {file\+Name\+Size}, \hyperpage{39}
+    \subitem {partition\+Blk\+Start}, \hyperpage{40}
+    \subitem {partition\+Name}, \hyperpage{40}
+    \subitem {partition\+Size}, \hyperpage{40}
+  \item {display}
+    \subitem {Debug\+Messages}, \hyperpage{30}
+  \item {dm}
+    \subitem {daemon.\+h}, \hyperpage{126}
+  \item {driver.\+cpp}
+    \subitem {D\+E\+B\+UG}, \hyperpage{128}
+    \subitem {main}, \hyperpage{128}
+
+  \indexspace
+
+  \item {E\+X\+C\+L\+U\+S\+I\+VE}
+    \subitem {cli\+\_\+helper.\+hpp}, \hyperpage{99}
+  \item {ecode}
+    \subitem {arboreal\+\_\+exception}, \hyperpage{15}
+  \item {Encryption\+Flag}
+    \subitem {File\+System.\+cpp}, \hyperpage{110}
+  \item {end}
+    \subitem {Tree\+Object}, \hyperpage{91}
+  \item {erase}
+    \subitem {File\+Info}, \hyperpage{48}
+    \subitem {Tree\+Object}, \hyperpage{91}
+  \item {execute}
+    \subitem {daemon.\+h}, \hyperpage{118}
+  \item {exthd.\+d}, \hyperpage{107}
+
+  \indexspace
+
+  \item {F\+A\+L\+SE}
+    \subitem {daemon.\+h}, \hyperpage{126}
+  \item {F\+I\+L\+E\+S\+E\+A\+R\+C\+H\+D\+A\+TA}
+    \subitem {daemon.\+h}, \hyperpage{117}
+    \subitem {timing.\+cpp}, \hyperpage{129}
+  \item {F\+I\+N\+D\+\_\+\+FS}
+    \subitem {Command\+Codes.\+h}, \hyperpage{146}
+  \item {F\+I\+N\+D\+\_\+\+TS}
+    \subitem {Command\+Codes.\+h}, \hyperpage{146}
+  \item {F\+L\+AG}
+    \subitem {daemon.\+h}, \hyperpage{126}
+  \item {F\+S\+Format/format.\+cpp}, \hyperpage{130}
+  \item {F\+T\+L\+\_\+\+E\+RR}
+    \subitem {Command\+Codes.\+h}, \hyperpage{146}
+  \item {fd\+\_\+fs\+\_\+map}
+    \subitem {daemon.\+h}, \hyperpage{126}
+  \item {File}, \hyperpage{40}
+    \subitem {File}, \hyperpage{40}
+    \subitem {get\+\_\+attributes}, \hyperpage{41}
+    \subitem {get\+\_\+name}, \hyperpage{41}
+    \subitem {get\+\_\+tags}, \hyperpage{41}
+    \subitem {read\+\_\+buff}, \hyperpage{41}
+  \item {file\+\_\+attributes}, \hyperpage{42}
+    \subitem {creation\+Time}, \hyperpage{42}
+    \subitem {last\+Access}, \hyperpage{42}
+    \subitem {last\+Edit}, \hyperpage{42}
+    \subitem {owner}, \hyperpage{43}
+    \subitem {permissions}, \hyperpage{43}
+    \subitem {size}, \hyperpage{43}
+  \item {file\+\_\+error}, \hyperpage{43}
+    \subitem {$\sim$file\+\_\+error}, \hyperpage{44}
+    \subitem {file\+\_\+error}, \hyperpage{44}
+  \item {file\+\_\+search}
+    \subitem {File\+System}, \hyperpage{59}
+  \item {File\+Attributes}
+    \subitem {types.\+h}, \hyperpage{114}
+  \item {File\+Info}, \hyperpage{45}
+    \subitem {$\sim$\+File\+Info}, \hyperpage{46}
+    \subitem {add\+\_\+direct\+\_\+block}, \hyperpage{46}
+    \subitem {add\+\_\+indirect\+\_\+block}, \hyperpage{47}
+    \subitem {del}, \hyperpage{47}
+    \subitem {delete\+\_\+cont\+\_\+blocks}, \hyperpage{47}
+    \subitem {erase}, \hyperpage{48}
+    \subitem {File\+Info}, \hyperpage{46}
+    \subitem {get\+\_\+attributes}, \hyperpage{48}
+    \subitem {get\+\_\+file\+\_\+attributes}, \hyperpage{48}
+    \subitem {get\+\_\+file\+\_\+size}, \hyperpage{48}
+    \subitem {get\+\_\+finode}, \hyperpage{48}
+    \subitem {get\+\_\+tags}, \hyperpage{49}
+    \subitem {get\+\_\+vec\+\_\+tags}, \hyperpage{49}
+    \subitem {insert}, \hyperpage{49}
+    \subitem {insert\+\_\+addition}, \hyperpage{50}
+    \subitem {insert\+\_\+deletion}, \hyperpage{50}
+    \subitem {mangle}, \hyperpage{50, 51}
+    \subitem {read\+\_\+in}, \hyperpage{51}
+    \subitem {serialize}, \hyperpage{52}
+    \subitem {set\+\_\+access}, \hyperpage{52}
+    \subitem {set\+\_\+edit}, \hyperpage{52}
+    \subitem {set\+\_\+permissions}, \hyperpage{52}
+    \subitem {update\+\_\+file\+\_\+size}, \hyperpage{53}
+    \subitem {write\+\_\+out}, \hyperpage{53}
+  \item {file\+Name\+Size}
+    \subitem {Disk\+Partition}, \hyperpage{39}
+  \item {File\+Open}, \hyperpage{53}
+    \subitem {byte\+\_\+to\+\_\+index}, \hyperpage{54}
+    \subitem {decrement\+\_\+seek}, \hyperpage{54}
+    \subitem {File\+Open}, \hyperpage{54}
+    \subitem {get\+\_\+\+E\+OF}, \hyperpage{54}
+    \subitem {get\+\_\+file}, \hyperpage{54}
+    \subitem {get\+\_\+mode}, \hyperpage{54}
+    \subitem {get\+\_\+seek}, \hyperpage{54}
+    \subitem {go\+\_\+past\+\_\+last\+\_\+byte}, \hyperpage{55}
+    \subitem {increment\+\_\+index}, \hyperpage{55}
+    \subitem {increment\+\_\+seek}, \hyperpage{55}
+    \subitem {refresh}, \hyperpage{55}
+    \subitem {reset\+\_\+seek}, \hyperpage{55}
+    \subitem {set\+\_\+\+E\+OF}, \hyperpage{55}
+  \item {File\+System}, \hyperpage{56}
+    \subitem {$\sim$\+File\+System}, \hyperpage{57}
+    \subitem {append\+\_\+file}, \hyperpage{57}
+    \subitem {close\+\_\+file}, \hyperpage{57}
+    \subitem {create\+\_\+file}, \hyperpage{57}
+    \subitem {create\+\_\+tag}, \hyperpage{58}
+    \subitem {delete\+\_\+file}, \hyperpage{58}
+    \subitem {delete\+\_\+tag}, \hyperpage{59}
+    \subitem {file\+\_\+search}, \hyperpage{59}
+    \subitem {File\+System}, \hyperpage{56}
+    \subitem {get\+\_\+attributes}, \hyperpage{59}
+    \subitem {get\+\_\+file\+\_\+name\+\_\+size}, \hyperpage{60}
+    \subitem {merge\+\_\+tags}, \hyperpage{60}
+    \subitem {num\+\_\+of\+\_\+files}, \hyperpage{60}
+    \subitem {num\+\_\+of\+\_\+tags}, \hyperpage{60}
+    \subitem {open\+\_\+file}, \hyperpage{61}
+    \subitem {path\+\_\+to\+\_\+file}, \hyperpage{61}
+    \subitem {print\+\_\+files}, \hyperpage{61}
+    \subitem {print\+\_\+root}, \hyperpage{61}
+    \subitem {print\+\_\+tags}, \hyperpage{62}
+    \subitem {read\+\_\+file}, \hyperpage{62}
+    \subitem {rename\+\_\+file}, \hyperpage{62}
+    \subitem {rename\+\_\+tag}, \hyperpage{62}
+    \subitem {seek\+\_\+file\+\_\+absolute}, \hyperpage{63}
+    \subitem {seek\+\_\+file\+\_\+relative}, \hyperpage{63}
+    \subitem {set\+\_\+permissions}, \hyperpage{63}
+    \subitem {tag\+\_\+file}, \hyperpage{64}
+    \subitem {tag\+\_\+search}, \hyperpage{65}
+    \subitem {untag\+\_\+file}, \hyperpage{65}
+    \subitem {write\+\_\+changes}, \hyperpage{66}
+    \subitem {write\+\_\+file}, \hyperpage{66}
+  \item {File\+System.\+cpp}
+    \subitem {Encryption\+Flag}, \hyperpage{110}
+  \item {Filesystem/\+Daemon\+Dependancies/\+Disk/\+Disk.\+cpp}, 
+		\hyperpage{108}
+  \item {Filesystem/\+Daemon\+Dependancies/\+Disk/\+Disk.\+h}, 
+		\hyperpage{109}
+  \item {Filesystem/\+Daemon\+Dependancies/\+Disk\+Manager/\+Disk\+Manager.\+cpp}, 
+		\hyperpage{109}
+  \item {Filesystem/\+Daemon\+Dependancies/\+Disk\+Manager/\+Disk\+Manager.\+h}, 
+		\hyperpage{109}
+  \item {Filesystem/\+Daemon\+Dependancies/\+File/\+File.\+cpp}, 
+		\hyperpage{110}
+  \item {Filesystem/\+Daemon\+Dependancies/\+File/\+File.\+h}, 
+		\hyperpage{110}
+  \item {Filesystem/\+Daemon\+Dependancies/\+File\+System/\+File\+System.\+cpp}, 
+		\hyperpage{110}
+  \item {Filesystem/\+Daemon\+Dependancies/\+File\+System/\+File\+System.\+h}, 
+		\hyperpage{111}
+  \item {Filesystem/\+Daemon\+Dependancies/\+Partition\+Manager/\+Partition\+Manager.\+cpp}, 
+		\hyperpage{111}
+  \item {Filesystem/\+Daemon\+Dependancies/\+Partition\+Manager/\+Partition\+Manager.\+h}, 
+		\hyperpage{111}
+  \item {Filesystem/\+Daemon\+Dependancies/\+Trees/\+Trees.\+cpp}, 
+		\hyperpage{112}
+  \item {Filesystem/\+Daemon\+Dependancies/\+Trees/\+Trees.\+h}, 
+		\hyperpage{112}
+  \item {Filesystem/\+Daemon\+Dependancies/\+Types/types.\+h}, 
+		\hyperpage{113}
+  \item {Filesystem/\+Daemon\+Headers/daemon.\+h}, \hyperpage{115}
+  \item {Filesystem/daemon.\+cpp}, \hyperpage{107}
+  \item {Filesystem/driver.\+cpp}, \hyperpage{128}
+  \item {Filesystem/timing.\+cpp}, \hyperpage{129}
+  \item {find}
+    \subitem {Tree\+Object}, \hyperpage{91}
+  \item {find\+\_\+files}
+    \subitem {Command\+Validation.\+h}, \hyperpage{156}
+  \item {find\+\_\+tags}
+    \subitem {Command\+Validation.\+h}, \hyperpage{156}
+  \item {find\+Part}
+    \subitem {Disk\+Manager}, \hyperpage{37}
+  \item {Finode}
+    \subitem {types.\+h}, \hyperpage{114}
+  \item {finode}, \hyperpage{67}
+    \subitem {attributes}, \hyperpage{67}
+    \subitem {direct\+Blocks}, \hyperpage{67}
+    \subitem {level1\+Indirect}, \hyperpage{67}
+    \subitem {level2\+Indirect}, \hyperpage{67}
+    \subitem {level3\+Indirect}, \hyperpage{67}
+  \item {Flag}
+    \subitem {Cli.\+h}, \hyperpage{105}
+    \subitem {liaison.\+cpp}, \hyperpage{132}
+  \item {format.\+cpp}
+    \subitem {main}, \hyperpage{130}
+
+  \indexspace
+
+  \item {get\+\_\+\+E\+OF}
+    \subitem {File\+Open}, \hyperpage{54}
+  \item {get\+\_\+access}
+    \subitem {Attributes}, \hyperpage{21}
+  \item {get\+\_\+attr\+\_\+cd}
+    \subitem {Command\+Validation.\+h}, \hyperpage{156}
+  \item {get\+\_\+attributes}
+    \subitem {File}, \hyperpage{41}
+    \subitem {File\+Info}, \hyperpage{48}
+    \subitem {File\+System}, \hyperpage{59}
+  \item {get\+\_\+attrs}
+    \subitem {Command\+Validation.\+h}, \hyperpage{156}
+  \item {get\+\_\+block\+\_\+number}
+    \subitem {Tree\+Object}, \hyperpage{92}
+  \item {get\+\_\+cmnd\+\_\+id}
+    \subitem {cli\+\_\+helper.\+hpp}, \hyperpage{102}
+    \subitem {daemon.\+h}, \hyperpage{119}
+    \subitem {liason\+\_\+helper.\+hpp}, \hyperpage{136}
+  \item {get\+\_\+command\+\_\+string}
+    \subitem {liason\+\_\+helper.\+hpp}, \hyperpage{136}
+  \item {get\+\_\+creation\+\_\+time}
+    \subitem {Attributes}, \hyperpage{22}
+  \item {get\+\_\+cwd\+\_\+tags}
+    \subitem {Parser}, \hyperpage{75}
+  \item {get\+\_\+edit}
+    \subitem {Attributes}, \hyperpage{22}
+  \item {get\+\_\+file}
+    \subitem {File\+Open}, \hyperpage{54}
+  \item {get\+\_\+file\+\_\+attributes}
+    \subitem {Attributes}, \hyperpage{22}
+    \subitem {File\+Info}, \hyperpage{48}
+  \item {get\+\_\+file\+\_\+info}
+    \subitem {daemon.\+h}, \hyperpage{119, 120}
+  \item {get\+\_\+file\+\_\+name\+\_\+size}
+    \subitem {File\+System}, \hyperpage{60}
+    \subitem {Partition\+Manager}, \hyperpage{79}
+  \item {get\+\_\+file\+\_\+size}
+    \subitem {File\+Info}, \hyperpage{48}
+  \item {get\+\_\+finode}
+    \subitem {File\+Info}, \hyperpage{48}
+  \item {get\+\_\+free\+\_\+spots}
+    \subitem {Tree\+Object}, \hyperpage{92}
+  \item {get\+\_\+index}
+    \subitem {Tree\+Object}, \hyperpage{92}
+  \item {get\+\_\+last\+\_\+entry}
+    \subitem {Tree\+Object}, \hyperpage{92}
+  \item {get\+\_\+mode}
+    \subitem {File\+Open}, \hyperpage{54}
+  \item {get\+\_\+name}
+    \subitem {File}, \hyperpage{41}
+    \subitem {Tree\+Object}, \hyperpage{93}
+  \item {get\+\_\+owner}
+    \subitem {Attributes}, \hyperpage{22}
+  \item {get\+\_\+partition}
+    \subitem {daemon.\+h}, \hyperpage{120}
+  \item {get\+\_\+peername}
+    \subitem {liason\+\_\+helper.\+hpp}, \hyperpage{137}
+  \item {get\+\_\+permissions}
+    \subitem {Attributes}, \hyperpage{22}
+  \item {get\+\_\+seek}
+    \subitem {File\+Open}, \hyperpage{54}
+  \item {get\+\_\+set}
+    \subitem {daemon.\+h}, \hyperpage{120, 121}
+  \item {get\+\_\+shm\+\_\+seg}
+    \subitem {liason\+\_\+helper.\+hpp}, \hyperpage{137}
+  \item {get\+\_\+short\+\_\+file\+\_\+info}
+    \subitem {daemon.\+h}, \hyperpage{121}
+  \item {get\+\_\+size}
+    \subitem {Attributes}, \hyperpage{23}
+  \item {get\+\_\+start\+\_\+block}
+    \subitem {Tree\+Object}, \hyperpage{93}
+  \item {get\+\_\+tags}
+    \subitem {File}, \hyperpage{41}
+    \subitem {File\+Info}, \hyperpage{49}
+  \item {get\+\_\+vec\+\_\+tags}
+    \subitem {File\+Info}, \hyperpage{49}
+  \item {get\+Block\+Count}
+    \subitem {Disk}, \hyperpage{34}
+  \item {get\+Block\+Size}
+    \subitem {Disk}, \hyperpage{34}
+    \subitem {Disk\+Manager}, \hyperpage{38}
+    \subitem {Partition\+Manager}, \hyperpage{79}
+  \item {get\+Free\+Disk\+Block}
+    \subitem {Partition\+Manager}, \hyperpage{79}
+  \item {get\+Partition\+Name}
+    \subitem {Partition\+Manager}, \hyperpage{80}
+  \item {get\+Partition\+Size}
+    \subitem {Disk\+Manager}, \hyperpage{38}
+  \item {go\+\_\+past\+\_\+last\+\_\+byte}
+    \subitem {File\+Open}, \hyperpage{55}
+
+  \indexspace
+
+  \item {H\+A\+N\+D\+S\+HK}
+    \subitem {Command\+Codes.\+h}, \hyperpage{147}
+  \item {help}
+    \subitem {Print.\+h}, \hyperpage{166}
+  \item {help\+\_\+1}
+    \subitem {Command\+Validation.\+h}, \hyperpage{156}
+  \item {help\+\_\+10}
+    \subitem {Command\+Validation.\+h}, \hyperpage{157}
+  \item {help\+\_\+11}
+    \subitem {Command\+Validation.\+h}, \hyperpage{157}
+  \item {help\+\_\+12}
+    \subitem {Command\+Validation.\+h}, \hyperpage{157}
+  \item {help\+\_\+13}
+    \subitem {Command\+Validation.\+h}, \hyperpage{157}
+  \item {help\+\_\+14}
+    \subitem {Command\+Validation.\+h}, \hyperpage{157}
+  \item {help\+\_\+15}
+    \subitem {Command\+Validation.\+h}, \hyperpage{157}
+  \item {help\+\_\+16}
+    \subitem {Command\+Validation.\+h}, \hyperpage{157}
+  \item {help\+\_\+2}
+    \subitem {Command\+Validation.\+h}, \hyperpage{158}
+  \item {help\+\_\+3}
+    \subitem {Command\+Validation.\+h}, \hyperpage{158}
+  \item {help\+\_\+4}
+    \subitem {Command\+Validation.\+h}, \hyperpage{158}
+  \item {help\+\_\+5}
+    \subitem {Command\+Validation.\+h}, \hyperpage{158}
+  \item {help\+\_\+6}
+    \subitem {Command\+Validation.\+h}, \hyperpage{158}
+  \item {help\+\_\+7}
+    \subitem {Command\+Validation.\+h}, \hyperpage{158}
+  \item {help\+\_\+8}
+    \subitem {Command\+Validation.\+h}, \hyperpage{158}
+  \item {help\+\_\+9}
+    \subitem {Command\+Validation.\+h}, \hyperpage{159}
+
+  \indexspace
+
+  \item {I\+N\+C\+L\+U\+S\+I\+VE}
+    \subitem {cli\+\_\+helper.\+hpp}, \hyperpage{100}
+  \item {increment\+\_\+allocate}
+    \subitem {Tree\+Object}, \hyperpage{93}
+  \item {increment\+\_\+follow}
+    \subitem {Tree\+Object}, \hyperpage{93}
+  \item {increment\+\_\+index}
+    \subitem {File\+Open}, \hyperpage{55}
+  \item {increment\+\_\+seek}
+    \subitem {File\+Open}, \hyperpage{55}
+  \item {Index}
+    \subitem {types.\+h}, \hyperpage{114}
+  \item {index}, \hyperpage{68}
+    \subitem {blknum}, \hyperpage{68}
+    \subitem {offset}, \hyperpage{68}
+  \item {insert}
+    \subitem {File\+Info}, \hyperpage{49}
+    \subitem {Tree\+Object}, \hyperpage{94}
+  \item {insert\+\_\+addition}
+    \subitem {File\+Info}, \hyperpage{50}
+    \subitem {Tree\+Object}, \hyperpage{94}
+  \item {insert\+\_\+deletion}
+    \subitem {File\+Info}, \hyperpage{50}
+    \subitem {Tree\+Object}, \hyperpage{95}
+  \item {invalid\+\_\+arg}, \hyperpage{68}
+    \subitem {$\sim$invalid\+\_\+arg}, \hyperpage{69}
+    \subitem {invalid\+\_\+arg}, \hyperpage{69}
+  \item {is\+\_\+number}
+    \subitem {daemon.\+h}, \hyperpage{121}
+
+  \indexspace
+
+  \item {last\+Access}
+    \subitem {file\+\_\+attributes}, \hyperpage{42}
+  \item {last\+Edit}
+    \subitem {file\+\_\+attributes}, \hyperpage{42}
+  \item {last\+Entry}
+    \subitem {root\+Super\+Block}, \hyperpage{81}
+    \subitem {tag\+Tree\+Super\+Block}, \hyperpage{87}
+  \item {level1\+Indirect}
+    \subitem {finode}, \hyperpage{67}
+  \item {level2\+Indirect}
+    \subitem {finode}, \hyperpage{67}
+  \item {level3\+Indirect}
+    \subitem {finode}, \hyperpage{67}
+  \item {liaison.\+cpp}
+    \subitem {Backlog}, \hyperpage{132}
+    \subitem {Daemon\+Port}, \hyperpage{132}
+    \subitem {Debug}, \hyperpage{132}
+    \subitem {Flag}, \hyperpage{132}
+    \subitem {main}, \hyperpage{131}
+    \subitem {Max\+Buffer\+Size}, \hyperpage{132}
+    \subitem {Parser}, \hyperpage{132}
+    \subitem {Permissions}, \hyperpage{132}
+    \subitem {Shared\+Memory\+Size}, \hyperpage{133}
+    \subitem {Timeout}, \hyperpage{133}
+    \subitem {V\+E\+R\+B\+O\+SE}, \hyperpage{133}
+  \item {Liaison\+Process/\+Liaison\+Dependancies/liason\+\_\+helper.\+hpp}, 
+		\hyperpage{133}
+  \item {Liaison\+Process/liaison.\+cpp}, \hyperpage{131}
+  \item {liason\+\_\+helper.\+hpp}
+    \subitem {accept\+\_\+client}, \hyperpage{134}
+    \subitem {bad\+\_\+clean}, \hyperpage{134}
+    \subitem {clean}, \hyperpage{135}
+    \subitem {connect\+\_\+to\+\_\+daemon}, \hyperpage{135}
+    \subitem {create\+\_\+daemon\+\_\+sock}, \hyperpage{136}
+    \subitem {get\+\_\+cmnd\+\_\+id}, \hyperpage{136}
+    \subitem {get\+\_\+command\+\_\+string}, \hyperpage{136}
+    \subitem {get\+\_\+peername}, \hyperpage{137}
+    \subitem {get\+\_\+shm\+\_\+seg}, \hyperpage{137}
+    \subitem {listen\+\_\+for\+\_\+client}, \hyperpage{138}
+    \subitem {N\+E\+W\+\_\+\+P\+L\+US}, \hyperpage{134}
+    \subitem {pad\+\_\+string}, \hyperpage{139}
+    \subitem {recv\+\_\+msg}, \hyperpage{139}
+    \subitem {seg\+\_\+fault}, \hyperpage{140}
+    \subitem {send\+\_\+response}, \hyperpage{140}
+    \subitem {set\+\_\+up\+\_\+socket}, \hyperpage{141}
+    \subitem {shutdown}, \hyperpage{141}
+    \subitem {unat\+\_\+shm}, \hyperpage{142}
+  \item {listen\+\_\+for\+\_\+client}
+    \subitem {liason\+\_\+helper.\+hpp}, \hyperpage{138}
+  \item {listen\+\_\+on\+\_\+socket}
+    \subitem {daemon.\+h}, \hyperpage{122}
+  \item {lk}
+    \subitem {Debug\+Messages.\+hpp}, \hyperpage{165}
+  \item {lock}
+    \subitem {Debug\+Messages}, \hyperpage{30}
+  \item {log}
+    \subitem {Debug\+Messages}, \hyperpage{31}
+
+  \indexspace
+
+  \item {m}
+    \subitem {Debug\+Messages.\+hpp}, \hyperpage{165}
+  \item {M\+A\+X\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+S\+I\+ZE}
+    \subitem {daemon.\+h}, \hyperpage{126}
+  \item {M\+A\+Xopen\+\_\+fileS}
+    \subitem {types.\+h}, \hyperpage{114}
+  \item {M\+E\+R\+G\+\_\+1\+\_\+1}
+    \subitem {Command\+Codes.\+h}, \hyperpage{147}
+  \item {M\+E\+R\+G\+\_\+\+M\+\_\+1}
+    \subitem {Command\+Codes.\+h}, \hyperpage{147}
+  \item {M\+E\+R\+G\+E\+\_\+1}
+    \subitem {cli\+\_\+helper.\+hpp}, \hyperpage{100}
+  \item {M\+E\+R\+G\+E\+\_\+2}
+    \subitem {cli\+\_\+helper.\+hpp}, \hyperpage{100}
+  \item {main}
+    \subitem {Cli.\+cpp}, \hyperpage{107}
+    \subitem {daemon.\+cpp}, \hyperpage{108}
+    \subitem {driver.\+cpp}, \hyperpage{128}
+    \subitem {format.\+cpp}, \hyperpage{130}
+    \subitem {liaison.\+cpp}, \hyperpage{131}
+    \subitem {timing.\+cpp}, \hyperpage{130}
+  \item {mangle}
+    \subitem {File\+Info}, \hyperpage{50, 51}
+  \item {master\+\_\+set}
+    \subitem {daemon.\+h}, \hyperpage{126}
+  \item {max\+\_\+fid}
+    \subitem {daemon.\+h}, \hyperpage{126}
+  \item {Max\+Buffer\+Size}
+    \subitem {Cli.\+h}, \hyperpage{105}
+    \subitem {liaison.\+cpp}, \hyperpage{132}
+  \item {merge\+\_\+1\+\_\+1}
+    \subitem {Command\+Validation.\+h}, \hyperpage{159}
+  \item {merge\+\_\+m\+\_\+1}
+    \subitem {Command\+Validation.\+h}, \hyperpage{159}
+  \item {merge\+\_\+tags}
+    \subitem {File\+System}, \hyperpage{60}
+  \item {Modification}, \hyperpage{70}
+    \subitem {\+\_\+mod}, \hyperpage{71}
+    \subitem {\+\_\+parent}, \hyperpage{71}
+    \subitem {$\sim$\+Modification}, \hyperpage{70}
+    \subitem {Modification}, \hyperpage{70}
+    \subitem {write\+\_\+out}, \hyperpage{71}
+  \item {my\+\_\+fid}
+    \subitem {daemon.\+h}, \hyperpage{126}
+
+  \indexspace
+
+  \item {N\+E\+W\+\_\+\+A\+N\+D\+\_\+\+T\+A\+G\+\_\+\+E\+XC}
+    \subitem {cli\+\_\+helper.\+hpp}, \hyperpage{100}
+  \item {N\+E\+W\+\_\+\+A\+N\+D\+\_\+\+T\+AG}
+    \subitem {cli\+\_\+helper.\+hpp}, \hyperpage{100}
+  \item {N\+E\+W\+\_\+\+FP}
+    \subitem {Command\+Codes.\+h}, \hyperpage{147}
+  \item {N\+E\+W\+\_\+\+FS}
+    \subitem {Command\+Codes.\+h}, \hyperpage{147}
+  \item {N\+E\+W\+\_\+\+P\+L\+US}
+    \subitem {liason\+\_\+helper.\+hpp}, \hyperpage{134}
+  \item {N\+E\+W\+\_\+\+TS}
+    \subitem {Command\+Codes.\+h}, \hyperpage{147}
+  \item {new\+\_\+file}
+    \subitem {Command\+Validation.\+h}, \hyperpage{159}
+  \item {new\+\_\+files}
+    \subitem {Command\+Validation.\+h}, \hyperpage{159}
+  \item {new\+\_\+tags}
+    \subitem {Command\+Validation.\+h}, \hyperpage{159}
+  \item {num\+\_\+of\+\_\+files}
+    \subitem {File\+System}, \hyperpage{60}
+  \item {num\+\_\+of\+\_\+tags}
+    \subitem {File\+System}, \hyperpage{60}
+
+  \indexspace
+
+  \item {O\+FF}
+    \subitem {Debug\+Messages}, \hyperpage{31}
+  \item {O\+P\+E\+N\+\_\+\+FP}
+    \subitem {Command\+Codes.\+h}, \hyperpage{147}
+  \item {O\+P\+E\+N\+\_\+F}
+    \subitem {Command\+Codes.\+h}, \hyperpage{147}
+  \item {O\+P\+EN}
+    \subitem {cli\+\_\+helper.\+hpp}, \hyperpage{100}
+  \item {offset}
+    \subitem {index}, \hyperpage{68}
+  \item {ON}
+    \subitem {Debug\+Messages}, \hyperpage{31}
+  \item {open\+\_\+file}
+    \subitem {File\+System}, \hyperpage{61}
+  \item {open\+\_\+file\+\_\+cd}
+    \subitem {Command\+Validation.\+h}, \hyperpage{159}
+  \item {open\+\_\+files}
+    \subitem {Command\+Validation.\+h}, \hyperpage{160}
+  \item {operator!=}
+    \subitem {Trees.\+cpp}, \hyperpage{112}
+  \item {operator==}
+    \subitem {Disk\+Manager.\+cpp}, \hyperpage{109}
+    \subitem {Disk\+Manager.\+h}, \hyperpage{110}
+    \subitem {Trees.\+cpp}, \hyperpage{112}
+  \item {owner}
+    \subitem {file\+\_\+attributes}, \hyperpage{43}
+
+  \indexspace
+
+  \item {P\+O\+RT}
+    \subitem {daemon.\+h}, \hyperpage{127}
+  \item {pad\+\_\+string}
+    \subitem {daemon.\+h}, \hyperpage{122}
+    \subitem {liason\+\_\+helper.\+hpp}, \hyperpage{139}
+  \item {parse}
+    \subitem {Parser}, \hyperpage{75}
+  \item {Parse\+Error}, \hyperpage{71}
+    \subitem {Parse\+Error}, \hyperpage{71}
+    \subitem {what}, \hyperpage{72}
+    \subitem {where}, \hyperpage{72}
+  \item {Parser}, \hyperpage{72}
+    \subitem {$\sim$\+Parser}, \hyperpage{74}
+    \subitem {get\+\_\+cwd\+\_\+tags}, \hyperpage{75}
+    \subitem {liaison.\+cpp}, \hyperpage{132}
+    \subitem {parse}, \hyperpage{75}
+    \subitem {Parser}, \hyperpage{73, 74}
+    \subitem {reset}, \hyperpage{75, 76}
+    \subitem {set\+\_\+cwd}, \hyperpage{77}
+    \subitem {set\+\_\+max\+\_\+name\+\_\+size}, \hyperpage{77}
+    \subitem {split\+\_\+on\+\_\+delim}, \hyperpage{78}
+  \item {Parser.\+h}
+    \subitem {uint}, \hyperpage{166}
+  \item {part\+\_\+fs\+\_\+map}
+    \subitem {daemon.\+h}, \hyperpage{127}
+  \item {partition\+Blk\+Start}
+    \subitem {Disk\+Partition}, \hyperpage{40}
+  \item {Partition\+Manager}, \hyperpage{78}
+    \subitem {$\sim$\+Partition\+Manager}, \hyperpage{79}
+    \subitem {get\+\_\+file\+\_\+name\+\_\+size}, \hyperpage{79}
+    \subitem {get\+Block\+Size}, \hyperpage{79}
+    \subitem {get\+Free\+Disk\+Block}, \hyperpage{79}
+    \subitem {get\+Partition\+Name}, \hyperpage{80}
+    \subitem {Partition\+Manager}, \hyperpage{79}
+    \subitem {read\+Disk\+Block}, \hyperpage{80}
+    \subitem {return\+Disk\+Block}, \hyperpage{80}
+    \subitem {write\+Disk\+Block}, \hyperpage{81}
+  \item {Partition\+Manager.\+cpp}
+    \subitem {D\+E\+B\+UG}, \hyperpage{111}
+  \item {partition\+Name}
+    \subitem {Disk\+Partition}, \hyperpage{40}
+  \item {partition\+Size}
+    \subitem {Disk\+Partition}, \hyperpage{40}
+  \item {path\+\_\+filedesc\+\_\+map}
+    \subitem {daemon.\+h}, \hyperpage{127}
+  \item {path\+\_\+to\+\_\+file}
+    \subitem {File\+System}, \hyperpage{61}
+  \item {Permissions}
+    \subitem {Cli.\+h}, \hyperpage{106}
+    \subitem {liaison.\+cpp}, \hyperpage{132}
+  \item {permissions}
+    \subitem {file\+\_\+attributes}, \hyperpage{43}
+  \item {Print.\+h}
+    \subitem {help}, \hyperpage{166}
+    \subitem {print\+\_\+attr}, \hyperpage{166}
+    \subitem {print\+\_\+cd}, \hyperpage{167}
+    \subitem {print\+\_\+close}, \hyperpage{167}
+    \subitem {print\+\_\+cmnd\+\_\+lst}, \hyperpage{167}
+    \subitem {print\+\_\+command}, \hyperpage{167}
+    \subitem {print\+\_\+copy}, \hyperpage{167}
+    \subitem {print\+\_\+del}, \hyperpage{167}
+    \subitem {print\+\_\+find}, \hyperpage{168}
+    \subitem {print\+\_\+header}, \hyperpage{168}
+    \subitem {print\+\_\+help}, \hyperpage{168}
+    \subitem {print\+\_\+merge}, \hyperpage{168}
+    \subitem {print\+\_\+new}, \hyperpage{168}
+    \subitem {print\+\_\+open}, \hyperpage{168}
+    \subitem {print\+\_\+quit}, \hyperpage{168}
+    \subitem {print\+\_\+read}, \hyperpage{168}
+    \subitem {print\+\_\+rname}, \hyperpage{169}
+    \subitem {print\+\_\+tag}, \hyperpage{169}
+    \subitem {print\+\_\+utag}, \hyperpage{169}
+    \subitem {print\+\_\+vector}, \hyperpage{169}
+    \subitem {print\+\_\+write}, \hyperpage{169}
+  \item {print\+\_\+attr}
+    \subitem {Print.\+h}, \hyperpage{166}
+  \item {print\+\_\+cd}
+    \subitem {Print.\+h}, \hyperpage{167}
+  \item {print\+\_\+close}
+    \subitem {Print.\+h}, \hyperpage{167}
+  \item {print\+\_\+cmnd\+\_\+lst}
+    \subitem {Print.\+h}, \hyperpage{167}
+  \item {print\+\_\+command}
+    \subitem {Print.\+h}, \hyperpage{167}
+  \item {print\+\_\+copy}
+    \subitem {Print.\+h}, \hyperpage{167}
+  \item {print\+\_\+del}
+    \subitem {Print.\+h}, \hyperpage{167}
+  \item {print\+\_\+files}
+    \subitem {File\+System}, \hyperpage{61}
+  \item {print\+\_\+find}
+    \subitem {Print.\+h}, \hyperpage{168}
+  \item {print\+\_\+header}
+    \subitem {Print.\+h}, \hyperpage{168}
+  \item {print\+\_\+help}
+    \subitem {Print.\+h}, \hyperpage{168}
+  \item {print\+\_\+merge}
+    \subitem {Print.\+h}, \hyperpage{168}
+  \item {print\+\_\+new}
+    \subitem {Print.\+h}, \hyperpage{168}
+  \item {print\+\_\+open}
+    \subitem {Print.\+h}, \hyperpage{168}
+  \item {print\+\_\+quit}
+    \subitem {Print.\+h}, \hyperpage{168}
+  \item {print\+\_\+read}
+    \subitem {Print.\+h}, \hyperpage{168}
+  \item {print\+\_\+rname}
+    \subitem {Print.\+h}, \hyperpage{169}
+  \item {print\+\_\+root}
+    \subitem {File\+System}, \hyperpage{61}
+  \item {print\+\_\+tag}
+    \subitem {Print.\+h}, \hyperpage{169}
+  \item {print\+\_\+tags}
+    \subitem {File\+System}, \hyperpage{62}
+  \item {print\+\_\+utag}
+    \subitem {Print.\+h}, \hyperpage{169}
+  \item {print\+\_\+vector}
+    \subitem {Print.\+h}, \hyperpage{169}
+  \item {print\+\_\+write}
+    \subitem {Print.\+h}, \hyperpage{169}
+
+  \indexspace
+
+  \item {Q\+U\+IT}
+    \subitem {Command\+Codes.\+h}, \hyperpage{148}
+
+  \indexspace
+
+  \item {R\+E\+A\+D\+\_\+\+F\+C\+WD}
+    \subitem {Command\+Codes.\+h}, \hyperpage{148}
+  \item {R\+E\+A\+D\+\_\+\+FP}
+    \subitem {Command\+Codes.\+h}, \hyperpage{148}
+  \item {R\+E\+A\+D\+\_\+\+X\+C\+WD}
+    \subitem {Command\+Codes.\+h}, \hyperpage{148}
+  \item {R\+E\+A\+D\+\_\+\+XP}
+    \subitem {Command\+Codes.\+h}, \hyperpage{148}
+  \item {R\+E\+A\+D\+M\+E.\+md}, \hyperpage{142}
+  \item {R\+E\+N\+A\+M\+E\+T\+A\+G\+D\+A\+TA}
+    \subitem {daemon.\+h}, \hyperpage{117}
+    \subitem {timing.\+cpp}, \hyperpage{129}
+  \item {R\+N\+A\+M\+E\+\_\+\+FP}
+    \subitem {Command\+Codes.\+h}, \hyperpage{148}
+  \item {R\+N\+A\+M\+E\+\_\+\+FS}
+    \subitem {Command\+Codes.\+h}, \hyperpage{148}
+  \item {R\+N\+A\+M\+E\+\_\+\+TS}
+    \subitem {Command\+Codes.\+h}, \hyperpage{148}
+  \item {read\+\_\+buff}
+    \subitem {File}, \hyperpage{41}
+  \item {read\+\_\+cwd}
+    \subitem {Command\+Validation.\+h}, \hyperpage{160}
+  \item {read\+\_\+file}
+    \subitem {File\+System}, \hyperpage{62}
+  \item {read\+\_\+in}
+    \subitem {Attributes}, \hyperpage{23}
+    \subitem {File\+Info}, \hyperpage{51}
+    \subitem {Root\+Tree}, \hyperpage{83}
+    \subitem {Tag\+Tree}, \hyperpage{86}
+    \subitem {Tree\+Object}, \hyperpage{95}
+  \item {read\+\_\+path}
+    \subitem {Command\+Validation.\+h}, \hyperpage{160}
+  \item {read\+\_\+x\+\_\+cwd}
+    \subitem {Command\+Validation.\+h}, \hyperpage{160}
+  \item {read\+\_\+x\+\_\+path}
+    \subitem {Command\+Validation.\+h}, \hyperpage{160}
+  \item {read\+Disk\+Block}
+    \subitem {Disk}, \hyperpage{34}
+    \subitem {Disk\+Manager}, \hyperpage{38}
+    \subitem {Partition\+Manager}, \hyperpage{80}
+  \item {receive\+\_\+from\+\_\+server}
+    \subitem {cli\+\_\+helper.\+hpp}, \hyperpage{103}
+  \item {recv\+\_\+msg}
+    \subitem {liason\+\_\+helper.\+hpp}, \hyperpage{139}
+  \item {refresh}
+    \subitem {File\+Open}, \hyperpage{55}
+  \item {rename\+\_\+file}
+    \subitem {File\+System}, \hyperpage{62}
+  \item {rename\+\_\+file\+\_\+cd}
+    \subitem {Command\+Validation.\+h}, \hyperpage{160}
+  \item {rename\+\_\+files}
+    \subitem {Command\+Validation.\+h}, \hyperpage{160}
+  \item {rename\+\_\+tag}
+    \subitem {File\+System}, \hyperpage{62}
+  \item {rename\+\_\+tags}
+    \subitem {Command\+Validation.\+h}, \hyperpage{161}
+  \item {reset}
+    \subitem {Parser}, \hyperpage{75, 76}
+  \item {reset\+\_\+seek}
+    \subitem {File\+Open}, \hyperpage{55}
+  \item {return\+Disk\+Block}
+    \subitem {Partition\+Manager}, \hyperpage{80}
+  \item {Root\+Super\+Block}
+    \subitem {types.\+h}, \hyperpage{115}
+  \item {root\+Super\+Block}, \hyperpage{81}
+    \subitem {last\+Entry}, \hyperpage{81}
+    \subitem {size}, \hyperpage{81}
+    \subitem {start\+Block}, \hyperpage{81}
+  \item {Root\+Tree}, \hyperpage{82}
+    \subitem {$\sim$\+Root\+Tree}, \hyperpage{82}
+    \subitem {del}, \hyperpage{83}
+    \subitem {read\+\_\+in}, \hyperpage{83}
+    \subitem {Root\+Tree}, \hyperpage{82}
+    \subitem {write\+\_\+out}, \hyperpage{83}
+  \item {run}
+    \subitem {C\+LI}, \hyperpage{27, 28}
+
+  \indexspace
+
+  \item {S\+T\+A\+R\+T\+T\+U\+P\+D\+A\+TA}
+    \subitem {daemon.\+cpp}, \hyperpage{108}
+    \subitem {timing.\+cpp}, \hyperpage{130}
+  \item {save\+\_\+to\+\_\+disk}
+    \subitem {daemon.\+h}, \hyperpage{123}
+  \item {seek\+\_\+file\+\_\+absolute}
+    \subitem {File\+System}, \hyperpage{63}
+  \item {seek\+\_\+file\+\_\+relative}
+    \subitem {File\+System}, \hyperpage{63}
+  \item {seg\+\_\+fault}
+    \subitem {liason\+\_\+helper.\+hpp}, \hyperpage{140}
+  \item {send\+\_\+cmnd}
+    \subitem {C\+LI}, \hyperpage{28}
+  \item {send\+\_\+response}
+    \subitem {liason\+\_\+helper.\+hpp}, \hyperpage{140}
+  \item {send\+\_\+to\+\_\+server}
+    \subitem {cli\+\_\+helper.\+hpp}, \hyperpage{103}
+  \item {serialize}
+    \subitem {File\+Info}, \hyperpage{52}
+  \item {serialize\+\_\+fileinfo}
+    \subitem {daemon.\+h}, \hyperpage{123}
+  \item {set\+\_\+\+E\+OF}
+    \subitem {File\+Open}, \hyperpage{55}
+  \item {set\+\_\+access}
+    \subitem {Attributes}, \hyperpage{23}
+    \subitem {File\+Info}, \hyperpage{52}
+  \item {set\+\_\+creation\+\_\+time}
+    \subitem {Attributes}, \hyperpage{23}
+  \item {set\+\_\+cwd}
+    \subitem {Parser}, \hyperpage{77}
+  \item {set\+\_\+edit}
+    \subitem {Attributes}, \hyperpage{23}
+    \subitem {File\+Info}, \hyperpage{52}
+  \item {set\+\_\+last\+\_\+entry}
+    \subitem {Tree\+Object}, \hyperpage{95}
+  \item {set\+\_\+max\+\_\+name\+\_\+size}
+    \subitem {Parser}, \hyperpage{77}
+  \item {set\+\_\+name}
+    \subitem {Tree\+Object}, \hyperpage{96}
+  \item {set\+\_\+nonblocking}
+    \subitem {daemon.\+h}, \hyperpage{124}
+  \item {set\+\_\+owner}
+    \subitem {Attributes}, \hyperpage{23}
+  \item {set\+\_\+permissions}
+    \subitem {Attributes}, \hyperpage{24}
+    \subitem {File\+Info}, \hyperpage{52}
+    \subitem {File\+System}, \hyperpage{63}
+  \item {set\+\_\+socket\+\_\+opt}
+    \subitem {daemon.\+h}, \hyperpage{124}
+  \item {set\+\_\+up\+\_\+socket}
+    \subitem {cli\+\_\+helper.\+hpp}, \hyperpage{103}
+    \subitem {liason\+\_\+helper.\+hpp}, \hyperpage{141}
+  \item {Shared\+C\+P\+P\+Files/\+Arboreal\+\_\+\+Exceptions.\+cpp}, 
+		\hyperpage{142}
+  \item {Shared\+C\+P\+P\+Files/\+Parser.\+cpp}, \hyperpage{143}
+  \item {Shared\+Headers/\+Arboreal\+\_\+\+Exceptions.\+h}, 
+		\hyperpage{143}
+  \item {Shared\+Headers/\+Command\+Codes.\+h}, \hyperpage{143}
+  \item {Shared\+Headers/\+Command\+Validation.\+h}, \hyperpage{152}
+  \item {Shared\+Headers/\+Debug\+Messages.\+hpp}, \hyperpage{164}
+  \item {Shared\+Headers/\+Error\+Codes.\+h}, \hyperpage{165}
+  \item {Shared\+Headers/\+Parser.\+h}, \hyperpage{165}
+  \item {Shared\+Headers/\+Print.\+h}, \hyperpage{166}
+  \item {Shared\+Memory\+Size}
+    \subitem {Cli.\+h}, \hyperpage{106}
+    \subitem {liaison.\+cpp}, \hyperpage{133}
+  \item {shutdown}
+    \subitem {liason\+\_\+helper.\+hpp}, \hyperpage{141}
+  \item {sig\+\_\+caught}
+    \subitem {daemon.\+h}, \hyperpage{124}
+  \item {size}
+    \subitem {file\+\_\+attributes}, \hyperpage{43}
+    \subitem {root\+Super\+Block}, \hyperpage{81}
+    \subitem {tag\+Tree\+Super\+Block}, \hyperpage{87}
+    \subitem {Tree\+Object}, \hyperpage{96}
+  \item {split\+\_\+on\+\_\+delim}
+    \subitem {Parser}, \hyperpage{78}
+  \item {start}
+    \subitem {C\+LI}, \hyperpage{28}
+  \item {start\+Block}
+    \subitem {root\+Super\+Block}, \hyperpage{81}
+    \subitem {tag\+Tree\+Super\+Block}, \hyperpage{87}
+
+  \indexspace
+
+  \item {T\+A\+G\+\_\+1}
+    \subitem {cli\+\_\+helper.\+hpp}, \hyperpage{100}
+  \item {T\+A\+G\+\_\+2}
+    \subitem {cli\+\_\+helper.\+hpp}, \hyperpage{100}
+  \item {T\+A\+G\+\_\+3}
+    \subitem {cli\+\_\+helper.\+hpp}, \hyperpage{101}
+  \item {T\+A\+G\+\_\+\+FP}
+    \subitem {Command\+Codes.\+h}, \hyperpage{149}
+  \item {T\+A\+G\+\_\+\+FS}
+    \subitem {Command\+Codes.\+h}, \hyperpage{149}
+  \item {T\+A\+G\+F\+I\+L\+E\+D\+A\+TA}
+    \subitem {daemon.\+h}, \hyperpage{117}
+    \subitem {timing.\+cpp}, \hyperpage{130}
+  \item {T\+A\+G\+S\+E\+A\+R\+C\+H\+D\+A\+TA}
+    \subitem {daemon.\+h}, \hyperpage{117}
+    \subitem {timing.\+cpp}, \hyperpage{130}
+  \item {T\+I\+M\+E\+O\+UT}
+    \subitem {daemon.\+h}, \hyperpage{127}
+  \item {T\+R\+UE}
+    \subitem {daemon.\+h}, \hyperpage{127}
+  \item {tag\+\_\+error}, \hyperpage{84}
+    \subitem {$\sim$tag\+\_\+error}, \hyperpage{85}
+    \subitem {tag\+\_\+error}, \hyperpage{84, 85}
+  \item {tag\+\_\+file}
+    \subitem {File\+System}, \hyperpage{64}
+  \item {tag\+\_\+files}
+    \subitem {Command\+Validation.\+h}, \hyperpage{161}
+  \item {tag\+\_\+search}
+    \subitem {File\+System}, \hyperpage{65}
+  \item {Tag\+Tree}, \hyperpage{85}
+    \subitem {$\sim$\+Tag\+Tree}, \hyperpage{86}
+    \subitem {del}, \hyperpage{86}
+    \subitem {read\+\_\+in}, \hyperpage{86}
+    \subitem {Tag\+Tree}, \hyperpage{86}
+    \subitem {write\+\_\+out}, \hyperpage{87}
+  \item {Tag\+Tree\+Super\+Block}
+    \subitem {types.\+h}, \hyperpage{115}
+  \item {tag\+Tree\+Super\+Block}, \hyperpage{87}
+    \subitem {last\+Entry}, \hyperpage{87}
+    \subitem {size}, \hyperpage{87}
+    \subitem {start\+Block}, \hyperpage{87}
+  \item {Timeout}
+    \subitem {liaison.\+cpp}, \hyperpage{133}
+  \item {timing.\+cpp}
+    \subitem {C\+R\+E\+A\+T\+E\+F\+I\+L\+E\+D\+A\+TA}, \hyperpage{129}
+    \subitem {C\+R\+E\+A\+T\+E\+T\+A\+G\+D\+A\+TA}, \hyperpage{129}
+    \subitem {F\+I\+L\+E\+S\+E\+A\+R\+C\+H\+D\+A\+TA}, \hyperpage{129}
+    \subitem {main}, \hyperpage{130}
+    \subitem {R\+E\+N\+A\+M\+E\+T\+A\+G\+D\+A\+TA}, \hyperpage{129}
+    \subitem {S\+T\+A\+R\+T\+T\+U\+P\+D\+A\+TA}, \hyperpage{130}
+    \subitem {T\+A\+G\+F\+I\+L\+E\+D\+A\+TA}, \hyperpage{130}
+    \subitem {T\+A\+G\+S\+E\+A\+R\+C\+H\+D\+A\+TA}, \hyperpage{130}
+  \item {Tree\+Object}, \hyperpage{88}
+    \subitem {\+\_\+block\+Number}, \hyperpage{96}
+    \subitem {\+\_\+free\+Spots}, \hyperpage{96}
+    \subitem {\+\_\+indeces}, \hyperpage{97}
+    \subitem {\+\_\+last\+Entry}, \hyperpage{97}
+    \subitem {\+\_\+modifications}, \hyperpage{97}
+    \subitem {\+\_\+my\+Partition\+Manager}, \hyperpage{97}
+    \subitem {\+\_\+my\+Tree}, \hyperpage{97}
+    \subitem {\+\_\+name}, \hyperpage{97}
+    \subitem {\+\_\+start\+Block}, \hyperpage{97}
+    \subitem {$\sim$\+Tree\+Object}, \hyperpage{89}
+    \subitem {add\+\_\+index}, \hyperpage{90}
+    \subitem {begin}, \hyperpage{90}
+    \subitem {del}, \hyperpage{90}
+    \subitem {delete\+\_\+cont\+\_\+blocks}, \hyperpage{90}
+    \subitem {end}, \hyperpage{91}
+    \subitem {erase}, \hyperpage{91}
+    \subitem {find}, \hyperpage{91}
+    \subitem {get\+\_\+block\+\_\+number}, \hyperpage{92}
+    \subitem {get\+\_\+free\+\_\+spots}, \hyperpage{92}
+    \subitem {get\+\_\+index}, \hyperpage{92}
+    \subitem {get\+\_\+last\+\_\+entry}, \hyperpage{92}
+    \subitem {get\+\_\+name}, \hyperpage{93}
+    \subitem {get\+\_\+start\+\_\+block}, \hyperpage{93}
+    \subitem {increment\+\_\+allocate}, \hyperpage{93}
+    \subitem {increment\+\_\+follow}, \hyperpage{93}
+    \subitem {insert}, \hyperpage{94}
+    \subitem {insert\+\_\+addition}, \hyperpage{94}
+    \subitem {insert\+\_\+deletion}, \hyperpage{95}
+    \subitem {read\+\_\+in}, \hyperpage{95}
+    \subitem {set\+\_\+last\+\_\+entry}, \hyperpage{95}
+    \subitem {set\+\_\+name}, \hyperpage{96}
+    \subitem {size}, \hyperpage{96}
+    \subitem {Tree\+Object}, \hyperpage{89}
+    \subitem {write\+\_\+out}, \hyperpage{96}
+  \item {Trees.\+cpp}
+    \subitem {operator!=}, \hyperpage{112}
+    \subitem {operator==}, \hyperpage{112}
+  \item {Trees.\+h}
+    \subitem {D\+E\+F\+A\+U\+L\+T\+O\+W\+N\+ER}, \hyperpage{113}
+    \subitem {D\+E\+F\+A\+U\+L\+T\+P\+E\+R\+M\+I\+S\+S\+I\+O\+NS}, 
+		\hyperpage{113}
+  \item {types.\+h}
+    \subitem {Blk\+Num\+Type}, \hyperpage{114}
+    \subitem {D\+E\+B\+UG}, \hyperpage{115}
+    \subitem {File\+Attributes}, \hyperpage{114}
+    \subitem {Finode}, \hyperpage{114}
+    \subitem {Index}, \hyperpage{114}
+    \subitem {M\+A\+Xopen\+\_\+fileS}, \hyperpage{114}
+    \subitem {Root\+Super\+Block}, \hyperpage{115}
+    \subitem {Tag\+Tree\+Super\+Block}, \hyperpage{115}
+
+  \indexspace
+
+  \item {U\+A\+T\+TR}
+    \subitem {Command\+Codes.\+h}, \hyperpage{149}
+  \item {U\+C\+L\+O\+SE}
+    \subitem {Command\+Codes.\+h}, \hyperpage{149}
+  \item {U\+C\+O\+PY}
+    \subitem {Command\+Codes.\+h}, \hyperpage{149}
+  \item {U\+CD}
+    \subitem {Command\+Codes.\+h}, \hyperpage{149}
+  \item {U\+D\+EL}
+    \subitem {Command\+Codes.\+h}, \hyperpage{149}
+  \item {U\+F\+I\+ND}
+    \subitem {Command\+Codes.\+h}, \hyperpage{149}
+  \item {U\+H\+E\+LP}
+    \subitem {Command\+Codes.\+h}, \hyperpage{150}
+  \item {U\+M\+E\+RG}
+    \subitem {Command\+Codes.\+h}, \hyperpage{150}
+  \item {U\+N\+EW}
+    \subitem {Command\+Codes.\+h}, \hyperpage{150}
+  \item {U\+O\+P\+EN}
+    \subitem {Command\+Codes.\+h}, \hyperpage{150}
+  \item {U\+Q\+U\+IT}
+    \subitem {Command\+Codes.\+h}, \hyperpage{150}
+  \item {U\+R\+E\+AD}
+    \subitem {Command\+Codes.\+h}, \hyperpage{150}
+  \item {U\+R\+N\+A\+ME}
+    \subitem {Command\+Codes.\+h}, \hyperpage{150}
+  \item {U\+T\+A\+G\+\_\+\+FP}
+    \subitem {Command\+Codes.\+h}, \hyperpage{151}
+  \item {U\+T\+A\+G\+\_\+\+FS}
+    \subitem {Command\+Codes.\+h}, \hyperpage{151}
+  \item {U\+T\+AG}
+    \subitem {Command\+Codes.\+h}, \hyperpage{150}
+  \item {U\+U\+T\+AG}
+    \subitem {Command\+Codes.\+h}, \hyperpage{151}
+  \item {U\+W\+R\+I\+TE}
+    \subitem {Command\+Codes.\+h}, \hyperpage{151}
+  \item {uint}
+    \subitem {Parser.\+h}, \hyperpage{166}
+  \item {unat\+\_\+shm}
+    \subitem {liason\+\_\+helper.\+hpp}, \hyperpage{142}
+  \item {unlock}
+    \subitem {Debug\+Messages}, \hyperpage{31}
+  \item {untag\+\_\+file}
+    \subitem {Command\+Validation.\+h}, \hyperpage{161}
+    \subitem {File\+System}, \hyperpage{65}
+  \item {untag\+\_\+files}
+    \subitem {Command\+Validation.\+h}, \hyperpage{161}
+  \item {update\+\_\+file\+\_\+size}
+    \subitem {File\+Info}, \hyperpage{53}
+  \item {update\+\_\+size}
+    \subitem {Attributes}, \hyperpage{24}
+  \item {usage\+\_\+attr}
+    \subitem {Command\+Validation.\+h}, \hyperpage{161}
+  \item {usage\+\_\+cd}
+    \subitem {Command\+Validation.\+h}, \hyperpage{161}
+  \item {usage\+\_\+close}
+    \subitem {Command\+Validation.\+h}, \hyperpage{162}
+  \item {usage\+\_\+copy}
+    \subitem {Command\+Validation.\+h}, \hyperpage{162}
+  \item {usage\+\_\+delete}
+    \subitem {Command\+Validation.\+h}, \hyperpage{162}
+  \item {usage\+\_\+find}
+    \subitem {Command\+Validation.\+h}, \hyperpage{162}
+  \item {usage\+\_\+help}
+    \subitem {Command\+Validation.\+h}, \hyperpage{162}
+  \item {usage\+\_\+merge}
+    \subitem {Command\+Validation.\+h}, \hyperpage{162}
+  \item {usage\+\_\+new}
+    \subitem {Command\+Validation.\+h}, \hyperpage{162}
+  \item {usage\+\_\+open}
+    \subitem {Command\+Validation.\+h}, \hyperpage{163}
+  \item {usage\+\_\+quit}
+    \subitem {Command\+Validation.\+h}, \hyperpage{163}
+  \item {usage\+\_\+read}
+    \subitem {Command\+Validation.\+h}, \hyperpage{163}
+  \item {usage\+\_\+rename}
+    \subitem {Command\+Validation.\+h}, \hyperpage{163}
+  \item {usage\+\_\+tag}
+    \subitem {Command\+Validation.\+h}, \hyperpage{163}
+  \item {usage\+\_\+untag}
+    \subitem {Command\+Validation.\+h}, \hyperpage{163}
+  \item {usage\+\_\+write}
+    \subitem {Command\+Validation.\+h}, \hyperpage{163}
+
+  \indexspace
+
+  \item {V\+E\+R\+B\+O\+SE}
+    \subitem {liaison.\+cpp}, \hyperpage{133}
+  \item {verbose}
+    \subitem {daemon.\+h}, \hyperpage{127}
+
+  \indexspace
+
+  \item {W\+I\+L\+L\+\_\+\+T\+I\+ME}
+    \subitem {daemon.\+h}, \hyperpage{127}
+  \item {W\+R\+I\+T\+E\+\_\+\+C\+H\+A\+N\+G\+E\+S\+\_\+\+W\+A\+IT}
+    \subitem {daemon.\+h}, \hyperpage{128}
+  \item {W\+R\+I\+T\+E\+\_\+\+F\+C\+WD}
+    \subitem {Command\+Codes.\+h}, \hyperpage{151}
+  \item {W\+R\+I\+T\+E\+\_\+\+FP}
+    \subitem {Command\+Codes.\+h}, \hyperpage{151}
+  \item {W\+R\+I\+T\+E\+\_\+\+X\+F\+C\+W\+DF}
+    \subitem {Command\+Codes.\+h}, \hyperpage{151}
+  \item {W\+R\+I\+T\+E\+\_\+\+X\+F\+PF}
+    \subitem {Command\+Codes.\+h}, \hyperpage{151}
+  \item {what}
+    \subitem {Parse\+Error}, \hyperpage{72}
+  \item {where}
+    \subitem {arboreal\+\_\+exception}, \hyperpage{15}
+    \subitem {Parse\+Error}, \hyperpage{72}
+  \item {write\+\_\+changes}
+    \subitem {File\+System}, \hyperpage{66}
+  \item {write\+\_\+cwd}
+    \subitem {Command\+Validation.\+h}, \hyperpage{164}
+  \item {write\+\_\+file}
+    \subitem {File\+System}, \hyperpage{66}
+  \item {write\+\_\+out}
+    \subitem {Addition}, \hyperpage{10}
+    \subitem {Attributes}, \hyperpage{24}
+    \subitem {Deletion}, \hyperpage{32}
+    \subitem {File\+Info}, \hyperpage{53}
+    \subitem {Modification}, \hyperpage{71}
+    \subitem {Root\+Tree}, \hyperpage{83}
+    \subitem {Tag\+Tree}, \hyperpage{87}
+    \subitem {Tree\+Object}, \hyperpage{96}
+  \item {write\+\_\+path}
+    \subitem {Command\+Validation.\+h}, \hyperpage{164}
+  \item {write\+\_\+x\+\_\+cwd}
+    \subitem {Command\+Validation.\+h}, \hyperpage{164}
+  \item {write\+\_\+x\+\_\+path}
+    \subitem {Command\+Validation.\+h}, \hyperpage{164}
+  \item {write\+Disk\+Block}
+    \subitem {Disk}, \hyperpage{35}
+    \subitem {Disk\+Manager}, \hyperpage{39}
+    \subitem {Partition\+Manager}, \hyperpage{81}
+
+\end{theindex}

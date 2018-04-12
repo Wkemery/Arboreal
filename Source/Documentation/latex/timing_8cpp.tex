@@ -1,0 +1,85 @@
+\hypertarget{timing_8cpp}{}\section{Filesystem/timing.cpp File Reference}
+\label{timing_8cpp}\index{Filesystem/timing.\+cpp@{Filesystem/timing.\+cpp}}
+{\ttfamily \#include $<$chrono$>$}\newline
+{\ttfamily \#include $<$ctime$>$}\newline
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include \char`\"{}Daemon\+Dependancies/\+File\+System/\+File\+System.\+h\char`\"{}}\newline
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{timing_8cpp_ac1dab7c6060baa5fa822d119b9033247}{C\+R\+E\+A\+T\+E\+F\+I\+L\+E\+D\+A\+TA}}~\char`\"{}Data/create\+\_\+file\+\_\+time.\+txt\char`\"{}
+\item 
+\#define \mbox{\hyperlink{timing_8cpp_a9644be5896ddb7be0ac7be71c1760e03}{C\+R\+E\+A\+T\+E\+T\+A\+G\+D\+A\+TA}}~\char`\"{}Data/create\+\_\+tag\+\_\+time.\+txt\char`\"{}
+\item 
+\#define \mbox{\hyperlink{timing_8cpp_a0dddc6d0c34ccd34bcb22d331e373af9}{T\+A\+G\+S\+E\+A\+R\+C\+H\+D\+A\+TA}}~\char`\"{}Data/tag\+\_\+search\+\_\+time.\+txt\char`\"{}
+\item 
+\#define \mbox{\hyperlink{timing_8cpp_aec94c260f6f2e68e50c85324a07e89ac}{F\+I\+L\+E\+S\+E\+A\+R\+C\+H\+D\+A\+TA}}~\char`\"{}Data/file\+\_\+search\+\_\+time.\+txt\char`\"{}
+\item 
+\#define \mbox{\hyperlink{timing_8cpp_a4a399f6b172f69298391fd9be841d9d9}{T\+A\+G\+F\+I\+L\+E\+D\+A\+TA}}~\char`\"{}Data/tag\+\_\+file\+\_\+time.\+txt\char`\"{}
+\item 
+\#define \mbox{\hyperlink{timing_8cpp_a3e5bd6a8e5e432d3b4d7fd6e635af0d5}{R\+E\+N\+A\+M\+E\+T\+A\+G\+D\+A\+TA}}~\char`\"{}Data/rename\+\_\+tag\+\_\+time.\+txt\char`\"{}
+\item 
+\#define \mbox{\hyperlink{timing_8cpp_ada4428c0dd22034c241f004477d9f75d}{S\+T\+A\+R\+T\+T\+U\+P\+D\+A\+TA}}~\char`\"{}Data/startup\+\_\+time.\+txt\char`\"{}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{timing_8cpp_a3c04138a5bfe5d72780bb7e82a18e627}{main}} (int argc, char $\ast$$\ast$argv)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{timing_8cpp_ac1dab7c6060baa5fa822d119b9033247}\label{timing_8cpp_ac1dab7c6060baa5fa822d119b9033247}} 
+\index{timing.\+cpp@{timing.\+cpp}!C\+R\+E\+A\+T\+E\+F\+I\+L\+E\+D\+A\+TA@{C\+R\+E\+A\+T\+E\+F\+I\+L\+E\+D\+A\+TA}}
+\index{C\+R\+E\+A\+T\+E\+F\+I\+L\+E\+D\+A\+TA@{C\+R\+E\+A\+T\+E\+F\+I\+L\+E\+D\+A\+TA}!timing.\+cpp@{timing.\+cpp}}
+\subsubsection{\texorpdfstring{C\+R\+E\+A\+T\+E\+F\+I\+L\+E\+D\+A\+TA}{CREATEFILEDATA}}
+{\footnotesize\ttfamily \#define C\+R\+E\+A\+T\+E\+F\+I\+L\+E\+D\+A\+TA~\char`\"{}Data/create\+\_\+file\+\_\+time.\+txt\char`\"{}}
+
+\mbox{\Hypertarget{timing_8cpp_a9644be5896ddb7be0ac7be71c1760e03}\label{timing_8cpp_a9644be5896ddb7be0ac7be71c1760e03}} 
+\index{timing.\+cpp@{timing.\+cpp}!C\+R\+E\+A\+T\+E\+T\+A\+G\+D\+A\+TA@{C\+R\+E\+A\+T\+E\+T\+A\+G\+D\+A\+TA}}
+\index{C\+R\+E\+A\+T\+E\+T\+A\+G\+D\+A\+TA@{C\+R\+E\+A\+T\+E\+T\+A\+G\+D\+A\+TA}!timing.\+cpp@{timing.\+cpp}}
+\subsubsection{\texorpdfstring{C\+R\+E\+A\+T\+E\+T\+A\+G\+D\+A\+TA}{CREATETAGDATA}}
+{\footnotesize\ttfamily \#define C\+R\+E\+A\+T\+E\+T\+A\+G\+D\+A\+TA~\char`\"{}Data/create\+\_\+tag\+\_\+time.\+txt\char`\"{}}
+
+\mbox{\Hypertarget{timing_8cpp_aec94c260f6f2e68e50c85324a07e89ac}\label{timing_8cpp_aec94c260f6f2e68e50c85324a07e89ac}} 
+\index{timing.\+cpp@{timing.\+cpp}!F\+I\+L\+E\+S\+E\+A\+R\+C\+H\+D\+A\+TA@{F\+I\+L\+E\+S\+E\+A\+R\+C\+H\+D\+A\+TA}}
+\index{F\+I\+L\+E\+S\+E\+A\+R\+C\+H\+D\+A\+TA@{F\+I\+L\+E\+S\+E\+A\+R\+C\+H\+D\+A\+TA}!timing.\+cpp@{timing.\+cpp}}
+\subsubsection{\texorpdfstring{F\+I\+L\+E\+S\+E\+A\+R\+C\+H\+D\+A\+TA}{FILESEARCHDATA}}
+{\footnotesize\ttfamily \#define F\+I\+L\+E\+S\+E\+A\+R\+C\+H\+D\+A\+TA~\char`\"{}Data/file\+\_\+search\+\_\+time.\+txt\char`\"{}}
+
+\mbox{\Hypertarget{timing_8cpp_a3e5bd6a8e5e432d3b4d7fd6e635af0d5}\label{timing_8cpp_a3e5bd6a8e5e432d3b4d7fd6e635af0d5}} 
+\index{timing.\+cpp@{timing.\+cpp}!R\+E\+N\+A\+M\+E\+T\+A\+G\+D\+A\+TA@{R\+E\+N\+A\+M\+E\+T\+A\+G\+D\+A\+TA}}
+\index{R\+E\+N\+A\+M\+E\+T\+A\+G\+D\+A\+TA@{R\+E\+N\+A\+M\+E\+T\+A\+G\+D\+A\+TA}!timing.\+cpp@{timing.\+cpp}}
+\subsubsection{\texorpdfstring{R\+E\+N\+A\+M\+E\+T\+A\+G\+D\+A\+TA}{RENAMETAGDATA}}
+{\footnotesize\ttfamily \#define R\+E\+N\+A\+M\+E\+T\+A\+G\+D\+A\+TA~\char`\"{}Data/rename\+\_\+tag\+\_\+time.\+txt\char`\"{}}
+
+\mbox{\Hypertarget{timing_8cpp_ada4428c0dd22034c241f004477d9f75d}\label{timing_8cpp_ada4428c0dd22034c241f004477d9f75d}} 
+\index{timing.\+cpp@{timing.\+cpp}!S\+T\+A\+R\+T\+T\+U\+P\+D\+A\+TA@{S\+T\+A\+R\+T\+T\+U\+P\+D\+A\+TA}}
+\index{S\+T\+A\+R\+T\+T\+U\+P\+D\+A\+TA@{S\+T\+A\+R\+T\+T\+U\+P\+D\+A\+TA}!timing.\+cpp@{timing.\+cpp}}
+\subsubsection{\texorpdfstring{S\+T\+A\+R\+T\+T\+U\+P\+D\+A\+TA}{STARTTUPDATA}}
+{\footnotesize\ttfamily \#define S\+T\+A\+R\+T\+T\+U\+P\+D\+A\+TA~\char`\"{}Data/startup\+\_\+time.\+txt\char`\"{}}
+
+\mbox{\Hypertarget{timing_8cpp_a4a399f6b172f69298391fd9be841d9d9}\label{timing_8cpp_a4a399f6b172f69298391fd9be841d9d9}} 
+\index{timing.\+cpp@{timing.\+cpp}!T\+A\+G\+F\+I\+L\+E\+D\+A\+TA@{T\+A\+G\+F\+I\+L\+E\+D\+A\+TA}}
+\index{T\+A\+G\+F\+I\+L\+E\+D\+A\+TA@{T\+A\+G\+F\+I\+L\+E\+D\+A\+TA}!timing.\+cpp@{timing.\+cpp}}
+\subsubsection{\texorpdfstring{T\+A\+G\+F\+I\+L\+E\+D\+A\+TA}{TAGFILEDATA}}
+{\footnotesize\ttfamily \#define T\+A\+G\+F\+I\+L\+E\+D\+A\+TA~\char`\"{}Data/tag\+\_\+file\+\_\+time.\+txt\char`\"{}}
+
+\mbox{\Hypertarget{timing_8cpp_a0dddc6d0c34ccd34bcb22d331e373af9}\label{timing_8cpp_a0dddc6d0c34ccd34bcb22d331e373af9}} 
+\index{timing.\+cpp@{timing.\+cpp}!T\+A\+G\+S\+E\+A\+R\+C\+H\+D\+A\+TA@{T\+A\+G\+S\+E\+A\+R\+C\+H\+D\+A\+TA}}
+\index{T\+A\+G\+S\+E\+A\+R\+C\+H\+D\+A\+TA@{T\+A\+G\+S\+E\+A\+R\+C\+H\+D\+A\+TA}!timing.\+cpp@{timing.\+cpp}}
+\subsubsection{\texorpdfstring{T\+A\+G\+S\+E\+A\+R\+C\+H\+D\+A\+TA}{TAGSEARCHDATA}}
+{\footnotesize\ttfamily \#define T\+A\+G\+S\+E\+A\+R\+C\+H\+D\+A\+TA~\char`\"{}Data/tag\+\_\+search\+\_\+time.\+txt\char`\"{}}
+
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{timing_8cpp_a3c04138a5bfe5d72780bb7e82a18e627}\label{timing_8cpp_a3c04138a5bfe5d72780bb7e82a18e627}} 
+\index{timing.\+cpp@{timing.\+cpp}!main@{main}}
+\index{main@{main}!timing.\+cpp@{timing.\+cpp}}
+\subsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$$\ast$}]{argv }\end{DoxyParamCaption})}
+

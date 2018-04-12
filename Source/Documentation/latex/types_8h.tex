@@ -1,0 +1,113 @@
+\hypertarget{types_8h}{}\section{Filesystem/\+Daemon\+Dependancies/\+Types/types.h File Reference}
+\label{types_8h}\index{Filesystem/\+Daemon\+Dependancies/\+Types/types.\+h@{Filesystem/\+Daemon\+Dependancies/\+Types/types.\+h}}
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$cstring$>$}\newline
+{\ttfamily \#include $<$queue$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$unordered\+\_\+set$>$}\newline
+{\ttfamily \#include $<$map$>$}\newline
+{\ttfamily \#include $<$unordered\+\_\+map$>$}\newline
+{\ttfamily \#include $<$algorithm$>$}\newline
+{\ttfamily \#include $<$utility$>$}\newline
+{\ttfamily \#include $<$cstdlib$>$}\newline
+{\ttfamily \#include $<$time.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}../../../\+Shared\+Headers/\+Arboreal\+\_\+\+Exceptions.\+h\char`\"{}}\newline
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structindex}{index}}
+\item 
+struct \mbox{\hyperlink{structrootSuperBlock}{root\+Super\+Block}}
+\item 
+struct \mbox{\hyperlink{structtagTreeSuperBlock}{tag\+Tree\+Super\+Block}}
+\item 
+struct \mbox{\hyperlink{structfile__attributes}{file\+\_\+attributes}}
+\item 
+struct \mbox{\hyperlink{structfinode}{finode}}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{types_8h_ae42cb3a5575e7066ec902fd1d06a83d5}{M\+A\+Xopen\+\_\+fileS}}~1000
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef unsigned long \mbox{\hyperlink{types_8h_a7e9497c76561c24964c9f56b0c014ea2}{Blk\+Num\+Type}}
+\item 
+typedef struct \mbox{\hyperlink{structindex}{index}} \mbox{\hyperlink{types_8h_a0413e45e5062ea9a8ada2a489d964795}{Index}}
+\item 
+typedef struct \mbox{\hyperlink{structrootSuperBlock}{root\+Super\+Block}} \mbox{\hyperlink{types_8h_a58d630469b14704f0641dfca9020e79f}{Root\+Super\+Block}}
+\item 
+typedef struct \mbox{\hyperlink{structtagTreeSuperBlock}{tag\+Tree\+Super\+Block}} \mbox{\hyperlink{types_8h_ad4bec2eebf380ea260e9c63daa2db4b4}{Tag\+Tree\+Super\+Block}}
+\item 
+typedef struct \mbox{\hyperlink{structfinode}{finode}} \mbox{\hyperlink{types_8h_a6203539f8b438ea4f3054bd73197ee4f}{Finode}}
+\item 
+typedef struct \mbox{\hyperlink{structfile__attributes}{file\+\_\+attributes}} \mbox{\hyperlink{types_8h_a86532b3b91ef5b9c4c8534afea4e7011}{File\+Attributes}}
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{types_8h_a117352cc494cc62c6b2f1882786a332c}{D\+E\+B\+UG}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{types_8h_ae42cb3a5575e7066ec902fd1d06a83d5}\label{types_8h_ae42cb3a5575e7066ec902fd1d06a83d5}} 
+\index{types.\+h@{types.\+h}!M\+A\+Xopen\+\_\+fileS@{M\+A\+Xopen\+\_\+fileS}}
+\index{M\+A\+Xopen\+\_\+fileS@{M\+A\+Xopen\+\_\+fileS}!types.\+h@{types.\+h}}
+\subsubsection{\texorpdfstring{M\+A\+Xopen\+\_\+fileS}{MAXopen\_fileS}}
+{\footnotesize\ttfamily \#define M\+A\+Xopen\+\_\+fileS~1000}
+
+
+
+\subsection{Typedef Documentation}
+\mbox{\Hypertarget{types_8h_a7e9497c76561c24964c9f56b0c014ea2}\label{types_8h_a7e9497c76561c24964c9f56b0c014ea2}} 
+\index{types.\+h@{types.\+h}!Blk\+Num\+Type@{Blk\+Num\+Type}}
+\index{Blk\+Num\+Type@{Blk\+Num\+Type}!types.\+h@{types.\+h}}
+\subsubsection{\texorpdfstring{Blk\+Num\+Type}{BlkNumType}}
+{\footnotesize\ttfamily typedef unsigned long \mbox{\hyperlink{types_8h_a7e9497c76561c24964c9f56b0c014ea2}{Blk\+Num\+Type}}}
+
+\mbox{\Hypertarget{types_8h_a86532b3b91ef5b9c4c8534afea4e7011}\label{types_8h_a86532b3b91ef5b9c4c8534afea4e7011}} 
+\index{types.\+h@{types.\+h}!File\+Attributes@{File\+Attributes}}
+\index{File\+Attributes@{File\+Attributes}!types.\+h@{types.\+h}}
+\subsubsection{\texorpdfstring{File\+Attributes}{FileAttributes}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structfile__attributes}{file\+\_\+attributes}} \mbox{\hyperlink{types_8h_a86532b3b91ef5b9c4c8534afea4e7011}{File\+Attributes}}}
+
+\mbox{\Hypertarget{types_8h_a6203539f8b438ea4f3054bd73197ee4f}\label{types_8h_a6203539f8b438ea4f3054bd73197ee4f}} 
+\index{types.\+h@{types.\+h}!Finode@{Finode}}
+\index{Finode@{Finode}!types.\+h@{types.\+h}}
+\subsubsection{\texorpdfstring{Finode}{Finode}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structfinode}{finode}} \mbox{\hyperlink{types_8h_a6203539f8b438ea4f3054bd73197ee4f}{Finode}}}
+
+\mbox{\Hypertarget{types_8h_a0413e45e5062ea9a8ada2a489d964795}\label{types_8h_a0413e45e5062ea9a8ada2a489d964795}} 
+\index{types.\+h@{types.\+h}!Index@{Index}}
+\index{Index@{Index}!types.\+h@{types.\+h}}
+\subsubsection{\texorpdfstring{Index}{Index}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structindex}{index}} \mbox{\hyperlink{types_8h_a0413e45e5062ea9a8ada2a489d964795}{Index}}}
+
+\mbox{\Hypertarget{types_8h_a58d630469b14704f0641dfca9020e79f}\label{types_8h_a58d630469b14704f0641dfca9020e79f}} 
+\index{types.\+h@{types.\+h}!Root\+Super\+Block@{Root\+Super\+Block}}
+\index{Root\+Super\+Block@{Root\+Super\+Block}!types.\+h@{types.\+h}}
+\subsubsection{\texorpdfstring{Root\+Super\+Block}{RootSuperBlock}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structrootSuperBlock}{root\+Super\+Block}} \mbox{\hyperlink{types_8h_a58d630469b14704f0641dfca9020e79f}{Root\+Super\+Block}}}
+
+\mbox{\Hypertarget{types_8h_ad4bec2eebf380ea260e9c63daa2db4b4}\label{types_8h_ad4bec2eebf380ea260e9c63daa2db4b4}} 
+\index{types.\+h@{types.\+h}!Tag\+Tree\+Super\+Block@{Tag\+Tree\+Super\+Block}}
+\index{Tag\+Tree\+Super\+Block@{Tag\+Tree\+Super\+Block}!types.\+h@{types.\+h}}
+\subsubsection{\texorpdfstring{Tag\+Tree\+Super\+Block}{TagTreeSuperBlock}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structtagTreeSuperBlock}{tag\+Tree\+Super\+Block}} \mbox{\hyperlink{types_8h_ad4bec2eebf380ea260e9c63daa2db4b4}{Tag\+Tree\+Super\+Block}}}
+
+
+
+\subsection{Variable Documentation}
+\mbox{\Hypertarget{types_8h_a117352cc494cc62c6b2f1882786a332c}\label{types_8h_a117352cc494cc62c6b2f1882786a332c}} 
+\index{types.\+h@{types.\+h}!D\+E\+B\+UG@{D\+E\+B\+UG}}
+\index{D\+E\+B\+UG@{D\+E\+B\+UG}!types.\+h@{types.\+h}}
+\subsubsection{\texorpdfstring{D\+E\+B\+UG}{DEBUG}}
+{\footnotesize\ttfamily bool D\+E\+B\+UG}
+

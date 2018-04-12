@@ -1,0 +1,754 @@
+\hypertarget{class_c_l_i}{}\section{C\+LI Class Reference}
+\label{class_c_l_i}\index{C\+LI@{C\+LI}}
+
+
+{\ttfamily \#include $<$Cli.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_c_l_i_a0c3b5662a3f33b5a76021be177c3eef2}{C\+LI}} (char $\ast$$\ast$partition)
+\item 
+\mbox{\hyperlink{class_c_l_i_aeafaa56f2b2d8c97121ed52125e3fa9a}{C\+LI}} (char $\ast$$\ast$partition, bool debug)
+\item 
+\mbox{\hyperlink{class_c_l_i_a4eb5e9a1c695edf4dcc705b9c12a0a8d}{C\+LI}} (char $\ast$$\ast$partition, char $\ast$is\+Script)
+\item 
+\mbox{\hyperlink{class_c_l_i_a5d9746160fc642addd9b4aff6cc4eef2}{C\+LI}} (char $\ast$$\ast$partition, char $\ast$is\+Script, bool debug)
+\item 
+\mbox{\hyperlink{class_c_l_i_a9f59d57abf434f7161fcf3f61b725752}{$\sim$\+C\+LI}} ()
+\item 
+void \mbox{\hyperlink{class_c_l_i_a1492005f186392031bd4d447cb20e975}{start}} ()
+\item 
+void \mbox{\hyperlink{class_c_l_i_a5ce3ce0818fc0afe2a277995000ea22b}{run}} (std\+::string input)
+\item 
+void \mbox{\hyperlink{class_c_l_i_aeefc8cd81999836a90c2cfaced6177f1}{run}} ()
+\item 
+char $\ast$ \mbox{\hyperlink{class_c_l_i_a6c3f97b04646b070ad82801adf0dc521}{build}} (const int id, const std\+::string input)
+\item 
+void \mbox{\hyperlink{class_c_l_i_a1d25fcb18cf42e03a7e38c24a8ba1506}{send\+\_\+cmnd}} (const char $\ast$command)
+\item 
+void \mbox{\hyperlink{class_c_l_i_a87c68e5edcb5750d1199839e6b1f843e}{await\+\_\+response}} ()
+\begin{DoxyCompactList}\small\item\em Block while waiting for response from filesystem. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{class_c_l_i_a93c65474d55597296ddda4739664ea27}{\+\_\+is\+\_\+script}}
+\item 
+bool \mbox{\hyperlink{class_c_l_i_a294b192f7400c451c7d4ee983ca11d21}{\+\_\+script\+\_\+print}}
+\item 
+std\+::string \mbox{\hyperlink{class_c_l_i_a589aa7edb9b2454720d5b54af3ddea00}{\+\_\+my\+\_\+pid}}
+\item 
+std\+::string \mbox{\hyperlink{class_c_l_i_ad3b7579608f8c2e1d4c01a8668f701d9}{\+\_\+client\+\_\+sockpath}}
+\item 
+std\+::string \mbox{\hyperlink{class_c_l_i_a582f907a9e5dc5c0dcd264e2f1b14f76}{\+\_\+server\+\_\+sockpath}}
+\item 
+int \mbox{\hyperlink{class_c_l_i_a13b5699d950ce765cad098f7613a3e20}{\+\_\+max\+\_\+string\+\_\+size}}
+\item 
+std\+::string \mbox{\hyperlink{class_c_l_i_aa58101a66621f7b2b64d4e566ad7bd89}{\+\_\+my\+\_\+partition}}
+\item 
+std\+::string \mbox{\hyperlink{class_c_l_i_a664097f330fa6beaad30f35eb9577ce1}{\+\_\+cwd}} = \char`\"{}/\char`\"{}
+\item 
+int \mbox{\hyperlink{class_c_l_i_a89c215687bff66a3e0359a17bac3657d}{\+\_\+client\+\_\+sock}}
+\item 
+struct sockaddr\+\_\+un \mbox{\hyperlink{class_c_l_i_a8100e64420f5528d1a09a18433ae24f9}{\+\_\+server\+\_\+sockaddr}}
+\item 
+struct sockaddr\+\_\+un \mbox{\hyperlink{class_c_l_i_a8c449fcba5105eec8d582c4695bfaca9}{\+\_\+client\+\_\+sockaddr}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_c_l_i_a0c3b5662a3f33b5a76021be177c3eef2}\label{class_c_l_i_a0c3b5662a3f33b5a76021be177c3eef2}} 
+\index{C\+LI@{C\+LI}!C\+LI@{C\+LI}}
+\index{C\+LI@{C\+LI}!C\+LI@{C\+LI}}
+\subsubsection{\texorpdfstring{C\+L\+I()}{CLI()}\hspace{0.1cm}{\footnotesize\ttfamily [1/4]}}
+{\footnotesize\ttfamily C\+L\+I\+::\+C\+LI (\begin{DoxyParamCaption}\item[{char $\ast$$\ast$}]{partition }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em partition} & A pointer to a charachter array containing the partition name that this particular command line interface will operate in\\
+\hline
+\end{DoxyParams}
+Constructor for use in Mode 1 of the Command Line Interface Reads from explicit user input Does N\+OT print debug data to log 
+\begin{DoxyCode}
+190 \{
+191   \mbox{\hyperlink{class_c_l_i_aa58101a66621f7b2b64d4e566ad7bd89}{\_my\_partition}} = partition[1];
+192   \mbox{\hyperlink{class_c_l_i_a589aa7edb9b2454720d5b54af3ddea00}{\_my\_pid}} = std::to\_string(getpid());
+193   \mbox{\hyperlink{class_c_l_i_ad3b7579608f8c2e1d4c01a8668f701d9}{\_client\_sockpath}} = \textcolor{stringliteral}{"cli-"} + \mbox{\hyperlink{class_c_l_i_a589aa7edb9b2454720d5b54af3ddea00}{\_my\_pid}} + \textcolor{stringliteral}{"-socket"};
+194   \mbox{\hyperlink{class_c_l_i_a582f907a9e5dc5c0dcd264e2f1b14f76}{\_server\_sockpath}} = \textcolor{stringliteral}{"lson-"} + \mbox{\hyperlink{class_c_l_i_a589aa7edb9b2454720d5b54af3ddea00}{\_my\_pid}} + \textcolor{stringliteral}{"-socket"};
+195 
+196   \mbox{\hyperlink{class_c_l_i_a1492005f186392031bd4d447cb20e975}{start}}();
+197 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{class_c_l_i_aeafaa56f2b2d8c97121ed52125e3fa9a}\label{class_c_l_i_aeafaa56f2b2d8c97121ed52125e3fa9a}} 
+\index{C\+LI@{C\+LI}!C\+LI@{C\+LI}}
+\index{C\+LI@{C\+LI}!C\+LI@{C\+LI}}
+\subsubsection{\texorpdfstring{C\+L\+I()}{CLI()}\hspace{0.1cm}{\footnotesize\ttfamily [2/4]}}
+{\footnotesize\ttfamily C\+L\+I\+::\+C\+LI (\begin{DoxyParamCaption}\item[{char $\ast$$\ast$}]{partition,  }\item[{bool}]{debug }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em partition} & A pointer to a charachter array containing the partition name that this particular command line interface will operate in\\
+\hline
+{\em debug} & Wether or not debug messages should be turned on for this interface\\
+\hline
+\end{DoxyParams}
+Constructor for use in Mode 2 of the Command Line Interface Reads from explicit user input Does P\+R\+I\+N\+TS D\+E\+B\+UG data to log 
+\begin{DoxyCode}
+206 \{
+207   \mbox{\hyperlink{class_c_l_i_aa58101a66621f7b2b64d4e566ad7bd89}{\_my\_partition}} = partition[1];
+208   \mbox{\hyperlink{class_c_l_i_a589aa7edb9b2454720d5b54af3ddea00}{\_my\_pid}} = std::to\_string(getpid());
+209   \mbox{\hyperlink{class_c_l_i_ad3b7579608f8c2e1d4c01a8668f701d9}{\_client\_sockpath}} = \textcolor{stringliteral}{"cli-"} + \mbox{\hyperlink{class_c_l_i_a589aa7edb9b2454720d5b54af3ddea00}{\_my\_pid}} + \textcolor{stringliteral}{"-socket"};
+210   \mbox{\hyperlink{class_c_l_i_a582f907a9e5dc5c0dcd264e2f1b14f76}{\_server\_sockpath}} = \textcolor{stringliteral}{"lson-"} + \mbox{\hyperlink{class_c_l_i_a589aa7edb9b2454720d5b54af3ddea00}{\_my\_pid}} + \textcolor{stringliteral}{"-socket"};
+211 
+212   \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\mbox{\hyperlink{class_c_l_i_aa58101a66621f7b2b64d4e566ad7bd89}{\_my\_partition}});
+213   \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\mbox{\hyperlink{class_c_l_i_a589aa7edb9b2454720d5b54af3ddea00}{\_my\_pid}});
+214   \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\mbox{\hyperlink{class_c_l_i_ad3b7579608f8c2e1d4c01a8668f701d9}{\_client\_sockpath}});
+215   \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\mbox{\hyperlink{class_c_l_i_a582f907a9e5dc5c0dcd264e2f1b14f76}{\_server\_sockpath}});
+216   \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Running Start()..."});
+217   \mbox{\hyperlink{class_c_l_i_a1492005f186392031bd4d447cb20e975}{start}}();
+218 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{class_c_l_i_a4eb5e9a1c695edf4dcc705b9c12a0a8d}\label{class_c_l_i_a4eb5e9a1c695edf4dcc705b9c12a0a8d}} 
+\index{C\+LI@{C\+LI}!C\+LI@{C\+LI}}
+\index{C\+LI@{C\+LI}!C\+LI@{C\+LI}}
+\subsubsection{\texorpdfstring{C\+L\+I()}{CLI()}\hspace{0.1cm}{\footnotesize\ttfamily [3/4]}}
+{\footnotesize\ttfamily C\+L\+I\+::\+C\+LI (\begin{DoxyParamCaption}\item[{char $\ast$$\ast$}]{partition,  }\item[{char $\ast$}]{is\+Script }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em partition} & A pointer to a charachter array containing the partition name that this particular command line interface will operate in\\
+\hline
+{\em is\+Script} & Flag telling whether or not the input for this interface will be coming from a file (The flag value is \textquotesingle{}-\/s\textquotesingle{})\\
+\hline
+\end{DoxyParams}
+Constructor for use in Mode 3 of the Command Line Interface Reads from file Does N\+OT print debug data to log 
+\begin{DoxyCode}
+227 \{
+228   \mbox{\hyperlink{class_c_l_i_aa58101a66621f7b2b64d4e566ad7bd89}{\_my\_partition}} = partition[1];
+229   std::string script = isScript;
+230   \mbox{\hyperlink{class_c_l_i_a589aa7edb9b2454720d5b54af3ddea00}{\_my\_pid}} = std::to\_string(getpid());
+231   \mbox{\hyperlink{class_c_l_i_ad3b7579608f8c2e1d4c01a8668f701d9}{\_client\_sockpath}} = \textcolor{stringliteral}{"cli-"} + \mbox{\hyperlink{class_c_l_i_a589aa7edb9b2454720d5b54af3ddea00}{\_my\_pid}} + \textcolor{stringliteral}{"-socket"};
+232   \mbox{\hyperlink{class_c_l_i_a582f907a9e5dc5c0dcd264e2f1b14f76}{\_server\_sockpath}} = \textcolor{stringliteral}{"lson-"} + \mbox{\hyperlink{class_c_l_i_a589aa7edb9b2454720d5b54af3ddea00}{\_my\_pid}} + \textcolor{stringliteral}{"-socket"};
+233   \textcolor{keywordflow}{if}(script == \textcolor{stringliteral}{"-s"})
+234   \{
+235     \mbox{\hyperlink{class_c_l_i_a93c65474d55597296ddda4739664ea27}{\_is\_script}} = \textcolor{keyword}{true};
+236     \mbox{\hyperlink{class_c_l_i_a294b192f7400c451c7d4ee983ca11d21}{\_script\_print}} = \textcolor{keyword}{false};
+237   \}
+238   \textcolor{keywordflow}{else} \textcolor{keywordflow}{if}(script == \textcolor{stringliteral}{"-sp"})
+239   \{
+240     \mbox{\hyperlink{class_c_l_i_a93c65474d55597296ddda4739664ea27}{\_is\_script}} = \textcolor{keyword}{true};
+241     \mbox{\hyperlink{class_c_l_i_a294b192f7400c451c7d4ee983ca11d21}{\_script\_print}} = \textcolor{keyword}{true};
+242   \}
+243 
+244   \mbox{\hyperlink{class_c_l_i_a1492005f186392031bd4d447cb20e975}{start}}();
+245 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{class_c_l_i_a5d9746160fc642addd9b4aff6cc4eef2}\label{class_c_l_i_a5d9746160fc642addd9b4aff6cc4eef2}} 
+\index{C\+LI@{C\+LI}!C\+LI@{C\+LI}}
+\index{C\+LI@{C\+LI}!C\+LI@{C\+LI}}
+\subsubsection{\texorpdfstring{C\+L\+I()}{CLI()}\hspace{0.1cm}{\footnotesize\ttfamily [4/4]}}
+{\footnotesize\ttfamily C\+L\+I\+::\+C\+LI (\begin{DoxyParamCaption}\item[{char $\ast$$\ast$}]{partition,  }\item[{char $\ast$}]{is\+Script,  }\item[{bool}]{debug }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em partition} & A pointer to a charachter array containing the partition name that this particular command line interface will operate in\\
+\hline
+{\em debug} & Wether or not debug messages should be turned on for this interface\\
+\hline
+{\em is\+Script} & Flag telling whether or not the input for this interface will be coming from a file (The flag value is \textquotesingle{}-\/s\textquotesingle{})\\
+\hline
+\end{DoxyParams}
+Constructor for use in Mode 3 of the Command Line Interface Reads from file Does P\+R\+I\+N\+TS D\+E\+B\+UG data to log 
+\begin{DoxyCode}
+254 \{
+255   \mbox{\hyperlink{class_c_l_i_aa58101a66621f7b2b64d4e566ad7bd89}{\_my\_partition}} = partition[1];
+256   std::string script = isScript;
+257   \mbox{\hyperlink{class_c_l_i_a589aa7edb9b2454720d5b54af3ddea00}{\_my\_pid}} = std::to\_string(getpid());
+258   \mbox{\hyperlink{class_c_l_i_ad3b7579608f8c2e1d4c01a8668f701d9}{\_client\_sockpath}} = \textcolor{stringliteral}{"cli-"} + \mbox{\hyperlink{class_c_l_i_a589aa7edb9b2454720d5b54af3ddea00}{\_my\_pid}} + \textcolor{stringliteral}{"-socket"};
+259   \mbox{\hyperlink{class_c_l_i_a582f907a9e5dc5c0dcd264e2f1b14f76}{\_server\_sockpath}} = \textcolor{stringliteral}{"lson-"} + \mbox{\hyperlink{class_c_l_i_a589aa7edb9b2454720d5b54af3ddea00}{\_my\_pid}} + \textcolor{stringliteral}{"-socket"};
+260 
+261   \textcolor{keywordflow}{if}(script == \textcolor{stringliteral}{"-s"})
+262   \{
+263     \mbox{\hyperlink{class_c_l_i_a93c65474d55597296ddda4739664ea27}{\_is\_script}} = \textcolor{keyword}{true};
+264     \mbox{\hyperlink{class_c_l_i_a294b192f7400c451c7d4ee983ca11d21}{\_script\_print}} = \textcolor{keyword}{false};
+265   \}
+266   \textcolor{keywordflow}{else} \textcolor{keywordflow}{if}(script == \textcolor{stringliteral}{"-sp"})
+267   \{
+268     \mbox{\hyperlink{class_c_l_i_a93c65474d55597296ddda4739664ea27}{\_is\_script}} = \textcolor{keyword}{true};
+269     \mbox{\hyperlink{class_c_l_i_a294b192f7400c451c7d4ee983ca11d21}{\_script\_print}} = \textcolor{keyword}{true};
+270   \}
+271 
+272   \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\mbox{\hyperlink{class_c_l_i_aa58101a66621f7b2b64d4e566ad7bd89}{\_my\_partition}});
+273   \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\mbox{\hyperlink{class_c_l_i_a589aa7edb9b2454720d5b54af3ddea00}{\_my\_pid}});
+274   \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\mbox{\hyperlink{class_c_l_i_ad3b7579608f8c2e1d4c01a8668f701d9}{\_client\_sockpath}});
+275   \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\mbox{\hyperlink{class_c_l_i_a582f907a9e5dc5c0dcd264e2f1b14f76}{\_server\_sockpath}});
+276   \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Running Start()..."});
+277   \mbox{\hyperlink{class_c_l_i_a1492005f186392031bd4d447cb20e975}{start}}();
+278 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{class_c_l_i_a9f59d57abf434f7161fcf3f61b725752}\label{class_c_l_i_a9f59d57abf434f7161fcf3f61b725752}} 
+\index{C\+LI@{C\+LI}!````~C\+LI@{$\sim$\+C\+LI}}
+\index{````~C\+LI@{$\sim$\+C\+LI}!C\+LI@{C\+LI}}
+\subsubsection{\texorpdfstring{$\sim$\+C\+L\+I()}{~CLI()}}
+{\footnotesize\ttfamily C\+L\+I\+::$\sim$\+C\+LI (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Default Destructor 
+\begin{DoxyCode}
+288 \{\}
+\end{DoxyCode}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_c_l_i_a87c68e5edcb5750d1199839e6b1f843e}\label{class_c_l_i_a87c68e5edcb5750d1199839e6b1f843e}} 
+\index{C\+LI@{C\+LI}!await\+\_\+response@{await\+\_\+response}}
+\index{await\+\_\+response@{await\+\_\+response}!C\+LI@{C\+LI}}
+\subsubsection{\texorpdfstring{await\+\_\+response()}{await\_response()}}
+{\footnotesize\ttfamily void C\+L\+I\+::await\+\_\+response (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Block while waiting for response from filesystem. 
+
+Receive data from the liaison process The data is X number of charachters The data can be anything from a list of files returned by the \textquotesingle{}find\textquotesingle{} operation To an error message. This function blocks until it receives data.
+
+Most filesystem commands operate on a 1\+:1 ratio, that is, sending one command will generate one response. However, some commands (most notably \textquotesingle{}find\textquotesingle{} \& \textquotesingle{}read\textquotesingle{}) may have a ratio of 1\+:Many (For example \textquotesingle{}find -\/t \mbox{[}tag1\mbox{]}\textquotesingle{} may return any number of files but it is only a single command). In situations such as these it is necssary to tell the Command Line to wait until the filesystem has sent all data. Thus, if the Command Line receives \char`\"{}\+W\+A\+I\+T\char`\"{} it will know to continue to block on a call to receive until the Liaison has gathered all of the nescessary data. However this is still not enough and it is also nescessary to tell the Command Line how much data it must read, for this reason, the first piece of data that the Liaison will send, will be the number of bytes the Command Line needs to read. After this value is received the actual data is sent. 
+\begin{DoxyCode}
+699 \{
+700 
+701   \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Receiving Data From File System..."});
+702   \textcolor{keywordtype}{char}* temp2 = \mbox{\hyperlink{cli__helper_8hpp_a9a7850489cf50a8693b388acc259ccaa}{receive\_from\_server}}(\mbox{\hyperlink{class_c_l_i_a89c215687bff66a3e0359a17bac3657d}{\_client\_sock}}, 
+      \mbox{\hyperlink{class_c_l_i_ad3b7579608f8c2e1d4c01a8668f701d9}{\_client\_sockpath}}, \mbox{\hyperlink{_cli_8h_a97a33a33e5428e13cfa0eff5ba0e846f}{MaxBufferSize}}, \mbox{\hyperlink{_cli_8h_a1ca03d8f367ec7987b5a7321fe82e23e}{Flag}});
+703 
+704   std::string temp3 = temp2;
+705   \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Received: \(\backslash\)n"} + temp3);
+706   \textcolor{keyword}{delete} temp2;
+707   \textcolor{keywordflow}{return};
+708 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{class_c_l_i_a6c3f97b04646b070ad82801adf0dc521}\label{class_c_l_i_a6c3f97b04646b070ad82801adf0dc521}} 
+\index{C\+LI@{C\+LI}!build@{build}}
+\index{build@{build}!C\+LI@{C\+LI}}
+\subsubsection{\texorpdfstring{build()}{build()}}
+{\footnotesize\ttfamily char $\ast$ C\+L\+I\+::build (\begin{DoxyParamCaption}\item[{const int}]{id,  }\item[{const std\+::string}]{input }\end{DoxyParamCaption})}
+
+Converts a std\+::string to a C-\/\+Style String, embeds the command id into the C-\/\+String, and pads it to length = Max\+Buffer\+Size
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & \mbox{\hyperlink{class_file}{File}} System Command ID\\
+\hline
+{\em input} & \mbox{\hyperlink{class_file}{File}} System Command\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A C-\/\+Style String of length = Max\+Buffer\+Size containing the command ID in the first X Bytes where X is the size of an integer type followed by the command itself followed by as many nullbytes as nescesarry in order to have a length = Max\+Buffer\+Size
+\end{DoxyReturn}
+Format user input for use by Liaison process\+:
+
+1) Prepend a byte representation of the command ID to the array 2) Copy the user input into the the array (skip the first X indecies were X is the size of an integer (we don\textquotesingle{}t want to overwrite the command ID))
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & Comand ID \\
+\hline
+{\em input} & User input string \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to a charachter array 
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+729 \{
+730   \textcolor{keywordtype}{char}* command = \textcolor{keyword}{new} \textcolor{keywordtype}{char}[\mbox{\hyperlink{_cli_8h_a97a33a33e5428e13cfa0eff5ba0e846f}{MaxBufferSize}}];
+731 
+732   \textcolor{comment}{/* Zero out the command buffer */}
+733   memset(command,\textcolor{charliteral}{'\(\backslash\)0'},\mbox{\hyperlink{_cli_8h_a97a33a33e5428e13cfa0eff5ba0e846f}{MaxBufferSize}});
+734 
+735   \textcolor{comment}{/* Add the Command ID to the command string and convert to char[] */}
+736   memcpy(command,&\textcolor{keywordtype}{id},\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}));
+737   memcpy(command + \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}),const\_cast<char*>(input.c\_str()),input.length());
+738   \textcolor{keywordflow}{return} command;
+739 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{class_c_l_i_a5ce3ce0818fc0afe2a277995000ea22b}\label{class_c_l_i_a5ce3ce0818fc0afe2a277995000ea22b}} 
+\index{C\+LI@{C\+LI}!run@{run}}
+\index{run@{run}!C\+LI@{C\+LI}}
+\subsubsection{\texorpdfstring{run()}{run()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void C\+L\+I\+::run (\begin{DoxyParamCaption}\item[{std\+::string}]{input }\end{DoxyParamCaption})}
+
+This function operates the same as \mbox{\hyperlink{class_c_l_i_aeefc8cd81999836a90c2cfaced6177f1}{run()}} but takes its input from a filestream rather than a user. Reads in the input data (A \mbox{\hyperlink{class_file}{File}} System Command) and sends it down to the file system. ~\newline
+Some commands that do not need to interact with the \mbox{\hyperlink{class_file}{File}} System code are handled in this function. For example, displaying the \textquotesingle{}help\textquotesingle{} messages is executed from this function since the \mbox{\hyperlink{class_file}{File}} System does not have or need and \textquotesingle{}help\textquotesingle{} command. This function will block until it receives a response from the \mbox{\hyperlink{class_file}{File}} System (provided that the command inputted is intended to go to the \mbox{\hyperlink{class_file}{File}} System) this function will continue reading from the input file until an error occurs or \textquotesingle{}end\textquotesingle{} is read in.
+
+
+\begin{DoxyParams}{Parameters}
+{\em input} & A std\+::string value representing a \mbox{\hyperlink{class_file}{File}} System command. This value is generally handed to the function by reading an input file. But may also be sent to it from another process such as a UI \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_c_l_i_aeefc8cd81999836a90c2cfaced6177f1}\label{class_c_l_i_aeefc8cd81999836a90c2cfaced6177f1}} 
+\index{C\+LI@{C\+LI}!run@{run}}
+\index{run@{run}!C\+LI@{C\+LI}}
+\subsubsection{\texorpdfstring{run()}{run()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void C\+L\+I\+::run (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Reads in the input data (A \mbox{\hyperlink{class_file}{File}} System Command) and sends it down to the file system. ~\newline
+Some commands that do not need to interact with the \mbox{\hyperlink{class_file}{File}} System code are handled in this function. For example, displaying the \textquotesingle{}help\textquotesingle{} messages is executed from this function since the \mbox{\hyperlink{class_file}{File}} System does not have or need and \textquotesingle{}help\textquotesingle{} command. This function will block until it receives a response from the \mbox{\hyperlink{class_file}{File}} System (provided that the command inputted is intended to go to the \mbox{\hyperlink{class_file}{File}} System) this function will continue reading from user input until an error occurs or the user quits the application.
+
+Reads input from user and sends it to the Liaison Process. Waits for corresponding data from the \mbox{\hyperlink{class_file}{File}} System. 
+\begin{DoxyCode}
+499 \{
+500 
+501   \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Beginning To Gather User Input"});
+502   std::string input;
+503 
+504   \textcolor{comment}{/* Reprint prompt after bad command (but only after a bad command) */}
+505   \textcolor{keywordtype}{bool} print\_prompt = \textcolor{keyword}{false};
+506 
+507   \textcolor{comment}{/* Print the welcome header */}
+508   \textcolor{keywordflow}{if}(!\mbox{\hyperlink{class_c_l_i_a93c65474d55597296ddda4739664ea27}{\_is\_script}})\{\mbox{\hyperlink{_print_8h_aab0a749241244d13922556533aeb7069}{print\_header}}();\}
+509 
+510   \textcolor{comment}{/* Operations will differ slightly if reading commands from a text file */}
+511   \textcolor{keywordflow}{if}(\mbox{\hyperlink{class_c_l_i_a93c65474d55597296ddda4739664ea27}{\_is\_script}})
+512   \{
+513     std::cout << \textcolor{stringliteral}{"Reading from input file...\(\backslash\)n"};
+514     std::cout << \textcolor{stringliteral}{"+---------------------------------------\(\backslash\)n\(\backslash\)n\(\backslash\)n"};
+515   \}
+516   \textcolor{comment}{/***********************************************************************************************/}
+517 
+518 
+519   \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Read User Input..."});
+520   \textcolor{keywordflow}{while}(\textcolor{keyword}{true})
+521   \{
+522     \textcolor{keywordflow}{if}(print\_prompt)
+523     \{
+524       \textcolor{keywordflow}{if}(!\mbox{\hyperlink{class_c_l_i_a93c65474d55597296ddda4739664ea27}{\_is\_script}}) std::cout << \textcolor{stringliteral}{"Arboreal >> "};
+525       print\_prompt = \textcolor{keyword}{false};
+526     \}
+527     \textcolor{comment}{/*********************************************************************************************/}
+528     \textcolor{comment}{/* Check for ENTER pressed (prints out a new line with 'Arboreal >> ') */}
+529     \textcolor{keywordtype}{char} c = std::cin.get();
+530     \textcolor{keywordflow}{if}(c == \textcolor{charliteral}{'\(\backslash\)n'})
+531     \{
+532       \textcolor{comment}{/* Don't print prompt if reading from file */}
+533       \textcolor{keywordflow}{if}(!\mbox{\hyperlink{class_c_l_i_a93c65474d55597296ddda4739664ea27}{\_is\_script}})\{std::cout << \textcolor{stringliteral}{"Arboreal >> "};\}
+534       \textcolor{keywordflow}{continue};
+535     \}
+536     \textcolor{comment}{/*********************************************************************************************/}
+537     \textcolor{keywordflow}{else}
+538     \{
+539       \textcolor{comment}{/*}
+540 \textcolor{comment}{       * Since we read one chrachter in to make sure we did not press ENTER,}
+541 \textcolor{comment}{       * Need to put that charcter back or else commands will be short by 1 charachter}
+542 \textcolor{comment}{       */}
+543       std::cin.putback(c);
+544       \textcolor{comment}{/* Get the command */}
+545       getline(std::cin,input);
+546       \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log((\textcolor{stringliteral}{"C: Command Received: "} + input));
+547       \textcolor{comment}{/*******************************************************************************************/}
+548       \textcolor{keywordflow}{if}(input == \textcolor{stringliteral}{"quit"} || input == \textcolor{stringliteral}{"q"} || input == \textcolor{stringliteral}{"Q"})
+549       \{
+550         \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: User Initiated Program Exit"});
+551         std::cout << \textcolor{stringliteral}{"Are you sure you would like to quit? (Y/N)\(\backslash\)n"};
+552         std::cin >> input;
+553         \textcolor{keywordflow}{if}(input == \textcolor{stringliteral}{"Y"} || input == \textcolor{stringliteral}{"y"})
+554         \{
+555 
+556           \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Notifying Liaison Process Of Program Termination"});
+557           \textcolor{keywordtype}{char}* quit = \textcolor{keyword}{new} \textcolor{keywordtype}{char}[\mbox{\hyperlink{_cli_8h_a97a33a33e5428e13cfa0eff5ba0e846f}{MaxBufferSize}}];
+558           \textcolor{keywordtype}{int} val = \mbox{\hyperlink{_command_codes_8h_a3c18e64ca07cf21278f4189cd4c2732f}{QUIT}};
+559           memset(quit,\textcolor{charliteral}{'\(\backslash\)0'},\mbox{\hyperlink{_cli_8h_a97a33a33e5428e13cfa0eff5ba0e846f}{MaxBufferSize}});
+560           memcpy(quit,&val,\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}));
+561           memcpy(quit + \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}), \textcolor{stringliteral}{"QUIT"}, \textcolor{keyword}{sizeof}(\textcolor{stringliteral}{"QUIT"}));
+562           \mbox{\hyperlink{class_c_l_i_a1d25fcb18cf42e03a7e38c24a8ba1506}{send\_cmnd}}(quit);
+563           \textcolor{keywordflow}{return};
+564         \}
+565         \textcolor{keywordflow}{else}\{\textcolor{keywordflow}{continue};\}
+566       \}
+567       \textcolor{comment}{/*******************************************************************************************/}
+568       \textcolor{keywordflow}{else} \textcolor{keywordflow}{if}((input == \textcolor{stringliteral}{"help"} || input == \textcolor{stringliteral}{"h"}) && !\mbox{\hyperlink{class_c_l_i_a93c65474d55597296ddda4739664ea27}{\_is\_script}} )
+569       \{
+570         \mbox{\hyperlink{_print_8h_a97ee70a8770dc30d06c744b24eb2fcfc}{help}}();
+571         \textcolor{keywordflow}{continue};
+572       \}
+573       \textcolor{comment}{/*******************************************************************************************/}
+574       \textcolor{keywordflow}{else} \textcolor{keywordflow}{if}(input[1] == \textcolor{charliteral}{'h'} && !\mbox{\hyperlink{class_c_l_i_a93c65474d55597296ddda4739664ea27}{\_is\_script}})
+575       \{
+576         \textcolor{comment}{/* Single Command Usage Help */}
+577         \textcolor{keywordflow}{switch}(\mbox{\hyperlink{_command_validation_8h_a95eed1f4e272387b6b83605fa29fc74f}{check\_help}}(input))
+578         \{
+579           \textcolor{keywordflow}{case}(\mbox{\hyperlink{_command_codes_8h_a8ed2c7a5f7af60a077cb7a492908f246}{UHELP}}):\{\mbox{\hyperlink{_print_8h_a853216ac51aa181669ff4d3de74058a7}{print\_help}}();\textcolor{keywordflow}{break};\}
+580           \textcolor{keywordflow}{case}(\mbox{\hyperlink{_command_codes_8h_ae545499f005dd93d2a8d7e9844392f28}{UQUIT}}):\{\mbox{\hyperlink{_print_8h_a1de7fcbf316e998b611782c890f46c80}{print\_quit}}();\textcolor{keywordflow}{break};\}
+581           \textcolor{keywordflow}{case}(\mbox{\hyperlink{_command_codes_8h_a2d49d17615df93b902be8037b587aeb8}{UFIND}}):\{\mbox{\hyperlink{_print_8h_ab37c440a3b480084b62d7c4ffc73e96e}{print\_find}}();\textcolor{keywordflow}{break};\}
+582           \textcolor{keywordflow}{case}(\mbox{\hyperlink{_command_codes_8h_a8c4f119839ce6c43f97394898dd91375}{UNEW}}):\{\mbox{\hyperlink{_print_8h_a2af5c1516f602b3efa8351c61bce42b1}{print\_new}}();\textcolor{keywordflow}{break};\}
+583           \textcolor{keywordflow}{case}(\mbox{\hyperlink{_command_codes_8h_a2025129d540adf5ffbfc439a4eb88f8e}{UDEL}}):\{\mbox{\hyperlink{_print_8h_ace74e28003b8468f063d96d56598bfbc}{print\_del}}();\textcolor{keywordflow}{break};\}
+584           \textcolor{keywordflow}{case}(\mbox{\hyperlink{_command_codes_8h_a76f0c81401677e3beb4d1da29e759cc1}{UOPEN}}):\{\mbox{\hyperlink{_print_8h_ab8f103ff111cb60c8998f173926b2ef2}{print\_open}}();\textcolor{keywordflow}{break};\}
+585           \textcolor{keywordflow}{case}(\mbox{\hyperlink{_command_codes_8h_ac720decb45bf0519e222b670969f4b6d}{UCLOSE}}):\{\mbox{\hyperlink{_print_8h_a8363987ad1c2ed926e8712579d497998}{print\_close}}();\textcolor{keywordflow}{break};\}
+586           \textcolor{keywordflow}{case}(\mbox{\hyperlink{_command_codes_8h_ab201f663e14f903bf00f46cb541fc05e}{URNAME}}):\{\mbox{\hyperlink{_print_8h_a60ffed77e20b233652b76fc91a32c8e7}{print\_rname}}();\textcolor{keywordflow}{break};\}
+587           \textcolor{keywordflow}{case}(\mbox{\hyperlink{_command_codes_8h_aa6552c1e1188df9d5cf2801ac14c6b46}{UATTR}}):\{\mbox{\hyperlink{_print_8h_af84104eff85389a34c4472361673704c}{print\_attr}}();\textcolor{keywordflow}{break};\}
+588           \textcolor{keywordflow}{case}(\mbox{\hyperlink{_command_codes_8h_ad7296003cc6fcda418298246be67870d}{UMERG}}):\{\mbox{\hyperlink{_print_8h_a7a6de3a68924ca92c9c69b8f4912ebd7}{print\_merge}}();\textcolor{keywordflow}{break};\}
+589           \textcolor{keywordflow}{case}(\mbox{\hyperlink{_command_codes_8h_ade46ec8637ced751159b1dd02d71dcf0}{UTAG}}):\{\mbox{\hyperlink{_print_8h_addd1e343263545b5ca289e70c2f6bb7f}{print\_tag}}();\textcolor{keywordflow}{break};\}
+590           \textcolor{keywordflow}{case}(\mbox{\hyperlink{_command_codes_8h_a38a0995d5783d0cd540766a675722b48}{UUTAG}}):\{\mbox{\hyperlink{_print_8h_aedffc90749a656326d83656de98af373}{print\_utag}}();\textcolor{keywordflow}{break};\}
+591           \textcolor{keywordflow}{case}(\mbox{\hyperlink{_command_codes_8h_ad7b9262a0cd07915f3f4ef3d12e329fd}{UCD}}):\{\mbox{\hyperlink{_print_8h_aa81af779ef3ddaffcd4d6caa97a35b9d}{print\_cd}}();\textcolor{keywordflow}{break};\}
+592           \textcolor{keywordflow}{case}(\mbox{\hyperlink{_command_codes_8h_a319fc827c23b98bbcdbf08e773a935ac}{UREAD}}):\{\mbox{\hyperlink{_print_8h_a021fe91d8f107ec008b7e8646a297cc9}{print\_read}}();\textcolor{keywordflow}{break};\}
+593           \textcolor{keywordflow}{case}(\mbox{\hyperlink{_command_codes_8h_a04fdbd73c31591634e2fa12e343391a8}{UWRITE}}):\{\mbox{\hyperlink{_print_8h_a28ec17feb7ae8ce1a618ef6a7d960080}{print\_write}}();\textcolor{keywordflow}{break};\}
+594           \textcolor{keywordflow}{case}(\mbox{\hyperlink{_command_codes_8h_a6d301bdf645366bbbcfbc479363aeed3}{UCOPY}}):\{\mbox{\hyperlink{_print_8h_a3e8c968d0b96e7f73002aa04e667a648}{print\_copy}}();\textcolor{keywordflow}{break};\}
+595           \textcolor{keywordflow}{default}:\{std::cout << \textcolor{stringliteral}{"Invalid Command"} << std::endl;\}
+596         \}
+597         std::cout << \textcolor{stringliteral}{"Arboreal >> "};
+598         \textcolor{keywordflow}{continue};
+599       \}
+600       \textcolor{comment}{/*******************************************************************************************/}
+601       \textcolor{keywordflow}{else} \textcolor{keywordflow}{if}(input == \textcolor{stringliteral}{"end"} && \mbox{\hyperlink{class_c_l_i_a93c65474d55597296ddda4739664ea27}{\_is\_script}})
+602       \{
+603         \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Notifying Liaison Process Of Program Termination"});
+604         \textcolor{keywordtype}{char}* quit = \textcolor{keyword}{new} \textcolor{keywordtype}{char}[\mbox{\hyperlink{_cli_8h_a97a33a33e5428e13cfa0eff5ba0e846f}{MaxBufferSize}}];
+605         \textcolor{keywordtype}{int} val = \mbox{\hyperlink{_command_codes_8h_a3c18e64ca07cf21278f4189cd4c2732f}{QUIT}};
+606         memset(quit,\textcolor{charliteral}{'\(\backslash\)0'},\mbox{\hyperlink{_cli_8h_a97a33a33e5428e13cfa0eff5ba0e846f}{MaxBufferSize}});
+607         memcpy(quit,&val,\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}));
+608         memcpy(quit + \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}), \textcolor{stringliteral}{"QUIT"}, \textcolor{keyword}{sizeof}(\textcolor{stringliteral}{"QUIT"}));
+609         \mbox{\hyperlink{class_c_l_i_a1d25fcb18cf42e03a7e38c24a8ba1506}{send\_cmnd}}(quit);
+610         \textcolor{keywordflow}{return};
+611       \}
+612       \textcolor{comment}{/*******************************************************************************************/}
+613       \textcolor{keywordflow}{else}
+614       \{
+615         \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Validating Input..."});
+616         \textcolor{keywordtype}{int} rtrn = \mbox{\hyperlink{_command_validation_8h_a3466043b5812e8ef4c469dc49bd1d7c5}{check\_command}}(input);
+617 
+618         \textcolor{keywordflow}{if}(rtrn != 0)
+619         \{
+620           \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Input Is Valid"});
+621           \textcolor{keywordflow}{if}(rtrn == \mbox{\hyperlink{_command_codes_8h_ad5aa3f7b7d9b6e01c379610d421e0f02}{CD\_ABS}} || rtrn == \mbox{\hyperlink{_command_codes_8h_af392859f111f0c34f3b48bf67d871435}{CD\_RLP}})
+622           \{
+623             \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: User Requested Directory Change"});
+624             std::string old = \mbox{\hyperlink{class_c_l_i_a664097f330fa6beaad30f35eb9577ce1}{\_cwd}};
+625             std::string temp = input.substr(3,input.length());
+626             \mbox{\hyperlink{class_c_l_i_a664097f330fa6beaad30f35eb9577ce1}{\_cwd}} = temp;
+627 
+628             \textcolor{keywordtype}{char}* new\_cwd = \textcolor{keyword}{new} \textcolor{keywordtype}{char}[\mbox{\hyperlink{_cli_8h_a97a33a33e5428e13cfa0eff5ba0e846f}{MaxBufferSize}}];
+629             memset(new\_cwd,\textcolor{charliteral}{'\(\backslash\)0'},\mbox{\hyperlink{_cli_8h_a97a33a33e5428e13cfa0eff5ba0e846f}{MaxBufferSize}});
+630             memcpy(new\_cwd,&rtrn,\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}));
+631             memcpy(new\_cwd + \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}),\mbox{\hyperlink{class_c_l_i_a664097f330fa6beaad30f35eb9577ce1}{\_cwd}}.c\_str(),\mbox{\hyperlink{class_c_l_i_a664097f330fa6beaad30f35eb9577ce1}{\_cwd}}.length());
+632 
+633             \mbox{\hyperlink{class_c_l_i_a1d25fcb18cf42e03a7e38c24a8ba1506}{send\_cmnd}}(new\_cwd);
+634             \mbox{\hyperlink{class_c_l_i_a87c68e5edcb5750d1199839e6b1f843e}{await\_response}}();
+635             \textcolor{keywordflow}{if}(!\mbox{\hyperlink{class_c_l_i_a93c65474d55597296ddda4739664ea27}{\_is\_script}})\{std::cout << \textcolor{stringliteral}{"\(\backslash\)nArboreal >> "};\}
+636             \textcolor{keywordflow}{continue};
+637           \}
+638         \}
+639         \textcolor{keywordflow}{else}
+640         \{
+641           std::cerr << \textcolor{stringliteral}{"Comand Not Valid\(\backslash\)n"};
+642           \textcolor{keywordflow}{if}(!\mbox{\hyperlink{class_c_l_i_a93c65474d55597296ddda4739664ea27}{\_is\_script}})\{std::cout << \textcolor{stringliteral}{"Arboreal >> "};\}
+643           \textcolor{keywordflow}{continue};
+644         \}
+645 
+646         \mbox{\hyperlink{class_c_l_i_a1d25fcb18cf42e03a7e38c24a8ba1506}{send\_cmnd}}(\mbox{\hyperlink{class_c_l_i_a6c3f97b04646b070ad82801adf0dc521}{build}}(rtrn,input));
+647         \mbox{\hyperlink{class_c_l_i_a87c68e5edcb5750d1199839e6b1f843e}{await\_response}}();
+648         \textcolor{keywordflow}{if}(!\mbox{\hyperlink{class_c_l_i_a93c65474d55597296ddda4739664ea27}{\_is\_script}})\{std::cout << \textcolor{stringliteral}{"Arboreal >> "};\}
+649       \}
+650       \textcolor{comment}{/*******************************************************************************************/}
+651       \textcolor{comment}{//if(\_is\_script) sleep(1);}
+652     \}
+653   \}
+654   \textcolor{keywordflow}{return};
+655 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{class_c_l_i_a1d25fcb18cf42e03a7e38c24a8ba1506}\label{class_c_l_i_a1d25fcb18cf42e03a7e38c24a8ba1506}} 
+\index{C\+LI@{C\+LI}!send\+\_\+cmnd@{send\+\_\+cmnd}}
+\index{send\+\_\+cmnd@{send\+\_\+cmnd}!C\+LI@{C\+LI}}
+\subsubsection{\texorpdfstring{send\+\_\+cmnd()}{send\_cmnd()}}
+{\footnotesize\ttfamily void C\+L\+I\+::send\+\_\+cmnd (\begin{DoxyParamCaption}\item[{const char $\ast$}]{cmnd }\end{DoxyParamCaption})}
+
+Sends a command converted to a C-\/\+Style String to the Liaison Process for parsing and execution.
+
+
+\begin{DoxyParams}{Parameters}
+{\em command} & A C-\/\+Style String of length = Max\+Buffer\+Size containing the command ID in the first X Bytes where X is the size of an integer type followed by the command itself followed by as many nullbytes as nescesarry in order to have a length = Max\+Buffer\+Size\\
+\hline
+\end{DoxyParams}
+Send user input (A filesystem command) to the Liaison Process 
+\begin{DoxyParams}{Parameters}
+{\em cmnd} & The input to send \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyCode}
+668 \{
+669   std::string t1 = cmnd;
+670   \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log((\textcolor{stringliteral}{"C: Sending "} + t1 + \textcolor{stringliteral}{"To "} + \mbox{\hyperlink{class_c_l_i_ad3b7579608f8c2e1d4c01a8668f701d9}{\_client\_sockpath}} +
+671              \textcolor{stringliteral}{" @ Socket ID: "} + std::to\_string(\mbox{\hyperlink{class_c_l_i_a89c215687bff66a3e0359a17bac3657d}{\_client\_sock}})));
+672   \mbox{\hyperlink{cli__helper_8hpp_a17a8dc79ae7d148b9eebc9698d404aa5}{send\_to\_server}}(\mbox{\hyperlink{class_c_l_i_a89c215687bff66a3e0359a17bac3657d}{\_client\_sock}},\mbox{\hyperlink{class_c_l_i_ad3b7579608f8c2e1d4c01a8668f701d9}{\_client\_sockpath}},cmnd,
+      \mbox{\hyperlink{_cli_8h_a97a33a33e5428e13cfa0eff5ba0e846f}{MaxBufferSize}},\mbox{\hyperlink{_cli_8h_a1ca03d8f367ec7987b5a7321fe82e23e}{Flag}});
+673   \textcolor{keywordflow}{return};
+674 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{class_c_l_i_a1492005f186392031bd4d447cb20e975}\label{class_c_l_i_a1492005f186392031bd4d447cb20e975}} 
+\index{C\+LI@{C\+LI}!start@{start}}
+\index{start@{start}!C\+LI@{C\+LI}}
+\subsubsection{\texorpdfstring{start()}{start()}}
+{\footnotesize\ttfamily void C\+L\+I\+::start (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Performs initial set-\/up activities such as initiating connections and sending handshakes. Upon the completion of a successful handshake, \mbox{\hyperlink{class_c_l_i_aeefc8cd81999836a90c2cfaced6177f1}{run()}} is called and the interface is ready to use. If the handshake was not successful, the interface notifies the user and quits.
+
+Run initial Command Line Interface setup operations\+:
+
+1) Generate Shared Memory Segment For Process Synchronization 2) Fork And Run A Liaison Process 3) Create Sockets For Connection To Liaison 4) Send Handshake Command To \mbox{\hyperlink{class_file}{File}} System 5) Run The Command Line 
+\begin{DoxyCode}
+310 \{
+311 
+312   \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Beginning Initial Setup"});
+313   key\_t shm\_key;
+314   \textcolor{keywordtype}{int} shm\_id;
+315   shm\_key = atoi(\mbox{\hyperlink{class_c_l_i_a589aa7edb9b2454720d5b54af3ddea00}{\_my\_pid}}.c\_str());
+316   \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log((\textcolor{stringliteral}{"C: Shared Memory Segment Key: "} + std::to\_string((\textcolor{keywordtype}{int})shm\_key)));
+317   \textcolor{comment}{/***********************************************************************************************/}
+318 
+319 
+320   \textcolor{comment}{/* Create char** to send to Liason via main() argv param */}
+321   \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Generating Liaison Process Arguments"});
+322   std::vector<char*> argv;
+323   argv.push\_back(const\_cast<char*>(std::to\_string((\textcolor{keywordtype}{int})shm\_key).c\_str()));
+324   argv.push\_back(const\_cast<char*>(\mbox{\hyperlink{class_c_l_i_ad3b7579608f8c2e1d4c01a8668f701d9}{\_client\_sockpath}}.c\_str()));
+325   argv.push\_back(const\_cast<char*>(\mbox{\hyperlink{class_c_l_i_a582f907a9e5dc5c0dcd264e2f1b14f76}{\_server\_sockpath}}.c\_str()));
+326   argv.push\_back(const\_cast<char*>(\mbox{\hyperlink{class_c_l_i_aa58101a66621f7b2b64d4e566ad7bd89}{\_my\_partition}}.c\_str()));
+327   argv.push\_back(const\_cast<char*>(\mbox{\hyperlink{class_c_l_i_a664097f330fa6beaad30f35eb9577ce1}{\_cwd}}.c\_str()));
+328   argv.push\_back(NULL); \textcolor{comment}{/* argv MUST be null terminated */}
+329   \textcolor{comment}{/***********************************************************************************************/}
+330 
+331 
+332   \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Creating A New Shared Memory Segment"});
+333   \textcolor{keywordtype}{char}* shm = \mbox{\hyperlink{cli__helper_8hpp_a14dda64a66946535eb19bb8af973fc73}{create\_shm\_seg}}(shm\_key,shm\_id);
+334   shm[0] = 0;
+335   \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log((\textcolor{stringliteral}{"C: Memory Segment Of Size 1 Created With Initial Value: "} + std::to\_string(shm[0])));
+336   \textcolor{comment}{/***********************************************************************************************/}
+337 
+338 
+339   \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Attempting To Fork A Liaison Process"});
+340   pid\_t pid = fork();
+341   \textcolor{keywordflow}{if}(pid == 0)
+342   \{
+343     \textcolor{comment}{/* Child Process */}
+344     execv(\textcolor{stringliteral}{"liaison"},argv.data());
+345   \}
+346   \textcolor{keywordflow}{else} \textcolor{keywordflow}{if}(pid < 0)
+347   \{
+348     \textcolor{comment}{/* Fork Failed */}
+349     \mbox{\hyperlink{cli__helper_8hpp_a29ecb490f9644dd283298edaaa0b2130}{delete\_shm}}(shm\_id,shm);
+350     std::string where = \textcolor{stringliteral}{"[cli.cpp::start()]: "};
+351     std::string what = \textcolor{stringliteral}{"Fork Failed -- "};
+352     what += strerror(errno);
+353     \textcolor{keywordflow}{throw} \mbox{\hyperlink{classarboreal__cli__error}{arboreal\_cli\_error}}(what,where);
+354   \}
+355   \textcolor{keywordflow}{else}
+356   \{
+357 
+358     \textcolor{comment}{/* Parent Process */}
+359     \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Fork Successful; Returned To Parent Process"});
+360     \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Waiting On Liaison Process To Finish Setup..."});
+361     \textcolor{keywordflow}{while}(shm[0] == 0);
+362     \textcolor{comment}{/**********************************************************************************************/}
+363 
+364 
+365     \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Liaison Process Completed Setup"});
+366     \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Setting Up [Command Line --> Liaison] Socket"});
+367     memset(&\mbox{\hyperlink{class_c_l_i_a8100e64420f5528d1a09a18433ae24f9}{\_server\_sockaddr}}, 0, \textcolor{keyword}{sizeof}(\textcolor{keyword}{struct} sockaddr\_un));
+368     memset(&\mbox{\hyperlink{class_c_l_i_a8c449fcba5105eec8d582c4695bfaca9}{\_client\_sockaddr}}, 0, \textcolor{keyword}{sizeof}(\textcolor{keyword}{struct} sockaddr\_un));
+369     \mbox{\hyperlink{class_c_l_i_a89c215687bff66a3e0359a17bac3657d}{\_client\_sock}} = \mbox{\hyperlink{cli__helper_8hpp_ac8ce69e525016b90209b0d970c9e7d2c}{set\_up\_socket}}(\mbox{\hyperlink{class_c_l_i_ad3b7579608f8c2e1d4c01a8668f701d9}{\_client\_sockpath}},
+      \mbox{\hyperlink{class_c_l_i_a8c449fcba5105eec8d582c4695bfaca9}{\_client\_sockaddr}});
+370     \textcolor{comment}{/**********************************************************************************************/}
+371 
+372 
+373     \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Signal Liaison: [Command Line --> Liaison] Socket Setup Completed"});
+374     shm[0] = 2;
+375     \textcolor{comment}{/**********************************************************************************************/}
+376 
+377 
+378     \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Shared Memory No Longer Needed Processes Synchronized; Deleting Segment"});
+379     \mbox{\hyperlink{cli__helper_8hpp_a29ecb490f9644dd283298edaaa0b2130}{delete\_shm}}(shm\_id,shm);
+380     \textcolor{comment}{/**********************************************************************************************/}
+381 
+382 
+383     \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Attempt To Connect To Liaison Process Server Socket"});
+384     socklen\_t length = \textcolor{keyword}{sizeof}(\mbox{\hyperlink{class_c_l_i_a8c449fcba5105eec8d582c4695bfaca9}{\_client\_sockaddr}});
+385     \mbox{\hyperlink{cli__helper_8hpp_ab6f42e113e3dbd5dc0dceb087e3d6474}{connect\_to\_server}}(\mbox{\hyperlink{class_c_l_i_a89c215687bff66a3e0359a17bac3657d}{\_client\_sock}},\mbox{\hyperlink{class_c_l_i_ad3b7579608f8c2e1d4c01a8668f701d9}{\_client\_sockpath}},
+      \mbox{\hyperlink{class_c_l_i_a582f907a9e5dc5c0dcd264e2f1b14f76}{\_server\_sockpath}},\mbox{\hyperlink{class_c_l_i_a8100e64420f5528d1a09a18433ae24f9}{\_server\_sockaddr}},length);
+386     \textcolor{comment}{/**********************************************************************************************/}
+387 
+388 
+389     \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Building Handshake Message"});
+390     \textcolor{keywordtype}{char}* cmnd = \textcolor{keyword}{new} \textcolor{keywordtype}{char}[\mbox{\hyperlink{_cli_8h_a97a33a33e5428e13cfa0eff5ba0e846f}{MaxBufferSize}}];
+391     \textcolor{keywordtype}{int} cmnd\_id = \mbox{\hyperlink{_command_codes_8h_a5ca3130c74a24a8e4d792e9d11fd8d95}{HANDSHK}};
+392     memset(cmnd,\textcolor{charliteral}{'\(\backslash\)0'},\mbox{\hyperlink{_cli_8h_a97a33a33e5428e13cfa0eff5ba0e846f}{MaxBufferSize}}); \textcolor{comment}{/* Get rid of junk data in buffer */}
+393     memcpy(cmnd,&cmnd\_id,\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}));
+394     memcpy(cmnd + \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}), \textcolor{stringliteral}{"HANDSHAKE-"}, \textcolor{keyword}{sizeof}(\textcolor{stringliteral}{"HANDSHAKE-"}));
+395     memcpy(cmnd + (\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}) + \textcolor{keyword}{sizeof}(\textcolor{stringliteral}{"HANDSHAKE-"})) - 1,
+396            const\_cast<char*>(\mbox{\hyperlink{class_c_l_i_aa58101a66621f7b2b64d4e566ad7bd89}{\_my\_partition}}.c\_str()),
+397            \mbox{\hyperlink{class_c_l_i_aa58101a66621f7b2b64d4e566ad7bd89}{\_my\_partition}}.length());
+398     \textcolor{comment}{/**********************************************************************************************/}
+399 
+400 
+401     std::string send\_to = (std::to\_string(\mbox{\hyperlink{class_c_l_i_a89c215687bff66a3e0359a17bac3657d}{\_client\_sock}}) + \textcolor{stringliteral}{"@"} + 
+      \mbox{\hyperlink{class_c_l_i_ad3b7579608f8c2e1d4c01a8668f701d9}{\_client\_sockpath}});
+402     \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log((\textcolor{stringliteral}{"C: Sending Handshake Message To: "} + send\_to));
+403     \mbox{\hyperlink{cli__helper_8hpp_a17a8dc79ae7d148b9eebc9698d404aa5}{send\_to\_server}}(\mbox{\hyperlink{class_c_l_i_a89c215687bff66a3e0359a17bac3657d}{\_client\_sock}},\mbox{\hyperlink{class_c_l_i_ad3b7579608f8c2e1d4c01a8668f701d9}{\_client\_sockpath}},cmnd,
+      \mbox{\hyperlink{_cli_8h_a97a33a33e5428e13cfa0eff5ba0e846f}{MaxBufferSize}},\mbox{\hyperlink{_cli_8h_a1ca03d8f367ec7987b5a7321fe82e23e}{Flag}});
+404     \textcolor{comment}{/**********************************************************************************************/}
+405 
+406 
+407     \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Attempting To Receive Response From Liaison Process"});
+408     \textcolor{keywordtype}{char}* \mbox{\hyperlink{daemon_8h_a85eb9d2878279de5fcb3000467c81af7}{data}} = \mbox{\hyperlink{cli__helper_8hpp_a9a7850489cf50a8693b388acc259ccaa}{receive\_from\_server}}(\mbox{\hyperlink{class_c_l_i_a89c215687bff66a3e0359a17bac3657d}{\_client\_sock}},
+      \mbox{\hyperlink{class_c_l_i_ad3b7579608f8c2e1d4c01a8668f701d9}{\_client\_sockpath}},\mbox{\hyperlink{_cli_8h_a97a33a33e5428e13cfa0eff5ba0e846f}{MaxBufferSize}},\mbox{\hyperlink{_cli_8h_a1ca03d8f367ec7987b5a7321fe82e23e}{Flag}});
+409     \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Data Received"});
+410     \textcolor{comment}{/*********************************************************************************************/}
+411 
+412 
+413     \textcolor{keywordflow}{if}(\mbox{\hyperlink{cli__helper_8hpp_a9caf20ba13e1adbc3e58c175a9b11fc0}{get\_cmnd\_id}}(\mbox{\hyperlink{daemon_8h_a85eb9d2878279de5fcb3000467c81af7}{data}}) == \mbox{\hyperlink{_command_codes_8h_a3c18e64ca07cf21278f4189cd4c2732f}{QUIT}})
+414     \{
+415       \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Error While Connecting To Filesystem; Exiting..."});
+416       perror(\textcolor{stringliteral}{"C: Error While Connecting To Filesystem; Exiting..."});
+417 
+418       \textcolor{keywordflow}{if}(close(\mbox{\hyperlink{class_c_l_i_a89c215687bff66a3e0359a17bac3657d}{\_client\_sock}}) < 0)
+419       \{
+420         std::string where = \textcolor{stringliteral}{"[cli.cpp::start()]: "};
+421         std::string what = \textcolor{stringliteral}{"Client Socket Close Failed -- "};
+422         what += strerror(errno);
+423         \textcolor{keywordflow}{throw} \mbox{\hyperlink{classarboreal__cli__error}{arboreal\_cli\_error}}(what,where);
+424       \}
+425       \textcolor{keywordflow}{if}(unlink(\mbox{\hyperlink{class_c_l_i_ad3b7579608f8c2e1d4c01a8668f701d9}{\_client\_sockpath}}.c\_str()) < 0)
+426       \{
+427         std::string where = \textcolor{stringliteral}{"[cli.cpp::start()]: "};
+428         std::string what = \textcolor{stringliteral}{"Client Socket Unlink Failed -- "};
+429         what += strerror(errno);
+430         \textcolor{keywordflow}{throw} \mbox{\hyperlink{classarboreal__cli__error}{arboreal\_cli\_error}}(what,where);
+431       \}
+432       \textcolor{comment}{/********************************************************************************************/}
+433 
+434 
+435       \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Waiting For Child Process To Complete..."});
+436       \textcolor{keywordtype}{int} status;
+437       waitpid(pid,&status,0);
+438       \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Exiting Command Line Interface"});
+439 
+440       \textcolor{keyword}{delete}[] cmnd;
+441       \textcolor{keyword}{delete}[] \mbox{\hyperlink{daemon_8h_a85eb9d2878279de5fcb3000467c81af7}{data}};
+442       exit(1);
+443     \}
+444     \textcolor{comment}{/**********************************************************************************************/}
+445 
+446 
+447     std::string dta = \mbox{\hyperlink{daemon_8h_a85eb9d2878279de5fcb3000467c81af7}{data}};
+448     \mbox{\hyperlink{class_c_l_i_a13b5699d950ce765cad098f7613a3e20}{\_max\_string\_size}} = \mbox{\hyperlink{cli__helper_8hpp_a9caf20ba13e1adbc3e58c175a9b11fc0}{get\_cmnd\_id}}(\mbox{\hyperlink{daemon_8h_a85eb9d2878279de5fcb3000467c81af7}{data}});
+449     \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log((\textcolor{stringliteral}{"C: Maximum Filename/Tagname Size: "} + std::to\_string(
+      \mbox{\hyperlink{class_c_l_i_a13b5699d950ce765cad098f7613a3e20}{\_max\_string\_size}})));
+450 
+451     \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Removing Potential Memory Leaks"});
+452     \textcolor{keyword}{delete}[] cmnd;
+453     \textcolor{keyword}{delete}[] \mbox{\hyperlink{daemon_8h_a85eb9d2878279de5fcb3000467c81af7}{data}};
+454 
+455     \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Setup Completed Successfully"});
+456     \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Running Command Line"});
+457     \mbox{\hyperlink{class_c_l_i_aeefc8cd81999836a90c2cfaced6177f1}{run}}();
+458 
+459     \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: User Initiated Exit Procedure..."});
+460     \textcolor{keywordflow}{if}(close(\mbox{\hyperlink{class_c_l_i_a89c215687bff66a3e0359a17bac3657d}{\_client\_sock}}) < 0)
+461     \{
+462       std::string where = \textcolor{stringliteral}{"[cli.cpp::start()]: "};
+463       std::string what = \textcolor{stringliteral}{"Client Socket Close Failed -- "};
+464       what += strerror(errno);
+465       \textcolor{keywordflow}{throw} \mbox{\hyperlink{classarboreal__cli__error}{arboreal\_cli\_error}}(what,where);
+466     \}
+467     \textcolor{keywordflow}{if}(unlink(\mbox{\hyperlink{class_c_l_i_ad3b7579608f8c2e1d4c01a8668f701d9}{\_client\_sockpath}}.c\_str()) < 0)
+468     \{
+469       std::string where = \textcolor{stringliteral}{"[cli.cpp::start()]: "};
+470       std::string what = \textcolor{stringliteral}{"Client Socket Unlink Failed -- "};
+471       what += strerror(errno);
+472       \textcolor{keywordflow}{throw} \mbox{\hyperlink{classarboreal__cli__error}{arboreal\_cli\_error}}(what,where);
+473     \}
+474 
+475     \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Waiting For Child Process To Complete..."});
+476     \textcolor{keywordtype}{int} status;
+477     waitpid(pid,&status,0);
+478     \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Child Process Completed Successfully"});
+479     \mbox{\hyperlink{_cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}.log(\textcolor{stringliteral}{"C: Command Line Exiting; Goodbye"});
+480     \textcolor{comment}{/**********************************************************************************************/}
+481   \}
+482 
+483   \textcolor{keywordflow}{return};
+484 \}
+\end{DoxyCode}
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{class_c_l_i_a89c215687bff66a3e0359a17bac3657d}\label{class_c_l_i_a89c215687bff66a3e0359a17bac3657d}} 
+\index{C\+LI@{C\+LI}!\+\_\+client\+\_\+sock@{\+\_\+client\+\_\+sock}}
+\index{\+\_\+client\+\_\+sock@{\+\_\+client\+\_\+sock}!C\+LI@{C\+LI}}
+\subsubsection{\texorpdfstring{\+\_\+client\+\_\+sock}{\_client\_sock}}
+{\footnotesize\ttfamily int C\+L\+I\+::\+\_\+client\+\_\+sock\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_c_l_i_a8c449fcba5105eec8d582c4695bfaca9}\label{class_c_l_i_a8c449fcba5105eec8d582c4695bfaca9}} 
+\index{C\+LI@{C\+LI}!\+\_\+client\+\_\+sockaddr@{\+\_\+client\+\_\+sockaddr}}
+\index{\+\_\+client\+\_\+sockaddr@{\+\_\+client\+\_\+sockaddr}!C\+LI@{C\+LI}}
+\subsubsection{\texorpdfstring{\+\_\+client\+\_\+sockaddr}{\_client\_sockaddr}}
+{\footnotesize\ttfamily struct sockaddr\+\_\+un C\+L\+I\+::\+\_\+client\+\_\+sockaddr\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_c_l_i_ad3b7579608f8c2e1d4c01a8668f701d9}\label{class_c_l_i_ad3b7579608f8c2e1d4c01a8668f701d9}} 
+\index{C\+LI@{C\+LI}!\+\_\+client\+\_\+sockpath@{\+\_\+client\+\_\+sockpath}}
+\index{\+\_\+client\+\_\+sockpath@{\+\_\+client\+\_\+sockpath}!C\+LI@{C\+LI}}
+\subsubsection{\texorpdfstring{\+\_\+client\+\_\+sockpath}{\_client\_sockpath}}
+{\footnotesize\ttfamily std\+::string C\+L\+I\+::\+\_\+client\+\_\+sockpath\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_c_l_i_a664097f330fa6beaad30f35eb9577ce1}\label{class_c_l_i_a664097f330fa6beaad30f35eb9577ce1}} 
+\index{C\+LI@{C\+LI}!\+\_\+cwd@{\+\_\+cwd}}
+\index{\+\_\+cwd@{\+\_\+cwd}!C\+LI@{C\+LI}}
+\subsubsection{\texorpdfstring{\+\_\+cwd}{\_cwd}}
+{\footnotesize\ttfamily std\+::string C\+L\+I\+::\+\_\+cwd = \char`\"{}/\char`\"{}\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_c_l_i_a93c65474d55597296ddda4739664ea27}\label{class_c_l_i_a93c65474d55597296ddda4739664ea27}} 
+\index{C\+LI@{C\+LI}!\+\_\+is\+\_\+script@{\+\_\+is\+\_\+script}}
+\index{\+\_\+is\+\_\+script@{\+\_\+is\+\_\+script}!C\+LI@{C\+LI}}
+\subsubsection{\texorpdfstring{\+\_\+is\+\_\+script}{\_is\_script}}
+{\footnotesize\ttfamily bool C\+L\+I\+::\+\_\+is\+\_\+script\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_c_l_i_a13b5699d950ce765cad098f7613a3e20}\label{class_c_l_i_a13b5699d950ce765cad098f7613a3e20}} 
+\index{C\+LI@{C\+LI}!\+\_\+max\+\_\+string\+\_\+size@{\+\_\+max\+\_\+string\+\_\+size}}
+\index{\+\_\+max\+\_\+string\+\_\+size@{\+\_\+max\+\_\+string\+\_\+size}!C\+LI@{C\+LI}}
+\subsubsection{\texorpdfstring{\+\_\+max\+\_\+string\+\_\+size}{\_max\_string\_size}}
+{\footnotesize\ttfamily int C\+L\+I\+::\+\_\+max\+\_\+string\+\_\+size\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_c_l_i_aa58101a66621f7b2b64d4e566ad7bd89}\label{class_c_l_i_aa58101a66621f7b2b64d4e566ad7bd89}} 
+\index{C\+LI@{C\+LI}!\+\_\+my\+\_\+partition@{\+\_\+my\+\_\+partition}}
+\index{\+\_\+my\+\_\+partition@{\+\_\+my\+\_\+partition}!C\+LI@{C\+LI}}
+\subsubsection{\texorpdfstring{\+\_\+my\+\_\+partition}{\_my\_partition}}
+{\footnotesize\ttfamily std\+::string C\+L\+I\+::\+\_\+my\+\_\+partition\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_c_l_i_a589aa7edb9b2454720d5b54af3ddea00}\label{class_c_l_i_a589aa7edb9b2454720d5b54af3ddea00}} 
+\index{C\+LI@{C\+LI}!\+\_\+my\+\_\+pid@{\+\_\+my\+\_\+pid}}
+\index{\+\_\+my\+\_\+pid@{\+\_\+my\+\_\+pid}!C\+LI@{C\+LI}}
+\subsubsection{\texorpdfstring{\+\_\+my\+\_\+pid}{\_my\_pid}}
+{\footnotesize\ttfamily std\+::string C\+L\+I\+::\+\_\+my\+\_\+pid\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_c_l_i_a294b192f7400c451c7d4ee983ca11d21}\label{class_c_l_i_a294b192f7400c451c7d4ee983ca11d21}} 
+\index{C\+LI@{C\+LI}!\+\_\+script\+\_\+print@{\+\_\+script\+\_\+print}}
+\index{\+\_\+script\+\_\+print@{\+\_\+script\+\_\+print}!C\+LI@{C\+LI}}
+\subsubsection{\texorpdfstring{\+\_\+script\+\_\+print}{\_script\_print}}
+{\footnotesize\ttfamily bool C\+L\+I\+::\+\_\+script\+\_\+print\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_c_l_i_a8100e64420f5528d1a09a18433ae24f9}\label{class_c_l_i_a8100e64420f5528d1a09a18433ae24f9}} 
+\index{C\+LI@{C\+LI}!\+\_\+server\+\_\+sockaddr@{\+\_\+server\+\_\+sockaddr}}
+\index{\+\_\+server\+\_\+sockaddr@{\+\_\+server\+\_\+sockaddr}!C\+LI@{C\+LI}}
+\subsubsection{\texorpdfstring{\+\_\+server\+\_\+sockaddr}{\_server\_sockaddr}}
+{\footnotesize\ttfamily struct sockaddr\+\_\+un C\+L\+I\+::\+\_\+server\+\_\+sockaddr\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_c_l_i_a582f907a9e5dc5c0dcd264e2f1b14f76}\label{class_c_l_i_a582f907a9e5dc5c0dcd264e2f1b14f76}} 
+\index{C\+LI@{C\+LI}!\+\_\+server\+\_\+sockpath@{\+\_\+server\+\_\+sockpath}}
+\index{\+\_\+server\+\_\+sockpath@{\+\_\+server\+\_\+sockpath}!C\+LI@{C\+LI}}
+\subsubsection{\texorpdfstring{\+\_\+server\+\_\+sockpath}{\_server\_sockpath}}
+{\footnotesize\ttfamily std\+::string C\+L\+I\+::\+\_\+server\+\_\+sockpath\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Command\+Line\+Interface/\+C\+L\+Headers/\mbox{\hyperlink{_cli_8h}{Cli.\+h}}\item 
+Command\+Line\+Interface/\mbox{\hyperlink{_cli_8cpp}{Cli.\+cpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,121 @@
+\hypertarget{classDiskManager}{}\section{Disk\+Manager Class Reference}
+\label{classDiskManager}\index{Disk\+Manager@{Disk\+Manager}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classDiskManager_a948cecec230d9895bafaced5534fd6cf}{Disk\+Manager}} (\mbox{\hyperlink{classDisk}{Disk}} $\ast$d)
+\end{DoxyCompactItemize}
+\begin{Indent}\textbf{ Accessor Functions}\par
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classDiskManager_afda24be04fb85711236a4d5905a5ad1c}{read\+Disk\+Block}} (string partition\+Name, Blk\+Num\+Type blknum, char $\ast$blkdata)
+\item 
+size\+\_\+t \mbox{\hyperlink{classDiskManager_aabdfbb2171f3c19a3ae14f9532876404}{get\+Block\+Size}} ()
+\item 
+Blk\+Num\+Type \mbox{\hyperlink{classDiskManager_ae32627ccfa72013e35da637570e1729b}{get\+Partition\+Size}} (string partition\+Name)
+\item 
+\mbox{\hyperlink{structDiskPartition}{Disk\+Partition}} $\ast$ \mbox{\hyperlink{classDiskManager_a08375c254bc09c8351a4f96cb669f1ab}{find\+Part}} (string partition\+Name)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Modifier Functions}\par
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classDiskManager_ac96846d309a59e8ac7b100724329cb30}{write\+Disk\+Block}} (string partition\+Name, Blk\+Num\+Type blknum, char $\ast$blkdata)
+\end{DoxyCompactItemize}
+\end{Indent}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classDiskManager_a948cecec230d9895bafaced5534fd6cf}\label{classDiskManager_a948cecec230d9895bafaced5534fd6cf}} 
+\index{Disk\+Manager@{Disk\+Manager}!Disk\+Manager@{Disk\+Manager}}
+\index{Disk\+Manager@{Disk\+Manager}!Disk\+Manager@{Disk\+Manager}}
+\subsubsection{\texorpdfstring{Disk\+Manager()}{DiskManager()}}
+{\footnotesize\ttfamily Disk\+Manager\+::\+Disk\+Manager (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classDisk}{Disk}} $\ast$}]{d }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em d} & Pointer to the \mbox{\hyperlink{classDisk}{Disk}} this will manage \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classDiskManager_a08375c254bc09c8351a4f96cb669f1ab}\label{classDiskManager_a08375c254bc09c8351a4f96cb669f1ab}} 
+\index{Disk\+Manager@{Disk\+Manager}!find\+Part@{find\+Part}}
+\index{find\+Part@{find\+Part}!Disk\+Manager@{Disk\+Manager}}
+\subsubsection{\texorpdfstring{find\+Part()}{findPart()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structDiskPartition}{Disk\+Partition}} $\ast$ Disk\+Manager\+::find\+Part (\begin{DoxyParamCaption}\item[{string}]{partition\+Name }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em partition\+Name} & the name of the partition \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the size of a partition in blocks 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classDiskManager_aabdfbb2171f3c19a3ae14f9532876404}\label{classDiskManager_aabdfbb2171f3c19a3ae14f9532876404}} 
+\index{Disk\+Manager@{Disk\+Manager}!get\+Block\+Size@{get\+Block\+Size}}
+\index{get\+Block\+Size@{get\+Block\+Size}!Disk\+Manager@{Disk\+Manager}}
+\subsubsection{\texorpdfstring{get\+Block\+Size()}{getBlockSize()}}
+{\footnotesize\ttfamily size\+\_\+t Disk\+Manager\+::get\+Block\+Size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+the blocksize of the \mbox{\hyperlink{classDisk}{Disk}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classDiskManager_ae32627ccfa72013e35da637570e1729b}\label{classDiskManager_ae32627ccfa72013e35da637570e1729b}} 
+\index{Disk\+Manager@{Disk\+Manager}!get\+Partition\+Size@{get\+Partition\+Size}}
+\index{get\+Partition\+Size@{get\+Partition\+Size}!Disk\+Manager@{Disk\+Manager}}
+\subsubsection{\texorpdfstring{get\+Partition\+Size()}{getPartitionSize()}}
+{\footnotesize\ttfamily Blk\+Num\+Type Disk\+Manager\+::get\+Partition\+Size (\begin{DoxyParamCaption}\item[{string}]{partition\+Name }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em partition\+Name} & the name of the partition \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the size of a partition in blocks 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classDiskManager_afda24be04fb85711236a4d5905a5ad1c}\label{classDiskManager_afda24be04fb85711236a4d5905a5ad1c}} 
+\index{Disk\+Manager@{Disk\+Manager}!read\+Disk\+Block@{read\+Disk\+Block}}
+\index{read\+Disk\+Block@{read\+Disk\+Block}!Disk\+Manager@{Disk\+Manager}}
+\subsubsection{\texorpdfstring{read\+Disk\+Block()}{readDiskBlock()}}
+{\footnotesize\ttfamily void Disk\+Manager\+::read\+Disk\+Block (\begin{DoxyParamCaption}\item[{string}]{partition\+Name,  }\item[{Blk\+Num\+Type}]{blknum,  }\item[{char $\ast$}]{blkdata }\end{DoxyParamCaption})}
+
+Reads a block from the \mbox{\hyperlink{classDisk}{Disk}}. 
+\begin{DoxyParams}{Parameters}
+{\em partition\+Name} & the name of the partition to write the block to \\
+\hline
+{\em blknum} & the blocknumber to be read \\
+\hline
+{\em blkdata} & the buffer to put the read data. must be large enough to contain an entire block of data \\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+Partition\+Manger\+::read\+Disk\+Block() Parition\+Manager\+::read\+Disk\+Block() 
+\end{DoxySeeAlso}
+\mbox{\Hypertarget{classDiskManager_ac96846d309a59e8ac7b100724329cb30}\label{classDiskManager_ac96846d309a59e8ac7b100724329cb30}} 
+\index{Disk\+Manager@{Disk\+Manager}!write\+Disk\+Block@{write\+Disk\+Block}}
+\index{write\+Disk\+Block@{write\+Disk\+Block}!Disk\+Manager@{Disk\+Manager}}
+\subsubsection{\texorpdfstring{write\+Disk\+Block()}{writeDiskBlock()}}
+{\footnotesize\ttfamily void Disk\+Manager\+::write\+Disk\+Block (\begin{DoxyParamCaption}\item[{string}]{partition\+Name,  }\item[{Blk\+Num\+Type}]{blknum,  }\item[{char $\ast$}]{blkdata }\end{DoxyParamCaption})}
+
+Writes a block to the \mbox{\hyperlink{classDisk}{Disk}}. 
+\begin{DoxyParams}{Parameters}
+{\em partition\+Name} & the name of the partition to write the block to \\
+\hline
+{\em blknum} & the blocknumber to be written \\
+\hline
+{\em blkdata} & the buffer to write the data from. It Will write an entire block size of data. \\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+Partition\+Manger\+::write\+Disk\+Block() Parition\+Manager\+::write\+Disk\+Block() 
+\end{DoxySeeAlso}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Filesystem/\+Daemon\+Dependancies/\+Disk\+Manager/Disk\+Manager.\+h\item 
+Filesystem/\+Daemon\+Dependancies/\+Disk\+Manager/Disk\+Manager.\+cpp\end{DoxyCompactItemize}

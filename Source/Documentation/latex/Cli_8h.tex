@@ -1,0 +1,136 @@
+\hypertarget{Cli_8h}{}\section{Command\+Line\+Interface/\+C\+L\+Headers/\+Cli.h File Reference}
+\label{Cli_8h}\index{Command\+Line\+Interface/\+C\+L\+Headers/\+Cli.\+h@{Command\+Line\+Interface/\+C\+L\+Headers/\+Cli.\+h}}
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$errno.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$sys/socket.\+h$>$}\newline
+{\ttfamily \#include $<$sys/un.\+h$>$}\newline
+{\ttfamily \#include $<$sys/ipc.\+h$>$}\newline
+{\ttfamily \#include $<$sys/shm.\+h$>$}\newline
+{\ttfamily \#include $<$signal.\+h$>$}\newline
+{\ttfamily \#include $<$sys/types.\+h$>$}\newline
+{\ttfamily \#include $<$sys/wait.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}../../\+Shared\+Headers/\+Arboreal\+\_\+\+Exceptions.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../../\+Shared\+Headers/\+Print.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../../\+Shared\+Headers/\+Debug\+Messages.\+hpp\char`\"{}}\newline
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classCLI}{C\+LI}}
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+static const int \mbox{\hyperlink{Cli_8h_a97a33a33e5428e13cfa0eff5ba0e846f}{Max\+Buffer\+Size}} = 4096
+\item 
+static const int \mbox{\hyperlink{Cli_8h_a1a8c39b0213b72565986c561031b9293}{Shared\+Memory\+Size}} = 1
+\item 
+static const int \mbox{\hyperlink{Cli_8h_aec9a592dc865ea28079e962fafdbcae7}{Permissions}} = 0666
+\item 
+static const int \mbox{\hyperlink{Cli_8h_a1ca03d8f367ec7987b5a7321fe82e23e}{Flag}} = 0
+\item 
+\mbox{\hyperlink{classDebugMessages}{Debug\+Messages}} \mbox{\hyperlink{Cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}{Debug}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Variable Documentation}
+\mbox{\Hypertarget{Cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}\label{Cli_8h_ab6d95a4e6a59b4ad033ed3af31d878e0}} 
+\index{Cli.\+h@{Cli.\+h}!Debug@{Debug}}
+\index{Debug@{Debug}!Cli.\+h@{Cli.\+h}}
+\subsubsection{\texorpdfstring{Debug}{Debug}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classDebugMessages}{Debug\+Messages}} Debug}
+
+Socket Send/\+Recv Flag \mbox{\Hypertarget{Cli_8h_a1ca03d8f367ec7987b5a7321fe82e23e}\label{Cli_8h_a1ca03d8f367ec7987b5a7321fe82e23e}} 
+\index{Cli.\+h@{Cli.\+h}!Flag@{Flag}}
+\index{Flag@{Flag}!Cli.\+h@{Cli.\+h}}
+\subsubsection{\texorpdfstring{Flag}{Flag}}
+{\footnotesize\ttfamily const int Flag = 0\hspace{0.3cm}{\ttfamily [static]}}
+
+Socket Permissions \mbox{\Hypertarget{Cli_8h_a97a33a33e5428e13cfa0eff5ba0e846f}\label{Cli_8h_a97a33a33e5428e13cfa0eff5ba0e846f}} 
+\index{Cli.\+h@{Cli.\+h}!Max\+Buffer\+Size@{Max\+Buffer\+Size}}
+\index{Max\+Buffer\+Size@{Max\+Buffer\+Size}!Cli.\+h@{Cli.\+h}}
+\subsubsection{\texorpdfstring{Max\+Buffer\+Size}{MaxBufferSize}}
+{\footnotesize\ttfamily const int Max\+Buffer\+Size = 4096\hspace{0.3cm}{\ttfamily [static]}}
+
+Strings ~\newline
+~\newline
+~\newline
+~\newline
+~\newline
+~\newline
+~\newline
+~\newline
+~\newline
+~\newline
+~\newline
+ cout ~\newline
+~\newline
+~\newline
+~\newline
+~\newline
+~\newline
+~\newline
+~\newline
+~\newline
+~\newline
+ Vectors ~\newline
+~\newline
+~\newline
+~\newline
+~\newline
+~\newline
+~\newline
+~\newline
+~\newline
+ errno Definitions ~\newline
+~\newline
+~\newline
+~\newline
+~\newline
+~\newline
+~\newline
+~\newline
+ Unix Std. Stuff ~\newline
+~\newline
+~\newline
+~\newline
+~\newline
+~\newline
+~\newline
+ Socket Handling ~\newline
+~\newline
+~\newline
+~\newline
+~\newline
+~\newline
+ Unix Domain Socket Stuff ~\newline
+~\newline
+~\newline
+~\newline
+~\newline
+ Inter Process Communication Stds. ~\newline
+~\newline
+~\newline
+~\newline
+ Shared Memory Handling ~\newline
+~\newline
+~\newline
+ Signal Handling ~\newline
+~\newline
+ System Types Definitions
+
+Wait Calls \mbox{\Hypertarget{Cli_8h_aec9a592dc865ea28079e962fafdbcae7}\label{Cli_8h_aec9a592dc865ea28079e962fafdbcae7}} 
+\index{Cli.\+h@{Cli.\+h}!Permissions@{Permissions}}
+\index{Permissions@{Permissions}!Cli.\+h@{Cli.\+h}}
+\subsubsection{\texorpdfstring{Permissions}{Permissions}}
+{\footnotesize\ttfamily const int Permissions = 0666\hspace{0.3cm}{\ttfamily [static]}}
+
+Size of Shared Memory Segment \mbox{\Hypertarget{Cli_8h_a1a8c39b0213b72565986c561031b9293}\label{Cli_8h_a1a8c39b0213b72565986c561031b9293}} 
+\index{Cli.\+h@{Cli.\+h}!Shared\+Memory\+Size@{Shared\+Memory\+Size}}
+\index{Shared\+Memory\+Size@{Shared\+Memory\+Size}!Cli.\+h@{Cli.\+h}}
+\subsubsection{\texorpdfstring{Shared\+Memory\+Size}{SharedMemorySize}}
+{\footnotesize\ttfamily const int Shared\+Memory\+Size = 1\hspace{0.3cm}{\ttfamily [static]}}
+
+Maximum size a command can be 

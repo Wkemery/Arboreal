@@ -1,0 +1,38 @@
+\hypertarget{Cli_8cpp}{}\section{Command\+Line\+Interface/\+Cli.cpp File Reference}
+\label{Cli_8cpp}\index{Command\+Line\+Interface/\+Cli.\+cpp@{Command\+Line\+Interface/\+Cli.\+cpp}}
+{\ttfamily \#include \char`\"{}C\+L\+Headers/\+Cli.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}C\+L\+Dependancies/cli\+\_\+helper.\+hpp\char`\"{}}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{Cli_8cpp_a3c04138a5bfe5d72780bb7e82a18e627}{main}} (int argc, char $\ast$$\ast$argv)
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{Cli_8cpp_a3c04138a5bfe5d72780bb7e82a18e627}\label{Cli_8cpp_a3c04138a5bfe5d72780bb7e82a18e627}} 
+\index{Cli.\+cpp@{Cli.\+cpp}!main@{main}}
+\index{main@{main}!Cli.\+cpp@{Cli.\+cpp}}
+\subsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$$\ast$}]{argv }\end{DoxyParamCaption})}
+
+The Command Line has several different modes of execution
+
+Mode 1\+: The most standard mode requires that a partition name be passed as an argument. The partition name must exist on the filesystem if it does not, the commandline will quit. This mode expects the user to manually type commands into the command line interface. This mode\textquotesingle{}s run command looks like\+: \textquotesingle{}./commandline Partition\+Name\textquotesingle{}
+
+Mode 2\+: The second mode adds debugging information to Mode 1 The flag that must be passed to enable this mode is \textquotesingle{}-\/d\textquotesingle{} This mode\textquotesingle{}s run command looks like\+: \textquotesingle{}./commandline Partition\+Name -\/d\textquotesingle{}
+
+Mode 3\+: The third mode operates simmilar to Mode 1 except that rather than expecting users to manually type commands in, it expects a file containing all of the commands that will be executed, to be piped to it. This mode still requires that a legal partition be passed. The flag that must be passed to enable this mode is \textquotesingle{}-\/d\textquotesingle{} This mode\textquotesingle{}s run command looks like\+: \textquotesingle{}.commandline Partition\+Name -\/s\textquotesingle{}
+
+Mode 4\+: The fourth and final mode adds debugging support to Mode 3. The flag that must be passed to enable this mode is \textquotesingle{}-\/d\textquotesingle{} This mode\textquotesingle{}s run command looks like\+: \textquotesingle{}./commandline Partition\+Name -\/s -\/d\textquotesingle{}
+
+
+\begin{DoxyParams}{Parameters}
+{\em argc} & The argument count (Not passed by user) \\
+\hline
+{\em argv} & The argument values (Passed by user) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An integer always equal to 0 
+\end{DoxyReturn}
