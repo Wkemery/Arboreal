@@ -76,9 +76,13 @@ int main(int argc, char** argv)
     case(0):
     {
       srand (time(NULL));
-
-      std::default_random_engine generator;
+      unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+      
+      std::default_random_engine generator(seed);
+      std::chi_squared_distribution<double> x_distribution(4.0);
       std::normal_distribution<double> distribution(8.0,3.0);
+      std::lognormal_distribution<double> log_distribution(2.0,4.0);
+      
 
       cout << "doing a startup timing test" << endl;
       size_t numTags = 125;
@@ -97,10 +101,23 @@ int main(int argc, char** argv)
 
       for(int i = 0; i < numFiles; ++i){
 
-         int tags_in_file = (int) round(distribution(generator));
+        int tags_in_file = (int) round(x_distribution(generator));
          // if(tags_in_file < 0) tags_in_file = 0;
         for(int k = 0; k < tags_in_file; ++k){
-          tagSet.insert(tagName + to_string(rand() % numTags));
+          /*Pick tag to append from log_distribution*/
+          int chosenTag = 0;
+          int tag_representative = numTags;
+          while(tag_representative >= numTags)
+          {
+            tag_representative = int(log_distribution(generator));
+          }
+          if(tag_representative <= 8) chosenTag = tag_representative;
+          else{
+            chosenTag = (rand() % numTags);
+            if(chosenTag < 8) chosenTag = 9;
+          }
+                
+          tagSet.insert(tagName + to_string(chosenTag));
         }
 
         try{
@@ -113,7 +130,7 @@ int main(int argc, char** argv)
         }
         fs1->write_changes();
 
-        if(rand() % 100 == 0){
+        if(i % 100 == 0){
           cout << "REstarting Filesystem" << endl;
           delete fs1; cout << "Filesystem Deleted"<< endl;
           std::ofstream outfile;
