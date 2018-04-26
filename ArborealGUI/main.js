@@ -6,6 +6,8 @@ const BrowserWindow = electron.BrowserWindow
 
 const path = require('path')
 const url = require('url')
+var testList = ["Pictures", "Videos", "Documents", "General Files", "Other"];
+var tagList =[];
 
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -61,10 +63,24 @@ app.on('activate', function ()
   if (mainWindow === null)
   {
     createWindow()
+
   }
 })
 
-
 /*----------------------------------------------------------------------------------------*/
+function popuate()// called on start up
+{
+  clearGrid();
+  for(var i=0; i <testList.length; i++)
+  {
+    addToGrid("tag",testList[i] );
+  }
+}
+function setTagList(theList)
+{
+
+  tagList = theList; // Not to be confused with Arya's
+  //popuate();
+}
 
 /*----------------------------------------------------------------------------------------*/
