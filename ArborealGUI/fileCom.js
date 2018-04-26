@@ -110,7 +110,7 @@ function connectTo()
 {
   //alert("xxx");
   client.connect(daemonPort, host);
-  connection("301//Random2//Random3//$");
+  connection("301//somethings//$");
 
 }
 
@@ -124,9 +124,12 @@ function connection(request)
   currentOp = inArray[0];
   if(inArray[0]==='301') //for when a tag is being added
   {
-    //alert("In if");
+    //alert(inArray.length);
       for(var i =0; i< inArray.length; i++)
       {
+        //alert(i+ " "+inArray[i]);
+        process.stdout.write(inArray[i]);
+        process.stdout.write('\n');
         buffer.write(inArray[i]);
         client.write(buffer);
         buffer = Buffer.alloc(4096,'\0');
