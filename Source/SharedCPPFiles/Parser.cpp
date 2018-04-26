@@ -354,6 +354,7 @@ std::vector<std::string> Parser::parse(int type)
     }
     case(LIST_ALL):
     {
+      parsed.push_back("ls");
       return parsed;
     }
   }

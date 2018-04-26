@@ -762,7 +762,6 @@ void execute(int id, char* command, int fd, std::vector<std::string>& data)
       vector<string>* tagnames = fd_fs_map[fd]->get_all_tags();
       for(unsigned int i = 0; i < tagnames->size(); i++)
       {
-        std::cout << tagnames->at(i) << std::endl;
         data.push_back(tagnames->at(i));
       }
       break;
