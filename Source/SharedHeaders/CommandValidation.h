@@ -21,7 +21,7 @@
 std::regex history_val ("history [0-9]+");
 std::regex change_dir ("cd (/[0-9a-zA-Z_]*)+");
 std::regex change_dir_rl ("cd \\.(/[0-9a-zA-Z_]+)+");
-std::regex list_all("ls");
+std::regex list_all("lt");
 //[================================================================================================-->]
 std::regex usage_help ("--help");
 std::regex usage_quit ("--quit");

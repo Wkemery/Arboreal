@@ -53,9 +53,9 @@
 int main(int argc, char** argv)
 {
   signal(SIGABRT,bad_clean);
-  //signal(SIGTERM,clean);
+  signal(SIGTERM,clean);
   signal(SIGINT,clean);
-  //signal(SIGQUIT,clean);
+  signal(SIGQUIT,clean);
   /***********************************************************************************************/
 
 

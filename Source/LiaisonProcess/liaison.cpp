@@ -344,12 +344,16 @@ int main(int argc, char** argv)
         /***************************************************************************************/
 
 
+        int read_size = 0;
         Debug.log("L: Waiting For Read Size...");
-        char read_size_buf[MaxBufferSize];
-        memset(read_size_buf,'\0',MaxBufferSize);
-        rval = recv(liaison_fid,read_size_buf,MaxBufferSize,Flag);
 
-        int read_size = get_cmnd_id(read_size_buf);
+        while(read_size == 0)
+        {
+          char read_size_buf[MaxBufferSize];
+          memset(read_size_buf,'\0',MaxBufferSize);
+          rval = recv(liaison_fid,read_size_buf,MaxBufferSize,Flag);
+          read_size = get_cmnd_id(read_size_buf);
+        }
         Debug.log("L: Read Size Received [" + std::to_string(read_size) + "]");
         /***************************************************************************************/
 

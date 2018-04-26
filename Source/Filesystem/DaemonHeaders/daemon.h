@@ -760,10 +760,7 @@ void execute(int id, char* command, int fd, std::vector<std::string>& data)
     {
       //Call list all tags function and add the return value to "data"
       vector<string>* tagnames = fd_fs_map[fd]->get_all_tags();
-      for(unsigned int i = 0; i < tagnames->size(); i++)
-      {
-        data.push_back(tagnames->at(i));
-      }
+      data = *tagnames;
       delete tagnames;
       break;
     }

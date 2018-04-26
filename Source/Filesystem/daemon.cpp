@@ -433,6 +433,10 @@ int main(int argc, char** argv)
                 }
                 else if(end_check == "$")
                 {
+                  if(current_command_id == LIST_ALL)
+                  {
+                    execute(current_command_id,buffer,i,data);
+                  }
 
                   Debug.log("D: Preparing Data For Sending...");
                   for(unsigned int i = 0; i < data.size(); i++)
@@ -472,7 +476,8 @@ int main(int argc, char** argv)
                   for(unsigned int i = 0; i < send_size; i++){temp_string += data_buf[i];}
                   Debug.log("D: Sending Data: \n" + temp_string);
 
-                  rval = send(i, data_buf, send_size, FLAG);
+                  std::cout << "Send Size [" << send_size << "]\n";
+                  rval = send(i, temp_string.c_str(), send_size, FLAG);
 
                   data.erase(begin(data),end(data));
                   /*******************************************************************************/
