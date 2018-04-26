@@ -19,13 +19,10 @@ function homeButton()
 function searchButton()
 {
   //get the text written in the search bar and search the file system for this
-  //var myDoc = "./index.html";
   var inputtedValue = document.getElementById("search_bar").value;
   var inArray = inputtedValue.split(", ");
-  window.alert(inArray[0]);
-  //window.alert(inputtedValue);
-  //var test = "heyyyyy";
-  //window.alert("Heyyyyyy");
+  connectToFileSystem(inArray[0]);
+  //window.alert(inArray[0]);
 }
 function searchHelp()
 {
@@ -39,13 +36,6 @@ function searchHelp()
   var lineEight="This will get you tag_one, tag_four, or tag_two and tag_three."
   window.alert(lineOne+lineTwo+lineThree+lineFour+lineFive+lineSix+lineSeven+lineEight);
 }
-function backButton()
-{
-  //goes back up in the directory
-  window.alert("The Game\n(you lost)");
-
-}
-
 /*--------------------------------Code for Nav Bar Buttons--------------------------------*/
 /*----------------------------------------------------------------------------------------*/
 /*-----------------------------------Window interaction-----------------------------------*/

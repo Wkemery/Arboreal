@@ -7,6 +7,7 @@
 //var msnry = new Masonry(grid, {columnWidth:160, itemSelector:'.grid-item'});
 var itemID = 0; //helps keep track of elements
 var elems = new Array();
+var fakeFiles = ["taxes.doc", "hawaii.jpeg","danny.isawesome","minecraft","running","out", "of","names"];
 
 /*-------------------------------Code for Addding Elements-------------------------------*/
 /*---------------------------------------------------------------------------------------*/
@@ -24,7 +25,7 @@ function addToGrid(elemType, caption)
   //set up the figure for dispaly
   var newFig = document.createElement("img");
   var divFig = document.createElement("div");
-  var text = document.createTextNode(id);
+  var text = document.createTextNode(caption);
   var br = document.createElement("br");
 
   if(elemType=='tag')
@@ -58,7 +59,7 @@ function addToGrid(elemType, caption)
   //text.setAttribute("align","bottom");
   document.getElementById('grid').appendChild(divFig);
 }
-function clearGrid()
+function clearGrid() //empties the grid and the elements in the array
 {
   for(var i=0; i <elems.length; i++)
   {
@@ -67,12 +68,32 @@ function clearGrid()
   }
   elems = [];
 }
-function itemClick(id)
+function itemClick(id) // checks if an item is clicked.
+//Performs a function based on if it is a file, or a tag
 {
-  alert("image clicked: "+id);
-  if(id.includes("tag")) // for when a tag is double clicked
+  //alert("image clicked: "+id);
+  if(id.includes("tag")) // for when a tag is double clicked, will find all files assoiciated with tag
   {
+    clearGrid()
+    for(var i =0; i <fakeFiles.length; i++)
+    {
+      var str ='';
+      if(fakeFiles[i].length >10)
+      {
+        var result = '';
+        while(str.length>0)
+        {
+          result+=str.substring(0,10)+'\n';
+          str = str.substring(10);
+        }
+        addToGrid("file",result);
+      }
+      else
+      {
+        addToGrid("file", fakeFiles[i]);
+      }
 
+    }
   }
   else if(id.includes("file")) // for when a file is double clicked
   {

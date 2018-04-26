@@ -8,24 +8,24 @@
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
     <link rel = "stylesheet" href = "res/style.scss"></link>
-    <script type="text/javascript" src="./masonry.pkgd.js"></script>
+    <script type="text/javascript" src="./fileCom.js"></script>
+    <script type="text/javascript" src="./fileConnection.js"></script>
     <script type="text/javascript" src="./onClickCode.js"></script>
     <script type="text/javascript" src="./grid.js"></script>
-    <script type="text/javascript" src="./fileSystemCom.js"></script>
     <script type="text/javascript" src="./main.js"></script>
   </head>
 
-  <body id="workingWindow" onmousedown="bodyRightClick()">
+  <body id="workingWindow" onmousedown="bodyRightClick()" onload="popuate()" >
     <nav class ="topnav">
       <button onclick="arborealButton();" class = "btn" id="arboreal_button">Arboreal</button>
       <button onclick="helpButton();" class = "btn" id="help_button">HELP</button>
-      <button onclick="homeButton();" class = "btn" id="home_button">Home</button>
-      <button onclick="addToGrid('tag','caption');" class="btn" id="test_button">TEST</button>
-      <button onclick="clearGrid();" class="btn" id="test_button">Clear</button>
+      <button onclick="popuate();" class = "btn" id="home_button">Home</button>
+      <button onclick="onStartUp();" class="btn" id="test_button">TEST</button>
+      <button onclick="clearGrid()" class="btn" id="clear_button">Clear</button>
       <diva class="search-container">
         <button onclick="searchHelp();" class="btn" id="search_help">SEARCH HELP</button>
         <input type="text" placeholder="Search..." name="search" id="search_bar"></input>
-        <button onclick="searchButton();" class="btn" id="go_button"> SEARCH</button>
+        <button onclick="searchButton()" class="btn" id="go_button"> SEARCH</button>
       </diva>
     </nav>
     <div id="grid">

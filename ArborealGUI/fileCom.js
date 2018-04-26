@@ -1,7 +1,7 @@
 //Danny Radoseivch
 //Code to interact with the Arboreal file system
 //328 -372
-//send single dolar sign signal 
+//send single dolar sign signal
 
 /*------------------------------Static Interaction Variables------------------------------*/
 //codes for renaming a file
@@ -14,7 +14,7 @@ const OPEN_F =  201; //opens a file in current directory
 //codes for new files/tags/path
 const NEW_FP =  300; // create a new file path from anywhere
 const NEW_TS =  301; // one or more new tags
-const NEW_FS =  302; //1 or more new iles within currrent directory
+const NEW_FS =  302; //1 or more new files within currrent directory
 //codes for finding tags/files
 const FIND_TS = 400; // find files by tags
 const FIND_FS = 401; //find files by name
@@ -72,28 +72,104 @@ const UUTAG =   10012; //usage untag
 const UCD   =   10013; //usage chagne directory
 const UREAD =   10014; //usage read
 const UWRITE=   10015; //usage write
-const UWRITE=   10016; //usage write
+
+const LISATALL = 7000;
+//const UWRITE=   10016; //usage write
 /*------------------------------Static Interaction Variables------------------------------*/
 ////////////////////////////////////////////////////////////////////////////////////////////
 /*-------------------------Code for Interacting with File system--------------------------*/
-const daemonPort = 70777; //the port number for conencting to the file Systems
-var ip_address = Request.UserHostAddress.ToString(); //get local IP address
+const daemonPort = 42069; //the port number for conencting to the file Systems
+var host = 'localhost';
+//add the requirements
 var net = require('net');
-var client = new net.Sockt();
+var stream = require("stream");
+//instantiate the net socket and buffer
+var client = new net.Socket();
+var buffer = Buffer.alloc(4096,'\0'); //buffer to size 4096 fill in with null bytes
 //functions to interact with the tcp port
+var currentOp = ""; //check what the current operation is for data return
+var lastAr = [];  // keep data being added until next operation
 
 // callConnect function, will be called from outside this fille to establish conenction on start up
-// as well as else where
-function callConnect(request)
-{
-  client.connect(daemonPort, ip_address,connection(request));
+function onStartUp()
+{//gets the initial array of all the tags
+
+  //alert("trying to get all data");
+
+  client.connect(daemonPort, host);
+  currentOp = '7000';
+  buffer.write(currentOp); // writes the command to get all the tags TBD
+  client.write(buffer); //writes the buffer to the client
+  buffer = Buffer.alloc(4096,'\0');
+  buffer.write('thingsInTheMiddle'); // writes the command to get all the tags TBD
+  client.write(buffer); //writes the buffer to the client
+  buffer = Buffer.alloc(4096,'\0'); // clears the buffer back to null bytes
+  buffer.write("$");
+  client.write(buffer); // signals that the communication is done
+  buffer = Buffer.alloc(4096,'\0'); // reclears the buffer
+
 }
+function connectTo()
+{
+  //alert("xxx");
+  client.connect(daemonPort, host);
+  connection("301//Random2//Random3//$");
+
+}
+
+
 // communicates with the tcp server
 function connection(request)
 {
+  //window.alert("callll");
+  //alert("trying...");
+  var inArray = request.split("//");
+  currentOp = inArray[0];
+  if(inArray[0]==='301') //for when a tag is being added
+  {
+      for(var i =0; i< inArray.length; i++)
+      {
+        buffer.write(inArray[i]);
+        client.write(buffer);
+        buffer = Buffer.alloc(4096,'\0');
+      }
 
+  }
+  lastAr = inArray;
+  close();
 }
 //closes the connection
+client.on('data', function(data)
+{
+  if(currentOp==='301') // checks if last op was to add a tag
+  {
+     //pop up alert to say that tag was added
+    if(data.toString('utf8').includes("Created")) //verifies that the string was unique and creatable
+    {
+      alert(data);
+      addToGrid('tag',lastAr[1]);
+    }
+    else
+    {
+      //do nothing
+    }
+  }
+
+  else if(currentOp==='7000')// checks if the current op is the request all
+  {
+    alert(data);
+    /*
+
+    var tempList = [];
+    tempList = data.split('\0');
+
+    setTagList(tempListTwo); //splits the data on the null byte
+    */
+  }
+
+
+  close();
+});
 function close()
 {
   client.end();
