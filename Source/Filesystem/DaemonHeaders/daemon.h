@@ -20,7 +20,7 @@ static const int FLAG = 0;                  /* Flag for recv() */
 static const int TIMEOUT = 10;              /* How Long Retries Should Take */
 static const int TRUE = 1;                  /* Integer Boolean True */
 static const int FALSE = 0;                 /* Integer Boolean False */
-static const int PORT = 70777;              /* File System Port Number */
+static const int PORT = 7777;               /* File System Port Number */
 static const int MAX_COMMAND_SIZE = 4096;   /* Maximum Buffer Size */
 static const int WRITE_CHANGES_WAIT = 1;    /* How Long To Wait Before Writing Changes */
 static const bool WILL_TIME = false;
@@ -756,6 +756,17 @@ void execute(int id, char* command, int fd, std::vector<std::string>& data)
 {
   switch(id)
   {
+    case(LIST_ALL):
+    {
+      //Call list all tags function and add the return value to "data"
+      vector<string>* tagnames = fd_fs_map[fd]->get_all_tags();
+      for(unsigned int i = 0; i < tagnames->size(); i++)
+      {
+        std::cout << tagnames->at(i) << std::endl;
+        data.push_back(tagnames->at(i));
+      }
+      break;
+    }
     case(FIND_TS): // find tag
     {
       std::unordered_set<std::string> tags = get_set(command,',');

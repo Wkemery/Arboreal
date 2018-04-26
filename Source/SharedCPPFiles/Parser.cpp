@@ -352,6 +352,10 @@ std::vector<std::string> Parser::parse(int type)
       parsed.push_back("Coming Soon...");
       return parsed;
     }
+    case(LIST_ALL):
+    {
+      return parsed;
+    }
   }
 
   // Return empty vector == FAILED

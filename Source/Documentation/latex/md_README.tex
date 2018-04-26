@@ -1,40 +1,216 @@
-This is a file for specific code notes. things to do, consider, etc, that doesn\textquotesingle{}t need to clutter up the main readme file.
+\subsubsection*{Table of Contents}
 
-{\bfseries Doing T\+R\+Y-\/\+C\+A\+T\+CH}
 
-{\bfseries tage\+Search() returns a vector of structs with (string \char`\"{}filename\char`\"{}, int fidentifier) \mbox{[}fidentifier can be F\+I\+O\+N\+O\+DE blknum or unique file identifier that is mapped to a F\+I\+O\+N\+DE blknum\mbox{]}} {\bfseries Hand off storage of file tag\+Search() return vector to Danny to be stored in a \char`\"{}current\char`\"{} buffer or smoe such}/
+\begin{DoxyItemize}
+\item {\bfseries Installing Arboreal}
+\item {\bfseries Starting The Command Line}
+\item {\bfseries Valid Commands and Their Syntax}
+\begin{DoxyItemize}
+\item {\bfseries Help}
+\item {\bfseries Quit}
+\item {\bfseries Find}
+\item {\bfseries New}
+\item {\bfseries Delete}
+\item {\bfseries Tag}
+\item {\bfseries Merge}
+\item {\bfseries Untag}
+\item {\bfseries Open}
+\item {\bfseries Close}
+\item {\bfseries Read}
+\item {\bfseries Write}
+\item {\bfseries Copy}
+\item {\bfseries Rename}
+\item {\bfseries Get \mbox{\hyperlink{classFile}{File}} \mbox{\hyperlink{classAttributes}{Attributes}}}
+\item {\bfseries Change Working Directory}
+\end{DoxyItemize}
+\item {\bfseries The Graphical User Interface (G\+UI)}
+\item {\bfseries Troubleshooting} ~\newline
 
-There should probably be an attributes object to make our lives easier. and thats what real filesystems do. {\bfseries \hyperlink{classAttributes}{Attributes} object should be stored in F\+I\+N\+O\+DE or another indirect block who\textquotesingle{}s reference is stored in the F\+I\+N\+O\+DE. Which one is used should be decided dynamically, if F\+I\+O\+N\+DE is full get empty data block, store address in F\+I\+O\+N\+DE (migrate data)\mbox{[}optional\mbox{]} to new block, add new data to new block, otherwise add data directly to F\+I\+O\+N\+DE. T\+A\+GS A\+RE A\+T\+T\+R\+I\+B\+U\+T\+ES}
+\end{DoxyItemize}
 
-I think we may need two open functions. One that takes the unique file id,(block number) and one that takes the vector of tags and the file name . similar to a path. {\bfseries Y\+ES}
+\subsection*{Installing Arboreal}
 
-{\itshape I removed valid\+Name() because we should check for valid input before passing it to our filesystem. as much as possible anyway.}
+Arboreal is currently not integrated with the kernel and as such runs similarly to a virtual file system albeit with a more experimental structure. Future work will be focused on direct integration with the kernal in order to provide more traditional usability. In the meantime playing around with and testing the file system can be achived through a few easy steps\+: ~\newline
 
-I think we\textquotesingle{}ll be able to get rid of alot of the helper functions actually. because map will be able to do all that for us. the {\bfseries big helper functions will be reading in a map and writing out a map}. which i think we can just basically write out all the key, value pairs, because a map can do that easily with its iterator. {\bfseries for reading in, we\textquotesingle{}ll just read in all the key value pairs and add them to the map one by one.} {\bfseries Name Length H\+A\+RD C\+A\+PS at size specified in partition info during formatting} {\bfseries N\+E\+ED T\+R\+EE I\+N\+O\+DE} {\bfseries R\+E\+A\+D\+I\+NG A M\+AP F\+R\+OM D\+I\+SK TO M\+A\+IN M\+E\+M\+O\+RY} $\ast$$\ast$-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---$\ast$$\ast$
+\begin{DoxyEnumerate}
+\item {\bfseries Download the project} ~\newline
+2. {\bfseries Changed directory to the folder within the project hierarchy named {\ttfamily Source}} ~\newline
+3. {\bfseries Type {\ttfamily make}} ~\newline
+4. {\bfseries You will now need to first run the daemon process. This process intercepts al communication attempts with the \mbox{\hyperlink{classFile}{File}} System and will execute functions accordingly. There are a number of command line arguments that can be passed to the daemon\+:} ~\newline
+ $\ast$ {\ttfamily -\/d} {\bfseries This flag is used to tell the daemon to enable debugging} ~\newline
+ $\ast$ {\ttfamily -\/v} {\bfseries This flag is used to tell the daemon to return file information (such as that returned by a call to find) with as much information as possible. Omitting this flag will cause the daemon to return a reduced version of file information} ~\newline
+ $\ast$ {\bfseries You may enable either of these options or both (input order does not matter, that is {\ttfamily -\/d -\/v} will work the same as {\ttfamily -\/v -\/d})}
+\item {\bfseries Finally, Simply Type {\ttfamily ./daemon} followed by your chosen flag or flags (be sure to include a space in between).} {\bfseries For example, if I wanted to run the daemon with verbose file information and debugging enabled the command would look like\+: {\ttfamily ./daemon -\/v -\/d}} ~\newline
+ At this point you\textquotesingle{}ll be ready to move on to the next step, starting the command line or G\+UI interface. Notice that the daemon does not output anything to the screen as it is running. {\bfseries This is O\+K!} Its whole purpose is to be a background process that aids communication with the file system. {\bfseries If you decided to enable debugging, the output will be located in a file called {\ttfamily Arboreal.\+log}.}
+\end{DoxyEnumerate}
 
-{\bfseries so we\textquotesingle{}ll have to have a reserved spot at the end of a block for a block number to the next block of continuing data.}
+{\bfseries A final note\+:} ~\newline
+By typing make, the \char`\"{}disk\char`\"{} will be formatted for you with the default values and partition names/ counts. It is possible to change these to better suit your needs however it is a little bit more involved. ~\newline
 
-{\bfseries We should write everything out in plaintext and have a converter that can change it to byte stuff that we can implement later. also we should have a flag that will zero out blocks (F\+OR S\+P\+E\+ED), mainly for debugging. but can also repourpose to an encrypt flag later.}
+\begin{DoxyEnumerate}
+\item {\bfseries Open and edit a file called {\ttfamily disk\+Info.\+d} (It is located in the {\ttfamily Source} folder)}
+\item {\bfseries Using the following syntax, edit the file as you see fit\+:}
+\begin{DoxyItemize}
+\item {\bfseries Line 1 needs to always be\+:} {\ttfamily Diskfile name, number of blocks on disk, size of each block in bytes, number of partitions} $\ast$$\ast$(Omit the commas in favor of spaces)$\ast$$\ast$
+\item {\bfseries Lines 2 -\/ X need to always be\+:} {\ttfamily Partition name, number of blocks in the partition, maximum filename size} $\ast$$\ast$(Again omit commas in favor of spaces)$\ast$$\ast$ ~\newline
+ $\ast$ {\bfseries There are some restrictions on allowed values for the {\ttfamily disk\+Info} file to see these please checkout the Arboreal Technical Documentation}
+\end{DoxyItemize}
+\item {\bfseries Next you will have to open {\ttfamily daemon.\+cpp} ( it is located under {\ttfamily Source/\+Filesystem/}) and edit this line of code\+:} ~\newline
+ $\ast$ {\ttfamily d = new \mbox{\hyperlink{classDisk}{Disk}}(\#1, \#,2 const\+\_\+cast$<$char $\ast$$>$(\char`\"{}diskfile\+\_\+name\char`\"{}));}
+\begin{DoxyItemize}
+\item {\bfseries Change} {\ttfamily \#1} {\bfseries to whatever value you picked for} {\ttfamily number of blocks} {\bfseries in} {\ttfamily disk\+Info.\+d}$\ast$$\ast$.$\ast$$\ast$
+\begin{DoxyItemize}
+\item So if I decided that I wanted 4000 blocks I would type {\ttfamily 4000} in for {\ttfamily \#1} ( {\bfseries The number here and in} {\ttfamily disk\+Info.\+d} {\bfseries M\+U\+ST M\+A\+T\+CH}).
+\end{DoxyItemize}
+\item {\bfseries Change} {\ttfamily \#2} {\bfseries to whatever value you picked for} {\ttfamily block size in bytes} {\bfseries in} {\ttfamily disk\+Info.\+d}
+\begin{DoxyItemize}
+\item So if I decided that I wanted blocks to be 4096 bytes large I would type {\ttfamily 4096} in for {\ttfamily \#2} ( {\bfseries Once again I stress that the number here and in} {\ttfamily disk\+Info.\+d} {\bfseries M\+U\+ST M\+A\+T\+CH})
+\end{DoxyItemize}
+\item {\bfseries Finally, change} {\ttfamily diskfile\+\_\+name} {\bfseries to the name of the disk file you chose in} {\ttfamily disk\+Info.\+d}
+\end{DoxyItemize}
+\item {\bfseries You are now almost ready, the final step is to type} {\ttfamily make clean} {\bfseries followed by} {\ttfamily make} {\bfseries in the shell and run the through the same steps as above for starting the daemon}
+\item {\bfseries You are now good to go!}
+\end{DoxyEnumerate}
 
-//\+L\+A\+T\+ER\+: we should try not to write out the whole tag tree everytime. instead we should only write out the parts that changed if we can. I know this is a tough solution, if a tag is deleted in the middle of the tree and we really have no way of knowing where stuff will be in the tree... but it might be possible to keep some sort of secondary data structure, like a vector with all the info because it doens\textquotesingle{}t matter what order we reconstruct the map in memory, just that all the data is there. this is also somehting we can implement later. {\bfseries I\+Ntermeidary Data structure will store, (in addition to Memory pointer, block pointer) a tuple (int blknum, int pos\+\_\+in\+\_\+blknum) of the key\+\_\+value pair so we can use it later for delete operations.}
+\subsection*{Starting The Command Line}
 
-{\bfseries A N\+O\+TE about speed\+: right now, in order to do tag search, we have to read in the finode of each file in the smallest tag tree becuase I am not storing the number of tags associated with a file in the tag tree inodes. This can be changed later, but for now I just want to get it done. If, when we are testing speeds this is something that will surely improve speed.}
+{\bfseries Before beginning anything below, make sure that a daemon process (and O\+N\+LY O\+NE daemon process) is running, if the command line cannot connect to the daemon process it will quit on startup with an appropriate error message} ~\newline
+ The command line utility has multiple optional arguments but it does contain a single mandatory argument. This is the {\bfseries Partition Name} that the command line will be working on. If no partition name is given the command line will fail on startup with an appropriate error message. Additionally it is important to note that {\bfseries the partition that is given to the command line must already exist}. If it does not, an appropriate error will be thrown. Finally, {\bfseries it does not matter if the partition is already in use by another command line and it does not matter how many command lines are currently active}, in both cases you will still be able to work wth the file system (provided that the partition you gave exists). After providing the partitoon name you are free to run the command line. However, should you wish to, there are some optional command line arguments\+: ~\newline
 
-$\ast$$\ast$\+Estimated read in time for everything on startup\+: O(n$^\wedge$2$\ast$log(n))$\ast$$\ast$$\ast$
+\begin{DoxyItemize}
+\item {\ttfamily -\/d} {\bfseries This argument will enable debugging for both the command line and the liaison process} ~\newline
+$\ast$ {\ttfamily -\/s} {\bfseries This argument will alert the command line that input will be coming from a file rather than a user}
+\item {\ttfamily -\/s -\/d} {\bfseries This will enable debugging for the command line A\+ND alert it to the fact that input will be coming from a file rather than a user}
+\end{DoxyItemize}
 
-{\bfseries File\+Inode structure filename -\/ filename\+Size Finode struct = sizeof(finode struct) local tag storage = rest of the space possible tag cont. block = sizeof(blknum\+Type)}
+For example, if i wished to pipe input from a file to the command line and enable debugging, I would run the command line process like so\+: {\ttfamily ./commandline Partition\+Name -\/s -\/d $<$ some\+\_\+random\+\_\+file.\+ext} ~\newline
+ ({\itshape Note that} {\ttfamily ./commandline -\/d -\/s $<$ some\+\_\+random\+\_\+file.\+ext} {\itshape will not work, that is, make sure the debug flag comes last!})
 
+But if I wanted to just enable debugging and read from user input, I would run the command line process like so\+: ~\newline
+{\ttfamily ./commandline Partition\+Name -\/d} ~\newline
+ At this point you should see the arboreal header and {\ttfamily Arboreal $>$$>$} indicating that the command line is ready to accept input. {\bfseries To send input to the command line simply type the command you wish to execute} (see {\itshape Valid Commands And Their Syntax} section for commands or type {\ttfamily help} or {\ttfamily h}) {\bfseries and press enter.}
+
+{\bfseries Note} ~\newline
+If you chose to enable debugging for the command line, all debug output will be written to a file named {\ttfamily Arboreal.\+log}. Do not worry if this file does not yet exist, it will be created for you on startup.
+
+\subsection*{Valid Commands And Their Syntax}
+
+\subsubsection*{Help Commands}
+
+Arboreal $>$$>$ help Arboreal $>$$>$ h {\bfseries These two commands will bring up a helper subprocess which will display a list of the command archetypes and show the user the specific commands (and their syntax) that are housed under each archetype.} The helper subprocess continues running until the user decides to quit it. \begin{DoxyVerb}Arboreal >> -h --command_archetype
+
+e.g.
+Arboreal >> -h --find   
+\end{DoxyVerb}
+ {\bfseries This version of the help command will show the usage for a single command archetype.} (Unlike the {\ttfamily help} or {\ttfamily h} commands it will not start a \char`\"{}helper\char`\"{} subprocess but will simply display the usage for the particular archetype and await the next file system command) ~\newline
+
+
+\subsubsection*{Quit Commands}
+
+Arboreal $>$$>$ quit Arboreal $>$$>$ q Arboreal $>$$>$ Q {\bfseries All of these will attempt to terminate the current command line process.} This command does not affect other concurrently running command lines it will only quit the currently active command line process. The user must confirm the quit before the command will actually be executed. this is to prevent accidental quits. The quit commands are built with proper cleanup in mind and should not leave any junk behind. ~\newline
+ \subsubsection*{Find Commands}
+
+Arboreal $>$$>$ find -\/t \mbox{[}tagname1,tagname2,...\mbox{]} Arboreal $>$$>$ find -\/t \{tagname1,tagname2,...\} Arboreal $>$$>$ find -\/t \mbox{[}tagname1,\{tagname2,tagname7,...\},tagname10,...\mbox{]} Arboreal $>$$>$ find -\/t \{tagname1,tagnam3,\mbox{[}tagname5,tagname6,...\mbox{]},...\} {\bfseries This command searches for files by tag.} It is quite powerful and allows you to search for any combination of tags. Commands that use {\ttfamily \{\}} are called {\ttfamily sets} and will tell the file system to {\bfseries search for A\+LL files which are tagged with A\+LL of the specified tags.} You can think of this as a bunch of {\ttfamily \&\&} operations, that is, you want a file tagged with \+: ~\newline
+ {\ttfamily \{ this tag, and this tag, and this tag, ... etc\}} ~\newline
+ Commands that use {\ttfamily \mbox{[}\mbox{]}} are called {\ttfamily lists} and will tell the system to {\bfseries search for A\+NY file which is tagged with A\+NY of the tags specified.} You can think of this as a bunch of {\ttfamily $\vert$$\vert$} operations, that is, you want a file tagged with\+: ~\newline
+ {\ttfamily \mbox{[}this tag, or this tag, or this tag, ... etc\mbox{]}} ~\newline
+ {\bfseries What\textquotesingle{}s great is that you can actually nest any of these within one another!} Although nesting a bunch of {\ttfamily sets} or {\ttfamily lists} won\textquotesingle{}t be any diffferent from simply using one big list or set (i.\+e. {\ttfamily \mbox{[}t1,\mbox{[}t2,t3,t4\mbox{]}\mbox{]}} is the exact same as {\ttfamily \mbox{[}t1,t2,t3,t4\mbox{]}} this goes for {\ttfamily sets} as well). However, tings get interesting when you pass a command such as\+:
+
+{\ttfamily find -\/t \mbox{[}tag1,tag2,\{tag45,tag78,\mbox{[}tag9,tag10\mbox{]},tag5\},tag100\mbox{]}} ~\newline
+ This particular command will search for any file with\+: ~\newline
+ 
+\begin{DoxyCode}
+tag1     
+tag2  
+tag100  
+tag1 && tag45 && tag78 && tag9 && tag5 && tag100  
+tag1 && tag45 && tag78 && tag10 && tag5 && tag100  
+tag2 && tag45 && tag78 && tag9 && tag5 && tag100  
+tag2 && tag45 && tag78 && tag10 && tag5 && tag100 
+\end{DoxyCode}
+
+
+({\itshape Of course you accomplish similar things even with a command that is a {\ttfamily list} nested within a {\ttfamily set} rather than this example which is a {\ttfamily set} nested within a {\ttfamily list}})
+
+As you can see, nesting these operations creates some really powerful search options! ~\newline
+\subsubsection*{Important! DO N\+OT put spaces in between the {\ttfamily list} or {\ttfamily set} items!!}
+
+
+\begin{DoxyItemize}
+\item 
+\begin{DoxyCode}
+Arboreal >> find -f [file1,file2,...]
+\end{DoxyCode}
+
+\end{DoxyItemize}
+
+\begin{quote}
+This is a file for specific code notes. things to do, consider, etc, that doesn\textquotesingle{}t need to clutter up the main readme file. \end{quote}
+
+
+\begin{quote}
+{\bfseries Doing T\+R\+Y-\/\+C\+A\+T\+CH} \end{quote}
+
+
+\begin{quote}
+{\bfseries tage\+Search() returns a vector of structs with (string \char`\"{}filename\char`\"{}, int fidentifier) \mbox{[}fidentifier can be F\+I\+O\+N\+O\+DE blknum or unique file identifier that is mapped to a F\+I\+O\+N\+DE blknum\mbox{]}} \end{quote}
+{\bfseries Hand off storage of file tag\+Search() return vector to Danny to be stored in a \char`\"{}current\char`\"{} buffer or smoe such}/
+
+\begin{quote}
+There should probably be an attributes object to make our lives easier. and thats what real filesystems do. \end{quote}
+{\bfseries \mbox{\hyperlink{classAttributes}{Attributes}} object should be stored in F\+I\+N\+O\+DE or another indirect block who\textquotesingle{}s reference is stored in the F\+I\+N\+O\+DE. Which one is used should be decided dynamically, if F\+I\+O\+N\+DE is full get empty data block, store address in F\+I\+O\+N\+DE (migrate data)\mbox{[}optional\mbox{]} to new block, add new data to new block, otherwise add data directly to F\+I\+O\+N\+DE. T\+A\+GS A\+RE A\+T\+T\+R\+I\+B\+U\+T\+ES}
+
+\begin{quote}
+I think we may need two open functions. One that takes the unique file id,(block number) and one that takes the vector of tags and the file name . similar to a path. {\bfseries Y\+ES} \end{quote}
+
+
+\begin{quote}
+{\itshape I removed valid\+Name() because we should check for valid input before passing it to our filesystem. as much as possible anyway.} \end{quote}
+
+
+\begin{quote}
+I think we\textquotesingle{}ll be able to get rid of alot of the helper functions actually. because map will be able to do all that for us. the {\bfseries big helper functions will be reading in a map and writing out a map}. which i think we can just basically write out all the key, value pairs, because a map can do that easily with its iterator. {\bfseries for reading in, we\textquotesingle{}ll just read in all the key value pairs and add them to the map one by one.} \end{quote}
+{\bfseries Name Length H\+A\+RD C\+A\+PS at size specified in partition info during formatting} {\bfseries N\+E\+ED T\+R\+EE I\+N\+O\+DE} {\bfseries R\+E\+A\+D\+I\+NG A M\+AP F\+R\+OM D\+I\+SK TO M\+A\+IN M\+E\+M\+O\+RY} $\ast$$\ast$-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---$\ast$$\ast$
+
+\begin{quote}
+{\bfseries so we\textquotesingle{}ll have to have a reserved spot at the end of a block for a block number to the next block of continuing data.} \end{quote}
+
+
+\begin{quote}
+{\bfseries We should write everything out in plaintext and have a converter that can change it to byte stuff that we can implement later. also we should have a flag that will zero out blocks (F\+OR S\+P\+E\+ED), mainly for debugging. but can also repourpose to an encrypt flag later.} \end{quote}
+
+
+\begin{quote}
+//\+L\+A\+T\+ER\+: we should try not to write out the whole tag tree everytime. instead we should only write out the parts that changed if we can. I know this is a tough solution, if a tag is deleted in the middle of the tree and we really have no way of knowing where stuff will be in the tree... but it might be possible to keep some sort of secondary data structure, like a vector with all the info because it doens\textquotesingle{}t matter what order we reconstruct the map in memory, just that all the data is there. this is also somehting we can implement later. \end{quote}
+{\bfseries I\+Ntermeidary Data structure will store, (in addition to Memory pointer, block pointer) a tuple (int blknum, int pos\+\_\+in\+\_\+blknum) of the key\+\_\+value pair so we can use it later for delete operations.}
+
+\begin{quote}
+{\bfseries A N\+O\+TE about speed\+: }\end{quote}
+right now, in order to do tag search, we have to read in the finode of each file in the smallest tag tree becuase I am not storing the number of tags associated with a file in the tag tree inodes. This can be changed later, but for now I just want to get it done. If, when we are testing speeds this is something that will surely improve speed.
+
+{\bfseries \begin{quote}
+$\ast$$\ast$\+Estimated read in time for everything on startup\+: \end{quote}
+O(n$^\wedge$2$\ast$log(n))$\ast$$\ast$$\ast$}
+
+{\bfseries \begin{quote}
+{\bfseries File\+Inode structure }\end{quote}
+filename -\/ filename\+Size Finode struct = sizeof(finode struct) local tag storage = rest of the space possible tag cont. block = sizeof(blknum\+Type)}
+
+{\bfseries \begin{quote}
 {\bfseries Restrictions\+:}
 \begin{DoxyEnumerate}
 \item filename size restricted to no more than 1/2 block size
 \item block size should be a power of 2
 \item Hard cap on the number of tags that can be associated with a file. = (((blocksize -\/ filenamesize -\/ 136) / sizeof(\+Blk\+Num\+Type)) + (blocksize / sizeof(\+Blk\+Num\+Type)). 103 tags for blocksize of 512. and 64b filename
-\item max block size = 16k
-\end{DoxyEnumerate}
+\item max block size = 16k 
+\end{DoxyEnumerate}\end{quote}
+}
 
+{\bfseries \begin{quote}
 {\bfseries T\+O\+DO\+:}
 \begin{DoxyEnumerate}
 \item Incorporate storing number of tags associated with file in Tag tree on disk, not yet
 \item add rename\+Tag function
-\item don\textquotesingle{}t allow duplicate tags to be sent to the filesystem when sending a tagset of any kind 
-\end{DoxyEnumerate}
+\item don\textquotesingle{}t allow duplicate tags to be sent to the filesystem when sending a tagset of any kind
+\end{DoxyEnumerate}\end{quote}
+}

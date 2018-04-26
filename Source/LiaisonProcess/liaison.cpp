@@ -35,9 +35,9 @@ static const int MaxBufferSize = 4096;            /* Maximum Size a FS Command B
 static const int SharedMemorySize = 1;            /* The Size of a Shared Memory Segment */
 static const int Backlog = 10;                    /* Number of Connection Requests that the Server Can Queue */
 static const int Flag = 0;                        /* Flag for Send/Recv. Operations */
-static const int DaemonPort = 70777;              /* Port On Which The FS Daemon Is Listening */
+static const int DaemonPort = 7777;               /* Port On Which The FS Daemon Is Listening */
 static const int Timeout = 10;                    /* How Many Seconds More To Continue Trying If An Operation Fails */
-static const bool VERBOSE = false;
+static const bool VERBOSE = true;
 DebugMessages Debug;
 Parser* Parser = 0;
 #include "LiaisonDependancies/liason_helper.hpp"                      /* Helper Functions */

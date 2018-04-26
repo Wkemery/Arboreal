@@ -358,10 +358,6 @@ void print_write()
   std::cout << ">>X   [ write -a ../tagname/filename(.ext) ]: (Appends Data To The File With The Given Path)" << std::endl;
   std::cout << ">>X   [ write filename(.ext) ]: (Writes Data To The File Within The Current Directory With The Given Name)" << std::endl;
   std::cout << ">>X   [ write -a filename(.ext) ]: (Appends Data To The File Within The Current Directory With The Given Name)" << std::endl;
-  std::cout << ">>X   [ write -b X ../tagname/filename1(.ext) -> ../tagname/filename2(.ext) ]: (Overwrites File Two With The First X Bytes Of File One)" << std::endl;
-  std::cout << ">>X   [ write -a -b X ../tagname/filename1(.ext) -> ../tagname/filename2(.ext) ]: (Appends File Two With The First X Bytes Of File One)" << std::endl;
-  std::cout << ">>X   [ write -b X filename(.ext) -> filename2(.ext) ]: (Overwrites File Two With The First X Bytes Of File One (Both Files Must Be In The Current Directory))" << std::endl;
-  std::cout << ">>X   [ write -a -b X filename(.ext) -> filename2(.ext) ]: (Appends File Two With The First X Bytes Of File One (Both Files Must Be In The Current Directory))" << std::endl;
   std::cout << std::endl;
   return; 
 }
@@ -383,6 +379,10 @@ void print_copy()
   std::cout << "[Usage]" <<std::endl;
   std::cout << ">>X   [ copy ../tagname/filename1(.ext) -> ../tagname/filename2(.ext) ]: (Overwrites The Contents Of File Two with Those Of File One)" << std::endl;
   std::cout << ">>X   [ copy filname1(.ext) -> filename2(.ext) ]: (Overwrites The Contents Of File Two with Those Of File One (Both Files Must Be In The Currrent Directory))" << std::endl;
+  std::cout << ">>X   [ copy -b X ../tagname/filename1(.ext) -> ../tagname/filename2(.ext) ]: (Overwrites File Two With The First X Bytes Of File One)" << std::endl;
+  std::cout << ">>X   [ copy -a -b X ../tagname/filename1(.ext) -> ../tagname/filename2(.ext) ]: (Appends File Two With The First X Bytes Of File One)" << std::endl;
+  std::cout << ">>X   [ copy -b X filename(.ext) -> filename2(.ext) ]: (Overwrites File Two With The First X Bytes Of File One (Both Files Must Be In The Current Directory))" << std::endl;
+  std::cout << ">>X   [ copy -a -b X filename(.ext) -> filename2(.ext) ]: (Appends File Two With The First X Bytes Of File One (Both Files Must Be In The Current Directory))" << std::endl;
   std::cout << std::endl;
   return;
 }

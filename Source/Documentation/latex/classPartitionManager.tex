@@ -3,44 +3,42 @@
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\hyperlink{classPartitionManager_aa875b0b19b7ab9f32b02d2c9be383b75}{Partition\+Manager} (\hyperlink{classDiskManager}{Disk\+Manager} $\ast$dm, string partition\+Name)
+\mbox{\hyperlink{classPartitionManager_aa875b0b19b7ab9f32b02d2c9be383b75}{Partition\+Manager}} (\mbox{\hyperlink{classDiskManager}{Disk\+Manager}} $\ast$dm, string partition\+Name)
 \end{DoxyCompactItemize}
-\begin{Indent}{\bf Accessor Functions}\par
+\begin{Indent}\textbf{ Accessor Functions}\par
 \begin{DoxyCompactItemize}
 \item 
-void \hyperlink{classPartitionManager_a7aca34c24770b7b9290c489475655ada}{read\+Disk\+Block} (Blk\+Num\+Type blknum, char $\ast$blkdata)
+void \mbox{\hyperlink{classPartitionManager_a7aca34c24770b7b9290c489475655ada}{read\+Disk\+Block}} (Blk\+Num\+Type blknum, char $\ast$blkdata)
 \item 
-size\+\_\+t \hyperlink{classPartitionManager_aa1026e17e77f154d7034fafd188bda02}{get\+Block\+Size} ()
+size\+\_\+t \mbox{\hyperlink{classPartitionManager_aa1026e17e77f154d7034fafd188bda02}{get\+Block\+Size}} ()
 \item 
-string \hyperlink{classPartitionManager_a7c756dba2665e5a7b62b2ccb261f1158}{get\+Partition\+Name} ()
+string \mbox{\hyperlink{classPartitionManager_a7c756dba2665e5a7b62b2ccb261f1158}{get\+Partition\+Name}} ()
 \item 
-int \hyperlink{classPartitionManager_a3b047c1c63c2f9a9e04805471c04ccf0}{get\+\_\+file\+\_\+name\+\_\+size} ()
+int \mbox{\hyperlink{classPartitionManager_a3b047c1c63c2f9a9e04805471c04ccf0}{get\+\_\+file\+\_\+name\+\_\+size}} ()
 \end{DoxyCompactItemize}
 \end{Indent}
-\begin{Indent}{\bf Modifier Functions}\par
+\begin{Indent}\textbf{ Modifier Functions}\par
 \begin{DoxyCompactItemize}
 \item 
-void \hyperlink{classPartitionManager_a114d5d4f8d90b6e9207b09d99e246bed}{write\+Disk\+Block} (Blk\+Num\+Type blknum, char $\ast$blkdata)
+void \mbox{\hyperlink{classPartitionManager_a114d5d4f8d90b6e9207b09d99e246bed}{write\+Disk\+Block}} (Blk\+Num\+Type blknum, char $\ast$blkdata)
 \item 
-Blk\+Num\+Type \hyperlink{classPartitionManager_a682ce5963a31cf7009455cb1c229b26a}{get\+Free\+Disk\+Block} ()
+Blk\+Num\+Type \mbox{\hyperlink{classPartitionManager_a682ce5963a31cf7009455cb1c229b26a}{get\+Free\+Disk\+Block}} ()
 \item 
-void \hyperlink{classPartitionManager_a3ce9b50aa5e7d9063919fc55d125246b}{return\+Disk\+Block} (Blk\+Num\+Type blknum)
+void \mbox{\hyperlink{classPartitionManager_a3ce9b50aa5e7d9063919fc55d125246b}{return\+Disk\+Block}} (Blk\+Num\+Type blknum)
 \end{DoxyCompactItemize}
 \end{Indent}
 
 
 \subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classPartitionManager_aa875b0b19b7ab9f32b02d2c9be383b75}\label{classPartitionManager_aa875b0b19b7ab9f32b02d2c9be383b75}} 
 \index{Partition\+Manager@{Partition\+Manager}!Partition\+Manager@{Partition\+Manager}}
 \index{Partition\+Manager@{Partition\+Manager}!Partition\+Manager@{Partition\+Manager}}
-\subsubsection[{\texorpdfstring{Partition\+Manager(\+Disk\+Manager $\ast$dm, string partition\+Name)}{PartitionManager(DiskManager *dm, string partitionName)}}]{\setlength{\rightskip}{0pt plus 5cm}Partition\+Manager\+::\+Partition\+Manager (
-\begin{DoxyParamCaption}
-\item[{{\bf Disk\+Manager} $\ast$}]{dm, }
-\item[{string}]{partition\+Name}
-\end{DoxyParamCaption}
-)}\hypertarget{classPartitionManager_aa875b0b19b7ab9f32b02d2c9be383b75}{}\label{classPartitionManager_aa875b0b19b7ab9f32b02d2c9be383b75}
+\subsubsection{\texorpdfstring{Partition\+Manager()}{PartitionManager()}}
+{\footnotesize\ttfamily Partition\+Manager\+::\+Partition\+Manager (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classDiskManager}{Disk\+Manager}} $\ast$}]{dm,  }\item[{string}]{partition\+Name }\end{DoxyParamCaption})}
+
 
 \begin{DoxyParams}{Parameters}
-{\em dm} & the \hyperlink{classDiskManager}{Disk\+Manager} associated with this object \\
+{\em dm} & the \mbox{\hyperlink{classDiskManager}{Disk\+Manager}} associated with this object \\
 \hline
 {\em partition\+Name} & the name of the partition that this will be managing \\
 \hline
@@ -48,82 +46,73 @@ void \hyperlink{classPartitionManager_a3ce9b50aa5e7d9063919fc55d125246b}{return\
 
 
 \subsection{Member Function Documentation}
+\mbox{\Hypertarget{classPartitionManager_a3b047c1c63c2f9a9e04805471c04ccf0}\label{classPartitionManager_a3b047c1c63c2f9a9e04805471c04ccf0}} 
 \index{Partition\+Manager@{Partition\+Manager}!get\+\_\+file\+\_\+name\+\_\+size@{get\+\_\+file\+\_\+name\+\_\+size}}
 \index{get\+\_\+file\+\_\+name\+\_\+size@{get\+\_\+file\+\_\+name\+\_\+size}!Partition\+Manager@{Partition\+Manager}}
-\subsubsection[{\texorpdfstring{get\+\_\+file\+\_\+name\+\_\+size()}{get_file_name_size()}}]{\setlength{\rightskip}{0pt plus 5cm}int Partition\+Manager\+::get\+\_\+file\+\_\+name\+\_\+size (
-\begin{DoxyParamCaption}
-{}
-\end{DoxyParamCaption}
-)}\hypertarget{classPartitionManager_a3b047c1c63c2f9a9e04805471c04ccf0}{}\label{classPartitionManager_a3b047c1c63c2f9a9e04805471c04ccf0}
+\subsubsection{\texorpdfstring{get\+\_\+file\+\_\+name\+\_\+size()}{get\_file\_name\_size()}}
+{\footnotesize\ttfamily int Partition\+Manager\+::get\+\_\+file\+\_\+name\+\_\+size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
 \begin{DoxyReturn}{Returns}
 The maximum file name size for this partition in bytes 
 \end{DoxyReturn}
+\mbox{\Hypertarget{classPartitionManager_aa1026e17e77f154d7034fafd188bda02}\label{classPartitionManager_aa1026e17e77f154d7034fafd188bda02}} 
 \index{Partition\+Manager@{Partition\+Manager}!get\+Block\+Size@{get\+Block\+Size}}
 \index{get\+Block\+Size@{get\+Block\+Size}!Partition\+Manager@{Partition\+Manager}}
-\subsubsection[{\texorpdfstring{get\+Block\+Size()}{getBlockSize()}}]{\setlength{\rightskip}{0pt plus 5cm}size\+\_\+t Partition\+Manager\+::get\+Block\+Size (
-\begin{DoxyParamCaption}
-{}
-\end{DoxyParamCaption}
-)}\hypertarget{classPartitionManager_aa1026e17e77f154d7034fafd188bda02}{}\label{classPartitionManager_aa1026e17e77f154d7034fafd188bda02}
+\subsubsection{\texorpdfstring{get\+Block\+Size()}{getBlockSize()}}
+{\footnotesize\ttfamily size\+\_\+t Partition\+Manager\+::get\+Block\+Size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
 \begin{DoxyReturn}{Returns}
-the blocksize of the \hyperlink{classDisk}{Disk} 
+the blocksize of the \mbox{\hyperlink{classDisk}{Disk}} 
 \end{DoxyReturn}
+\mbox{\Hypertarget{classPartitionManager_a682ce5963a31cf7009455cb1c229b26a}\label{classPartitionManager_a682ce5963a31cf7009455cb1c229b26a}} 
 \index{Partition\+Manager@{Partition\+Manager}!get\+Free\+Disk\+Block@{get\+Free\+Disk\+Block}}
 \index{get\+Free\+Disk\+Block@{get\+Free\+Disk\+Block}!Partition\+Manager@{Partition\+Manager}}
-\subsubsection[{\texorpdfstring{get\+Free\+Disk\+Block()}{getFreeDiskBlock()}}]{\setlength{\rightskip}{0pt plus 5cm}Blk\+Num\+Type Partition\+Manager\+::get\+Free\+Disk\+Block (
-\begin{DoxyParamCaption}
-{}
-\end{DoxyParamCaption}
-)}\hypertarget{classPartitionManager_a682ce5963a31cf7009455cb1c229b26a}{}\label{classPartitionManager_a682ce5963a31cf7009455cb1c229b26a}
-Allocates a block on disk if there is a free one. The \hyperlink{classDisk}{Disk} free list is updated accordingly \begin{DoxyReturn}{Returns}
+\subsubsection{\texorpdfstring{get\+Free\+Disk\+Block()}{getFreeDiskBlock()}}
+{\footnotesize\ttfamily Blk\+Num\+Type Partition\+Manager\+::get\+Free\+Disk\+Block (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Allocates a block on disk if there is a free one. The \mbox{\hyperlink{classDisk}{Disk}} free list is updated accordingly \begin{DoxyReturn}{Returns}
 the block number of the newly allocated block 
 \end{DoxyReturn}
+\mbox{\Hypertarget{classPartitionManager_a7c756dba2665e5a7b62b2ccb261f1158}\label{classPartitionManager_a7c756dba2665e5a7b62b2ccb261f1158}} 
 \index{Partition\+Manager@{Partition\+Manager}!get\+Partition\+Name@{get\+Partition\+Name}}
 \index{get\+Partition\+Name@{get\+Partition\+Name}!Partition\+Manager@{Partition\+Manager}}
-\subsubsection[{\texorpdfstring{get\+Partition\+Name()}{getPartitionName()}}]{\setlength{\rightskip}{0pt plus 5cm}string Partition\+Manager\+::get\+Partition\+Name (
-\begin{DoxyParamCaption}
-{}
-\end{DoxyParamCaption}
-)}\hypertarget{classPartitionManager_a7c756dba2665e5a7b62b2ccb261f1158}{}\label{classPartitionManager_a7c756dba2665e5a7b62b2ccb261f1158}
+\subsubsection{\texorpdfstring{get\+Partition\+Name()}{getPartitionName()}}
+{\footnotesize\ttfamily string Partition\+Manager\+::get\+Partition\+Name (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
 \begin{DoxyReturn}{Returns}
-The name of the partition this \hyperlink{classPartitionManager}{Partition\+Manager} is associated with 
+The name of the partition this \mbox{\hyperlink{classPartitionManager}{Partition\+Manager}} is associated with 
 \end{DoxyReturn}
+\mbox{\Hypertarget{classPartitionManager_a7aca34c24770b7b9290c489475655ada}\label{classPartitionManager_a7aca34c24770b7b9290c489475655ada}} 
 \index{Partition\+Manager@{Partition\+Manager}!read\+Disk\+Block@{read\+Disk\+Block}}
 \index{read\+Disk\+Block@{read\+Disk\+Block}!Partition\+Manager@{Partition\+Manager}}
-\subsubsection[{\texorpdfstring{read\+Disk\+Block(\+Blk\+Num\+Type blknum, char $\ast$blkdata)}{readDiskBlock(BlkNumType blknum, char *blkdata)}}]{\setlength{\rightskip}{0pt plus 5cm}void Partition\+Manager\+::read\+Disk\+Block (
-\begin{DoxyParamCaption}
-\item[{Blk\+Num\+Type}]{blknum, }
-\item[{char $\ast$}]{blkdata}
-\end{DoxyParamCaption}
-)}\hypertarget{classPartitionManager_a7aca34c24770b7b9290c489475655ada}{}\label{classPartitionManager_a7aca34c24770b7b9290c489475655ada}
-Reads a block from the \hyperlink{classDisk}{Disk}. 
+\subsubsection{\texorpdfstring{read\+Disk\+Block()}{readDiskBlock()}}
+{\footnotesize\ttfamily void Partition\+Manager\+::read\+Disk\+Block (\begin{DoxyParamCaption}\item[{Blk\+Num\+Type}]{blknum,  }\item[{char $\ast$}]{blkdata }\end{DoxyParamCaption})}
+
+Reads a block from the \mbox{\hyperlink{classDisk}{Disk}}. 
 \begin{DoxyParams}{Parameters}
 {\em blknum} & the blocknumber to be read \\
 \hline
 {\em blkdata} & the buffer to put the read data. must be large enough to contain an entire block of data \\
 \hline
 \end{DoxyParams}
+\mbox{\Hypertarget{classPartitionManager_a3ce9b50aa5e7d9063919fc55d125246b}\label{classPartitionManager_a3ce9b50aa5e7d9063919fc55d125246b}} 
 \index{Partition\+Manager@{Partition\+Manager}!return\+Disk\+Block@{return\+Disk\+Block}}
 \index{return\+Disk\+Block@{return\+Disk\+Block}!Partition\+Manager@{Partition\+Manager}}
-\subsubsection[{\texorpdfstring{return\+Disk\+Block(\+Blk\+Num\+Type blknum)}{returnDiskBlock(BlkNumType blknum)}}]{\setlength{\rightskip}{0pt plus 5cm}void Partition\+Manager\+::return\+Disk\+Block (
-\begin{DoxyParamCaption}
-\item[{Blk\+Num\+Type}]{blknum}
-\end{DoxyParamCaption}
-)}\hypertarget{classPartitionManager_a3ce9b50aa5e7d9063919fc55d125246b}{}\label{classPartitionManager_a3ce9b50aa5e7d9063919fc55d125246b}
-returns a block to the \hyperlink{classDisk}{Disk} free list and zeros it out before writing. 
+\subsubsection{\texorpdfstring{return\+Disk\+Block()}{returnDiskBlock()}}
+{\footnotesize\ttfamily void Partition\+Manager\+::return\+Disk\+Block (\begin{DoxyParamCaption}\item[{Blk\+Num\+Type}]{blknum }\end{DoxyParamCaption})}
+
+returns a block to the \mbox{\hyperlink{classDisk}{Disk}} free list and zeros it out before writing. 
 \begin{DoxyParams}{Parameters}
 {\em blknum} & the blocknumber of the block to be freed \\
 \hline
 \end{DoxyParams}
+\mbox{\Hypertarget{classPartitionManager_a114d5d4f8d90b6e9207b09d99e246bed}\label{classPartitionManager_a114d5d4f8d90b6e9207b09d99e246bed}} 
 \index{Partition\+Manager@{Partition\+Manager}!write\+Disk\+Block@{write\+Disk\+Block}}
 \index{write\+Disk\+Block@{write\+Disk\+Block}!Partition\+Manager@{Partition\+Manager}}
-\subsubsection[{\texorpdfstring{write\+Disk\+Block(\+Blk\+Num\+Type blknum, char $\ast$blkdata)}{writeDiskBlock(BlkNumType blknum, char *blkdata)}}]{\setlength{\rightskip}{0pt plus 5cm}void Partition\+Manager\+::write\+Disk\+Block (
-\begin{DoxyParamCaption}
-\item[{Blk\+Num\+Type}]{blknum, }
-\item[{char $\ast$}]{blkdata}
-\end{DoxyParamCaption}
-)}\hypertarget{classPartitionManager_a114d5d4f8d90b6e9207b09d99e246bed}{}\label{classPartitionManager_a114d5d4f8d90b6e9207b09d99e246bed}
-Writes a block to the \hyperlink{classDisk}{Disk}. 
+\subsubsection{\texorpdfstring{write\+Disk\+Block()}{writeDiskBlock()}}
+{\footnotesize\ttfamily void Partition\+Manager\+::write\+Disk\+Block (\begin{DoxyParamCaption}\item[{Blk\+Num\+Type}]{blknum,  }\item[{char $\ast$}]{blkdata }\end{DoxyParamCaption})}
+
+Writes a block to the \mbox{\hyperlink{classDisk}{Disk}}. 
 \begin{DoxyParams}{Parameters}
 {\em blknum} & the blocknumber to be written \\
 \hline

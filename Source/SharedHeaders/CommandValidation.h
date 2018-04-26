@@ -21,6 +21,7 @@
 std::regex history_val ("history [0-9]+");
 std::regex change_dir ("cd (/[0-9a-zA-Z_]*)+");
 std::regex change_dir_rl ("cd \\.(/[0-9a-zA-Z_]+)+");
+std::regex list_all("ls");
 //[================================================================================================-->]
 std::regex usage_help ("--help");
 std::regex usage_quit ("--quit");
@@ -154,6 +155,7 @@ int check_command(std::string command)
 {
     // Need to set up better error messages
     if(std::regex_match(command,find_tags)){return FIND_TS;}
+    else if(std::regex_match(command,list_all)){return LIST_ALL;}
     else if(std::regex_match(command,find_files)){return FIND_FS;}
     else if(std::regex_match(command,new_tags)){return NEW_TS;}
     else if(std::regex_match(command,new_files)){return NEW_FS;}

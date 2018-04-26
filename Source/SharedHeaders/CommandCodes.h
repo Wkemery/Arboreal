@@ -12,6 +12,7 @@
 #ifndef COM_CODES
 #define COM_CODES
 
+
 /* Find Files By Tag */
 static const int FIND_TS = 400;
 
@@ -128,6 +129,9 @@ static const int CPY_FP = 6000;
 
 /* Copy Contents Of One File To Another (Overwrites File; In Current Working Directory */
 static const int CPY_FCWD = 6001;
+
+/* List All Tags On The System */
+static const int LIST_ALL = 7000;
 /*************************************************************************************************/
 
 

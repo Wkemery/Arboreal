@@ -66,7 +66,7 @@ int main(int argc, char** argv)
   Debug.log("D: Launching File System...");
   try
   {
-    d = new Disk(300000, 4096, const_cast<char *>("/dev/sde"));
+    d = new Disk(300000, 4096, "DISK1");
     dm = new DiskManager(d);
   }
   catch(arboreal_exception& e)

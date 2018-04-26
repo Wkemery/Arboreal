@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['readme',['README',['../md_README.html',1,'']]]
+  ['arboreal_20user_20guide',['Arboreal User Guide',['../md_README.html',1,'']]]
 ];
