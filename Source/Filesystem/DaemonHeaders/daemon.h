@@ -764,6 +764,7 @@ void execute(int id, char* command, int fd, std::vector<std::string>& data)
       {
         data.push_back(tagnames->at(i));
       }
+      delete tagnames;
       break;
     }
     case(FIND_TS): // find tag

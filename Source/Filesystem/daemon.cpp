@@ -433,6 +433,7 @@ int main(int argc, char** argv)
                 }
                 else if(end_check == "$")
                 {
+
                   Debug.log("D: Preparing Data For Sending...");
                   for(unsigned int i = 0; i < data.size(); i++)
                   {
@@ -486,7 +487,6 @@ int main(int argc, char** argv)
                     rval = send(i, failure.c_str(), MAX_COMMAND_SIZE, FLAG);
                   }
                   /*******************************************************************************/
-
 
                   /* Execute the command */
                   execute(current_command_id, buffer, i, data);
