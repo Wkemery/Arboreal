@@ -1348,6 +1348,16 @@ void FileSystem::write_changes()
   }
 }
 
+vector<string>* FileSystem::get_all_tags()
+{
+  vector<string>* ret = new vector<string>;
+    for(auto it = _RootTree->begin(); it != _RootTree->end(); ++it){
+      ret->push_back(it->first);
+    }
+  return ret;
+}
+
+
 /* Start Helper Functions */
 
 void FileSystem::insert_modification(TreeObject* object)

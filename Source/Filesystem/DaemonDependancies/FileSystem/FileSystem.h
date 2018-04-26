@@ -308,6 +308,8 @@ public:
 
   size_t num_of_files();
   size_t num_of_tags();
+  
+  vector<string>* get_all_tags();
 
   /** @name Debug Functions
    */
