@@ -35,7 +35,11 @@ static const int MaxBufferSize = 4096;            /* Maximum Size a FS Command B
 static const int SharedMemorySize = 1;            /* The Size of a Shared Memory Segment */
 static const int Backlog = 10;                    /* Number of Connection Requests that the Server Can Queue */
 static const int Flag = 0;                        /* Flag for Send/Recv. Operations */
+<<<<<<< HEAD
 static const int DaemonPort = 42096;               /* Port On Which The FS Daemon Is Listening */
+=======
+static const int DaemonPort = 42069;               /* Port On Which The FS Daemon Is Listening */
+>>>>>>> 00996768c686bf961ff6f19e386904c5c08c48c9
 static const int Timeout = 10;                    /* How Many Seconds More To Continue Trying If An Operation Fails */
 static const bool VERBOSE = true;
 DebugMessages Debug;
