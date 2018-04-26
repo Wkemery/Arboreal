@@ -101,9 +101,6 @@ function onStartUp()
   buffer.write(currentOp); // writes the command to get all the tags TBD
   client.write(buffer); //writes the buffer to the client
   buffer = Buffer.alloc(4096,'\0');
-  buffer.write('thingsInTheMiddle'); // writes the command to get all the tags TBD
-  client.write(buffer); //writes the buffer to the client
-  buffer = Buffer.alloc(4096,'\0'); // clears the buffer back to null bytes
   buffer.write("$");
   client.write(buffer); // signals that the communication is done
   buffer = Buffer.alloc(4096,'\0'); // reclears the buffer
@@ -122,11 +119,12 @@ function connectTo()
 function connection(request)
 {
   //window.alert("callll");
-  //alert("trying...");
+//  alert("trying...");
   var inArray = request.split("//");
   currentOp = inArray[0];
   if(inArray[0]==='301') //for when a tag is being added
   {
+    //alert("In if");
       for(var i =0; i< inArray.length; i++)
       {
         buffer.write(inArray[i]);
@@ -138,7 +136,7 @@ function connection(request)
   lastAr = inArray;
   close();
 }
-//closes the connection
+//cfor when data is received
 client.on('data', function(data)
 {
   if(currentOp==='301') // checks if last op was to add a tag
