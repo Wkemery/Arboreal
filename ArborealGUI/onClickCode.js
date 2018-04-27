@@ -1,6 +1,11 @@
 //Danny Radosevich
 // Code for all the on click listeners
 /* Code to deal with button presses for the GUI*/
+const Menu = electron.menu;
+const MenuItem = electron.Menuitem;
+let rightClickPos = null;
+var imagClicked = 0;
+
 /*--------------------------------Code for Nav Bar Buttons--------------------------------*/
 function arborealButton()
 {
@@ -42,19 +47,32 @@ function searchHelp()
 
 function bodyRightClick() //for a right click on the body area,
 {
-  var rightclick;
-  var eve = window.event;
-  if ((eve.which && eve.which == 3) || (eve.button && eve.button == 2))
+  //sleep(200);
+  if(imagClicked==0)
   {
-    alert("right click");
+    var rightclick;
+    var eve = window.event;
+    if ((eve.which && eve.which == 3) || (eve.button && eve.button == 2))
+    {
+      //alert("right click");
+    }
+  }
+  else if (imagClicked==1)
+  {
+    imagClicked = 0;
   }
 }
 function iconRightClick() // check for a right click on an icon
 {
-  var rightclick;
-  var eve = window.event;
-  if ((eve.which && eve.which == 3) || (eve.button && eve.button == 2))
-  {
-    alert("image right clicked");
-  }
+
+    var rightclick;
+    var eve = window.event;
+    if ((eve.which && eve.which == 3) || (eve.button && eve.button == 2))
+    {
+      imageClicked =1;
+      //alert("image right clicked");
+      contextMenu(imageMenu);
+
+    }
+
 }

@@ -20,11 +20,7 @@ static const int FLAG = 0;                  /* Flag for recv() */
 static const int TIMEOUT = 10;              /* How Long Retries Should Take */
 static const int TRUE = 1;                  /* Integer Boolean True */
 static const int FALSE = 0;                 /* Integer Boolean False */
-<<<<<<< HEAD
-static const int PORT = 42096;               /* File System Port Number */
-=======
 static const int PORT = 42069;               /* File System Port Number */
->>>>>>> 00996768c686bf961ff6f19e386904c5c08c48c9
 static const int MAX_COMMAND_SIZE = 4096;   /* Maximum Buffer Size */
 static const int WRITE_CHANGES_WAIT = 1;    /* How Long To Wait Before Writing Changes */
 static const bool WILL_TIME = false;

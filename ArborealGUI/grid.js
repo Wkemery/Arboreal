@@ -17,6 +17,14 @@ function addToGrid(elemType, caption)
 {
   //alert("adding");
   //create the ID for the element to be accessed
+  if(caption.includes('['))
+  {
+    caption = caption.replace('[','');
+  }
+  if(caption.includes(']'))
+  {
+    caption = caption.replace(']','');
+  }
   var id = elemType + itemID;
   itemID++;
   //add id to an array to keep track
@@ -27,6 +35,7 @@ function addToGrid(elemType, caption)
   var divFig = document.createElement("div");
   var text = document.createTextNode(caption);
   var br = document.createElement("br");
+
 
   if(elemType=='tag')
   {
@@ -44,7 +53,7 @@ function addToGrid(elemType, caption)
   newFig.width = '70';
   //newFig.id = id;
   //newFig.setAttribute("onclick", "testOn("+id+")");
-  newFig.addEventListener("dblclick", itemClick.bind(null,id));
+  newFig.addEventListener("dblclick", itemClick.bind(null,id,caption));
 
   // creating the text below the figure
 
@@ -68,35 +77,18 @@ function clearGrid() //empties the grid and the elements in the array
   }
   elems = [];
 }
-function itemClick(id) // checks if an item is clicked.
+function itemClick(id,caption) // checks if an item is clicked.
 //Performs a function based on if it is a file, or a tag
 {
   //alert("image clicked: "+id);
   if(id.includes("tag")) // for when a tag is double clicked, will find all files assoiciated with tag
   {
-    clearGrid()
-    for(var i =0; i <fakeFiles.length; i++)
-    {
-      var str ='';
-      if(fakeFiles[i].length >10)
-      {
-        var result = '';
-        while(str.length>0)
-        {
-          result+=str.substring(0,10)+'\n';
-          str = str.substring(10);
-        }
-        addToGrid("file",result);
-      }
-      else
-      {
-        addToGrid("file", fakeFiles[i]);
-      }
-
-    }
+    clearGrid();
+    getFilesforTag(caption);
   }
   else if(id.includes("file")) // for when a file is double clicked
   {
-
+    alert("You clicked on: " + caption+ "\n open coming soon");
+    //does nothing
   }
 }
