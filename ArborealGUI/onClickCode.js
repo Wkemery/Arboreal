@@ -3,14 +3,22 @@
 /* Code to deal with button presses for the GUI*/
 const Menu = electron.menu;
 const MenuItem = electron.Menuitem;
+//const {app, Menu} = require('electron');
 let rightClickPos = null;
-var imagClicked = 0;
+var imageClicked = 0;
+/*const template = [
+  {
+    label:'new tag';
+    id: 'newtag';
+    //click:'newTag()';
+  }
+]; */
 
 /*--------------------------------Code for Nav Bar Buttons--------------------------------*/
 function arborealButton()
 {
   //Generate a pop up about Arboreal
-  window.alert("Arboreal is a new kind of file system\nthat uses a tree based structure!")
+  window.alert("Arboreal is a new kind of file system\nthat uses a tree based structure!");
 }
 function helpButton()
 {
@@ -26,8 +34,8 @@ function searchButton()
   //get the text written in the search bar and search the file system for this
   var inputtedValue = document.getElementById("search_bar").value;
   var inArray = inputtedValue.split(", ");
-  connectToFileSystem(inArray[0]);
-  //window.alert(inArray[0]);
+    //getFilesforTag(inArray[i]);
+    getFilesfromName(inArray[0]);
 }
 function searchHelp()
 {
@@ -47,32 +55,32 @@ function searchHelp()
 
 function bodyRightClick() //for a right click on the body area,
 {
-  //sleep(200);
-  if(imagClicked==0)
-  {
-    var rightclick;
     var eve = window.event;
-    if ((eve.which && eve.which == 3) || (eve.button && eve.button == 2))
+    if(imageClicked===0)
     {
-      //alert("right click");
+      if (((eve.which && eve.which == 3) || (eve.button && eve.button == 2)))
+      {
+        alert("right click");
+      }
     }
-  }
-  else if (imagClicked==1)
-  {
-    imagClicked = 0;
-  }
+
+    else if (imageClicked===1)
+    {
+      imagClicked = 0;
+    }
+
 }
+
 function iconRightClick() // check for a right click on an icon
 {
-
-    var rightclick;
     var eve = window.event;
     if ((eve.which && eve.which == 3) || (eve.button && eve.button == 2))
     {
       imageClicked =1;
-      //alert("image right clicked");
-      contextMenu(imageMenu);
-
+      alert("image right clicked");
+      const menu = new Menu();
+      menu.append(new MenuItem({label:'tag', click(){console.log('item clicked')}}));
+      menu.popup(remote.getCurrentWindow());
     }
 
 }

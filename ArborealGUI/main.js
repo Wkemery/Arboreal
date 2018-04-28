@@ -92,13 +92,13 @@ function setTagList(theList)
 {
 
   tagList = theList; // Not to be confused with Arya's
-  process.stdout.write("Maybe setting");
+  //process.stdout.write("Maybe setting");
   popuate();
 }
 function setTagListFiles(theList)
 {
   tagListFiles = theList; // Not to be confused with Arya's
-  process.stdout.write("Maybe setting");
+  //process.stdout.write("Maybe setting");
   popFiles();
 }
 /*----------------------------------------------------------------------------------------*/

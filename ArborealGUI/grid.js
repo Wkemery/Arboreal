@@ -7,7 +7,6 @@
 //var msnry = new Masonry(grid, {columnWidth:160, itemSelector:'.grid-item'});
 var itemID = 0; //helps keep track of elements
 var elems = new Array();
-var fakeFiles = ["taxes.doc", "hawaii.jpeg","danny.isawesome","minecraft","running","out", "of","names"];
 
 /*-------------------------------Code for Addding Elements-------------------------------*/
 /*---------------------------------------------------------------------------------------*/
@@ -25,48 +24,51 @@ function addToGrid(elemType, caption)
   {
     caption = caption.replace(']','');
   }
-  var id = elemType + itemID;
-  itemID++;
-  //add id to an array to keep track
-  elems.push(id);
-
-  //set up the figure for dispaly
-  var newFig = document.createElement("img");
-  var divFig = document.createElement("div");
-  var text = document.createTextNode(caption);
-  var br = document.createElement("br");
-
-
-  if(elemType=='tag')
+  if(caption.match(/[a-z]*/))
   {
-    newFig.src = './res/folder.png';
-  }
-  else if (elemType=='file')
-  {
-    newFig.src = './res/icon.png';
-  }
+      var id = elemType + itemID;
+      itemID++;
+      //add id to an array to keep track
+      elems.push(id);
 
-  //Setting up the figure
-  //newFig.src = 'https://cdn.bulbagarden.net/upload/7/73/004Charmander.png';
-  //newFig.src = './res/icon.png';
-  newFig.height = '70';
-  newFig.width = '70';
-  //newFig.id = id;
-  //newFig.setAttribute("onclick", "testOn("+id+")");
-  newFig.addEventListener("dblclick", itemClick.bind(null,id,caption));
+      //set up the figure for dispaly
+      var newFig = document.createElement("img");
+      var divFig = document.createElement("div");
+      var text = document.createTextNode(caption);
+      var br = document.createElement("br");
 
-  // creating the text below the figure
 
-  //adding the picture to the display area
-  divFig.appendChild(newFig);
-  divFig.appendChild(br);
-  divFig.appendChild(text);
-  divFig.setAttribute("class","image");
-  divFig.setAttribute("onmousedown", "iconRightClick()")
-  divFig.style.padding = "5px 5px 5px 5px";
-  divFig.id=id;
-  //text.setAttribute("align","bottom");
-  document.getElementById('grid').appendChild(divFig);
+      if(elemType=='tag')
+      {
+        newFig.src = './res/folder.png';
+      }
+      else if (elemType=='file')
+      {
+        newFig.src = './res/icon.png';
+      }
+
+      //Setting up the figure
+      //newFig.src = 'https://cdn.bulbagarden.net/upload/7/73/004Charmander.png';
+      //newFig.src = './res/icon.png';
+      newFig.height = '70';
+      newFig.width = '70';
+      //newFig.id = id;
+      //newFig.setAttribute("onclick", "testOn("+id+")");
+      newFig.addEventListener("dblclick", itemClick.bind(null,id,caption));
+
+      // creating the text below the figure
+
+      //adding the picture to the display area
+      divFig.appendChild(newFig);
+      divFig.appendChild(br);
+      divFig.appendChild(text);
+      divFig.setAttribute("class","image");
+      divFig.setAttribute("onmousedown", "iconRightClick()")
+      divFig.style.padding = "5px 5px 5px 5px";
+      divFig.id=id;
+      //text.setAttribute("align","bottom");
+      document.getElementById('grid').appendChild(divFig);
+}
 }
 function clearGrid() //empties the grid and the elements in the array
 {

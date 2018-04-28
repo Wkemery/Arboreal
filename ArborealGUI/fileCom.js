@@ -115,7 +115,7 @@ function getAllTags()
   currentOp = '7000';
 
   buffer.write(currentOp); // writes the command to get all the tags TBD
-  process.stdout.write(buffer);
+  //process.stdout.write(buffer);
   client.write(buffer); //writes the buffer to the client
   buffer = Buffer.alloc(4096,'\0');
   buffer.write("$");
@@ -125,12 +125,25 @@ function getAllTags()
 }
 function getFilesforTag(tag)
 {
-  process.stdout.write("getting files for system");
+  //process.stdout.write("getting files for system");
   currentOp = '400';
   buffer.write(currentOp);
   client.write(buffer);
   buffer = Buffer.alloc(4096,'\0');
   buffer.write(tag);
+  client.write(buffer);
+  buffer = Buffer.alloc(4096,'\0');
+  buffer.write('$');
+  client.write(buffer);
+  buffer = Buffer.alloc(4096,'\0');
+}
+function getFilesfromName(name)
+{
+  currentOp = '401';
+  buffer.write(currentOp);
+  client.write(buffer);
+  buffer = Buffer.alloc(4096,'\0');
+  buffer.write(name);
   client.write(buffer);
   buffer = Buffer.alloc(4096,'\0');
   buffer.write('$');
@@ -191,6 +204,28 @@ client.on('data', function(data)
 
   }
   else if(currentOp==='400') //searching for files based on tag
+  {
+    if(check ===0)
+    {
+      check = 1;
+    }
+    else if(check ===1)
+    {
+      var templist = [];
+      var templistTwo = [];
+      //alert(data);
+      templist = data.toString().split('\n'); //split the data up
+      for(var i = 1; i <templist.length; i++)
+      {
+        var forTemp = [];
+        forTemp = templist[i].split('|');
+        templistTwo.push(forTemp[0]);
+      }
+      setTagListFiles(templistTwo);
+      int =0;
+    }
+  }
+  else if(currentOp==='401') //searching for files based on tag
   {
     if(check ===0)
     {
