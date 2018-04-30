@@ -18,8 +18,8 @@ https://docs.google.com/spreadsheets/d/1vL4BsiUzvJpM0IO-PRyWgokJArVKhy6LYVstcVRk
 # Technical Documentation
 **See *ArborealTechDoc.pdf* in files above**
 
-# General Arboreal Documentation
-**See *ArborealGeneralDoc.pdf* in files above**
+# Complete Arboreal Documentation
+**See *arboreal-system-documentation-final.pdf* in files above**
 
 
 ---
