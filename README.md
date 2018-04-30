@@ -1,16 +1,19 @@
 # Arboreal
 
 
-## FlipGrid Link
-**(For videos that are not on the communal flipgrid)
+# FlipGrid Link
+**(For videos that are not on the communal flipgrid)**
+
 *FLipGrip Link:* https://flipgrid.com/1tcwvu
 
 
-## Time Sheet Link
-**(Read only)
+# Time Sheet Link
+**(Read only)**
+
 https://docs.google.com/spreadsheets/d/1vL4BsiUzvJpM0IO-PRyWgokJArVKhy6LYVstcVRkcSU/edit?usp=sharing
 
 
+---
 
 
 
@@ -19,8 +22,7 @@ https://docs.google.com/spreadsheets/d/1vL4BsiUzvJpM0IO-PRyWgokJArVKhy6LYVstcVRk
 
 
 
-
-## some notes
+### some notes
 
 Tag based tree-structured filesystem
 
