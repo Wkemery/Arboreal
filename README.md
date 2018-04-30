@@ -12,6 +12,15 @@
 
 https://docs.google.com/spreadsheets/d/1vL4BsiUzvJpM0IO-PRyWgokJArVKhy6LYVstcVRkcSU/edit?usp=sharing
 
+# User Guide
+**See *ArborealUserGuide.pdf* in files above**
+
+# Technical Documentation
+**See *ArborealTechDoc.pdf* in files above**
+
+# General Arboreal Documentation
+**See *ArborealGeneralDoc.pdf* in files above**
+
 
 ---
 
