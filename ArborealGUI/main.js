@@ -8,6 +8,7 @@ const path = require('path')
 const url = require('url')
 var testList = ["Pictures", "Videos", "Documents", "General Files", "Other"];
 var tagList =[];
+var tagListFiles = [];
 
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -37,6 +38,7 @@ function createWindow ()
     // when you should delete the corresponding element.
     mainWindow = null
     app.quit();
+    close();
   })
 }
 
@@ -71,16 +73,32 @@ app.on('activate', function ()
 function popuate()// called on start up
 {
   clearGrid();
-  for(var i=0; i <testList.length; i++)
+  for(var i=0; i <tagList.length; i++)
   {
-    addToGrid("tag",testList[i] );
+    addToGrid("tag",tagList[i] );
   }
+}
+function popFiles()
+{
+
+    clearGrid();
+    for(var i=0; i <tagListFiles.length; i++)
+    {
+      addToGrid("file",tagListFiles[i] );
+    }
+
 }
 function setTagList(theList)
 {
 
   tagList = theList; // Not to be confused with Arya's
-  //popuate();
+  //process.stdout.write("Maybe setting");
+  popuate();
 }
-
+function setTagListFiles(theList)
+{
+  tagListFiles = theList; // Not to be confused with Arya's
+  //process.stdout.write("Maybe setting");
+  popFiles();
+}
 /*----------------------------------------------------------------------------------------*/

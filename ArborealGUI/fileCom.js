@@ -89,16 +89,33 @@ var buffer = Buffer.alloc(4096,'\0'); //buffer to size 4096 fill in with null by
 //functions to interact with the tcp port
 var currentOp = ""; //check what the current operation is for data return
 var lastAr = [];  // keep data being added until next operation
-
+var check = 0;
 // callConnect function, will be called from outside this fille to establish conenction on start up
 function onStartUp()
-{//gets the initial array of all the tags
-
-  //alert("trying to get all data");
-
+{
+  var theVar = "HANDSHAKE-PartitionA";
   client.connect(daemonPort, host);
+  buffer.writeIntBE(0);
+  buffer.fill(theVar,4,4+theVar.length); //handshake
+  client.write(buffer);
+  buffer=Buffer.alloc(4096,'\0');
+  sleep(500);
+  getAllTags();
+}
+function connectTo()
+{
+  //alert("xxx");
+  connection("301//newtest3333//$");
+}
+function getAllTags()
+{
+  //alert("get all tags");
+  //client.connect(daemonPort, host);
+
   currentOp = '7000';
+
   buffer.write(currentOp); // writes the command to get all the tags TBD
+  //process.stdout.write(buffer);
   client.write(buffer); //writes the buffer to the client
   buffer = Buffer.alloc(4096,'\0');
   buffer.write("$");
@@ -106,20 +123,39 @@ function onStartUp()
   buffer = Buffer.alloc(4096,'\0'); // reclears the buffer
 
 }
-function connectTo()
+function getFilesforTag(tag)
 {
-  //alert("xxx");
-  client.connect(daemonPort, host);
-  connection("301//somethings//$");
-
+  //process.stdout.write("getting files for system");
+  currentOp = '400';
+  buffer.write(currentOp);
+  client.write(buffer);
+  buffer = Buffer.alloc(4096,'\0');
+  buffer.write(tag);
+  client.write(buffer);
+  buffer = Buffer.alloc(4096,'\0');
+  buffer.write('$');
+  client.write(buffer);
+  buffer = Buffer.alloc(4096,'\0');
 }
-
-
+function getFilesfromName(name)
+{
+  currentOp = '401';
+  buffer.write(currentOp);
+  client.write(buffer);
+  buffer = Buffer.alloc(4096,'\0');
+  buffer.write(name);
+  client.write(buffer);
+  buffer = Buffer.alloc(4096,'\0');
+  buffer.write('$');
+  client.write(buffer);
+  buffer = Buffer.alloc(4096,'\0');
+}
 // communicates with the tcp server
 function connection(request)
 {
   //window.alert("callll");
 //  alert("trying...");
+
   var inArray = request.split("//");
   currentOp = inArray[0];
   if(inArray[0]==='301') //for when a tag is being added
@@ -127,19 +163,17 @@ function connection(request)
     //alert(inArray.length);
       for(var i =0; i< inArray.length; i++)
       {
-        //alert(i+ " "+inArray[i]);
-        process.stdout.write(inArray[i]);
-        process.stdout.write('\n');
-        buffer.write(inArray[i]);
+        process.stdout.write("Position: "+i+ " ");
+        buffer.write(inArray[i]+'\n');
+        process.stdout.write(buffer);
         client.write(buffer);
-        buffer = Buffer.alloc(4096,'\0');
+        buffer=Buffer.alloc(4096,'\0');
       }
 
   }
   lastAr = inArray;
-  close();
 }
-//cfor when data is received
+//for when data is received
 client.on('data', function(data)
 {
   if(currentOp==='301') // checks if last op was to add a tag
@@ -150,30 +184,81 @@ client.on('data', function(data)
       alert(data);
       addToGrid('tag',lastAr[1]);
     }
-    else
-    {
-      //do nothing
-    }
+    //else do nothing
   }
 
   else if(currentOp==='7000')// checks if the current op is the request all
   {
-    alert(data);
-    /*
+    if(check ===0)
+    {
+      check = 1;
+    }
+    else if(check ===1)
+    {
+      var templist = [];
+      //alert(data);
+      templist = data.toString().split('\n'); //split the data up
+      setTagList(templist);
+      int =0;
+    }
 
-    var tempList = [];
-    tempList = data.split('\0');
-
-    setTagList(tempListTwo); //splits the data on the null byte
-    */
+  }
+  else if(currentOp==='400') //searching for files based on tag
+  {
+    if(check ===0)
+    {
+      check = 1;
+    }
+    else if(check ===1)
+    {
+      var templist = [];
+      var templistTwo = [];
+      //alert(data);
+      templist = data.toString().split('\n'); //split the data up
+      for(var i = 1; i <templist.length; i++)
+      {
+        var forTemp = [];
+        forTemp = templist[i].split('|');
+        templistTwo.push(forTemp[0]);
+      }
+      setTagListFiles(templistTwo);
+      int =0;
+    }
+  }
+  else if(currentOp==='401') //searching for files based on tag
+  {
+    if(check ===0)
+    {
+      check = 1;
+    }
+    else if(check ===1)
+    {
+      var templist = [];
+      var templistTwo = [];
+      //alert(data);
+      templist = data.toString().split('\n'); //split the data up
+      for(var i = 1; i <templist.length; i++)
+      {
+        var forTemp = [];
+        forTemp = templist[i].split('|');
+        templistTwo.push(forTemp[0]);
+      }
+      setTagListFiles(templistTwo);
+      int =0;
+    }
   }
 
-
-  close();
 });
 function close()
 {
   client.end();
 }
+function sleep(miliseconds) //have a delay so that things don't execute too quickly
+{
+   var currentTime = new Date().getTime();
 
+   while (currentTime + miliseconds >= new Date().getTime())
+   {
+   }
+}
 /*-------------------------Code for Interacting with File system--------------------------*/
