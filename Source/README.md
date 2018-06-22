@@ -1,4 +1,4 @@
-# Arboreal User Guide
+# Arboreal USER GUIDE
 
 ### Table of Contents
 
@@ -25,17 +25,17 @@
 * **The Graphical User Interface (GUI)**
 * **Troubleshooting**  
 
- 
+
 ## Installing Arboreal
 Arboreal is currently not integrated with the kernel and as such runs similarly to a virtual file system albeit with a more experimental structure.  Future work will be focused on direct integration with the kernal in order to provide more traditional  usability.  In the meantime playing around with and testing the file system can be achived through a few easy steps:   
 
 1.  **Download the project**  
 2. **Changed directory to the folder within the project hierarchy named `Source`**  
 3. **Type `make`**  
-4. **You will now need to first run the daemon process.  This process intercepts al communication 	attempts with the File System and will execute functions accordingly.  There are a number of 	command line arguments that can be passed to the daemon:**  
+	. **You will now need to first run the daemon process.  This process intercepts al communication 	attempts with the File System and will execute functions accordingly.  There are a number of 	command line arguments that can be passed to the daemon:**  
 	* `-d` **This flag is used to tell the daemon to enable debugging**  
-	* `-v` **This flag is used to tell the daemon to return file information (such as that returned by a call 			to find) with as much information as possible.  Omitting this flag will cause the daemon to 			return a reduced version of file information**  
-	* **You may enable either of these options or both (input order does not matter, that is `-d -v` will 		work the same as `-v -d`)**
+		 `-v` **This flag is used to tell the daemon to return file information (such as that returned by a call 			to find) with as much information as possible.  Omitting this flag will cause the daemon to 			return a reduced version of file information**  
+		 **You may enable either of these options or both (input order does not matter, that is `-d -v` will 		work the same as `-v -d`)**
 5.   **Finally, Simply Type `./daemon ` followed by your chosen flag or flags (be sure to include a space in between).**  **For example, if I wanted to run the daemon with verbose file information and debugging enabled the command would look like: `./daemon -v -d`**  
 
 At this point you'll be ready to move on to the next step, starting the command line or GUI interface.  Notice that the daemon does not output anything to the screen as it is running.  **This is OK!**  Its whole purpose is to be a background process that aids communication with the file system.  **If you decided to enable debugging,  the output will be located in a file called `Arboreal.log`.** 
@@ -93,14 +93,14 @@ If you chose to enable debugging for the command line, all debug output will be 
 	e.g.
 	Arboreal >> -h --find	
 **This version of the help command will show the usage for a single command archetype.**  (Unlike the `help` or `h` commands it will not start a  "helper" subprocess but will simply display the usage for the particular archetype and await the next file system command)  
-  
+
 
 ### Quit Commands
 	Arboreal >> quit
 	Arboreal >> q
 	Arboreal >> Q
 **All of these will attempt to terminate the current command line process.**  This command does not affect other concurrently running command lines it will only quit the currently active command line process.  The user must confirm the quit before the command will actually be executed.  this is to prevent accidental quits.  The quit commands are built with proper cleanup in mind and should not leave any junk behind.  
-  
+
 ### Find Commands
 	Arboreal >> find -t [tagname1,tagname2,...]
 	Arboreal >> find -t {tagname1,tagname2,...}
@@ -117,9 +117,9 @@ Commands that use `[]` are called `lists` and will tell the system to **search f
   **What's great is that you can actually nest any of these within one another!** Although nesting a bunch of `sets` or `lists` won't be any diffferent from simply using one big list or set (i.e. `[t1,[t2,t3,t4]]` is the exact same as `[t1,t2,t3,t4]` this goes for `sets` as well).  However, tings get interesting when you pass a command such as:
     
   `find -t [tag1,tag2,{tag45,tag78,[tag9,tag10],tag5},tag100]`  
-  
+
   This particular command will search for any file with:  
- 
+
   ~~~
    	tag1  	 
    	tag2  
@@ -129,10 +129,10 @@ Commands that use `[]` are called `lists` and will tell the system to **search f
    	tag2 && tag45 && tag78 && tag9 && tag5 && tag100  
    	tag2 && tag45 && tag78 && tag10 && tag5 && tag100 
   ~~~
-   	
+
    (*Of course you accomplish similar things even with a command that is a `list` nested within a `set` rather than this example which is a `set` nested within a `list`*)
-   
-   
+
+
    As you can see, nesting these operations creates some really powerful search options!  
 ### Important! DO NOT put spaces in between the `list` or `set` items!!  
 -
