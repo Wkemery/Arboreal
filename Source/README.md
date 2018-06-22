@@ -1,4 +1,4 @@
-# Arboreal USER GUIDE
+# Arboreal User Guide
 
 ### Table of Contents
 
